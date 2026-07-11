@@ -15,6 +15,7 @@ import { StudentDetailConsultationTab } from "./student-detail-consultation-tab"
 import { StudentDetailParentTab } from "./student-detail-parent-tab";
 import { StudentAccessCard } from "./devices/student-access-card";
 import { StudentBillingSection } from "./billing/student-billing-section";
+import { StudentExamHistoryTab } from "./student-exam-history-tab";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface StudentDetailClientProps {
@@ -30,6 +31,8 @@ export function StudentDetailClient({
 }: StudentDetailClientProps) {
   const basePath = isDirector ? "/director/students" : "/teacher/students";
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  // 응시 이력 탭은 시험지 배포 대개편 플래그로 게이트 — SHOW_USER_RESULTS 와 독립.
+  const showExamHistory = FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT;
 
   return (
     <div className="flex flex-col h-full">
@@ -46,6 +49,9 @@ export function StudentDetailClient({
           <TabsList variant="line">
             <TabsTrigger value="overview">개요</TabsTrigger>
             {showResults && <TabsTrigger value="grades">성적</TabsTrigger>}
+            {showExamHistory && (
+              <TabsTrigger value="exam-history">응시 이력</TabsTrigger>
+            )}
             <TabsTrigger value="attendance">출결</TabsTrigger>
             <TabsTrigger value="billing">수납</TabsTrigger>
             <TabsTrigger value="consultation">상담</TabsTrigger>
@@ -64,6 +70,12 @@ export function StudentDetailClient({
           {showResults && (
             <TabsContent value="grades" className="mt-6">
               <StudentDetailGradesTab stats={stats} />
+            </TabsContent>
+          )}
+
+          {showExamHistory && (
+            <TabsContent value="exam-history" className="mt-6">
+              <StudentExamHistoryTab studentId={student.id} />
             </TabsContent>
           )}
 

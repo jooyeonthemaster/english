@@ -132,7 +132,7 @@ export function AnswerLinkPanel({
 
   return (
     <div className="space-y-2.5">
-      {/* 제출 상태 칩 */}
+      {/* 제출 상태 칩 — 미제출 동안은 워크스페이스 폴링으로 라이브 갱신된다. */}
       <div className="flex flex-wrap items-center gap-1.5">
         {submittedAt ? (
           <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
@@ -141,10 +141,18 @@ export function AnswerLinkPanel({
           </span>
         ) : (
           <span className="inline-flex items-center whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-            미제출
+            제출 대기
           </span>
         )}
       </div>
+
+      {/* 다음 행동 안내 — 링크를 학생에게 전달해야 답안이 들어온다. */}
+      {!submittedAt && (
+        <p className="text-[12px] leading-relaxed text-slate-500">
+          이 링크를 학생에게 보내세요. 학생이 답안을 제출하면 상태가 자동으로
+          바뀝니다.
+        </p>
+      )}
 
       <div className="flex items-stretch gap-1.5">
         <input

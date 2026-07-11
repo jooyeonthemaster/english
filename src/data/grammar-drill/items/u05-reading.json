@@ -1,0 +1,484 @@
+{
+  "unitId": "u05",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u05-c1-mu-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["coord-pair"],
+      "text": "The archaeologists [[1:mapped]] the buried courtyard, photographed each stone, and [[2:recording]] the positions of the artifacts. Their notes [[3:were]] later published in a regional journal.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "recorded",
+      "rationales": [
+        "접속사 없이 문장을 이끄는 본동사 자리이므로 과거형 mapped가 옳습니다.",
+        "등위접속사 and의 짝은 나열된 과거동사 mapped·photographed이므로 병렬을 이루는 과거형 recorded가 옳으며, recording은 틀립니다.",
+        "주어가 복수 명사 Their notes이므로 복수 동사 were가 옳습니다."
+      ],
+      "hints": [
+        "콤마로 나열된 동작들이 각각 어떤 형태로 시작하는지 표시해 보십시오.",
+        "등위접속사로 이어진 나열에서는 마지막 항도 첫 항과 같은 문법 형태를 유지해야 합니다."
+      ],
+      "explanation": "두 번째 밑줄의 짝은 and로 나열된 과거동사 mapped와 photographed입니다. 같은 주어가 한 일을 나열하는 구조이므로 세 항 모두 과거형이어야 하며, recording을 recorded로 고쳐야 합니다. 첫 밑줄은 문장의 본동사 과거형, 셋째 밑줄은 복수 주어와 일치한 동사로 모두 옳습니다."
+    },
+    {
+      "id": "u05-c2-mu-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "text": "Coaches [[1:observing]] the weekly drills [[2:praise]] a steady improvement: the training program has made its graduates not only calmer under pressure but also [[3:quickly]] in their responses to emergencies.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "quicker",
+      "rationales": [
+        "코치들이 훈련을 지켜보는 주체이므로 명사 Coaches를 꾸미는 현재분사 observing이 옳습니다.",
+        "주어의 핵은 복수 Coaches이고 observing the weekly drills는 수식어이므로 복수 동사 praise가 옳습니다.",
+        "상관접속사 not only A but also B에서 A 자리의 형용사 비교급 calmer와 짝을 이루어야 하므로 형용사 quicker가 옳으며, 부사 quickly는 틀립니다."
+      ],
+      "hints": [
+        "not only와 but also가 각각 어떤 형태의 말을 데리고 있는지 나란히 놓고 비교해 보십시오.",
+        "상관접속사 병렬에서는 A 자리의 품사와 형태를 B 자리가 그대로 따라야 합니다."
+      ],
+      "explanation": "made의 목적격 보어 자리에서 not only 뒤에는 형용사 비교급 calmer가 왔으므로, but also 뒤도 같은 형태의 형용사 비교급이어야 합니다. 따라서 quickly를 quicker로 고쳐야 합니다. 부사는 보어 자리에 설 수 없고 상관접속사 병렬의 형태도 어긋납니다. 첫 밑줄은 능동의 수식 분사, 둘째 밑줄은 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c3-mu-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["shared-aux"],
+      "text": "The catalog, [[1:updated]] every month, [[2:lists]] all new acquisitions. Visitors can request rare volumes at the desk or [[3:browsed]] the digital copies from home.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "browse",
+      "rationales": [
+        "목록은 갱신되는 대상이므로 과거분사 updated가 옳습니다.",
+        "주어의 핵은 단수 The catalog이고 콤마 사이 분사구는 삽입 수식어이므로 단수 동사 lists가 옳습니다.",
+        "조동사 can의 힘이 or 뒤 항까지 미치므로 request와 병렬인 원형 browse가 옳으며, 과거형 browsed는 틀립니다."
+      ],
+      "hints": [
+        "or 앞뒤의 두 동작이 어떤 조동사에 함께 걸려 있는지 확인해 보십시오.",
+        "앞 항의 조동사가 뒤 항에 공유되는 병렬에서는 뒤 항도 원형이어야 합니다."
+      ],
+      "explanation": "세 번째 밑줄은 can request ... or ___ 구조로, 조동사 can이 or 뒤 항까지 공유됩니다. 따라서 request와 같은 원형이 필요하며 browsed를 browse로 고쳐야 합니다. 첫 밑줄은 갱신되는 대상의 과거분사, 둘째 밑줄은 삽입 분사구를 걷어낸 단수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c4-mu-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "text": "Sessions [[1:designed]] for beginners [[2:last]] about forty minutes. In each one, the therapist helps clients by naming their fears and [[3:describe]] them in plain words.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "describing",
+      "rationales": [
+        "수업은 초보자를 위해 설계되는 대상이므로 과거분사 designed가 옳습니다.",
+        "주어의 핵은 복수 Sessions이고 designed for beginners는 수식어이므로 복수 동사 last가 옳습니다.",
+        "전치사 by가 and 뒤 항까지 공유되므로 naming과 병렬인 동명사 describing이 옳으며, 원형 describe는 틀립니다."
+      ],
+      "hints": [
+        "and 앞의 첫 항이 어떤 전치사의 목적어인지 되짚어 보십시오.",
+        "전치사가 공유되는 병렬에서는 뒤 항도 동명사여야 합니다."
+      ],
+      "explanation": "세 번째 밑줄의 짝은 전치사 by의 목적어인 동명사 naming입니다. by의 힘이 and 뒤 항까지 미치므로 describe를 describing으로 고쳐야 합니다. 원형이 오면 전치사의 목적어 자리가 성립하지 않습니다. 첫 밑줄은 설계되는 대상의 과거분사, 둘째 밑줄은 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c1-mu-005",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["distant-parallel", "coord-pair"],
+      "text": "The committee reviewed the flood records for nearly a decade and, after a long and cautious debate, [[1:approving]] a stricter building code. The code [[2:applies]] to every structure [[3:built]] within the river basin.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "approved",
+      "rationales": [
+        "등위접속사 and의 짝은 삽입 부사구 너머의 본동사 reviewed이므로 과거형 approved가 옳으며, approving은 틀립니다.",
+        "주어가 단수 The code이므로 단수 동사 applies가 옳습니다.",
+        "구조물은 지어지는 대상이므로 과거분사 built가 옳습니다."
+      ],
+      "hints": [
+        "and 바로 앞 단어가 아니라, 접속사 뒤 항과 역할이 같은 짝을 문장 앞쪽에서 찾아보십시오.",
+        "접속사와 짝 사이에 낀 부사구는 괄호로 묶고, 나열된 두 항의 형태가 일치하는지 판단합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 짝은 and 바로 앞의 debate가 아니라 문장 앞쪽의 본동사 reviewed입니다. after a long and cautious debate는 삽입 부사구이므로 걷어내면 reviewed ... and ___ 구조가 남고, 과거형 approved로 고쳐야 병렬이 완성됩니다. 둘째 밑줄은 단수 주어와 일치한 동사, 셋째 밑줄은 지어지는 대상의 과거분사로 옳습니다."
+    },
+    {
+      "id": "u05-c2-mu-006",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "clause-subject"],
+      "text": "What worries valley farmers most [[1:is]] the rising cost of fuel [[2:delivered]] by coastal barges. They either sell their grain at the autumn market or [[3:storing]] it in sheds until prices recover.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "store",
+      "rationales": [
+        "What이 이끄는 명사절 주어는 단수 취급하므로 단수 동사 is가 옳습니다.",
+        "연료는 바지선으로 운반되는 대상이므로 과거분사 delivered가 옳습니다.",
+        "상관접속사 either A or B에서 A 자리의 현재동사 sell과 짝을 이루어야 하므로 store가 옳으며, storing은 틀립니다."
+      ],
+      "hints": [
+        "either가 데리고 있는 첫 항의 동사 형태를 먼저 확정한 뒤, or 뒤 항과 나란히 비교해 보십시오.",
+        "상관접속사 병렬에서 A와 B는 같은 문법 형태여야 합니다."
+      ],
+      "explanation": "세 번째 밑줄은 either sell ... or ___ 구조로, A 자리에 현재동사 sell이 왔으므로 B 자리도 같은 형태여야 합니다. 따라서 storing을 store로 고쳐야 합니다. 첫 밑줄은 what 명사절 주어에 일치한 단수 동사이고, 둘째 밑줄은 운반되는 대상의 과거분사로 옳습니다."
+    },
+    {
+      "id": "u05-c3-mu-007",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "ed-ambiguity"],
+      "text": "Curators [[1:believe]] the pigments [[2:analyzed]] last year [[3:reveal]] a lost workshop tradition. Over the past decade the museum has restored the faded mural and [[4:display]] it under filtered light.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "displayed",
+      "rationales": [
+        "주어가 복수 Curators이므로 복수 동사 believe가 옳습니다.",
+        "뒤에 본동사 reveal이 따로 있으므로 이 자리는 수식어이고, 안료는 분석되는 대상이므로 과거분사 analyzed가 옳습니다.",
+        "believe 뒤 절의 주어 핵은 복수 the pigments이고 analyzed last year는 수식어이므로 복수 동사 reveal이 옳습니다.",
+        "조동사 has의 힘이 and 뒤 항까지 미치므로 restored와 병렬인 과거분사 displayed가 옳으며, 원형 display는 틀립니다."
+      ],
+      "hints": [
+        "and 앞 항이 어떤 조동사와 함께 완료형을 이루고 있는지 확인해 보십시오.",
+        "have류 조동사가 공유되는 병렬에서는 뒤 항도 같은 분사 형태여야 합니다."
+      ],
+      "explanation": "네 번째 밑줄은 has restored ... and ___ 구조로, 조동사 has가 and 뒤 항까지 공유됩니다. 따라서 restored와 같은 과거분사 형태가 필요하며 display를 displayed로 고쳐야 합니다. 둘째 밑줄은 본동사처럼 보이지만 뒤에 reveal이 있으므로 분석되는 대상을 꾸미는 과거분사이고, 셋째 밑줄은 수식어를 걷어낸 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c4-mu-008",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["comparison-parallel"],
+      "text": "For most beginners, reading a musical score slowly is far more useful than [[1:to rush]] through it at full speed. Teachers [[2:convinced]] of this principle [[3:assign]] only short passages at first.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "rushing",
+      "rationales": [
+        "비교 병렬의 짝은 문장 첫머리의 동명사구 reading a musical score slowly이므로 동명사 rushing이 옳으며, to부정사는 틀립니다.",
+        "교사들은 이 원리를 확신하게 된 쪽이므로 과거분사 convinced가 옳습니다.",
+        "주어의 핵은 복수 Teachers이고 convinced of this principle은 수식어이므로 복수 동사 assign이 옳습니다."
+      ],
+      "hints": [
+        "than 앞에서 비교되고 있는 항이 문장의 어디에서 어떤 형태로 시작하는지 찾아보십시오.",
+        "than 비교 병렬에서는 비교되는 양쪽 항의 문법 형태를 일치시킵니다."
+      ],
+      "explanation": "첫 번째 밑줄이 속한 문장은 reading ... is far more useful than ___ 구조로, 비교되는 짝이 문장 첫머리의 동명사구 주어입니다. 양쪽 형태를 일치시켜야 하므로 to rush를 rushing으로 고쳐야 합니다. 둘째 밑줄은 확신을 갖게 된 쪽의 과거분사, 셋째 밑줄은 수식어를 걷어낸 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c1-mu-009",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair"],
+      "text": "The station's sensors track wind speed, [[1:measure]] the salt content of the spray, and [[2:sending]] hourly reports to the mainland. Each report [[3:contains]] a brief forecast [[4:written]] by the duty officer.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "send",
+      "rationales": [
+        "나열의 첫 항인 현재동사 track과 병렬을 이루는 현재형 measure가 옳습니다.",
+        "track·measure와 병렬을 이루는 나열의 마지막 항이므로 현재형 send가 옳으며, sending은 틀립니다.",
+        "Each가 붙은 주어는 단수 취급하므로 단수 동사 contains가 옳습니다.",
+        "예보는 당직 장교에 의해 작성되는 대상이므로 과거분사 written이 옳습니다."
+      ],
+      "hints": [
+        "콤마로 이어진 세 동작이 모두 같은 주어의 동사인지 확인해 보십시오.",
+        "세 항 이상의 나열에서는 마지막 항일수록 첫 항으로 되돌아가 형태를 대조해야 합니다."
+      ],
+      "explanation": "두 번째 밑줄은 track, measure, and ___로 이어지는 세 항 나열의 마지막 항입니다. 주어 The station's sensors의 동사가 나열되는 구조이므로 sending을 send로 고쳐야 병렬이 완성됩니다. 첫 밑줄은 track과 병렬인 옳은 현재형이고, 셋째 밑줄은 Each의 단수 일치, 넷째 밑줄은 작성되는 대상의 과거분사로 옳습니다."
+    },
+    {
+      "id": "u05-c1-mu-010",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["distant-parallel", "inserted-clause"],
+      "text": "The historian spent years tracing how the canal, [[1:financed]] by rival merchant families, transformed the region's trade and, in ways few contemporaries could have foreseen, [[2:weakening]] the old river ports. Her conclusions [[3:rest]] on shipping ledgers [[4:preserved]] in three separate archives, and each ledger [[5:records]] tolls with remarkable care.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "weakened",
+      "rationales": [
+        "운하는 상인 가문들에게서 자금을 지원받는 대상이므로 과거분사 financed가 옳습니다.",
+        "등위접속사 and의 짝은 삽입 부사구 너머의 과거동사 transformed이므로 과거형 weakened가 옳으며, weakening은 틀립니다.",
+        "주어가 복수 Her conclusions이므로 복수 동사 rest가 옳습니다.",
+        "장부는 문서고에 보존되는 대상이므로 과거분사 preserved가 옳습니다.",
+        "each ledger는 단수 취급하므로 단수 동사 records가 옳습니다."
+      ],
+      "hints": [
+        "and 뒤 항의 형태를 먼저 확정하고, 같은 역할을 하는 짝을 삽입구 앞쪽에서 찾아보십시오.",
+        "접속사와 짝 사이에 낀 부사구는 괄호로 묶고, 나열된 두 항의 형태가 일치하는지 판단합니다."
+      ],
+      "explanation": "두 번째 밑줄의 짝은 how절 안의 과거동사 transformed인데, 사이에 in ways few contemporaries could have foreseen이라는 부사구가 삽입되어 짝이 멀어졌습니다. 삽입구를 걷어내면 transformed ... and ___ 구조가 남으므로 weakening을 weakened로 고쳐야 합니다. 첫째·넷째 밑줄은 각각 자금을 받고 보존되는 대상의 과거분사, 셋째 밑줄은 복수 주어 일치, 다섯째 밑줄은 each의 단수 일치로 옳습니다."
+    },
+    {
+      "id": "u05-c3-mu-011",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "text": "Donors [[1:impressed]] by the first phase [[2:have pledged]] further support. The charity now intends to dig new wells across the district, [[3:train]] local technicians to maintain them, and [[4:equipping]] each site with solar pumps.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "equip",
+      "rationales": [
+        "기부자들은 감명을 받은 쪽이므로 과거분사 impressed가 옳습니다.",
+        "주어의 핵은 복수 Donors이고 impressed by the first phase는 수식어이므로 복수 완료형 have pledged가 옳습니다.",
+        "앞의 to가 공유되는 to부정사 병렬에서 두 번째 to는 생략할 수 있으므로 원형 train은 옳은 형태입니다.",
+        "to dig·train과 병렬을 이루는 나열의 마지막 항이므로 원형 equip이 옳으며, equipping은 틀립니다."
+      ],
+      "hints": [
+        "나열된 세 동작이 모두 어떤 to에 걸려 있는지 앞쪽으로 되짚어 보십시오.",
+        "to부정사 병렬에서 뒤 항은 to를 반복하거나 생략한 원형이어야 하며, 다른 형태가 오면 병렬이 깨집니다."
+      ],
+      "explanation": "네 번째 밑줄은 intends to dig ..., train ..., and ___ 구조로, 첫 항의 to가 세 항 모두에 공유됩니다. 따라서 마지막 항도 원형이어야 하며 equipping을 equip으로 고쳐야 합니다. 셋째 밑줄의 train은 홀로 선 원형처럼 보이지만 to가 생략된 옳은 병렬입니다. 첫 밑줄은 감명을 받은 쪽의 과거분사, 둘째 밑줄은 복수 주어와 일치한 완료형으로 옳습니다."
+    },
+    {
+      "id": "u05-c2-mu-012",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["correlative", "prep-gerund"],
+      "text": "Critics [[1:alarmed]] by the pace of change [[2:admit]] that the city, once [[3:dismissed]] as unmanageable, now functions smoothly. The reform succeeded not only in lowering the cost of housing but also [[4:to widen]] access to public transit.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "in widening",
+      "rationales": [
+        "비판자들은 변화의 속도에 놀람을 느끼는 쪽이므로 과거분사 alarmed가 옳습니다.",
+        "주어의 핵은 복수 Critics이고 alarmed by the pace of change는 수식어이므로 복수 동사 admit이 옳습니다.",
+        "도시는 감당 불가능하다고 치부되던 대상이므로 과거분사 dismissed가 옳습니다.",
+        "not only 뒤가 in+동명사(in lowering)이므로 but also 뒤도 같은 형태인 in widening이 옳으며, to widen은 틀립니다."
+      ],
+      "hints": [
+        "not only 바로 뒤에 어떤 형태의 말이 시작되는지 확인하고, but also 뒤와 나란히 비교해 보십시오.",
+        "신호어 바로 뒤에서 A의 형태를 확정하면 B가 따라야 할 형태도 그대로 정해집니다."
+      ],
+      "explanation": "네 번째 밑줄은 succeeded not only in lowering ... but also ___ 구조입니다. 신호어 not only 바로 뒤에 전치사구 in lowering이 왔으므로 but also 뒤도 in+동명사 형태여야 하며, to widen을 in widening으로 고쳐야 합니다. 첫째·셋째 밑줄은 각각 놀람을 느끼는 쪽과 치부되는 대상의 과거분사, 둘째 밑줄은 수식어를 걷어낸 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u05-c1-ps-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "partitive", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Astronomers rarely observe a distant planet directly; instead, they watch its star with extraordinary patience. When the planet crosses the star's face, a small fraction of the starlight [[1:passes]] through the planet's atmosphere on its way to our telescopes. Instruments aboard orbiting observatories split this filtered light into a spectrum, compare the pattern with the star's ordinary output, and [[2:identifying]] the faint chemical fingerprints that water vapor leaves behind. Before anyone announces a discovery, dozens of crossings must [[3:be recorded]], because the signal [[4:buried]] in stellar noise is astonishingly weak. Still, the method has matured rapidly, and the list of planets with known atmospheres [[5:continues]] to grow each year.",
+      "answer": 2,
+      "correction": "identify",
+      "rationales": [
+        "부분 표현 a small fraction of는 of 뒤 명사로 수를 정하는데 the starlight가 단수이므로 단수 동사 passes가 옳습니다.",
+        "등위접속사 and의 짝은 나열된 현재동사 split·compare이므로 병렬을 이루는 identify가 옳으며, identifying은 틀립니다.",
+        "횡단 기록은 관측되어 쌓이는 대상이므로 수동태 be recorded가 옳습니다.",
+        "신호는 항성 잡음 속에 묻히는 대상이므로 과거분사 buried가 옳습니다.",
+        "주어의 핵은 단수 the list이고 of planets with known atmospheres는 수식어이므로 단수 동사 continues가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u05", "u03", "u04", "u02"],
+      "gist": "외계 행성 대기의 성분을 별빛 스펙트럼 분석으로 알아내는 관측 방법을 설명하는 글입니다.",
+      "hints": [
+        "콤마로 나열된 동작들의 주어가 무엇인지, 각 항이 어떤 형태로 시작하는지 표시해 보십시오.",
+        "등위접속사로 이어진 나열에서는 마지막 항도 첫 항과 같은 문법 형태를 유지해야 합니다."
+      ],
+      "explanation": "②의 짝은 주어 Instruments가 하는 일로 나열된 현재동사 split과 compare입니다. and로 이어진 나열의 마지막 항도 같은 형태여야 하므로 identifying을 identify로 고쳐야 합니다. -ing형은 나열의 한 항으로서 본동사 역할을 할 수 없습니다. ⑤는 바로 앞의 복수 명사들에 끌리기 쉽지만 주어 핵이 단수 the list이므로 옳은 밑줄입니다."
+    },
+    {
+      "id": "u05-c2-ps-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "the-number-of"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Why do some people keep their New Year resolutions while others abandon them within weeks? Psychologists [[1:studying]] this question have reached a conclusion that upsets popular wisdom. Highly disciplined people do not fight temptation more heroically; instead, they design their daily routines so that temptation rarely [[2:arises]] at all. In one large study, students with the best academic habits not only chose quiet places to work but also [[3:removing]] their phones from the room entirely. The number of willpower battles they reported [[4:was]] strikingly small. Discipline, the researchers argue, is less a heroic act of resistance than a quiet skill of arranging one's life, a skill [[5:practiced]] until it feels effortless.",
+      "answer": 3,
+      "correction": "removed",
+      "rationales": [
+        "심리학자들이 이 질문을 연구하는 주체이므로 현재분사 studying이 옳습니다.",
+        "arise는 목적어를 갖지 않는 자동사여서 수동태가 불가능하므로 능동 단수형 arises가 옳습니다.",
+        "상관접속사 not only A but also B에서 A 자리의 과거동사 chose와 짝을 이루어야 하므로 과거형 removed가 옳으며, removing은 틀립니다.",
+        "the number of 뒤에 복수 명사가 와도 주어 핵은 단수 the number이므로 단수 동사 was가 옳습니다.",
+        "기술은 힘들이지 않게 느껴질 때까지 연마되는 대상이므로 과거분사 practiced가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u03", "u05", "u02", "u04"],
+      "gist": "자기 절제력이 높은 사람들은 유혹에 맞서기보다 유혹이 생기지 않도록 환경을 설계한다는 연구 결과를 소개하는 글입니다.",
+      "hints": [
+        "not only가 데리고 있는 첫 항의 동사 형태를 확정한 뒤, but also 뒤 항과 나란히 비교해 보십시오.",
+        "상관접속사 병렬에서 A와 B는 같은 문법 형태여야 합니다."
+      ],
+      "explanation": "③은 not only chose ... but also ___ 구조로, A 자리에 과거동사 chose가 왔으므로 B 자리도 과거형이어야 합니다. 따라서 removing을 removed로 고쳐야 합니다. ②는 수동으로 고치고 싶어지는 자리이지만 자동사 arise는 수동태로 쓸 수 없어 옳고, ④는 복수 battles가 아니라 단수 핵 the number에 일치한 옳은 밑줄입니다."
+    },
+    {
+      "id": "u05-c3-ps-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Sociologists have begun to describe the public library as social infrastructure, a term once [[1:reserved]] for roads and power grids. On hot summer afternoons a busy branch [[2:shelters]] elderly patrons who have nowhere else to cool down, and during exam season its study rooms [[3:fill]] with anxious teenagers. A well-run branch can also host language classes for newcomers, offer free tax advice in the spring, or [[4:lending]] meeting rooms to neighborhood groups at no charge. Because what such a building provides [[5:is]] difficult to count, budget committees often undervalue it; yet when branches close, the loss of everyday contact among neighbors becomes visible almost immediately.",
+      "answer": 4,
+      "correction": "lend",
+      "rationales": [
+        "그 용어는 도로와 전력망에 한정되어 쓰이던 대상이므로 과거분사 reserved가 옳습니다.",
+        "주어가 단수 a busy branch이므로 단수 동사 shelters가 옳습니다.",
+        "주어가 복수 its study rooms이므로 복수 동사 fill이 옳습니다.",
+        "조동사 can의 힘이 or 뒤 항까지 미치므로 host·offer와 병렬인 원형 lend가 옳으며, lending은 틀립니다.",
+        "what이 이끄는 명사절 주어는 단수 취급하므로 단수 동사 is가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u02", "u02", "u05", "u02"],
+      "gist": "공공 도서관이 도로처럼 사회 기반 시설의 역할을 하며 이웃 간의 일상적 연결을 지탱한다는 점을 설명하는 글입니다.",
+      "hints": [
+        "or로 이어진 나열이 어떤 조동사에서 시작되는지 앞쪽으로 되짚어 보십시오.",
+        "앞 항의 조동사가 공유되는 병렬에서는 나열된 모든 항이 원형이어야 합니다."
+      ],
+      "explanation": "④의 나열은 can also host ..., offer ..., or ___ 구조로, 조동사 can이 세 항 모두에 공유됩니다. 따라서 마지막 항도 원형이어야 하며 lending을 lend로 고쳐야 합니다. ⑤는 절이 주어여서 복잡해 보이지만 what 명사절 주어는 단수 취급하므로 옳은 밑줄이고, ③은 복수 주어 rooms에 일치한 옳은 동사입니다."
+    },
+    {
+      "id": "u05-c4-ps-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["comparison-parallel", "prep-gerund", "ed-ambiguity"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Historians of everyday life face a stubborn obstacle: most ordinary people in the past [[1:left]] behind no diaries or letters. Their houses have vanished, and the few documents [[2:mentioning]] them were drafted by officials with entirely different concerns. Recent scholarship has answered this silence by setting household inventories beside tax rolls and [[3:comparing]] what families owned with what they owed. From a modest list of pots, looms, and bedding, a careful reader [[4:reconstructs]] the rhythm of a working household. The task is admittedly slow; recovering a weaver's daily routine from such scraps takes far longer than [[5:to summarize]] a royal chronicle. Yet these patient reconstructions restore lives that older histories simply ignored.",
+      "answer": 5,
+      "correction": "summarizing",
+      "rationales": [
+        "이 문장에 다른 본동사가 없으므로 left는 과거형 본동사이며 옳습니다.",
+        "문서가 사람들을 언급하는 주체이므로 현재분사 mentioning이 옳습니다.",
+        "전치사 by가 and 뒤 항까지 공유되므로 setting과 병렬인 동명사 comparing이 옳습니다.",
+        "주어가 단수 a careful reader이므로 단수 동사 reconstructs가 옳습니다.",
+        "비교 병렬의 짝은 문장 첫머리의 동명사구 recovering ...이므로 동명사 summarizing이 옳으며, to부정사는 틀립니다."
+      ],
+      "underlineUnits": ["u01", "u04", "u05", "u02", "u05"],
+      "gist": "일반 민중의 기록이 없는 상황에서 역사가들이 가계 재산 목록 등으로 일상사를 복원하는 방법을 설명하는 글입니다.",
+      "hints": [
+        "than 앞에서 비교되는 항이 문장의 어디에서 어떤 형태로 시작하는지 찾아보십시오.",
+        "than 비교 병렬에서는 비교되는 양쪽 항의 문법 형태를 일치시켜야 합니다."
+      ],
+      "explanation": "⑤가 속한 문장은 recovering ... takes far longer than ___ 구조로, 비교되는 짝이 문장 첫머리의 동명사구 주어입니다. 양쪽 형태를 일치시켜야 하므로 to summarize를 summarizing으로 고쳐야 합니다. ③은 and 뒤의 -ing이 어색해 보일 수 있으나 전치사 by가 공유되는 옳은 병렬이고, ①은 과거분사처럼 보여도 이 문장의 본동사인 과거형입니다."
+    },
+    {
+      "id": "u05-c1-ps-005",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["distant-parallel", "gerund-subject", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "In the 1980s the restorers of a celebrated fresco cycle stripped away centuries of candle smoke and varnish and, to the alarm of many critics, [[1:revealing]] colors so vivid that some viewers doubted the painter had ever chosen them. The dispute [[2:divided]] the art world for a decade. Defenders insisted that every darkened layer [[3:removed]] by the team had been added by later restorers, and chemical analysis of the pigment samples still [[4:supports]] their case today. Skeptics replied that the harsh brightness flattened the figures the painter had modeled so carefully. Whatever one's verdict, the episode reminds museums that cleaning a masterpiece and interpreting it [[5:are]] inseparable acts, never to be assigned to separate committees again.",
+      "answer": 1,
+      "correction": "revealed",
+      "rationales": [
+        "등위접속사 and의 짝은 삽입 부사구 너머의 과거동사 stripped이므로 과거형 revealed가 옳으며, revealing은 틀립니다.",
+        "주어 The dispute에 대응하는 본동사 자리이므로 과거형 divided가 옳습니다.",
+        "덧칠된 층은 복원팀에 의해 제거되는 대상이므로 과거분사 removed가 옳습니다.",
+        "주어의 핵은 단수 chemical analysis이고 of the pigment samples는 수식어이므로 단수 동사 supports가 옳으며, still과 today가 현재의 사실임을 밝혀 주므로 현재시제도 자연스럽습니다.",
+        "and로 연결된 두 개의 동명사구가 주어이므로 복수 동사 are가 옳습니다."
+      ],
+      "underlineUnits": ["u05", "u01", "u04", "u02", "u02"],
+      "gist": "프레스코화 복원 논쟁을 통해 작품의 세척과 해석이 분리될 수 없는 작업임을 보여 주는 글입니다.",
+      "hints": [
+        "밑줄 앞의 and가 무엇과 무엇을 잇는지, 삽입된 구를 걷어내고 짝을 찾아보십시오.",
+        "접속사와 짝 사이에 낀 부사구는 괄호로 묶고, 나열된 항끼리 형태가 일치하는지 판단합니다."
+      ],
+      "explanation": "①의 and는 본동사 stripped와 다음 항을 잇는데, 사이에 to the alarm of many critics라는 부사구가 삽입되어 짝이 멀어졌습니다. 나열된 두 항은 같은 형태여야 하므로 revealing을 revealed로 고쳐야 합니다. ⑤는 동명사구 주어라 단수로 고치고 싶어지지만 and로 연결된 두 개의 동명사구 주어이므로 복수 are가 옳은 고난도 미끼입니다."
+    },
+    {
+      "id": "u05-c2-ps-006",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["correlative", "coord-pair", "intransitive-passive"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coastal wetlands were long dismissed as useless ground, drained for farmland or [[1:filled]] for construction whenever a growing city wanted room. The reversal of that judgment [[2:owes]] much to decades of patient field measurement. Engineers now recognize that a healthy salt marsh not only shields the shoreline from storm surges but also [[3:filtering]] agricultural runoff before it reaches open water. Meanwhile, the nutrients [[4:trapped]] in marsh mud nourish young fish, and carbon [[5:accumulates]] in the sediment far faster than in most forest soils. Restoring a drained marsh is expensive, yet coastal cities on three continents have concluded that the protection such a marsh buys is cheaper than any concrete alternative.",
+      "answer": 3,
+      "correction": "filters",
+      "rationales": [
+        "drained와 or로 병렬된 같은 과거분사 형태이므로 filled가 옳습니다.",
+        "주어의 핵은 단수 The reversal이고 of that judgment는 수식어이므로 단수 동사 owes가 옳습니다.",
+        "상관접속사 not only A but also B에서 A 자리의 현재동사 shields와 짝을 이루어야 하므로 filters가 옳으며, filtering은 틀립니다.",
+        "영양분은 갯벌 진흙에 갇히는 대상이므로 과거분사 trapped가 옳습니다.",
+        "accumulate는 목적어를 갖지 않는 자동사여서 수동태가 불가능하므로 능동 단수형 accumulates가 옳습니다."
+      ],
+      "underlineUnits": ["u05", "u02", "u05", "u04", "u03"],
+      "gist": "쓸모없는 땅으로 여겨지던 해안 습지가 해안 보호와 오염 정화 등 값진 기능을 한다는 재평가를 소개하는 글입니다.",
+      "hints": [
+        "not only 바로 뒤 동사의 형태를 확정한 뒤, but also 뒤 항이 그 형태를 따르는지 확인해 보십시오.",
+        "상관접속사 병렬에서 A 자리의 동사 형태가 B 자리의 형태를 결정합니다."
+      ],
+      "explanation": "③은 not only shields ... but also ___ 구조로, A 자리의 3인칭 단수 현재동사 shields와 짝을 이루어야 합니다. 따라서 filtering을 filters로 고쳐야 합니다. ①은 홀로 보면 어색해 보이지만 drained or filled로 병렬된 옳은 과거분사이고, ⑤는 수동으로 고치고 싶어지는 자리이지만 자동사 accumulate는 수동태로 쓸 수 없습니다."
+    },
+    {
+      "id": "u05-c3-ps-007",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["shared-aux", "clause-subject", "inserted-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Economists once believed that households judge inflation by consulting official statistics. Decades of survey research, much of it [[1:conducted]] in volatile periods, have punctured that belief and [[2:showing]] that people rely instead on the handful of prices they meet each week. Milk, fuel, and rent [[3:carry]] enormous weight in this private arithmetic, while durable goods barely register. The bias matters for policy: a family convinced that inflation is severe will demand higher wages, cut back on small luxuries, or [[4:delay]] a home purchase, and each of these responses feeds the very pressure the family fears. What a central bank announces, some researchers conclude, [[5:matters]] far less than what the nearest supermarket charges.",
+      "answer": 2,
+      "correction": "shown",
+      "rationales": [
+        "조사가 수행되는 대상이므로 과거분사 conducted가 옳습니다.",
+        "조동사 have의 힘이 and 뒤 항까지 미치므로 punctured와 병렬인 과거분사 shown이 옳으며, showing은 틀립니다.",
+        "Milk, fuel, and rent가 and로 연결된 복수 주어이므로 복수 동사 carry가 옳습니다.",
+        "조동사 will이 demand·cut과 함께 뒤 항까지 공유되므로 원형 delay는 옳은 형태입니다.",
+        "what이 이끄는 명사절 주어는 삽입절을 걷어내면 단수 취급하므로 단수 동사 matters가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u05", "u02", "u05", "u02"],
+      "gist": "가계는 공식 통계가 아니라 일상적으로 접하는 가격으로 물가 상승을 판단하며, 이 편향이 정책에 중요하다는 글입니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사와 함께 완료형을 이루고 있는지 확인해 보십시오.",
+        "have류 조동사가 공유되는 병렬에서는 뒤 항도 같은 분사 형태여야 합니다."
+      ],
+      "explanation": "②가 속한 문장의 뼈대는 Decades of survey research have punctured ... and ___ 구조입니다. 조동사 have가 뒤 항까지 공유되므로 punctured와 같은 과거분사 형태가 필요하며, showing을 shown으로 고쳐야 합니다. ④는 홀로 선 원형처럼 보이지만 will demand ..., cut ..., or delay로 조동사가 공유되는 옳은 미끼이고, ⑤는 삽입절 some researchers conclude를 걷어내면 what 명사절 주어에 일치한 단수 동사입니다."
+    },
+    {
+      "id": "u05-c4-ps-008",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["prep-gerund", "coord-pair", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Streaming platforms often describe their recommendation engines as neutral mirrors of audience taste. The description is flattering but incomplete. An engine [[1:refined]] through millions of daily experiments does more than observe preferences; in practice, viewers are rarely [[2:shown]] more than a sliver of the full catalog. What appears on the opening screen [[3:determines]] much of what gets watched, and the engine profits both from measuring attention and from [[4:steering]] it. Critics argue that such systems serve their owners chiefly by narrowing the menu of visible options and [[5:to nudge]] viewers toward titles that are inexpensive to license. Regulators, at the very least, deserve a clearer view of how the mirror is built.",
+      "answer": 5,
+      "correction": "nudging",
+      "rationales": [
+        "추천 엔진은 실험을 통해 정교해지는 대상이므로 과거분사 refined가 옳습니다.",
+        "4형식 동사 show의 수동태로, 수동태 뒤에 직접목적어가 남을 수 있으므로 are shown이 옳습니다.",
+        "what이 이끄는 명사절 주어는 단수 취급하므로 단수 동사 determines가 옳습니다.",
+        "both from A and from B로 전치사가 반복된 병렬이므로 measuring과 짝을 이루는 동명사 steering이 옳습니다.",
+        "전치사 by가 and 뒤 항까지 공유되므로 narrowing과 병렬인 동명사 nudging이 옳으며, to부정사는 틀립니다."
+      ],
+      "underlineUnits": ["u04", "u03", "u02", "u05", "u05"],
+      "gist": "스트리밍 추천 알고리즘이 취향의 중립적 거울이 아니라 보이는 선택지를 좁혀 시청을 유도한다는 비판을 다루는 글입니다.",
+      "hints": [
+        "and 앞의 첫 항이 어떤 전치사의 목적어인지 되짚은 뒤, and 뒤 항도 같은 전치사에 걸리는지 확인해 보십시오.",
+        "전치사가 공유되는 병렬에서는 뒤 항도 동명사여야 합니다."
+      ],
+      "explanation": "⑤의 짝은 전치사 by의 목적어인 동명사 narrowing입니다. by의 힘이 and 뒤 항까지 미치므로 to nudge를 nudging으로 고쳐야 합니다. ②는 수동태 뒤에 명사가 남아 틀려 보이지만 4형식 동사 show의 수동으로 목적어 하나가 남은 옳은 형태이고, ④는 both from ... and from ...으로 전치사가 반복된 옳은 병렬입니다."
+    }
+  ]
+}

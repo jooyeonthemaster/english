@@ -1,0 +1,822 @@
+{
+  "unitId": "u03",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u03-c1-ch-001",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["agent-omitted"],
+      "stem": "The ancient manuscript {{blank}} in a sealed jar near the river.",
+      "options": ["discovered", "was discovered"],
+      "answer": 1,
+      "translation": "그 고대 필사본은 강 근처의 봉인된 항아리 안에서 발견되었습니다.",
+      "hints": [
+        "빈칸의 주어 The ancient manuscript가 그 동작을 직접 하는 쪽인지, 당하는 쪽인지 의미 관계부터 따져 보십시오.",
+        "주어가 동작을 하는 쪽이면 능동, 받는 쪽이면 be+p.p.를 고릅니다. by 행위자가 안 보여도 수동은 성립합니다."
+      ],
+      "explanation": "주어 The ancient manuscript는 스스로 무언가를 발견하는 주체가 아니라 발견되는 대상입니다. 따라서 be+p.p. 수동인 was discovered가 옳습니다. by 행위자가 없다는 이유로 능동 discovered를 고르면, 발견의 대상인 목적어도 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["inanimate-subject", "passive-with-object"],
+      "stem": "Every spring, the research station {{blank}} thousands of migrating birds.",
+      "options": ["records", "is recorded"],
+      "answer": 0,
+      "translation": "봄마다 그 연구 기지는 수천 마리의 철새를 기록합니다.",
+      "hints": [
+        "주어가 사람이 아니라는 사실에 흔들리지 말고, 주어 the research station과 동사의 의미 관계를 보십시오.",
+        "사물 주어도 동작의 주체가 될 수 있습니다. 동사 뒤에 동작의 대상이 이어지는지도 함께 확인하십시오."
+      ],
+      "explanation": "사물 주어라고 무조건 수동이 아닙니다. 주어 the research station은 철새를 기록하는 주체이고, 동사 뒤에 목적어 thousands of migrating birds가 그대로 있으므로 능동 records가 옳습니다. is recorded를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-003",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["agent-omitted"],
+      "stem": "The replacement parts {{blank}} to the workshop two days later.",
+      "options": ["were delivered", "delivered"],
+      "answer": 0,
+      "translation": "교체 부품들은 이틀 뒤에 그 작업장으로 배송되었습니다.",
+      "hints": [
+        "주어 The replacement parts가 그 동작을 스스로 할 수 있는 대상인지 생각해 보십시오.",
+        "주어가 동작을 받는 쪽이면 be+p.p.를 고릅니다. 행위자를 밝히지 않아도 수동 문장은 완전합니다."
+      ],
+      "explanation": "부품은 스스로 배송하는 주체가 아니라 배송되는 대상이므로 be+p.p. 수동 were delivered가 옳습니다. 능동 delivered를 고르면 배송의 대상인 목적어가 없는 비문이 됩니다. by 행위자가 생략되어 있어도 수동 판단에는 영향이 없습니다."
+    },
+    {
+      "id": "u03-c1-ch-004",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["inanimate-subject", "passive-with-object"],
+      "stem": "The chart {{blank}} a clear link between sleep and memory.",
+      "options": ["is revealed", "reveals"],
+      "answer": 1,
+      "translation": "그 도표는 수면과 기억 사이의 뚜렷한 연관성을 드러냅니다.",
+      "hints": [
+        "주어 The chart와 동사의 의미 관계를 보십시오 — 도표가 무엇을 하고 있는지 생각해 보십시오.",
+        "사물 주어라는 이유만으로 수동을 고르면 안 됩니다. 동사 뒤에 이어지는 명사가 무엇인지 확인하십시오."
+      ],
+      "explanation": "주어 The chart는 연관성을 드러내는 주체이고, 동사 뒤에 목적어 a clear link가 그대로 있으므로 능동 reveals가 옳습니다. 사물이 주어니까 수동이라는 암기로 is revealed를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-005",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["agent-omitted", "intervening-pp"],
+      "stem": "The safety procedures at the chemical plant {{blank}} after the recent accident.",
+      "options": ["revised", "were revised"],
+      "answer": 1,
+      "translation": "그 화학 공장의 안전 절차는 최근의 사고 이후에 개정되었습니다.",
+      "hints": [
+        "전치사구 at the chemical plant를 괄호로 묶고, 주어 핵 The safety procedures와 동사의 관계만 보십시오.",
+        "주어가 동작을 받는 쪽이면 be+p.p.입니다. 행위자가 문장에 없어도 수동은 성립합니다."
+      ],
+      "explanation": "주어 핵은 The safety procedures이고 at the chemical plant는 수식 전치사구입니다. 절차는 스스로 개정하는 주체가 아니라 개정되는 대상이므로 were revised가 옳습니다. 능동 revised를 고르면 개정의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-006",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object"],
+      "stem": "In many coastal villages, local fishermen {{blank}} detailed records of daily catches.",
+      "options": ["keep", "are kept"],
+      "answer": 0,
+      "translation": "많은 해안 마을에서 지역 어부들은 매일의 어획량에 대한 상세한 기록을 보관합니다.",
+      "hints": [
+        "문두의 전치사구는 괄호로 묶고, 주어 local fishermen과 동사의 의미 관계를 보십시오.",
+        "동사 바로 뒤에 동작의 대상이 이어져 있는지 확인하면 태 판단이 끝납니다."
+      ],
+      "explanation": "주어 local fishermen은 기록을 보관하는 주체이고, 동사 뒤에 목적어 detailed records가 그대로 있으므로 능동 keep이 옳습니다. are kept를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다. 문두의 In many coastal villages는 장소 수식어일 뿐 태 판단과 무관합니다."
+    },
+    {
+      "id": "u03-c1-ch-007",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["agent-omitted", "intervening-pp"],
+      "stem": "The proposal for a shorter working week {{blank}} at the annual meeting.",
+      "options": ["was discussed", "discussed"],
+      "answer": 0,
+      "translation": "주당 근로 시간 단축안은 연례 회의에서 논의되었습니다.",
+      "hints": [
+        "전치사구 for a shorter working week를 걷어내고 주어 핵 The proposal과 동사의 관계를 보십시오.",
+        "주어에 하다와 되다를 각각 대입해 보고 자연스러운 쪽을 고릅니다."
+      ],
+      "explanation": "주어 핵은 The proposal이고 for a shorter working week는 수식 전치사구입니다. 제안서는 논의하는 주체가 아니라 논의되는 대상이므로 be+p.p. 수동 was discussed가 옳습니다. 능동 discussed를 고르면 논의의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-008",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["inanimate-subject", "passive-with-object", "intervening-pp"],
+      "stem": "The new sensor inside the greenhouse {{blank}} the humidity every ten minutes.",
+      "options": ["is measured", "measures"],
+      "answer": 1,
+      "translation": "온실 안의 새 감지기는 십 분마다 습도를 측정합니다.",
+      "hints": [
+        "전치사구 inside the greenhouse를 괄호로 묶고, 주어 핵과 동사 뒤의 성분을 함께 보십시오.",
+        "사물 주어도 동작의 주체가 될 수 있습니다. 동사 뒤에 동작의 대상이 남아 있으면 태는 이미 결정된 것입니다."
+      ],
+      "explanation": "주어 핵 The new sensor는 습도를 측정하는 주체이고, 동사 뒤에 목적어 the humidity가 그대로 있으므로 능동 measures가 옳습니다. 사물 주어라는 인상만으로 is measured를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-009",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["agent-omitted", "intervening-clause"],
+      "stem": "The letters that the novelist wrote to her editor during the war {{blank}} in a university archive decades later.",
+      "options": ["unearthed", "were unearthed"],
+      "answer": 1,
+      "translation": "그 소설가가 전쟁 중에 자신의 편집자에게 쓴 편지들은 수십 년 뒤 한 대학 기록 보관소에서 발굴되었습니다.",
+      "hints": [
+        "관계절 that the novelist wrote ... the war를 괄호로 묶고, 주어 핵 The letters와 빈칸 동사의 관계만 보십시오.",
+        "주어가 그 동작을 받는 쪽이면 be+p.p.입니다. 괄호 속 관계절의 동사에 이끌려 판단하면 안 됩니다."
+      ],
+      "explanation": "주어 핵은 The letters이고, that the novelist wrote to her editor during the war는 주어를 꾸미는 관계절입니다. 편지는 발굴하는 주체가 아니라 발굴되는 대상이므로 were unearthed가 옳습니다. 능동 unearthed를 고르면 발굴의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-010",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "intervening-clause"],
+      "stem": "Despite years of criticism, the ministry that oversees regional development still {{blank}} its optimistic growth forecasts each quarter.",
+      "options": ["defends", "is defended"],
+      "answer": 0,
+      "translation": "수년간의 비판에도 불구하고, 지역 개발을 관장하는 그 부처는 여전히 분기마다 자신들의 낙관적인 성장 전망을 옹호합니다.",
+      "hints": [
+        "문두 전치사구와 관계절 that oversees regional development를 괄호로 묶고, 주어 핵과 빈칸 뒤 성분을 보십시오.",
+        "동사 뒤에 동작의 대상이 그대로 이어져 있다면 태 판단은 끝난 것입니다."
+      ],
+      "explanation": "주어 핵은 the ministry이고 that oversees regional development는 수식 관계절입니다. 부처는 전망을 옹호하는 주체이고 빈칸 뒤에 목적어 its optimistic growth forecasts가 그대로 있으므로 능동 defends가 옳습니다. is defended를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-011",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause"],
+      "stem": "The controversial theory, which many reviewers initially dismissed as pure speculation, {{blank}} by two independent laboratories within a single decade.",
+      "options": ["confirmed", "was confirmed"],
+      "answer": 1,
+      "translation": "많은 심사자가 처음에는 순전한 억측으로 치부했던 그 논쟁적 이론은 십 년 안에 두 곳의 독립적인 실험실에 의해 입증되었습니다.",
+      "hints": [
+        "콤마 사이에 삽입된 관계절을 통째로 괄호로 묶고, 주어 핵 The controversial theory와 빈칸 동사만 남겨 보십시오.",
+        "빈칸 뒤의 by구는 누가 그 동작을 했는지 밝히는 표지입니다. 주어가 하는 쪽인지 당하는 쪽인지로 판단하십시오."
+      ],
+      "explanation": "콤마 사이의 which many reviewers initially dismissed as pure speculation은 삽입 관계절이므로 걷어냅니다. 주어 핵 The controversial theory는 입증하는 주체가 아니라 입증되는 대상이고, by two independent laboratories가 행위자를 밝히고 있으므로 was confirmed가 옳습니다. 능동 confirmed를 고르면 목적어 없이 by구만 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c1-ch-012",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["inanimate-subject", "passive-with-object", "intervening-clause"],
+      "stem": "The habits that children form before the age of seven often {{blank}} their attitudes toward learning for the rest of their lives.",
+      "options": ["shape", "are shaped"],
+      "answer": 0,
+      "translation": "아이들이 일곱 살 이전에 형성하는 습관은 평생에 걸쳐 학습에 대한 태도를 형성하는 경우가 많습니다.",
+      "hints": [
+        "관계절 that children form ... seven을 괄호로 묶고, 주어 핵 The habits와 빈칸 뒤의 성분을 보십시오.",
+        "추상적인 사물 주어도 동작의 주체가 될 수 있습니다. 빈칸 뒤에 동작의 대상이 있는지 확인하십시오."
+      ],
+      "explanation": "주어 핵은 The habits이고 that children form before the age of seven은 수식 관계절입니다. 습관은 태도를 형성하는 주체이고 빈칸 뒤에 목적어 their attitudes가 그대로 있으므로 능동 shape이 옳습니다. 사물 주어라는 인상으로 are shaped를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["passive-with-object"],
+      "stem": "Volunteers {{blank}} more than two hundred trees along the trail.",
+      "options": ["planted", "were planted"],
+      "answer": 0,
+      "translation": "자원봉사자들은 그 산책로를 따라 이백 그루가 넘는 나무를 심었습니다.",
+      "hints": [
+        "빈칸 동사 바로 뒤에 목적어가 되는 명사가 있는지 확인하십시오.",
+        "타동사 뒤에 목적어가 그대로 있으면 능동입니다."
+      ],
+      "explanation": "빈칸 뒤에 목적어 more than two hundred trees가 그대로 있으므로 능동 planted가 옳습니다. 주어 Volunteers도 나무를 심는 주체입니다. were planted를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-002",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["agent-omitted"],
+      "stem": "The missing wallet {{blank}} under a bench in the park.",
+      "options": ["found", "was found"],
+      "answer": 1,
+      "translation": "그 잃어버린 지갑은 공원 벤치 밑에서 발견되었습니다.",
+      "hints": [
+        "빈칸 동사 뒤에 목적어가 있는지, 그리고 여기가 관계절 안인지 아닌지를 확인하십시오.",
+        "타동사인데 목적어가 없고 주어가 그 동작의 대상이면 be+p.p.입니다."
+      ],
+      "explanation": "find는 타동사인데 빈칸 뒤에 목적어가 없고, 이 자리는 관계절 안도 아닙니다. 주어 The missing wallet은 발견되는 대상이므로 was found가 옳습니다. 능동 found를 고르면 발견의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-003",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["relative-gap"],
+      "stem": "The essay that the student {{blank}} won a national prize.",
+      "options": ["was submitted", "submitted"],
+      "answer": 1,
+      "translation": "그 학생이 제출한 에세이는 전국 대회에서 상을 받았습니다.",
+      "hints": [
+        "빈칸이 관계절 안에 있습니다. 관계절 안에 이미 주어가 따로 있는지 확인하십시오.",
+        "관계절에서 목적어가 선행사로 빠져나간 자리는, 목적어가 안 보여도 능동을 유지합니다."
+      ],
+      "explanation": "빈칸은 관계절 that the student ___ 안에 있고, 관계절의 주어는 the student입니다. submitted의 목적어는 선행사 The essay로 빠져나간 것이므로, 목적어가 안 보여도 능동 submitted가 옳습니다. was submitted를 고르면 주어 the student가 제출되었다는 뜻의 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["subject-relative", "agent-omitted"],
+      "stem": "The murals that {{blank}} on the library wall attracted many visitors.",
+      "options": ["were painted", "painted"],
+      "answer": 0,
+      "translation": "도서관 벽에 그려진 벽화들은 많은 방문객을 끌어모았습니다.",
+      "hints": [
+        "관계사 that 바로 뒤에 동사가 오는 구조입니다. 이때 선행사가 관계절의 어느 자리로 빠졌는지 확인하십시오.",
+        "선행사가 관계절의 주어 자리로 빠졌다면, 선행사와 동사의 의미 관계로 태를 판단합니다."
+      ],
+      "explanation": "that 바로 뒤에 동사가 오므로 선행사 The murals가 관계절의 주어 자리로 빠진 구조입니다. 벽화는 그리는 주체가 아니라 그려지는 대상이므로 수동 were painted가 옳습니다. 능동 painted를 고르면 벽화가 무언가를 그렸다는 뜻의 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-005",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "stem": "The data that the survey team {{blank}} over three summers remain difficult to interpret.",
+      "options": ["gathered", "were gathered"],
+      "answer": 0,
+      "translation": "그 조사팀이 세 번의 여름에 걸쳐 수집한 자료는 여전히 해석하기 어렵습니다.",
+      "hints": [
+        "빈칸이 관계절 안에 있고, 관계절 안에 별도의 주어가 이미 있는지 확인하십시오.",
+        "빈자리가 보이면 선행사를 목적어 자리에 되돌려 넣어 말이 되는지 확인하십시오 — 말이 되면 능동 유지입니다."
+      ],
+      "explanation": "빈칸은 관계절 that the survey team ___ over three summers 안에 있고, 관계절의 주어는 the survey team입니다. gathered의 목적어는 선행사 The data로 빠져나간 자리이므로 능동 gathered가 옳습니다. 목적어가 안 보인다는 이유로 were gathered를 고르면 조사팀이 수집되었다는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-006",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["agent-omitted", "intervening-pp"],
+      "stem": "The entrance fee for the science museum {{blank}} last year to cover the cost of new exhibits.",
+      "options": ["raised", "was raised"],
+      "answer": 1,
+      "translation": "그 과학관의 입장료는 새 전시물 비용을 충당하기 위해 작년에 인상되었습니다.",
+      "hints": [
+        "전치사구 for the science museum을 괄호로 묶고, 빈칸 뒤에 목적어가 있는지 확인하십시오.",
+        "타동사인데 목적어가 없고 관계절의 빈자리도 아니라면, 주어가 대상인지 확인해 be+p.p.를 검토하십시오."
+      ],
+      "explanation": "raise는 타동사인데 빈칸 뒤에 목적어가 없고, 이 자리는 관계절의 빈자리도 아닙니다. 주어 핵 The entrance fee는 인상되는 대상이므로 was raised가 옳습니다. 능동 raised를 고르면 인상의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-007",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object"],
+      "stem": "After the storm, engineers carefully {{blank}} every section of the old sea wall.",
+      "options": ["inspected", "were inspected"],
+      "answer": 0,
+      "translation": "폭풍이 지나간 뒤, 기술자들은 낡은 방파제의 모든 구간을 꼼꼼히 점검했습니다.",
+      "hints": [
+        "부사 carefully 뒤에 오는 빈칸 동사의 바로 뒤에 목적어가 되는 명사가 있는지 확인하십시오.",
+        "타동사 뒤에 목적어가 그대로 있으면 태 판단은 끝난 것입니다."
+      ],
+      "explanation": "빈칸 뒤에 목적어 every section of the old sea wall이 그대로 있으므로 능동 inspected가 옳습니다. 주어 engineers도 점검하는 주체입니다. were inspected를 고르면 수동 뒤에 목적어가 남는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-008",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "stem": "The candidates whom the committee {{blank}} for the final round will present next week.",
+      "options": ["were interviewed", "interviewed"],
+      "answer": 1,
+      "translation": "위원회가 최종 라운드를 위해 면접한 지원자들은 다음 주에 발표를 진행할 예정입니다.",
+      "hints": [
+        "빈칸이 관계절 안에 있습니다. 관계사 whom이 관계절의 어떤 성분을 대신해 앞으로 나갔는지 생각해 보십시오.",
+        "관계절에서 목적어가 선행사로 빠져나간 자리는 목적어가 안 보여도 능동을 유지합니다."
+      ],
+      "explanation": "빈칸은 관계절 whom the committee ___ 안에 있고, 관계절의 주어는 the committee입니다. interviewed의 목적어는 관계사 whom이 대신하여 선행사 The candidates로 빠져나갔으므로 능동 interviewed가 옳습니다. were interviewed를 고르면 위원회가 면접을 당했다는 뜻의 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-009",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["relative-gap", "intervening-pp"],
+      "stem": "The manuscripts that the librarians in the rare book room {{blank}} from water damage are now available to researchers again.",
+      "options": ["rescued", "were rescued"],
+      "answer": 0,
+      "translation": "희귀 도서실의 사서들이 수해로부터 구해 낸 필사본들은 이제 다시 연구자들에게 공개되어 있습니다.",
+      "hints": [
+        "관계절 안의 전치사구 in the rare book room을 괄호로 묶고, 관계절의 진짜 주어를 찾아 보십시오.",
+        "빈자리가 보이면 선행사를 목적어 자리에 되돌려 넣어 보십시오 — 말이 되면 능동 유지입니다."
+      ],
+      "explanation": "빈칸은 관계절 안에 있고, 관계절의 주어는 the librarians이며 in the rare book room은 수식 전치사구입니다. rescued의 목적어는 선행사 The manuscripts로 빠져나간 자리이므로 능동 rescued가 옳습니다. 목적어가 안 보인다는 이유로 were rescued를 고르면 사서들이 구조되었다는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-010",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["agent-omitted", "intervening-pp"],
+      "stem": "The recommendations submitted by the ethics panel last spring {{blank}} into the hospital's official guidelines after months of debate.",
+      "options": ["incorporated", "were incorporated"],
+      "answer": 1,
+      "translation": "지난봄 윤리 위원회가 제출한 권고안들은 수개월의 논쟁 끝에 그 병원의 공식 지침에 통합되었습니다.",
+      "hints": [
+        "분사구 submitted by the ethics panel last spring을 괄호로 묶고, 주어 핵과 빈칸 동사의 관계를 보십시오.",
+        "타동사인데 목적어가 없고 관계절의 빈자리도 아니라면, 주어가 그 동작의 대상인지 확인하십시오."
+      ],
+      "explanation": "주어 핵은 The recommendations이고 submitted by the ethics panel last spring은 주어를 꾸미는 분사구입니다. incorporate는 타동사인데 빈칸 뒤에 목적어가 없고 관계절의 빈자리도 아니며, 권고안은 지침에 통합되는 대상이므로 were incorporated가 옳습니다. 능동 incorporated를 고르면 통합의 대상인 목적어가 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-011",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["relative-gap"],
+      "stem": "The technique, which several rival laboratories {{blank}} without acknowledgment for many years, finally earned its inventor formal recognition.",
+      "options": ["copied", "was copied"],
+      "answer": 0,
+      "translation": "여러 경쟁 실험실이 오랫동안 출처를 밝히지 않고 베껴 온 그 기법은 마침내 발명자에게 공식적인 인정을 안겨 주었습니다.",
+      "hints": [
+        "빈칸이 콤마 사이에 삽입된 관계절 안에 있습니다. 그 관계절 안에 별도의 주어가 있는지 확인하십시오.",
+        "관계절에서 목적어가 관계사로 빠져나간 자리는 목적어가 안 보여도 능동을 유지합니다."
+      ],
+      "explanation": "빈칸은 삽입 관계절 which several rival laboratories ___ 안에 있고, 관계절의 주어는 several rival laboratories입니다. copied의 목적어는 관계사 which가 대신하는 선행사 The technique이므로 능동 copied가 옳습니다. was copied를 고르면 복수 주어와도 어긋나고 실험실들이 베껴졌다는 뜻의 비문이 됩니다."
+    },
+    {
+      "id": "u03-c2-ch-012",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["subject-relative", "agent-omitted"],
+      "stem": "Applications that {{blank}} after the deadline printed on the notice will not reach the review committee this year.",
+      "options": ["file", "are filed"],
+      "answer": 1,
+      "translation": "공고문에 인쇄된 마감일 이후에 접수되는 지원서는 올해 심사 위원회에 전달되지 않습니다.",
+      "hints": [
+        "관계사 that 바로 뒤에 빈칸 동사가 오는 구조입니다. 선행사가 관계절의 주어 자리로 빠졌음을 확인하십시오.",
+        "선행사가 주어 자리로 빠진 관계절에서는, 선행사와 동사의 의미 관계로 태를 판단합니다."
+      ],
+      "explanation": "that 바로 뒤에 동사가 오므로 선행사 Applications가 관계절의 주어 자리로 빠진 구조입니다. 지원서는 스스로 접수하는 주체가 아니라 접수되는 대상이므로 수동 are filed가 옳습니다. printed on the notice는 the deadline을 꾸미는 분사구일 뿐 태 판단과 무관합니다."
+    },
+    {
+      "id": "u03-c3-ch-001",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive"],
+      "stem": "Serious delays rarely {{blank}} on this railway line in winter.",
+      "options": ["occur", "are occurred"],
+      "answer": 0,
+      "translation": "이 철도 노선에서는 겨울에 심각한 지연이 거의 발생하지 않습니다.",
+      "hints": [
+        "빈칸 동사가 목적어를 가질 수 있는 동사인지부터 확인하십시오.",
+        "목적어를 갖지 않는 자동사는 수동태 자체가 성립하지 않습니다."
+      ],
+      "explanation": "occur는 목적어를 갖지 않는 자동사이므로 수동태 자체가 성립하지 않습니다. 따라서 능동 occur가 옳고, are occurred는 어떤 문맥에서도 비문입니다. 목적어가 없다는 사실은 수동의 신호가 아니라 자동사의 정상 형태입니다."
+    },
+    {
+      "id": "u03-c3-ch-002",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive"],
+      "stem": "A technical fault {{blank}} during the final systems check.",
+      "options": ["was happened", "happened"],
+      "answer": 1,
+      "translation": "최종 시스템 점검 중에 기술적 결함이 발생했습니다.",
+      "hints": [
+        "빈칸 동사가 자동사 목록(occur, happen, appear, arise, remain 계열)에 속하는지 확인하십시오.",
+        "자동사에 be+p.p.가 결합된 형태는 즉시 틀린 것으로 판단합니다."
+      ],
+      "explanation": "happen은 목적어를 갖지 않는 자동사이므로 수동태로 쓸 수 없습니다. 따라서 능동 happened가 옳습니다. 사물 주어에 목적어가 없다는 인상으로 was happened를 고르면 비문을 고르는 것입니다."
+    },
+    {
+      "id": "u03-c3-ch-003",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive"],
+      "stem": "Thick fog {{blank}} over the valley before sunrise.",
+      "options": ["was appeared", "appeared"],
+      "answer": 1,
+      "translation": "해뜨기 전에 짙은 안개가 계곡 위에 나타났습니다.",
+      "hints": [
+        "빈칸 동사가 무언가를 대상으로 삼는 동사인지, 스스로 일어나는 일을 나타내는 동사인지 구분하십시오.",
+        "목적어를 가질 수 없는 자동사는 be+p.p. 형태 자체가 불가능합니다."
+      ],
+      "explanation": "appear는 나타나다라는 뜻의 자동사로 목적어를 갖지 않으므로 수동태가 성립하지 않습니다. 따라서 능동 appeared가 옳습니다. was appeared는 문맥과 무관하게 항상 비문입니다."
+    },
+    {
+      "id": "u03-c3-ch-004",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive"],
+      "stem": "Several rare plant species {{blank}} only on this remote island.",
+      "options": ["exist", "are existed"],
+      "answer": 0,
+      "translation": "몇몇 희귀 식물 종은 오직 이 외딴섬에만 존재합니다.",
+      "hints": [
+        "빈칸 동사가 목적어를 가질 수 있는 동사인지 확인하십시오.",
+        "존재나 발생을 나타내는 자동사는 수동태로 쓸 수 없습니다."
+      ],
+      "explanation": "exist는 존재하다라는 뜻의 자동사로 목적어를 갖지 않으므로 수동태가 성립하지 않습니다. 따라서 능동 exist가 옳습니다. are existed는 어떤 문맥에서도 비문입니다."
+    },
+    {
+      "id": "u03-c3-ch-005",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "stem": "Doubts about the safety of the new material {{blank}} soon after its release.",
+      "options": ["arose", "were arisen"],
+      "answer": 0,
+      "translation": "그 신소재의 안전성에 대한 의구심은 출시 직후에 생겨났습니다.",
+      "hints": [
+        "전치사구 about the safety of the new material을 괄호로 묶고, 빈칸 동사의 성질부터 확인하십시오.",
+        "생겨나다 계열의 자동사는 목적어가 없는 것이 정상 형태이며, be+p.p.와 결합할 수 없습니다."
+      ],
+      "explanation": "arise는 생겨나다라는 뜻의 자동사이므로 수동태 자체가 성립하지 않습니다. 주어 핵 Doubts가 스스로 생겨난 것이므로 능동 과거형 arose가 옳습니다. 목적어가 안 보인다는 이유로 were arisen을 고르면 비문을 고르는 것입니다."
+    },
+    {
+      "id": "u03-c3-ch-006",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "stem": "The pain in her shoulder {{blank}} for several weeks despite the therapy sessions.",
+      "options": ["was persisted", "persisted"],
+      "answer": 1,
+      "translation": "그녀의 어깨 통증은 치료를 받았는데도 몇 주 동안 계속되었습니다.",
+      "hints": [
+        "전치사구 in her shoulder를 괄호로 묶고, 빈칸 동사가 목적어를 갖는 동사인지 확인하십시오.",
+        "지속되다 계열의 자동사는 수동태로 쓸 수 없습니다."
+      ],
+      "explanation": "persist는 계속되다라는 뜻의 자동사로 목적어를 갖지 않으므로 수동태가 성립하지 않습니다. 따라서 능동 persisted가 옳습니다. 주어가 사물이고 뒤에 목적어가 없다는 인상만으로 was persisted를 고르면 함정에 걸린 것입니다."
+    },
+    {
+      "id": "u03-c3-ch-007",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "stem": "Most of the graffiti near the station {{blank}} after the cleaning campaign.",
+      "options": ["disappeared", "was disappeared"],
+      "answer": 0,
+      "translation": "역 근처 낙서의 대부분은 청소 캠페인 이후에 사라졌습니다.",
+      "hints": [
+        "수식어 near the station을 괄호로 묶고, 빈칸 동사의 성질을 확인하십시오.",
+        "사라지다 계열의 자동사는 목적어가 없는 것이 정상이며 be+p.p.가 불가능합니다."
+      ],
+      "explanation": "disappear는 사라지다라는 뜻의 자동사이므로 수동태가 성립하지 않습니다. 캠페인 이후 낙서가 사라진 사건을 서술하는 것이므로 능동 disappeared가 옳습니다. 누군가 지웠다는 의미를 떠올려 was disappeared를 고르면 비문이 됩니다."
+    },
+    {
+      "id": "u03-c3-ch-008",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "stem": "The ceremony in honor of the retiring principal {{blank}} nearly three hours.",
+      "options": ["was lasted", "lasted"],
+      "answer": 1,
+      "translation": "퇴임하는 교장 선생님을 기리는 그 기념식은 거의 세 시간 동안 이어졌습니다.",
+      "hints": [
+        "빈칸 뒤의 nearly three hours가 목적어인지, 시간의 길이를 나타내는 부사어인지 구분해 보십시오.",
+        "지속 시간을 나타내는 자동사는 수동태로 쓸 수 없습니다."
+      ],
+      "explanation": "last는 지속되다라는 뜻의 자동사이고, 뒤의 nearly three hours는 목적어가 아니라 지속 시간을 나타내는 부사어입니다. 자동사는 수동태가 성립하지 않으므로 능동 lasted가 옳습니다. was lasted는 어떤 문맥에서도 비문입니다."
+    },
+    {
+      "id": "u03-c3-ch-009",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-clause"],
+      "stem": "Unexpected side effects that no previous trial had predicted {{blank}} when the drug was combined with common painkillers.",
+      "options": ["emerged", "were emerged"],
+      "answer": 0,
+      "translation": "이전의 어떤 시험도 예측하지 못했던 예기치 않은 부작용이 그 약을 흔한 진통제와 병용했을 때 나타났습니다.",
+      "hints": [
+        "관계절 that no previous trial had predicted를 괄호로 묶고, 주어 핵과 빈칸 동사만 남겨 보십시오.",
+        "뒤 절에 be+p.p.가 보인다고 따라 가지 말고, 빈칸 동사 자체가 수동이 가능한 동사인지부터 확인하십시오."
+      ],
+      "explanation": "주어 핵은 Unexpected side effects이고 that no previous trial had predicted는 수식 관계절입니다. emerge는 나타나다라는 뜻의 자동사이므로 수동태가 성립하지 않아 능동 emerged가 옳습니다. 뒤 절의 was combined는 타동사 combine의 정당한 수동일 뿐, 빈칸에 were emerged를 쓰면 비문이 됩니다."
+    },
+    {
+      "id": "u03-c3-ch-010",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "stem": "Protests against the water pricing plan {{blank}} in several neighboring regions as soon as the reservoir project was publicly announced.",
+      "options": ["were broken out", "broke out"],
+      "answer": 1,
+      "translation": "저수지 사업이 공식 발표되자마자 물 가격 정책에 반대하는 시위가 인접한 여러 지역에서 터져 나왔습니다.",
+      "hints": [
+        "전치사구 against the water pricing plan을 괄호로 묶고, 빈칸의 구동사가 목적어를 갖는 쓰임인지 확인하십시오.",
+        "뒤 절의 be+p.p.에 이끌리지 말고, 발생을 나타내는 구동사가 수동이 가능한지부터 판단하십시오."
+      ],
+      "explanation": "break out은 시위나 전쟁 등이 발생하다라는 뜻의 자동사 구동사이므로 수동태가 성립하지 않습니다. 주어 Protests가 스스로 터져 나온 것이므로 능동 broke out이 옳습니다. 뒤 절의 was announced는 타동사의 정당한 수동이지만, 빈칸에 were broken out을 쓰면 비문이 됩니다."
+    },
+    {
+      "id": "u03-c3-ch-011",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-clause"],
+      "stem": "Questions about who had funded the controversial excavation {{blank}} long after the official report had been published and archived.",
+      "options": ["remained", "were remained"],
+      "answer": 0,
+      "translation": "누가 그 논란 많은 발굴에 자금을 댔는지에 대한 의문은 공식 보고서가 발간되어 보관된 뒤에도 오랫동안 남아 있었습니다.",
+      "hints": [
+        "주어 뒤에 붙은 전치사구와 그 안의 의문사절을 통째로 괄호로 묶고, 주어 핵과 빈칸 동사만 보십시오.",
+        "남아 있다 계열의 자동사는 목적어가 없는 것이 정상이며 be+p.p.와 결합할 수 없습니다."
+      ],
+      "explanation": "주어 핵은 Questions이고 about who had funded the controversial excavation은 수식어입니다. remain은 남아 있다라는 뜻의 자동사이므로 수동태가 성립하지 않아 능동 remained가 옳습니다. 뒤 절의 had been published는 타동사의 정당한 완료 수동일 뿐, were remained는 비문입니다."
+    },
+    {
+      "id": "u03-c3-ch-012",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-clause", "relative-gap"],
+      "stem": "The confidence that early investors had shown in the venture {{blank}} almost overnight when the audit results became public.",
+      "options": ["was vanished", "vanished"],
+      "answer": 1,
+      "translation": "초기 투자자들이 그 벤처에 보였던 신뢰는 감사 결과가 공개되자 거의 하룻밤 사이에 사라졌습니다.",
+      "hints": [
+        "관계절 that early investors had shown in the venture를 괄호로 묶고, 주어 핵과 빈칸 동사만 남겨 보십시오.",
+        "사라지다 계열의 자동사는 수동태 자체가 성립하지 않습니다."
+      ],
+      "explanation": "주어 핵은 The confidence이고, that early investors had shown in the venture는 목적어가 선행사로 빠져나간 수식 관계절입니다. vanish는 사라지다라는 뜻의 자동사이므로 수동태가 성립하지 않아 능동 vanished가 옳습니다. 주어가 추상 명사라는 인상으로 was vanished를 고르면 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-001",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["perfect-passive", "been-being"],
+      "stem": "The winning design has {{blank}} announced on the official website.",
+      "options": ["been", "being"],
+      "answer": 0,
+      "translation": "당선작은 공식 웹사이트에 발표되었습니다.",
+      "hints": [
+        "빈칸 바로 앞의 동사가 완료를 만드는 have 계열인지, 진행을 만드는 be동사인지 확인하십시오.",
+        "완료 수동과 진행 수동은 가운데에 오는 형태가 서로 다릅니다 — 형태 공식에 이 문장을 대입해 보십시오."
+      ],
+      "explanation": "빈칸 앞에 완료를 만드는 has가 있으므로 이 자리는 완료 수동 have been p.p.의 가운데 자리입니다. 따라서 been이 옳습니다. being을 넣으면 완료와 진행의 형태가 뒤섞인 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-002",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["progressive-passive", "been-being"],
+      "stem": "The old lecture hall {{blank}} renovated this semester.",
+      "options": ["is been", "is being"],
+      "answer": 1,
+      "translation": "그 낡은 강의동은 이번 학기에 개보수되고 있습니다.",
+      "hints": [
+        "지금 진행 중인 공사를 나타내는 문장입니다. 진행과 수동이 결합할 때의 형태 공식을 떠올려 보십시오.",
+        "진행을 만드는 be동사 뒤에 오는 형태와, 완료를 만드는 have 뒤에 오는 형태는 서로 다릅니다."
+      ],
+      "explanation": "강의동은 개보수되는 대상이고 공사가 지금 진행 중이므로 진행 수동 be being p.p.가 필요합니다. 따라서 is being renovated를 만드는 is being이 옳습니다. is been은 어떤 시제 공식에도 속하지 않는 비문 형태입니다."
+    },
+    {
+      "id": "u03-c4-ch-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["modal-passive"],
+      "stem": "The samples must {{blank}} in a locked freezer overnight.",
+      "options": ["be kept", "been kept"],
+      "answer": 0,
+      "translation": "그 시료들은 밤새 잠긴 냉동고에 보관되어야 합니다.",
+      "hints": [
+        "빈칸 바로 앞에 조동사 must가 있습니다. 조동사 뒤에 올 수 있는 동사의 형태를 떠올려 보십시오.",
+        "조동사 뒤에는 반드시 동사원형이 옵니다 — 수동이라면 원형으로 시작하는 형태를 고릅니다."
+      ],
+      "explanation": "시료는 보관되는 대상이므로 수동이 필요하고, 조동사 must 뒤에는 동사원형이 와야 하므로 조동사+be p.p. 형태인 be kept가 옳습니다. been kept를 고르면 조동사 뒤에 원형이 아닌 형태가 오는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-004",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["perfect-passive"],
+      "stem": "The harbor bridge has {{blank}} twice since its construction.",
+      "options": ["repainted", "been repainted"],
+      "answer": 1,
+      "translation": "그 항구 다리는 건설된 이후 두 차례 다시 도색되었습니다.",
+      "hints": [
+        "먼저 태를 판단하십시오 — 주어 The harbor bridge가 그 동작을 하는 쪽인지 받는 쪽인지 보십시오.",
+        "완료와 수동이 결합할 때 has 뒤에 무엇이 더 필요한지 형태 공식으로 확인하십시오."
+      ],
+      "explanation": "다리는 도색하는 주체가 아니라 도색되는 대상이므로 수동이 필요합니다. 완료 수동은 have been p.p. 형태이므로 been repainted가 옳습니다. repainted만 넣으면 다리가 무언가를 칠했다는 능동 완료가 되어 목적어도 없고 의미도 어긋나는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-005",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["progressive-passive", "been-being", "intervening-pp"],
+      "stem": "A new vaccine for the seasonal virus {{blank}} tested in three countries.",
+      "options": ["is being", "is been"],
+      "answer": 0,
+      "translation": "그 계절성 바이러스에 대한 새 백신은 세 개 나라에서 시험되고 있습니다.",
+      "hints": [
+        "전치사구 for the seasonal virus를 괄호로 묶고, 주어 핵이 동작을 받는 쪽인지 확인하십시오.",
+        "진행과 수동을 결합할 때의 형태 공식을 떠올려, be동사 뒤에 올 수 있는 형태를 고르십시오."
+      ],
+      "explanation": "주어 핵 A new vaccine은 시험되는 대상이고 시험이 지금 진행 중이므로 진행 수동 be being p.p.가 필요합니다. 따라서 is being이 옳습니다. is been은 완료의 형태를 진행 자리에 잘못 끼워 넣은 비문 형태입니다."
+    },
+    {
+      "id": "u03-c4-ch-006",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["perfect-passive", "intervening-pp"],
+      "stem": "Every complaint from the residents {{blank}} by an independent reviewer so far.",
+      "options": ["has examined", "has been examined"],
+      "answer": 1,
+      "translation": "지금까지 주민들이 제기한 모든 민원은 독립 심사관에 의해 검토되어 왔습니다.",
+      "hints": [
+        "전치사구 from the residents를 괄호로 묶고, 주어 핵이 검토를 하는 쪽인지 받는 쪽인지 보십시오.",
+        "완료 시제 안에서도 태 판단의 원리는 같습니다 — 수동이면 have와 p.p. 사이에 무엇이 필요한지 확인하십시오."
+      ],
+      "explanation": "주어 핵 Every complaint는 검토하는 주체가 아니라 검토되는 대상이고, by an independent reviewer가 행위자를 밝히고 있습니다. 따라서 완료 수동 have been p.p. 형태인 has been examined가 옳습니다. has examined를 고르면 민원이 무언가를 검토했다는 뜻의 목적어 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-007",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["modal-passive", "agent-omitted"],
+      "stem": "The final schedule will {{blank}} to all participants before the end of the month.",
+      "options": ["be sent", "send"],
+      "answer": 0,
+      "translation": "최종 일정표는 이달 말 이전에 모든 참가자에게 발송될 예정입니다.",
+      "hints": [
+        "주어 The final schedule이 발송을 하는 쪽인지 받는 쪽인지부터 판단하십시오.",
+        "조동사 뒤 원형 자리에서도 태 판단의 원리는 같습니다 — 수동이면 조동사+be p.p. 공식을 따릅니다."
+      ],
+      "explanation": "일정표는 발송하는 주체가 아니라 발송되는 대상이므로 수동이 필요하고, 조동사 will 뒤에는 원형이 와야 하므로 조동사+be p.p. 형태인 be sent가 옳습니다. send를 고르면 일정표가 무언가를 보낸다는 뜻의 목적어 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-008",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["be-used-to"],
+      "stem": "This software is used to {{blank}} very large sets of raw climate data.",
+      "options": ["analyze", "analyzing"],
+      "answer": 0,
+      "translation": "이 소프트웨어는 아주 방대한 원시 기후 자료를 분석하는 데 사용됩니다.",
+      "hints": [
+        "주어가 사람인지 도구인지 확인하십시오 — 도구는 무언가에 익숙해질 수 없습니다.",
+        "be used to 뒤의 형태에 따라 용도와 익숙함으로 뜻이 갈립니다. 이 문장에 자연스러운 쪽을 고르십시오."
+      ],
+      "explanation": "주어 This software는 분석하는 데 사용되는 도구이므로 용도를 나타내는 be used to-V가 필요합니다. 따라서 원형 analyze가 옳습니다. analyzing을 넣으면 소프트웨어가 분석에 익숙하다는 be used to V-ing 의미가 되어 어색한 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-009",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["perfect-passive", "intervening-clause", "since-perfect"],
+      "stem": "The murals that decorate the station's main corridor {{blank}} three times since vandals first damaged them in 2019.",
+      "options": ["have restored", "have been restored"],
+      "answer": 1,
+      "translation": "역의 중앙 통로를 장식하는 그 벽화들은 2019년에 공공 기물 파손자들이 처음 훼손한 이후 세 차례 복원되었습니다.",
+      "hints": [
+        "관계절 that decorate the station's main corridor를 괄호로 묶고, 주어 핵이 복원을 하는 쪽인지 받는 쪽인지 보십시오.",
+        "완료 시제 안에서 수동이 필요하면 have와 p.p. 사이에 무엇이 들어가야 하는지 형태 공식으로 확인하십시오."
+      ],
+      "explanation": "주어 핵은 The murals이고 that decorate the station's main corridor는 수식 관계절입니다. 벽화는 복원하는 주체가 아니라 복원되는 대상이므로 완료 수동 have been p.p. 형태인 have been restored가 옳습니다. have restored를 고르면 벽화가 무언가를 복원했다는 뜻의 목적어 없는 비문이 됩니다."
+    },
+    {
+      "id": "u03-c4-ch-010",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["progressive-passive", "been-being", "intervening-clause"],
+      "stem": "The database, which thousands of hospitals rely on every day, {{blank}} upgraded while a backup system handles routine requests.",
+      "options": ["is been", "is being"],
+      "answer": 1,
+      "translation": "수천 곳의 병원이 매일 의존하는 그 데이터베이스는 예비 시스템이 일상적인 요청을 처리하는 동안 업그레이드되고 있습니다.",
+      "hints": [
+        "콤마 사이의 관계절을 괄호로 묶고, 주어 핵과 빈칸의 관계만 남겨 보십시오.",
+        "while절이 그리는 상황을 참고해, 진행과 수동이 결합할 때의 형태 공식을 적용하십시오."
+      ],
+      "explanation": "콤마 사이의 which thousands of hospitals rely on every day는 삽입 관계절이므로 걷어냅니다. 데이터베이스는 업그레이드되는 대상이고 while절이 보여 주듯 작업이 진행 중이므로 진행 수동 be being p.p.를 만드는 is being이 옳습니다. is been은 완료의 형태를 진행 자리에 끼워 넣은 비문 형태입니다."
+    },
+    {
+      "id": "u03-c4-ch-011",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["modal-passive", "been-being", "intervening-clause"],
+      "stem": "Under the revised policy, any equipment that leaves the laboratory must {{blank}} by a supervisor and logged in the central registry.",
+      "options": ["been certified", "be certified"],
+      "answer": 1,
+      "translation": "개정된 규정에 따라, 실험실 밖으로 나가는 모든 장비는 관리자에 의해 인증되고 중앙 대장에 기록되어야 합니다.",
+      "hints": [
+        "관계절 that leaves the laboratory를 괄호로 묶고, 빈칸 바로 앞의 조동사에 주목하십시오.",
+        "조동사 뒤에는 동사원형이 와야 합니다 — 수동이라면 원형으로 시작하는 형태를 고릅니다."
+      ],
+      "explanation": "주어 핵은 any equipment이고 that leaves the laboratory는 수식 관계절입니다. 장비는 인증되는 대상이고 조동사 must 뒤에는 원형이 와야 하므로 조동사+be p.p. 형태인 be certified가 옳습니다. been certified는 have 없이 완료의 형태를 쓴 비문이며, 뒤의 and logged도 must be에 이어지는 수동 병렬입니다."
+    },
+    {
+      "id": "u03-c4-ch-012",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["be-used-to", "prep-to", "intervening-clause"],
+      "stem": "Farmers in the delta region, whose fields flood almost every rainy season, are used to {{blank}} their planting schedules at short notice.",
+      "options": ["adjusting", "adjust"],
+      "answer": 0,
+      "translation": "우기마다 거의 매번 밭이 물에 잠기는 삼각주 지역의 농부들은 갑작스럽게 파종 일정을 조정하는 일에 익숙합니다.",
+      "hints": [
+        "콤마 사이의 관계절을 괄호로 묶고, 주어가 사람이라는 점과 문장의 의미를 함께 보십시오.",
+        "be used to 뒤의 형태에 따라 용도와 익숙함으로 뜻이 갈립니다 — 사람은 무언가에 익숙해지는 쪽입니다."
+      ],
+      "explanation": "주어 Farmers는 사람이고, 홍수가 잦은 환경 탓에 일정 조정에 익숙하다는 의미이므로 be used to V-ing가 필요합니다. 이때 to는 전치사이므로 동명사 adjusting이 옳습니다. 원형 adjust를 넣으면 농부들이 일정을 조정하는 데 사용된다는 용도의 be used to-V가 되어 의미가 어긋납니다."
+    }
+  ]
+}

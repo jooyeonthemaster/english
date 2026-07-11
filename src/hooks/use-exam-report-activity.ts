@@ -30,6 +30,13 @@ export interface ExamReportSummaryRow {
   /** 리포트 생성 완료(GENERATED) 학생 수 */
   reportCount?: number;
   /**
+   * 분석 원천 — "INTERNAL" = 자체 생성 시험지 합성 분석(sourceExamId 보유).
+   * 구버전 API 는 미포함이므로 optional 로 안전 소비한다("MANUAL" 동치).
+   */
+  sourceType?: string;
+  /** sourceType==="INTERNAL" 일 때 원본 시험지(Exam) id — "시험지 열기" 딥링크용 */
+  sourceExamId?: string | null;
+  /**
    * 시험지 sourceFiles 가 하나라도 있는지. 등록 도중 실패한 "고아 DRAFT"
    * (sourceFiles 없는 DRAFT·학생 0명) 판별에 쓴다. 구버전 API 는 미포함이므로
    * undefined 는 "미상(고아 아님)"으로 취급한다.

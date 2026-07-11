@@ -78,6 +78,8 @@ interface PreviewPagesProps {
   schoolId: string;
   classId: string;
   examDate: string;
+  // 공유 QR 자기등록(E4) — enrollEnabled 시 첫 페이지 헤더에 인쇄할 QR data URI.
+  examEnrollQrDataUrl?: string | null;
   readOnly?: boolean;
   // 한 페이지의 (zoom 적용 전) 픽셀 높이 — 가상화 프레임의 placeholder 높이로 쓴다.
   singlePageHeight: number;
@@ -216,6 +218,7 @@ export function PreviewPages(props: PreviewPagesProps) {
               instructions={props.instructions}
               studentNameLabel={props.studentNameLabel}
               academyLogoDataUrl={props.academyLogoDataUrl}
+              examEnrollQrDataUrl={props.examEnrollQrDataUrl}
               template={props.template}
               columns={props.columns}
               density={props.density}

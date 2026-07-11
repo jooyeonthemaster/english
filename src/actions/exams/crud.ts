@@ -94,6 +94,11 @@ export async function getExam(examId: string) {
 
   // Scope lookup to the caller's academy so a manipulated examId can't
   // read another tenant's exam (including its full question bodies).
+  // NOTE(E4): `include`(no `select`) returns every Exam scalar, so the shared
+  // self-enrollment fields — enrollToken / enrollEnabled / enrollMode — are
+  // already part of the returned row and its inferred type. The paper builder
+  // reads these off `initialExam` to print the shared QR on page 1. If this is
+  // ever narrowed to `select`, those three columns must be re-added explicitly.
   const exam = await prisma.exam.findFirst({
     where: { id: examId, academyId: staff.academyId },
     include: {

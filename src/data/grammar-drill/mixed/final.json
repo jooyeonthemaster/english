@@ -1,0 +1,319 @@
+{
+  "setId": "final",
+  "title": "총괄 모의고사 — 전 유닛 실전",
+  "unitScope": ["u01", "u02", "u03", "u04", "u05", "u06", "u07", "u08", "u09", "u10", "u11", "u12"],
+  "items": [
+    {
+      "id": "mx3-ps-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-clause", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coral reefs, often described as the rainforests of the sea, [[1:depend]] on a delicate partnership with microscopic algae living inside their tissues. The algae, [[2:housed]] within the coral's cells, supply sugars produced through photosynthesis, while the coral offers shelter and nutrients in return. This mutual arrangement, which has evolved over millions of years, [[3:making]] the reef one of the most productive ecosystems on the planet. When ocean temperatures rise, the stressed coral expels its algal partners, a process [[4:known]] as bleaching that leaves the skeleton pale and starving. Scientists warn that the frequency of such damaging events [[5:has]] climbed sharply as the seas continue to warm.",
+      "answer": 3,
+      "correction": "makes",
+      "underlineUnits": ["u02", "u04", "u01", "u04", "u02"],
+      "rationales": [
+        "주어 Coral reefs는 복수이고 often described 이하는 삽입 수식구이므로 복수 동사 depend가 옳습니다.",
+        "algae가 세포 안에 '수용되는' 대상이므로 수동 관계의 과거분사 housed가 명사를 옳게 수식합니다.",
+        "which has evolved 관계절을 걷어내면 주어 This mutual arrangement에 본동사가 없으므로, 준동사 making이 아니라 본동사가 와야 합니다.",
+        "a process가 bleaching이라고 '불리는' 대상이므로 수동의 과거분사 known이 옳습니다.",
+        "주어 핵은 단수 the frequency이고 of such damaging events는 수식어이므로 단수 동사 has가 옳습니다."
+      ],
+      "hints": [
+        "콤마로 묶인 관계절을 걷어내고, 각 주어에 짝지어질 본동사가 실제로 있는지 세어 보십시오.",
+        "관계사나 접속사가 없다면 한 절의 본동사는 하나뿐이며, 준동사는 그 자리를 대신할 수 없습니다."
+      ],
+      "explanation": "밑줄 ③이 속한 문장에서 which has evolved over millions of years를 괄호로 묶으면 주어 This mutual arrangement에 대응하는 본동사가 사라집니다. 접속사나 관계사 없이 준동사 making만으로는 절이 성립하지 않으므로 본동사 형태로 고쳐야 합니다. ①의 depend는 복수 주어와의 수일치, ⑤의 has는 삽입 수식구를 건넌 단수 동사로 모두 옳습니다.",
+      "gist": "산호초는 체내 미세조류와의 공생으로 유지되며 수온 상승이 이 관계를 위협합니다."
+    },
+    {
+      "id": "mx3-ps-002",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp", "each-every"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The vast network of trade routes that once linked distant Bronze Age cities [[1:were]] far more extensive than earlier historians had assumed. Archaeologists analysing chemical residues in ancient storage jars have identified exotic spices [[2:transported]] across thousands of kilometres by sea and overland caravan. Each of the coastal settlements excavated so far [[3:reveals]] finished goods whose raw materials originate in several distant regions. A single web of exchange, [[4:sustained]] by countless anonymous intermediaries, connected communities that modern scholars once firmly believed [[5:had]] developed in almost complete isolation.",
+      "answer": 1,
+      "correction": "was",
+      "underlineUnits": ["u02", "u04", "u02", "u04", "u01"],
+      "rationales": [
+        "주어 핵은 단수 The vast network이고 of trade routes that once linked distant Bronze Age cities는 수식어이므로 복수 were가 아니라 단수가 옳습니다.",
+        "spices가 '운반된' 대상이므로 수동 관계의 과거분사 transported가 명사를 옳게 수식합니다.",
+        "Each of + 복수명사 주어는 단수 취급하므로 뒤의 복수 settlements에 끌리지 않고 단수 reveals가 옳습니다.",
+        "a web of exchange가 '유지되는' 대상이므로 수동의 과거분사 sustained가 옳습니다.",
+        "scholars once firmly believed는 삽입절이고 that의 선행사 communities가 주어이므로 had developed가 옳습니다."
+      ],
+      "hints": [
+        "동사 바로 앞의 복수 명사가 아니라 문장 맨 앞에서 진짜 주어의 핵을 찾아보십시오.",
+        "of 이하의 전치사구와 관계절은 수식어이므로 괄호로 묶고, 남는 주어의 수로 동사를 결정합니다."
+      ],
+      "explanation": "밑줄 ①의 주어 핵은 단수 명사 The vast network이며 of trade routes that once linked distant Bronze Age cities는 전치사구와 관계절로 이루어진 긴 수식어입니다. 수식어를 걷어내면 The network ___ far more extensive가 남으므로 복수 were가 아니라 단수 was가 옳습니다. 바로 앞의 복수 명사 cities에 끌려 were를 고르면 안 됩니다.",
+      "gist": "청동기 시대의 교역망은 예상보다 훨씬 광범위하고 촘촘하게 연결되어 있었습니다."
+    },
+    {
+      "id": "mx3-ps-003",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["intransitive-passive", "passive-with-object", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Gravitational lensing occurs when light from a remote galaxy [[1:bends]] around a massive object that lies between the source and the observer. The intervening mass, usually an enormous cluster of galaxies, [[2:warps]] the very fabric of space, so that rays which would otherwise travel in straight lines [[3:are deflected]] into gently curving paths. The faint, magnified light produced in this way [[4:detects]] by the sensitive instruments mounted on orbiting telescopes. Because the effect amplifies distant sources, astronomers can now observe galaxies [[5:formed]] only a few hundred million years after the universe began.",
+      "answer": 4,
+      "correction": "is detected",
+      "underlineUnits": ["u03", "u02", "u03", "u03", "u04"],
+      "rationales": [
+        "빛이 스스로 '휘는' 자동사적 용법이므로 능동 bends가 옳으며, 수동으로 착각하면 안 됩니다.",
+        "주어 핵은 단수 The intervening mass이고 usually an enormous cluster of galaxies는 삽입 동격어이므로 단수 warps가 옳습니다.",
+        "rays가 '휘어지는' 대상이므로 수동태 are deflected가 옳습니다.",
+        "The faint, magnified light는 기기에 의해 '탐지되는' 대상이므로 능동 detects가 아니라 수동 형태가 와야 합니다.",
+        "galaxies가 '형성된' 대상이므로 수동 관계의 과거분사 formed가 명사를 옳게 수식합니다."
+      ],
+      "hints": [
+        "각 밑줄 동사의 주어를 찾아, 그 주어가 동작을 '하는' 쪽인지 '당하는' 쪽인지 따져 보십시오.",
+        "주어가 동작의 대상이면 be + p.p. 형태여야 하며, 자동사는 원래 수동으로 쓰지 않습니다."
+      ],
+      "explanation": "밑줄 ④의 진짜 주어는 The faint, magnified light이며 produced in this way는 이를 꾸미는 분사구입니다. 빛은 기기가 '탐지하는' 대상이지 스스로 무언가를 탐지하는 주체가 아니므로 능동 detects가 아니라 수동 형태가 옳습니다. ①의 bends는 빛이 스스로 휘는 자동사적 능동이고, ③의 are deflected는 광선이 휘어지는 수동으로 모두 옳습니다.",
+      "gist": "중력 렌즈 효과는 거대 질량이 빛의 경로를 휘게 하여 먼 은하를 관측하게 해 줍니다."
+    },
+    {
+      "id": "mx3-ps-004",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "relative-gap", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "During sleep, the brain replays the day's experiences, gradually transferring fragile memories into long-term storage. This process, [[1:known]] as consolidation, explains why a good night's rest so often improves recall. Students [[2:confusing]] by a difficult lesson frequently understand it far better the following morning. The researchers who monitor overnight electrical activity [[3:have observed]] bursts of signalling that coincide with the strengthening of neural connections. The memories [[4:reinforced]] in this way become remarkably resistant to later interference. Such findings suggest that sleep is not idle rest but an active period during which learning [[5:is quietly reorganised]].",
+      "answer": 2,
+      "correction": "confused",
+      "underlineUnits": ["u04", "u04", "u02", "u04", "u03"],
+      "rationales": [
+        "This process가 consolidation이라고 '불리는' 대상이므로 수동의 과거분사 known이 옳습니다.",
+        "students는 어려운 수업에 의해 혼란을 '느끼는' 쪽이므로 confusing이 아니라 감정 과거분사가 옳습니다.",
+        "who monitor overnight electrical activity는 삽입 관계절이고 주어는 복수 The researchers이므로 have observed가 옳습니다.",
+        "memories가 '강화되는' 대상이므로 수동 관계의 과거분사 reinforced가 옳습니다.",
+        "learning이 '재편되는' 대상이므로 수동태 is quietly reorganised가 옳습니다."
+      ],
+      "hints": [
+        "밑줄이 꾸미거나 서술하는 대상이 감정을 '일으키는' 쪽인지 '느끼는' 쪽인지 확인하십시오.",
+        "사람이 감정을 느끼는 자리에는 과거분사를, 대상이 감정을 유발하는 자리에는 -ing를 씁니다."
+      ],
+      "explanation": "밑줄 ②의 students는 어려운 수업이 유발하는 혼란을 '느끼는' 주체입니다. 감정을 일으키는 대상에는 -ing를, 감정을 느끼는 사람에는 과거분사를 쓰므로 confusing이 아니라 과거분사 형태가 옳습니다. ①의 known과 ④의 reinforced는 각각 process와 memories가 동작을 받는 수동 관계이므로 과거분사가 맞습니다.",
+      "gist": "수면 중 뇌는 기억을 재생하고 강화하여 학습 내용을 장기 기억으로 굳힙니다."
+    },
+    {
+      "id": "mx3-ps-005",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["shared-aux", "distant-parallel", "coord-pair"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Classical economics long assumed that people weigh every option rationally, calculate the odds precisely, and [[1:act]] on the outcome that maximises their gain. Behavioural research, [[2:drawing]] on thousands of experiments, has steadily undermined this tidy portrait. People routinely misjudge probabilities, [[3:are swayed]] by how choices are framed, and cling to losses long after reason says to let go. What the newer models capture [[4:is]] the systematic, predictable nature of these errors. A seasoned trader may study the data carefully, consult expert forecasts, and yet [[5:deciding]] on impulse when the market suddenly turns.",
+      "answer": 5,
+      "correction": "decide",
+      "underlineUnits": ["u05", "u09", "u03", "u02", "u05"],
+      "rationales": [
+        "조동사 없이 weigh, calculate와 나란히 이어지는 세 번째 동사이므로 원형 act가 옳게 병렬됩니다.",
+        "Behavioural research가 experiments에 '의존하는' 능동 관계이므로 현재분사 drawing이 옳습니다.",
+        "People이 프레이밍에 의해 '휘둘리는' 대상이므로 수동 are swayed가 misjudge, cling과 함께 옳게 병렬됩니다.",
+        "What the newer models capture는 명사절 주어로 단수 취급하므로 단수 is가 옳습니다.",
+        "조동사 may가 study, consult와 함께 지배하는 세 번째 동사이므로 deciding이 아니라 원형이 옳습니다."
+      ],
+      "hints": [
+        "and 또는 and yet가 무엇과 무엇을 연결하는지 짝을 먼저 찾아 형태를 맞춰 보십시오.",
+        "앞 항을 지배하던 조동사는 뒤 항에도 그대로 적용되므로, 병렬 항은 같은 형태여야 합니다."
+      ],
+      "explanation": "밑줄 ⑤는 조동사 may가 이끄는 study, consult와 대등하게 이어지는 세 번째 병렬 항입니다. and yet 뒤에서도 may의 지배가 유지되므로 준동사 deciding이 아니라 원형동사로 형태를 맞춰야 합니다. ①의 act 역시 앞선 weigh, calculate와 대등하게 이어지는 원형이며, ③의 are swayed는 능동 동사들 사이에서도 사람이 동작을 받는 수동이라 옳습니다.",
+      "gist": "행동경제학은 인간이 예측 가능한 방식으로 비합리적 판단을 한다는 점을 밝혔습니다."
+    },
+    {
+      "id": "mx3-ps-006",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["no-main-verb", "double-verb", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Children acquire their native language with a speed that continues to astonish researchers. Exposed to nothing more than ordinary conversation, they [[1:extract]] intricate grammatical rules no one has ever taught them explicitly. The sequence of stages through which every child predictably passes [[2:suggests]] that some capacity for language is innate. One influential hypothesis, first proposed in the mid-twentieth century and refined ever since, [[3:holding]] that the brain contains a specialised system dedicated to grammar. Critics counter that the patterns [[4:observed]] in early speech can emerge from general learning mechanisms. The debate, [[5:fuelled]] by decades of evidence on both sides, remains unresolved.",
+      "answer": 3,
+      "correction": "holds",
+      "underlineUnits": ["u01", "u02", "u01", "u04", "u09"],
+      "rationales": [
+        "주어 they에 대응하는 본동사 자리이므로 extract가 옳습니다.",
+        "주어 핵은 단수 The sequence이고 of stages through which every child predictably passes는 수식어이므로 단수 suggests가 옳습니다.",
+        "first proposed 이하 분사구를 걷어내면 주어 One influential hypothesis에 본동사가 없으므로, 준동사 holding이 아니라 본동사가 와야 합니다.",
+        "the patterns가 '관찰되는' 대상이므로 수동 관계의 과거분사 observed가 옳습니다.",
+        "The debate가 증거에 의해 '촉발되는' 대상이므로 수동의 과거분사 fuelled가 주어를 옳게 수식합니다."
+      ],
+      "hints": [
+        "콤마로 묶인 수식구를 지운 뒤, 각 주어에 짝지어질 본동사가 실제로 있는지 확인하십시오.",
+        "-ing나 p.p. 같은 준동사는 접속사 없이 홀로 문장의 본동사 자리를 채울 수 없습니다."
+      ],
+      "explanation": "밑줄 ③이 속한 문장에서 콤마로 묶인 first proposed in the mid-twentieth century and refined ever since는 주어를 꾸미는 분사구입니다. 이를 걷어내면 One influential hypothesis에 본동사가 사라지므로, 준동사 holding이 아니라 본동사 형태가 옳습니다. ④의 observed와 ⑤의 fuelled는 각각 명사가 동작을 받는 수동 관계의 과거분사로 모두 옳습니다.",
+      "gist": "아이들은 명시적 학습 없이도 놀라운 속도로 모국어의 문법을 습득합니다."
+    },
+    {
+      "id": "mx3-ps-007",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "a-number-of", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The circulation of warm and cold waters that spans the world's oceans [[1:play]] a decisive role in regulating the global climate. [[2:Driven]] by differences in temperature and salinity, this vast conveyor belt redistributes heat from the equator toward the poles. A number of recent studies [[3:warn]] that the melting of polar ice could weaken the entire system. What alarms climate scientists most [[4:is]] the possibility of an abrupt collapse rather than a gradual decline. The consequences, [[5:felt]] far beyond the ocean itself, would reshape weather patterns across whole continents.",
+      "answer": 1,
+      "correction": "plays",
+      "underlineUnits": ["u02", "u09", "u02", "u02", "u04"],
+      "rationales": [
+        "주어 핵은 단수 The circulation이고 of warm and cold waters that spans the world's oceans는 수식어이므로 복수 play가 아니라 단수가 옳습니다.",
+        "this vast conveyor belt가 온도와 염분 차이에 의해 '구동되는' 대상이므로 수동의 과거분사 Driven이 옳습니다.",
+        "a number of + 복수명사는 복수 취급하므로 studies에 맞춰 복수 warn이 옳습니다.",
+        "What alarms climate scientists most는 명사절 주어로 단수 취급하므로 단수 is가 옳습니다.",
+        "The consequences가 '느껴지는' 대상이므로 수동 관계의 과거분사 felt가 주어를 옳게 수식합니다."
+      ],
+      "hints": [
+        "동사 앞의 복수 명사에 현혹되지 말고, 문장 맨 앞에서 주어의 핵을 짚어 보십시오.",
+        "관계절과 전치사구를 괄호로 묶으면 남는 단수 주어가 동사의 수를 결정합니다."
+      ],
+      "explanation": "밑줄 ①의 주어 핵은 단수 명사 The circulation이며 of warm and cold waters that spans the world's oceans는 전치사구와 관계절로 이루어진 긴 수식어입니다. 수식어를 걷어내면 The circulation ___ a decisive role가 남으므로 복수 play가 아니라 단수 plays가 옳습니다. 바로 앞의 복수 명사 oceans에 끌리면 안 됩니다.",
+      "gist": "해양의 열염 순환은 지구 기후를 조절하며 그 붕괴 가능성이 우려됩니다."
+    },
+    {
+      "id": "mx3-ps-008",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "conj-that", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "During the early Renaissance, painters discovered a mathematical technique for representing depth on a flat surface. Linear perspective, [[1:developed]] over several generations, gave their work a startling illusion of three-dimensional space. The scholars who later reconstructed its history [[2:agree]] that Brunelleschi first demonstrated the method convincingly. Later artists studied [[3:what]] earlier masters had left unexplained about foreshortening and proportion. Their surviving treatises reveal [[4:what]] the geometry behind a convincing image was surprisingly rigorous. The technique eventually produced a visual language [[5:whose]] influence spread across the whole of European art.",
+      "answer": 4,
+      "correction": "that",
+      "underlineUnits": ["u09", "u02", "u06", "u06", "u07"],
+      "rationales": [
+        "Linear perspective가 여러 세대에 걸쳐 '발전된' 대상이므로 수동의 과거분사 developed가 옳습니다.",
+        "who later reconstructed its history는 삽입 관계절이고 주어는 복수 The scholars이므로 복수 agree가 옳습니다.",
+        "left의 목적어가 빠진 불완전한 절을 이끌고 선행사가 없으므로 what이 옳습니다.",
+        "the geometry ... was surprisingly rigorous는 성분이 완전한 절이므로 what이 아니라 완전한 절을 이끄는 접속사가 와야 합니다.",
+        "language를 선행사로 하여 influence의 소유 관계를 나타내므로 소유격 관계사 whose가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 뒤에 이어지는 절에서 주어나 목적어가 빠져 있는지, 성분이 온전한지 세어 보십시오.",
+        "성분이 완전한 절과 성분이 하나 빠진 불완전한 절은 서로 다른 연결어가 이끈다는 점을 떠올리십시오."
+      ],
+      "explanation": "밑줄 ④ 뒤의 the geometry behind a convincing image was surprisingly rigorous는 주어와 동사, 보어를 모두 갖춘 완전한 절입니다. 완전한 절을 이끄는 명사절 접속사는 that이므로, 성분이 빠진 불완전한 절에만 쓰는 what은 틀립니다. 반면 ③의 what은 left의 목적어가 빠진 불완전한 절을 이끌므로 옳습니다.",
+      "gist": "르네상스의 선원근법은 평면에 깊이를 재현하는 수학적 기법이었습니다."
+    },
+    {
+      "id": "mx3-ps-009",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["which-vs-where", "abstract-antecedent", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The brain's capacity to rewire itself, known as plasticity, persists far longer than researchers once believed. In early childhood there is a critical period [[1:during which]] the visual cortex organises itself in response to experience. Yet studies of adults have revealed a surprising flexibility [[2:where]] allows the nervous system to compensate after serious injury. When a limb is lost, the region of cortex that once served it [[3:is gradually taken]] over by neighbouring functions. This reorganisation, [[4:driven]] by continual use, can restore abilities that seemed permanently gone. Such findings explain [[5:why]] rehabilitation exercises remain effective even decades after the original damage.",
+      "answer": 2,
+      "correction": "which",
+      "underlineUnits": ["u07", "u07", "u03", "u09", "u07"],
+      "rationales": [
+        "선행사 a critical period 뒤에 완전한 절이 이어지므로 전치사 + 관계대명사 during which가 옳습니다.",
+        "allows의 주어가 빠진 불완전한 절이므로 관계부사 where가 아니라 주격 관계대명사가 와야 합니다.",
+        "the region of cortex가 이웃 기능에 의해 '넘겨받는' 대상이므로 단수 수동 is gradually taken이 옳습니다.",
+        "This reorganisation이 지속적 사용에 의해 '추동되는' 대상이므로 수동의 과거분사 driven이 옳습니다.",
+        "explain 뒤에서 rehabilitation exercises remain effective라는 완전한 절이 이어지므로 관계부사 why가 옳습니다."
+      ],
+      "hints": [
+        "선행사의 뜻이 장소처럼 보여도, 밑줄 뒤 절에서 주어나 목적어가 빠졌는지부터 확인하십시오.",
+        "성분이 빠진 불완전한 절은 관계대명사가, 성분이 온전한 완전한 절은 관계부사가 이끕니다."
+      ],
+      "explanation": "밑줄 ② 뒤의 allows the nervous system to compensate는 주어가 빠진 불완전한 절입니다. 관계부사 where는 완전한 절을 이끌 뿐 주어 자리를 채울 수 없으므로, 주격 관계대명사 which가 옳습니다. 선행사 flexibility가 장소처럼 느껴져 where를 고르기 쉽지만, 판단 기준은 선행사의 의미가 아니라 뒤 절의 완전성입니다.",
+      "gist": "뇌의 가소성은 성인기까지 지속되어 손상 후에도 기능 회복을 돕습니다."
+    },
+    {
+      "id": "mx3-ps-010",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["participle-voice", "dangling-subject", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The theory of plate tectonics explains how the continents drifted into their present positions. [[1:Composed]] of enormous rigid slabs, the planet's outer shell floats on a layer of slowly flowing rock. The boundaries [[2:marked]] by these colliding slabs are the sites of the world's most violent geological activity. Where two plates meet, one may slide beneath the other, [[3:forming]] deep ocean trenches and lofty mountain ranges. The heat that rises steadily from the deep interior [[4:keeps]] the entire system in perpetual motion. [[5:Compressing]] by immense tectonic forces, the crust buckles and fractures over millions of years.",
+      "answer": 5,
+      "correction": "Compressed",
+      "underlineUnits": ["u09", "u04", "u09", "u02", "u09"],
+      "rationales": [
+        "the planet's outer shell가 강판들로 '구성되는' 대상이므로 수동 관계의 과거분사 Composed가 옳습니다.",
+        "The boundaries가 슬래브에 의해 '표시되는' 대상이므로 수동의 과거분사 marked가 명사를 옳게 수식합니다.",
+        "의미상 주어인 판이 해구를 '형성하는' 능동 관계이므로 현재분사 forming이 옳습니다.",
+        "주어 핵은 단수 The heat이고 that rises steadily from the deep interior는 관계절 수식어이므로 단수 keeps가 옳습니다.",
+        "분사구문의 의미상 주어 the crust는 힘에 의해 '압축되는' 대상이므로 Compressing이 아니라 수동의 과거분사가 와야 합니다."
+      ],
+      "hints": [
+        "문두 분사구문의 의미상 주어를 주절에서 찾아, 그 주어와 분사의 관계가 능동인지 수동인지 판단하십시오.",
+        "의미상 주어가 동작을 받는 관계이면 과거분사를, 스스로 하는 관계이면 현재분사를 씁니다."
+      ],
+      "explanation": "밑줄 ⑤ 분사구문의 의미상 주어는 주절의 the crust입니다. 지각은 tectonic forces에 의해 '압축되는' 대상이므로 능동의 현재분사 Compressing이 아니라 수동의 과거분사가 옳습니다. ①의 Composed 역시 shell이 슬래브로 구성되는 수동 관계라 과거분사가 맞고, ③의 forming은 판이 해구를 형성하는 능동 관계라 현재분사가 맞습니다.",
+      "gist": "판구조론은 지각판의 이동으로 대륙 이동과 지질 활동을 설명합니다."
+    },
+    {
+      "id": "mx3-ps-011",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["adj-vs-adv", "that-those", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Every human society passes its accumulated knowledge from one generation to the next through a process [[1:known]] as cultural transmission. Unlike genetic inheritance, the practices spread by this kind of learning [[2:reach]] new members within a single lifetime. Children raised inside a community absorb its inherited beliefs [[3:effortless]], treating them as natural and beyond question. Yet the customs of one society frequently differ from [[4:those]] of another, even when the two peoples live side by side. [[5:Comparing]] such traditions carefully, anthropologists resist the claim that any single one is truly universal.",
+      "answer": 3,
+      "correction": "effortlessly",
+      "underlineUnits": ["u04", "u02", "u10", "u10", "u09"],
+      "rationales": [
+        "a process가 cultural transmission이라고 '불리는' 대상이므로 수동의 과거분사 known이 옳습니다.",
+        "주어는 복수 the practices이고 spread by this kind of learning은 분사 수식어이므로 복수 reach가 옳습니다.",
+        "동사 absorb를 수식하는 자리이므로 형용사 effortless가 아니라 부사가 와야 합니다.",
+        "앞서 나온 복수명사 the customs를 대신하므로 단수 that이 아니라 복수 those가 옳습니다.",
+        "의미상 주어 anthropologists가 전통을 '비교하는' 능동 관계이므로 현재분사 Comparing이 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 말이 무엇을 꾸미는지 — 명사인지 동사인지 — 확인하고, 뒤의 대명사가 어떤 명사를 대신하는지 세어 보십시오.",
+        "동사를 수식하는 자리에는 형용사가 아니라 부사가 오며, 대명사는 그것이 대신하는 명사의 수에 맞춰야 합니다."
+      ],
+      "explanation": "밑줄 ③은 동사 absorb가 '어떻게' 이루어지는지를 꾸미는 자리이므로 형용사 effortless가 아니라 부사 형태가 옳습니다. 형용사는 명사나 보어 자리에만 설 수 있습니다. 밑줄 ④의 those는 복수명사 the customs를 대신하므로 수에 맞게 those가 맞고, 단수 that으로 쓰면 안 됩니다.",
+      "gist": "인간 사회는 문화 전달을 통해 축적된 지식을 다음 세대로 전합니다."
+    },
+    {
+      "id": "mx3-ps-012",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["negative-inversion", "subjunctive", "distant-parallel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Only after a system has been deployed at scale [[1:engineers discover]] the subtle biases hidden in its training data. Machine-learning models absorb the patterns present in the examples they are shown, [[2:reproducing]] historical inequalities that no one ever intended. A dataset drawn from past hiring decisions, for example, may teach an algorithm to favour the very groups [[3:that]] were favoured before. Were such distortions easy to detect, they [[4:would pose]] far less of a threat to fairness. Researchers now insist that fairness must be built into a model from the outset, [[5:rather than]] corrected after the harm has already occurred.",
+      "answer": 1,
+      "correction": "do engineers discover",
+      "underlineUnits": ["u12", "u09", "u07", "u12", "u05"],
+      "rationales": [
+        "Only after ~ 부사절이 문두에 오면 주어와 조동사가 도치되므로 engineers discover라는 평서문 어순은 틀립니다.",
+        "의미상 주어 models가 불평등을 '재생산하는' 능동 관계이므로 현재분사 reproducing이 옳습니다.",
+        "선행사 the very groups의 주어 자리가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "if가 생략되어 도치된 가정법 구문(Were such distortions ~)이므로 주절의 would pose가 옳습니다.",
+        "built과 대등하게 이어지는 병렬 항이므로 rather than 뒤의 corrected와 짝을 이루어 옳습니다."
+      ],
+      "hints": [
+        "문장 맨 앞에 Only나 부정어가 이끄는 부사어가 놓였는지 확인하고, 그 뒤 주어와 동사의 어순을 살피십시오.",
+        "제한이나 부정의 부사어가 문두에 오면 주어와 조동사의 순서가 뒤바뀝니다."
+      ],
+      "explanation": "밑줄 ①은 Only after a system has been deployed at scale라는 부사절이 문두에 놓인 구조입니다. Only가 이끄는 부사어가 문두에 오면 주어와 조동사가 도치되어야 하므로, 평서문 어순 engineers discover는 틀리며 조동사 do를 앞세운 도치 어순이 옳습니다. ④의 would pose는 if가 생략되어 Were로 도치된 가정법 과거의 주절 동사이므로 옳습니다.",
+      "gist": "머신러닝 모델은 학습 데이터에 담긴 편향을 무의식적으로 재생산합니다."
+    }
+  ]
+}

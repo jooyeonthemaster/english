@@ -1,7 +1,7 @@
 "use client";
 
-import { Loader2, PencilLine, Printer, RefreshCw, Sparkle } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { Loader2, PencilLine, Printer, RefreshCw, Send, Sparkle } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AnalysisReportDocument } from "@/components/workbench/analysis-report/AnalysisReportDocument";
 import {
@@ -10,6 +10,11 @@ import {
 } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import {
+  AssignmentComposer,
+  type ComposerPreset,
+} from "@/components/study-assignments/assignment-composer";
+import { useWorksheetAssignCreatedToast } from "@/components/workbench/use-worksheet-assign";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
@@ -22,6 +27,8 @@ interface Props {
   /** 기존 5-layer 분석 (PRIME 없을 때 옛 인터랙티브 뷰로 폴백 — 기존 유저 호환) */
   legacyAnalysisData?: PassageAnalysisData | null;
   passageContent?: string;
+  /** 지문 제목 — "학생에게 배포" 프리셋의 부가 표시(meta)용. */
+  passageTitle?: string;
   /** 편집기 저장 상태를 모달 헤더로 끌어올리기 위한 콜백. */
   onToolbarStateChange?: (state: ReportEditorToolbarState | null) => void;
 }
@@ -31,13 +38,18 @@ interface Props {
  * - 기존 보고서 있으면 바로 렌더
  * - 없으면 생성 버튼 (5크레딧) → 생성 → 렌더
  */
-export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, passageContent, onToolbarStateChange }: Props) {
+export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, passageContent, passageTitle, onToolbarStateChange }: Props) {
   const [report, setReport] = useState<AnalysisReport | null>(null);
+  // 배포 프리셋의 refId — StudyAssignment(WORKSHEET)는 PassageReport.id 를 참조.
+  const [reportId, setReportId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // 모달 진입 시 편집 모드 기본 활성화 (요청)
   const [mode, setMode] = useState<"view" | "edit">("edit");
+  // "학생에게 배포" — 과제 컴포저 (U6)
+  const [assignOpen, setAssignOpen] = useState(false);
+  const onAssignCreated = useWorksheetAssignCreatedToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -47,6 +59,7 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
       .then((j) => {
         if (cancelled) return;
         if (j?.report) setReport(j.report as AnalysisReport);
+        if (typeof j?.reportId === "string") setReportId(j.reportId);
         setLoading(false);
       })
       .catch(() => !cancelled && setLoading(false));
@@ -63,6 +76,7 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
       const j = await res.json();
       if (!res.ok) throw new Error(j?.error ?? "생성에 실패했습니다.");
       setReport(j.report as AnalysisReport);
+      if (typeof j?.reportId === "string") setReportId(j.reportId);
       onGenerated?.();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -72,6 +86,20 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
       notifyCreditsChanged();
     }
   }, [passageId, onGenerated]);
+
+  // 배포 프리셋 — 보고서 id 가 있을 때만(레거시 분석만 있으면 버튼 자체를 숨김).
+  const assignPreset = useMemo<ComposerPreset | null>(() => {
+    if (!reportId || !report) return null;
+    const rawTitle = (report as { meta?: { titleKo?: string } }).meta?.titleKo;
+    return {
+      kind: "WORKSHEET",
+      content: {
+        refId: reportId,
+        title: rawTitle?.trim() || passageTitle || "학습지",
+        meta: passageTitle ?? "",
+      },
+    };
+  }, [reportId, report, passageTitle]);
 
   if (loading) {
     return (
@@ -177,6 +205,18 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
           {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
           재생성
         </button>
+        {/* 학생에게 배포 — 학생 앱(/g) 과제로 이 학습지를 보낸다 (U6). */}
+        {assignPreset ? (
+          <button
+            type="button"
+            onClick={() => setAssignOpen(true)}
+            title="학생 앱으로 배포"
+            aria-label="학생 앱으로 배포"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-blue-200 text-[12px] font-semibold text-blue-600 hover:bg-blue-50"
+          >
+            <Send className="w-3.5 h-3.5" /> 학생에게 배포
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={() =>
@@ -192,6 +232,14 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
         <AnalysisReportDocument report={report} />
       </div>
       {error ? <p className="px-4 py-1 text-xs text-red-500">{error}</p> : null}
+
+      {/* 과제 배포 컴포저 (U6) */}
+      <AssignmentComposer
+        open={assignOpen}
+        onClose={() => setAssignOpen(false)}
+        preset={assignPreset}
+        onCreated={onAssignCreated}
+      />
     </div>
   );
 }

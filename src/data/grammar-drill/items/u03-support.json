@@ -1,0 +1,1214 @@
+{
+  "unitId": "u03",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u03-c1-ox-001",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["inanimate-subject"],
+      "hints": [
+        "밑줄 친 동사 뒤에 목적어(명사구)가 있는지 확인하십시오.",
+        "사물 주어라도 동작의 주체가 될 수 있습니다 — 판단 기준은 주어와 동사의 의미 관계입니다."
+      ],
+      "explanation": "주어 The final chapter는 사물이지만 '검토하는' 동작의 주체이고, 동사 뒤에 목적어 the long-term consequences가 그대로 있습니다. 목적어를 거느린 타동사는 능동이 옳습니다. '사물 주어니까 수동'이라는 암기에 끌려 be+p.p.로 고치면 목적어가 갈 곳이 없어 비문이 됩니다.",
+      "sentence": "The final chapter [[u:examines]] the long-term consequences of rapid urbanization in East Asia.",
+      "isCorrect": true,
+      "translation": "마지막 장은 동아시아의 급속한 도시화가 가져온 장기적 결과를 검토합니다."
+    },
+    {
+      "id": "u03-c1-ox-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["by-agent-omitted"],
+      "hints": [
+        "주어 The volunteers가 '나누는' 쪽인지 '나뉘는' 쪽인지 따져 보십시오.",
+        "by 행위자가 안 보여도 수동은 성립합니다 — 주어와 동사의 의미 관계만으로 판단합니다."
+      ],
+      "explanation": "주어 The volunteers는 사람이지만 스스로 나눈 것이 아니라 실험 설계자에 의해 '나뉘는' 대상입니다. 주어가 동작을 받는 쪽이므로 be+p.p. 수동이 옳습니다. by 행위자가 생략되어 있다는 이유로, 또는 사람 주어라는 이유로 능동으로 고치면 목적어 없는 divide만 남아 비문이 됩니다.",
+      "sentence": "The volunteers [[u:were divided]] into three groups at the start of the experiment.",
+      "isCorrect": true,
+      "translation": "자원자들은 실험 시작 시점에 세 그룹으로 나뉘었습니다."
+    },
+    {
+      "id": "u03-c1-ox-003",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object", "inanimate-subject"],
+      "hints": [
+        "밑줄 친 동사 바로 뒤에 무엇이 오는지 확인하십시오.",
+        "수동태 뒤에는 원칙적으로 목적어가 올 수 없습니다 — 목적어가 버젓이 있으면 능동이어야 합니다."
+      ],
+      "explanation": "동사 뒤에 목적어 the main findings가 그대로 남아 있습니다. 수동태 뒤에는 목적어가 올 수 없으므로, 표가 '요약하는' 주체가 되는 능동으로 써야 합니다. 사물 주어라는 이유로 수동을 고르면 이 목적어를 설명할 수 없습니다.",
+      "sentence": "The table below [[u:is summarized]] the main findings of all six studies.",
+      "isCorrect": false,
+      "correction": "summarizes",
+      "translation": "아래 표는 여섯 개 연구 전체의 주요 결과를 요약해 보여 줍니다."
+    },
+    {
+      "id": "u03-c1-ox-004",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["voice-basic"],
+      "hints": [
+        "주어 Her first novel이 '거절하는' 쪽인지 '거절당하는' 쪽인지 따져 보십시오.",
+        "주어가 동작을 받는 대상이면 동사는 be+p.p. 형태여야 합니다."
+      ],
+      "explanation": "주어 Her first novel은 출판사들에 의해 '거절당하는' 대상이고, 바로 뒤에 by 행위자까지 명시되어 있습니다. 주어가 동작을 받는 쪽이므로 be+p.p. 수동으로 써야 합니다. 능동 과거형을 그대로 두면 소설이 무언가를 거절했다는 뜻이 되어 목적어도 없고 의미도 성립하지 않습니다.",
+      "sentence": "Her first novel [[u:rejected]] by more than a dozen publishers before it finally reached readers.",
+      "isCorrect": false,
+      "correction": "was rejected",
+      "translation": "그녀의 첫 소설은 마침내 독자들에게 닿기 전에 십여 곳이 넘는 출판사에서 거절당했습니다."
+    },
+    {
+      "id": "u03-c1-ox-005",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inanimate-subject", "inserted-phrase"],
+      "hints": [
+        "콤마 사이에 삽입된 분사구를 걷어내고 주어와 밑줄 동사를 직접 연결해 보십시오.",
+        "판단 기준은 주어가 그 동작의 주체인가입니다 — 사물 주어도 얼마든지 능동의 주체가 됩니다."
+      ],
+      "explanation": "삽입구 released only days after the flood를 걷어내면 The report describes how ...가 남습니다. 주어 The report는 '기술하는' 주체이고 뒤에 목적어인 how절이 있으므로 능동이 옳습니다. 삽입구의 released(수동 의미의 분사)에 끌려 본동사까지 수동으로 고치면 how절 목적어가 설 자리를 잃습니다.",
+      "sentence": "The report, released only days after the flood, [[u:describes]] how local officials responded to the crisis.",
+      "isCorrect": true,
+      "translation": "홍수 며칠 뒤에 공개된 그 보고서는 지역 공무원들이 위기에 어떻게 대응했는지를 기술합니다."
+    },
+    {
+      "id": "u03-c1-ox-006",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "by-agent-omitted"],
+      "hints": [
+        "관계절 who had ignored ...를 괄호로 묶고, 주어 Residents와 밑줄 동사의 관계만 보십시오.",
+        "관계절 안의 능동 동사에 끌리지 말고, 주어가 '강제하는' 쪽인지 '강제당하는' 쪽인지 따집니다."
+      ],
+      "explanation": "주어 핵은 Residents이고 who had ignored the earlier warnings는 삽입된 관계절입니다. 주민들은 떠나도록 '강제당한' 대상이므로 be+p.p. 수동이 옳습니다. 관계절 안의 능동 동사 had ignored에 끌려 본동사까지 능동으로 고치면 force의 목적어가 없어 비문이 됩니다.",
+      "sentence": "Residents who had ignored the earlier warnings [[u:were forced]] to leave their homes within hours.",
+      "isCorrect": true,
+      "translation": "앞선 경고를 무시했던 주민들은 몇 시간 만에 집을 떠나도록 강제되었습니다."
+    },
+    {
+      "id": "u03-c1-ox-007",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "intervening-clause"],
+      "hints": [
+        "관계절을 걷어낸 뒤, 밑줄 동사 바로 뒤에 무엇이 남는지 확인하십시오.",
+        "동사 뒤에 목적어가 그대로 있으면 그 동사는 수동태가 될 수 없습니다."
+      ],
+      "explanation": "관계절 that reviews such applications를 걷어내면 The committee ___ the final proposal 구조가 드러납니다. 동사 뒤에 목적어 the final proposal이 그대로 있고 위원회는 '승인하는' 주체이므로 능동으로 써야 합니다. 주어와 동사 사이의 거리 때문에 수동처럼 보여도, 목적어의 존재가 능동의 결정적 증거입니다.",
+      "sentence": "The committee that reviews such applications [[u:was approved]] the final proposal without further discussion.",
+      "isCorrect": false,
+      "correction": "approved",
+      "translation": "그런 신청서를 심사하는 위원회는 추가 논의 없이 최종 제안을 승인했습니다."
+    },
+    {
+      "id": "u03-c1-ox-008",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inserted-phrase", "voice-basic"],
+      "hints": [
+        "콤마 사이의 together with구를 걷어내고, 주어와 밑줄 동사의 의미 관계를 따져 보십시오.",
+        "주어가 동작을 받는 대상인데 동사 뒤에 목적어도 없다면, 동사는 be+p.p.여야 합니다."
+      ],
+      "explanation": "삽입구 together with its historic market squares를 걷어내면 주어는 The entire district입니다. 구역은 '철거하는' 주체가 아니라 '철거되는' 대상이고 demolish의 목적어도 보이지 않으므로 be+p.p. 수동으로 써야 합니다. 능동 과거형을 그대로 두면 구역이 무언가를 철거했다는 뜻이 되어 성립하지 않습니다.",
+      "sentence": "The entire district, together with its historic market squares, [[u:demolished]] to make room for a new expressway.",
+      "isCorrect": false,
+      "correction": "was demolished",
+      "translation": "그 구역 전체는 유서 깊은 시장 광장들과 함께 새 고속화도로 부지를 마련하기 위해 철거되었습니다."
+    },
+    {
+      "id": "u03-c1-wf-001",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["voice-basic", "past-marker"],
+      "hints": [
+        "주어 The bridge가 '설계하는' 쪽인지 '설계되는' 쪽인지 따지고, by구와 연도를 확인하십시오.",
+        "주어가 동작을 받는 대상이고 과거 시점이 명시되어 있으면 be+p.p.의 과거형을 씁니다."
+      ],
+      "explanation": "다리는 '설계되는' 대상이고 by a young engineer가 행위자를 명시하므로 수동태가 필요합니다. 1908이라는 명백한 과거 시점이 있으므로 be동사는 과거형으로 고정됩니다. 따라서 be+p.p. 과거 수동이 정답입니다.",
+      "stem": "The bridge {{blank}} by a young engineer in 1908.",
+      "given": "design",
+      "acceptedAnswers": ["was designed"],
+      "translation": "그 다리는 1908년에 한 젊은 기술자에 의해 설계되었습니다."
+    },
+    {
+      "id": "u03-c1-wf-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["inanimate-subject"],
+      "hints": [
+        "주어인 기계가 그 동작을 직접 하는지 당하는지 따지고, 동사 뒤의 명사구도 확인하십시오.",
+        "동작의 주체가 주어이고 뒤에 목적어가 있으면 능동 — usually가 가리키는 시제도 함께 결정하십시오."
+      ],
+      "explanation": "기계는 병을 '생산하는' 주체이고 뒤에 목적어 about two hundred bottles가 있으므로 능동입니다. usually가 반복되는 일상적 사실을 가리키므로 현재시제이며, 주어가 3인칭 단수이므로 -s를 붙인 형태가 정답입니다. 사물 주어라는 이유로 수동을 만들면 목적어가 설 자리를 잃습니다.",
+      "stem": "The new machine usually {{blank}} about two hundred bottles an hour.",
+      "given": "produce",
+      "acceptedAnswers": ["produces"],
+      "translation": "그 새 기계는 보통 시간당 약 200개의 병을 생산합니다."
+    },
+    {
+      "id": "u03-c1-wf-003",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["voice-basic", "past-marker"],
+      "hints": [
+        "주어 The long questionnaire와 동사의 의미 관계, 그리고 by구를 확인하십시오.",
+        "주어가 동작을 받는 대상이면 be+p.p. — 시제는 yesterday가 고정합니다."
+      ],
+      "explanation": "설문지는 참가자들에 의해 '작성되는' 대상이므로 수동태가 필요하고, by all forty participants가 행위자를 명시합니다. yesterday's opening session이라는 명백한 과거 시점이 있으므로 be동사는 과거 단수형으로 고정됩니다. 따라서 과거 수동이 정답입니다.",
+      "stem": "The long questionnaire {{blank}} by all forty participants at yesterday's opening session.",
+      "given": "complete",
+      "acceptedAnswers": ["was completed"],
+      "translation": "그 긴 설문지는 어제 첫 세션에서 참가자 40명 전원에 의해 작성 완료되었습니다."
+    },
+    {
+      "id": "u03-c1-wf-004",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["inanimate-subject", "inserted-phrase"],
+      "hints": [
+        "콤마 사이 삽입구를 걷어내고 주어와 동사를 직접 연결한 뒤, 동사 뒤의 명사구를 확인하십시오.",
+        "목적어를 거느린 동사는 능동 — 시제는 last year가 고정합니다."
+      ],
+      "explanation": "삽입구 despite its remote location을 걷어내면 The museum ___ nearly a million visitors 구조입니다. 박물관은 방문객을 '끌어들이는' 주체이고 뒤에 목적어가 있으므로 능동이며, last year가 명백한 과거를 가리키므로 과거형이 정답입니다. 사물 주어라는 이유로 수동을 만들면 목적어를 설명할 수 없습니다.",
+      "stem": "The museum, despite its remote location, {{blank}} nearly a million visitors last year.",
+      "given": "attract",
+      "acceptedAnswers": ["attracted"],
+      "translation": "그 박물관은 외진 위치에도 불구하고 작년에 거의 백만 명의 방문객을 끌어들였습니다."
+    },
+    {
+      "id": "u03-c1-wf-005",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "by-agent-omitted"],
+      "hints": [
+        "관계절 that disappeared ...를 괄호로 묶고, 주어 핵 The paintings와 빈칸 동사의 관계만 보십시오.",
+        "주어가 동작을 받는 대상이면 be+p.p. — 주어의 수와 서술된 과거 시점에 맞춰 형태를 결정합니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The paintings이고 that disappeared from the gallery in 1990은 삽입된 관계절입니다. 그림은 '회수되는' 대상이므로 be+p.p. 수동이 필요하며, 1990년에서 십여 년 뒤라는 과거 서사이므로 be동사는 과거 복수형입니다. 관계절 안의 능동 disappeared에 끌려 능동으로 쓰면 목적어 없는 타동사만 남습니다.",
+      "stem": "The paintings that disappeared from the gallery in 1990 {{blank}} from a warehouse more than a decade later.",
+      "given": "recover",
+      "acceptedAnswers": ["were recovered"],
+      "translation": "1990년에 미술관에서 사라졌던 그 그림들은 십여 년 뒤 한 창고에서 회수되었습니다."
+    },
+    {
+      "id": "u03-c1-wf-006",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "by-agent-omitted"],
+      "hints": [
+        "of 이하의 전치사구를 걷어내고 주어 핵을 확인한 뒤, 주어와 동사의 의미 관계를 따져 보십시오.",
+        "주어가 동작을 받는 대상이면 be+p.p. — 일반적 사실을 말하므로 현재시제이고, 주어 핵의 수에 맞춥니다."
+      ],
+      "explanation": "주어 핵은 단수 취급하는 Each이고 of the manuscripts in this collection은 수식 전치사구입니다. 필사본은 '보관되는' 대상이므로 be+p.p. 수동이 필요하고, 소장품의 일반적 관리 상태를 말하므로 현재시제 단수형이 정답입니다. by 행위자가 없어도 수동은 성립합니다.",
+      "stem": "Each of the manuscripts in this collection {{blank}} in a temperature-controlled vault two floors below the reading room.",
+      "given": "keep",
+      "acceptedAnswers": ["is kept"],
+      "translation": "이 소장품의 필사본 각각은 열람실 두 층 아래의 온도 조절 수장고에 보관됩니다."
+    },
+    {
+      "id": "u03-c1-wc-001",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["voice-basic", "past-marker"],
+      "hints": [
+        "주어 The ancient harbor가 '파괴하는' 쪽인지 '파괴되는' 쪽인지 따지고, by구를 확인하십시오.",
+        "주어가 동작을 받는 대상이면 동사는 be+p.p. — 시점 표현이 be동사의 시제를 고정합니다."
+      ],
+      "explanation": "항구는 지진에 의해 '파괴되는' 대상이고 by a series of earthquakes가 행위자를 명시하므로 수동태가 필요합니다. in the fourth century라는 과거 시점이 있으므로 be동사는 과거형입니다. 능동 과거형을 그대로 두면 항구가 무언가를 파괴했다는 뜻이 되어 목적어도 없고 의미도 성립하지 않습니다.",
+      "sentence": "The ancient harbor [[u:destroyed]] by a series of earthquakes in the fourth century.",
+      "wrong": "destroyed",
+      "acceptedAnswers": ["was destroyed"],
+      "translation": "그 고대 항구는 4세기에 잇따른 지진으로 파괴되었습니다."
+    },
+    {
+      "id": "u03-c1-wc-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object", "inanimate-subject"],
+      "hints": [
+        "밑줄 친 동사 바로 뒤에 무엇이 오는지 확인하십시오.",
+        "수동태 뒤에는 목적어가 올 수 없습니다 — 목적어가 있으면 능동으로 되돌립니다."
+      ],
+      "explanation": "동사 뒤에 목적어 the reading habits가 그대로 남아 있으므로 수동태는 성립하지 않습니다. 도표는 두 세대의 독서 습관을 '비교해 보여 주는' 주체이므로 능동 현재형으로 고칩니다. 사물 주어라는 이유만으로 수동을 고르면 이 목적어를 설명할 수 없습니다.",
+      "sentence": "This chart [[u:is compared]] the reading habits of two very different generations.",
+      "wrong": "is compared",
+      "acceptedAnswers": ["compares"],
+      "translation": "이 도표는 매우 다른 두 세대의 독서 습관을 비교해 보여 줍니다."
+    },
+    {
+      "id": "u03-c1-wc-003",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["inserted-phrase", "by-agent-omitted"],
+      "hints": [
+        "콤마 사이의 분사구를 걷어내고, 주어 The letters와 밑줄 동사를 직접 연결해 보십시오.",
+        "주어가 동작을 받는 대상이고 목적어도 없다면 동사는 be+p.p.여야 합니다."
+      ],
+      "explanation": "삽입구 hidden for decades inside an old piano를 걷어내면 The letters ___ only after ... 구조입니다. 편지는 '출판되는' 대상이고 publish의 목적어가 보이지 않으므로 be+p.p. 수동으로 고쳐야 합니다. 두 작가가 죽은 뒤의 과거 사건이고 주어가 복수이므로 be동사는 과거 복수형입니다.",
+      "sentence": "The letters, hidden for decades inside an old piano, [[u:published]] only after both writers had died.",
+      "wrong": "published",
+      "acceptedAnswers": ["were published"],
+      "translation": "낡은 피아노 안에 수십 년간 숨겨져 있던 그 편지들은 두 작가가 모두 세상을 떠난 뒤에야 출판되었습니다."
+    },
+    {
+      "id": "u03-c1-wc-004",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object"],
+      "hints": [
+        "밑줄 친 동사 바로 뒤에 목적어가 있는지 확인하십시오.",
+        "동사 뒤에 목적어가 그대로 있으면 수동태가 아니라 능동태로 써야 합니다."
+      ],
+      "explanation": "동사 뒤에 목적어 academic debate가 그대로 있으므로 수동태는 성립하지 않습니다. 이론은 학계 논쟁을 '형성해 온' 주체이므로 능동으로 고칩니다. before절의 과거 동사와 호응하는 과거 능동형이 정답입니다.",
+      "sentence": "The theory [[u:was shaped]] academic debate for two decades before serious objections gained ground.",
+      "wrong": "was shaped",
+      "acceptedAnswers": ["shaped"],
+      "translation": "그 이론은 심각한 반론이 힘을 얻기 전까지 20년 동안 학계의 논쟁을 형성했습니다."
+    },
+    {
+      "id": "u03-c2-ox-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "hints": [
+        "밑줄 동사가 관계절 안에 있는지, 그 목적어가 어디로 갔는지 확인하십시오.",
+        "선행사를 목적어 자리에 되돌려 넣어 말이 되면, 목적어가 안 보여도 능동을 유지합니다."
+      ],
+      "explanation": "gathered 뒤가 비어 보이지만, 여기는 관계절이고 목적어는 선행사 The recordings로 빠져나간 자리입니다. 선행사를 되돌려 넣으면 the field researchers gathered the recordings로 완전한 능동문이 됩니다. 빈자리를 수동의 신호로 착각해 be+p.p.로 고치면 관계절에 주어 the field researchers가 남아돌아 비문이 됩니다.",
+      "sentence": "The recordings that the field researchers [[u:gathered]] over two summers have never been fully transcribed.",
+      "isCorrect": true,
+      "translation": "현장 연구자들이 두 번의 여름에 걸쳐 수집한 그 녹음 자료들은 아직 완전히 전사되지 않았습니다."
+    },
+    {
+      "id": "u03-c2-ox-002",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "hints": [
+        "that 뒤에 주어가 따로 있는지 확인하고, 밑줄 동사의 목적어가 어디로 갔는지 찾아보십시오.",
+        "관계절에서 목적어가 선행사로 빠져나간 자리는 목적어가 안 보여도 능동이 옳습니다."
+      ],
+      "explanation": "관계절 안에 주어 the interviewer가 있고, asked의 목적어는 선행사 The questions로 빠져나갔습니다. 선행사를 되돌리면 the interviewer asked the questions로 자연스러운 능동문입니다. 목적어가 안 보인다는 이유로 수동으로 고치면 오히려 비문이 됩니다.",
+      "sentence": "The questions that the interviewer [[u:asked]] near the end caught most of the candidates off guard.",
+      "isCorrect": true,
+      "translation": "면접관이 막바지에 던진 질문들은 지원자 대부분의 허를 찔렀습니다."
+    },
+    {
+      "id": "u03-c2-ox-003",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["relative-gap", "intervening-clause"],
+      "hints": [
+        "밑줄 동사가 속한 관계절의 주어를 찾고, 목적어가 어디로 이동했는지 확인하십시오.",
+        "선행사를 목적어 자리에 되돌려 넣어 문장이 성립하면 능동 유지 — 부사가 끼어 있어도 판단은 같습니다."
+      ],
+      "explanation": "관계절의 주어는 the original model이고, embedded의 목적어는 선행사 the assumptions로 빠져나갔습니다. 선행사를 되돌리면 the model embedded the assumptions in its equations로 완전한 능동문이 됩니다. 부사 quietly와 뒤따르는 수동태 본동사 were never verified에 끌려 관계절 동사까지 수동으로 고치면 비문이 됩니다.",
+      "sentence": "Several of the assumptions that the original model quietly [[u:embedded]] in its equations were never verified against real data.",
+      "isCorrect": true,
+      "translation": "원래 모형이 방정식 속에 슬며시 심어 둔 가정들 가운데 몇몇은 실제 데이터와 대조해 검증된 적이 없습니다."
+    },
+    {
+      "id": "u03-c2-ox-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["subject-relative", "relative-gap"],
+      "hints": [
+        "that 바로 뒤에 주어가 있는지, 아니면 곧바로 동사가 오는지 확인하십시오.",
+        "선행사가 관계절의 주어 자리로 빠진 경우, 태는 다시 선행사와 동사의 의미 관계로 판단합니다."
+      ],
+      "explanation": "that 바로 뒤에 동사가 오므로 선행사 The files가 관계절의 주어 자리로 빠진 구조입니다. 파일은 '삭제되는' 대상이므로 관계절 동사는 be+p.p. 수동이 옳습니다. '관계절이니 능동 유지'라는 공식을 기계적으로 적용하면 안 되고, 그 공식은 목적어가 빠져나간 자리에만 해당합니다.",
+      "sentence": "The files that [[u:were deleted]] during the server upgrade contained the only copies of the original survey.",
+      "isCorrect": true,
+      "translation": "서버 업그레이드 중에 삭제된 그 파일들에는 원본 설문의 유일한 사본이 들어 있었습니다."
+    },
+    {
+      "id": "u03-c2-ox-005",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object"],
+      "hints": [
+        "밑줄 동사 바로 뒤에 목적어가 있는지 확인하십시오.",
+        "동사 뒤에 목적어가 그대로 있고 주어가 동작의 주체라면 능동이어야 합니다."
+      ],
+      "explanation": "동사 뒤에 목적어 its final report가 그대로 있습니다. 위원단은 보고서를 '제출하는' 주체이므로 능동 과거형으로 써야 합니다. 목적어가 남아 있는 자리에 be+p.p.를 쓰면 태와 문형이 모두 어긋납니다.",
+      "sentence": "The panel [[u:was submitted]] its final report a week before the deadline.",
+      "isCorrect": false,
+      "correction": "submitted",
+      "translation": "그 위원단은 마감 일주일 전에 최종 보고서를 제출했습니다."
+    },
+    {
+      "id": "u03-c2-ox-006",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "hints": [
+        "관계절 안에 주어가 따로 있는지 확인하고, 빠져나간 성분이 무엇인지 찾아보십시오.",
+        "관계절 안에 주어가 살아 있으면 그 동사는 주어가 하는 동작 — 목적어는 선행사로 이동한 것입니다."
+      ],
+      "explanation": "관계절 안에 주어 the villagers가 있고, 목적어는 선행사 Wild herbs로 빠져나간 구조입니다. 마을 사람들이 허브를 '뜯는' 주체이므로 관계절 동사는 능동이어야 합니다. 주어가 살아 있는 관계절에 be+p.p.를 쓰면 the villagers가 설 자리를 잃어 비문이 됩니다.",
+      "sentence": "Wild herbs that the villagers [[u:are picked]] each spring feature in many of the region's traditional dishes.",
+      "isCorrect": false,
+      "correction": "pick",
+      "translation": "마을 사람들이 봄마다 뜯는 야생 허브는 이 지역 전통 요리 다수에 들어갑니다."
+    },
+    {
+      "id": "u03-c2-ox-007",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["relative-gap", "be-used-to"],
+      "hints": [
+        "관계절의 주어와, 선행사가 빠져나간 자리가 어디인지 확인하십시오.",
+        "관계절 안에 주어가 살아 있고 목적어 자리가 비어 있으면, 그 동사는 능동이어야 합니다."
+      ],
+      "explanation": "관계절 안에 주어 early farmers가 있고, use의 목적어는 선행사 The tools로 빠져나갔습니다. 선행사를 되돌리면 early farmers used the tools to clear the land로 완전한 능동문이 됩니다. be used to 형태에 이끌려 수동을 그대로 두면 관계절에서 빠져나간 성분이 사라져 문장 전체가 성립하지 않습니다.",
+      "sentence": "The tools that early farmers [[u:were used]] to clear the land have been found across the region.",
+      "isCorrect": false,
+      "correction": "used",
+      "translation": "초기 농부들이 땅을 개간하는 데 쓰던 그 도구들은 이 지역 곳곳에서 발견되어 왔습니다."
+    },
+    {
+      "id": "u03-c2-ox-008",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["subject-relative"],
+      "hints": [
+        "that 바로 뒤에 주어가 있는지, 곧바로 동사가 오는지 확인하십시오.",
+        "선행사가 관계절의 주어 자리로 빠졌다면, 태는 선행사와 동사의 의미 관계로 다시 판단합니다."
+      ],
+      "explanation": "that 바로 뒤에 동사가 오므로 선행사 The paintings가 관계절의 주어 자리로 빠진 구조입니다. 그림은 '복원되는' 대상이므로 관계절 동사는 be+p.p. 수동이어야 합니다. 능동 과거형을 그대로 두면 그림이 무언가를 복원했다는 뜻이 되는데 목적어가 없어 성립하지 않습니다.",
+      "sentence": "The paintings that [[u:restored]] last year now hang in the east wing of the gallery.",
+      "isCorrect": false,
+      "correction": "were restored",
+      "translation": "작년에 복원된 그 그림들은 지금 미술관 동관에 걸려 있습니다."
+    },
+    {
+      "id": "u03-c2-wf-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["voice-basic", "past-marker"],
+      "hints": [
+        "빈칸 동사 뒤에 목적어가 있는지 확인하십시오.",
+        "목적어를 거느린 동사는 능동 — 시제는 last night이 고정합니다."
+      ],
+      "explanation": "동사 뒤에 목적어 every dish가 있고 주어인 요리사가 '준비하는' 주체이므로 능동입니다. last night's banquet이 명백한 과거 시점을 가리키므로 과거형이 정답입니다. 목적어가 있는 자리에 수동을 쓰면 비문이 됩니다.",
+      "stem": "The chef {{blank}} every dish himself at last night's banquet.",
+      "given": "prepare",
+      "acceptedAnswers": ["prepared"],
+      "translation": "그 요리사는 어젯밤 연회에서 모든 요리를 직접 준비했습니다."
+    },
+    {
+      "id": "u03-c2-wf-002",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["by-agent-omitted"],
+      "hints": [
+        "빈칸 동사 뒤에 목적어가 있는지 보고, 주어가 동작을 하는 쪽인지 받는 쪽인지 따져 보십시오.",
+        "목적어가 없고 주어가 동작을 받는 대상이면 be+p.p. — after절의 현재형 동사가 시제를 고정합니다."
+      ],
+      "explanation": "빈칸 뒤에 목적어가 없고, 교실은 '청소되는' 대상이므로 be+p.p. 수동이 필요합니다. every evening과 after절의 현재형 ends가 반복되는 현재의 일상을 고정하므로 현재시제 단수형입니다. 과거형을 쓰면 현재형 종속절과 시제가 충돌하며, by 행위자가 없어도 수동은 성립합니다.",
+      "stem": "The classroom {{blank}} every evening after the last lecture ends.",
+      "given": "clean",
+      "acceptedAnswers": ["is cleaned"],
+      "translation": "그 강의실은 매일 저녁 마지막 강의가 끝난 뒤에 청소됩니다."
+    },
+    {
+      "id": "u03-c2-wf-003",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["voice-basic", "inserted-phrase"],
+      "hints": [
+        "콤마 사이 삽입구를 걷어내고, 빈칸 동사 뒤에 목적어가 있는지 확인하십시오.",
+        "목적어가 그대로 있으면 능동 — 시제는 yesterday가 고정합니다."
+      ],
+      "explanation": "삽입구 visibly nervous at first를 걷어내면 동사 뒤에 목적어 the entire sequence of events가 있으므로 능동이어야 합니다. 증인이 '설명하는' 주체이고 yesterday's hearing이 과거 시점을 고정하므로 과거 능동형이 정답입니다.",
+      "stem": "The witness, visibly nervous at first, {{blank}} the entire sequence of events during yesterday's hearing.",
+      "given": "explain",
+      "acceptedAnswers": ["explained"],
+      "translation": "그 증인은 처음에는 눈에 띄게 긴장했지만 어제 청문회에서 사건의 전체 경과를 설명했습니다."
+    },
+    {
+      "id": "u03-c2-wf-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "주어 핵이 무엇인지 확인하고, by구와 시점 표현을 찾아보십시오.",
+        "주어가 동작을 받는 대상이면 be+p.p. — ago가 시제를, 주어 핵의 수가 be동사의 형태를 결정합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 set이고 of guidelines는 수식 전치사구입니다. 지침은 '공표되는' 대상이고 by the ministry가 행위자를 명시하므로 수동태가 필요하며, two days ago가 과거를 고정하므로 과거 단수 수동형이 정답입니다.",
+      "stem": "A completely new set of guidelines {{blank}} by the ministry two days ago.",
+      "given": "issue",
+      "acceptedAnswers": ["was issued"],
+      "translation": "완전히 새로운 지침 일체가 이틀 전에 그 부처에 의해 공표되었습니다."
+    },
+    {
+      "id": "u03-c2-wf-005",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["relative-gap", "past-marker"],
+      "hints": [
+        "빈칸 동사가 관계절 안에 있는지 확인하고, 관계절의 주어와 빠져나간 성분을 찾아보십시오.",
+        "관계절 안에 주어가 살아 있고 목적어가 선행사로 이동했다면 능동 — 시점 부사가 시제를 고정합니다."
+      ],
+      "explanation": "관계절 안에 주어 the historian이 있고, 목적어는 선행사 The documents로 빠져나갔습니다. 역사가가 문서를 '열람한' 주체이므로 능동이며, last winter가 과거를 고정하므로 과거형이 정답입니다. 빈자리를 수동의 신호로 읽어 be+p.p.를 쓰면 관계절 주어가 남아돌아 비문이 됩니다.",
+      "stem": "The documents that the historian {{blank}} in the palace archive last winter have changed our picture of the dynasty.",
+      "given": "consult",
+      "acceptedAnswers": ["consulted"],
+      "translation": "그 역사가가 지난겨울 왕궁 문서고에서 열람한 문서들은 그 왕조에 대한 우리의 그림을 바꾸어 놓았습니다."
+    },
+    {
+      "id": "u03-c2-wf-006",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["subject-relative", "past-marker"],
+      "hints": [
+        "that 바로 뒤가 빈칸입니다 — 선행사가 관계절에서 어떤 자리로 빠졌는지 판단하십시오.",
+        "선행사가 관계절의 주어 자리로 빠졌다면, 태는 선행사와 동사의 의미 관계로 정합니다."
+      ],
+      "explanation": "that 바로 뒤가 동사 자리이므로 선행사 The bell tower가 관계절의 주어 자리로 빠진 구조입니다. 종탑은 지진에 '손상되는' 대상이므로 be+p.p. 수동이 필요하고, 1906년이라는 과거 시점이 시제를 고정합니다. 능동으로 쓰면 종탑이 무언가를 손상시켰다는 뜻이 되어 성립하지 않습니다.",
+      "stem": "The bell tower that {{blank}} in the 1906 earthquake was not rebuilt until the 1950s.",
+      "given": "damage",
+      "acceptedAnswers": ["was damaged", "had been damaged"],
+      "translation": "1906년 지진으로 손상된 그 종탑은 1950년대에 이르러서야 재건되었습니다."
+    },
+    {
+      "id": "u03-c2-wc-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object"],
+      "hints": [
+        "밑줄 동사 바로 뒤에 목적어가 있는지 확인하십시오.",
+        "목적어가 그대로 남아 있으면 수동태가 아니라 능동태로 고칩니다."
+      ],
+      "explanation": "동사 뒤에 목적어 hundreds of rare maps가 그대로 있으므로 수동태는 성립하지 않습니다. 사서는 지도를 '목록으로 정리하는' 주체이므로 능동 과거형으로 고칩니다. during her first year라는 과거 기간 표현과도 자연스럽게 호응합니다.",
+      "sentence": "The librarian [[u:was catalogued]] hundreds of rare maps during her first year at the archive.",
+      "wrong": "was catalogued",
+      "acceptedAnswers": ["catalogued", "cataloged"],
+      "translation": "그 사서는 문서고 근무 첫해에 수백 장의 희귀 지도를 목록으로 정리했습니다."
+    },
+    {
+      "id": "u03-c2-wc-002",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["relative-gap"],
+      "hints": [
+        "관계절 안에 주어가 살아 있는지 확인하고, 빠져나간 성분이 무엇인지 찾아보십시오.",
+        "관계절의 목적어가 선행사로 이동한 자리라면 동사는 능동 — each summer가 시제를 알려 줍니다."
+      ],
+      "explanation": "관계절 안에 주어 the children이 있고, learn의 목적어는 선행사 The folk songs로 빠져나갔습니다. 아이들이 노래를 '배우는' 주체이므로 능동으로 고쳐야 하며, each summer가 반복 사실을 가리키므로 현재형입니다. 주어가 살아 있는 관계절에 수동을 쓰면 비문이 됩니다.",
+      "sentence": "The folk songs that the children [[u:are learned]] at the festival each summer have been sung for generations.",
+      "wrong": "are learned",
+      "acceptedAnswers": ["learn"],
+      "translation": "아이들이 여름마다 축제에서 배우는 그 민요들은 여러 세대에 걸쳐 불려 왔습니다."
+    },
+    {
+      "id": "u03-c2-wc-003",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["subject-relative", "past-marker"],
+      "hints": [
+        "that 바로 뒤에 주어 없이 동사가 오는 구조입니다 — 선행사가 어떤 자리로 빠졌는지 판단하십시오.",
+        "선행사가 관계절의 주어 자리로 빠졌다면, 선행사가 그 동작을 하는지 당하는지로 태를 정합니다."
+      ],
+      "explanation": "that 바로 뒤에 동사가 오므로 선행사 The academy가 관계절의 주어 자리로 빠진 구조입니다. 학술원은 '설립되는' 대상이므로 be+p.p. 수동으로 고쳐야 하고, 1666이라는 과거 시점이 시제를 고정합니다. '관계절은 능동 유지'라는 공식은 목적어가 빠져나간 자리에만 적용됩니다.",
+      "sentence": "The academy that [[u:founded]] in 1666 still advises the government on scientific questions.",
+      "wrong": "founded",
+      "acceptedAnswers": ["was founded"],
+      "translation": "1666년에 설립된 그 학술원은 지금도 과학 문제에 관해 정부에 자문합니다."
+    },
+    {
+      "id": "u03-c2-wc-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["relative-gap", "prep-rel"],
+      "hints": [
+        "관계절 안에 주어가 살아 있는지, 그리고 전치사 on의 목적어가 어디로 갔는지 확인하십시오.",
+        "전치사의 목적어가 선행사로 빠져나간 자리라면 관계절 동사는 능동이어야 합니다."
+      ],
+      "explanation": "관계절 안에 주어 the coach가 있고, 전치사 on의 목적어가 선행사 The strategies로 빠져나간 구조입니다. 감독이 전략에 '의존한' 주체이므로 능동 과거형으로 고칩니다. 빈자리에 이끌려 수동을 그대로 두면 the coach라는 주어가 설 자리를 잃어 비문이 됩니다.",
+      "sentence": "The strategies that the coach [[u:was relied]] on throughout the season finally failed in the championship match.",
+      "wrong": "was relied",
+      "acceptedAnswers": ["relied"],
+      "translation": "감독이 시즌 내내 의존했던 그 전략들은 결승전에서 끝내 실패했습니다."
+    },
+    {
+      "id": "u03-c3-ox-001",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive"],
+      "hints": [
+        "밑줄 동사가 목적어를 가질 수 있는 동사인지 확인하십시오.",
+        "자동사 뒤에 목적어가 없는 것은 수동의 신호가 아니라 정상 형태입니다."
+      ],
+      "explanation": "occur는 목적어를 갖지 않는 자동사이므로 수동태 자체가 성립하지 않습니다. 뒤에 목적어가 없는 것은 자동사의 정상 형태입니다. 목적어가 안 보인다는 이유로 be+p.p.로 고치면 오히려 비문이 됩니다.",
+      "sentence": "Major shifts in public opinion [[u:occur]] only after years of quiet groundwork.",
+      "isCorrect": true,
+      "translation": "여론의 큰 변화는 여러 해의 조용한 기초 작업이 있고 나서야 일어납니다."
+    },
+    {
+      "id": "u03-c3-ox-002",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive"],
+      "hints": [
+        "밑줄 동사가 자동사 목록(occur·happen·arise 계열)에 속하는지 떠올려 보십시오.",
+        "자동사는 수동태로 쓸 수 없습니다 — 능동이 유일한 형태입니다."
+      ],
+      "explanation": "arise는 occur·happen과 같은 묶음의 자동사로, 목적어를 갖지 않으므로 수동태가 불가능합니다. 어려움이 스스로 '생겨난' 것이므로 능동 과거형이 옳습니다. 목적어가 없다는 이유로 수동으로 고치려 하면 함정에 걸립니다.",
+      "sentence": "Several unexpected difficulties [[u:arose]] during the first weeks of the excavation.",
+      "isCorrect": true,
+      "translation": "발굴 첫 몇 주 동안 예상치 못한 여러 어려움이 생겨났습니다."
+    },
+    {
+      "id": "u03-c3-ox-003",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-pp"],
+      "hints": [
+        "주어 핵과 밑줄 동사를 연결한 뒤, 이 동사가 목적어를 갖는 동사인지 판단하십시오.",
+        "remain·persist처럼 '남아 있다' 계열의 자동사는 목적어 없이 능동으로 쓰는 것이 정상입니다."
+      ],
+      "explanation": "persist는 '계속 남아 있다'라는 뜻의 자동사로, 목적어를 갖지 않으므로 수동태가 성립하지 않습니다. 주어 Doubts가 스스로 '지속된' 것이므로 능동 과거형이 옳습니다. about 전치사구와 문장 길이에 흔들려 수동을 의심할 필요가 없습니다.",
+      "sentence": "Doubts about the official account [[u:persisted]] long after the investigation had formally closed.",
+      "isCorrect": true,
+      "translation": "공식 설명에 대한 의심은 조사가 공식적으로 종결된 뒤에도 오래 지속되었습니다."
+    },
+    {
+      "id": "u03-c3-ox-004",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "inserted-phrase"],
+      "hints": [
+        "삽입구를 걷어내고 주어와 밑줄 동사를 직접 연결해 보십시오.",
+        "자동사와 타동사를 겸하는 동사는 목적어 유무와 문맥으로 판단합니다 — 목적어가 없고 주어가 스스로 생겨난 것이면 능동입니다."
+      ],
+      "explanation": "develop은 자동사와 타동사를 겸하는 동사인데, 여기서는 목적어 없이 '(협력 형태가) 저절로 생겨나다'라는 자동사 용법으로 쓰였습니다. 협력이 위기 속에서 스스로 발달한 것이므로 능동이 옳습니다. 목적어가 없다는 이유로 be+p.p.로 고치면 누군가 그것을 개발했다는 어색한 의미가 강제되어 문맥과 어긋납니다.",
+      "sentence": "New forms of cooperation, some of them entirely informal, [[u:developed]] among rival firms as the crisis deepened.",
+      "isCorrect": true,
+      "translation": "위기가 깊어지면서 경쟁 기업들 사이에 일부는 전적으로 비공식적인 새로운 협력 형태들이 생겨났습니다."
+    },
+    {
+      "id": "u03-c3-ox-005",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "밑줄 동사가 정말 목적어 없이 쓸 수 있는 자동사인지 따져 보십시오.",
+        "'~에 위치해 있다'라는 상태 의미는 타동사를 수동 형태로 써서 나타냅니다."
+      ],
+      "explanation": "locate는 '~의 위치를 정하다/찾아내다'라는 타동사이므로, 목적어 없이 능동 현재형으로 쓰면 비문입니다. 기지가 '자리 잡혀 있는' 대상이므로 be+p.p. 수동으로 고쳐야 합니다. 우리말 '위치하다'가 자동사처럼 들린다는 이유로 능동을 그대로 두면 안 됩니다.",
+      "sentence": "The research station [[u:locates]] at the edge of a vast ice sheet.",
+      "isCorrect": false,
+      "correction": "is located",
+      "translation": "그 연구 기지는 광대한 빙상의 가장자리에 자리 잡고 있습니다."
+    },
+    {
+      "id": "u03-c3-ox-006",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "밑줄 동사가 목적어 없이 홀로 설 수 있는 동사인지 확인하십시오.",
+        "'~에 근거를 두고 있다'라는 상태 의미는 타동사를 수동 형태로 써서 나타냅니다."
+      ],
+      "explanation": "base는 'A를 B에 근거 짓다'라는 타동사이므로 목적어 없이 능동으로 쓰면 비문입니다. 영화가 회고록에 '근거를 둔' 대상이므로 be+p.p.로 고쳐야 합니다. 우리말 번역 '~에 기반하다'가 자동사처럼 느껴져도 영어 base의 실제 쓰임은 수동입니다.",
+      "sentence": "The film [[u:bases]] on a memoir that its director discovered in a flea market.",
+      "isCorrect": false,
+      "correction": "is based",
+      "translation": "그 영화는 감독이 벼룩시장에서 발견한 회고록에 바탕을 두고 있습니다."
+    },
+    {
+      "id": "u03-c3-ox-007",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["rise-raise", "hidden-transitive"],
+      "hints": [
+        "밑줄 뒤에 있는 by 행위자구가 무엇을 요구하는지 생각해 보십시오.",
+        "rise는 자동사, raise는 타동사입니다 — 행위자에 의해 '제기된' 것이라면 타동사의 수동이 필요합니다."
+      ],
+      "explanation": "by several senior researchers라는 행위자구가 있으므로 이의는 연구자들에 의해 '제기된' 대상입니다. 자동사 rise는 행위자를 취할 수 없으므로, 타동사 raise의 수동 be+p.p.로 고쳐야 합니다. rise/raise처럼 형태가 비슷한 자·타 짝은 목록 암기가 아니라 문장 구조로 판단해야 합니다.",
+      "sentence": "Objections to the new dosage guidelines [[u:rose]] by several senior researchers at the annual meeting.",
+      "isCorrect": false,
+      "correction": "were raised",
+      "translation": "새 용량 지침에 대한 이의가 연례 회의에서 여러 선임 연구자들에 의해 제기되었습니다."
+    },
+    {
+      "id": "u03-c3-ox-008",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "consist of와 이 밑줄 동사의 쓰임 차이를 떠올려 보십시오.",
+        "'~을 구성하다'라는 타동사로 '~으로 구성되다'라는 뜻을 내려면 형태를 바꿔야 합니다."
+      ],
+      "explanation": "compose는 '~을 구성하다'라는 타동사이므로, '~으로 구성되다'라는 뜻은 be composed of, 즉 be+p.p. 수동으로 나타냅니다. 자동사 consist가 consist of로 능동으로 쓰이는 것과 혼동해 compose를 능동으로 두면 비문입니다. 대기가 여러 기체로 '구성되는' 대상이므로 수동이 필요합니다.",
+      "sentence": "Earth's earliest atmosphere [[u:composed]] largely of carbon dioxide, nitrogen, and water vapor.",
+      "isCorrect": false,
+      "correction": "was composed",
+      "translation": "지구의 초기 대기는 대부분 이산화탄소, 질소, 수증기로 이루어져 있었습니다."
+    },
+    {
+      "id": "u03-c3-wf-001",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive", "past-marker"],
+      "hints": [
+        "이 동사가 목적어를 갖는 동사인지 떠올려 보십시오.",
+        "자동사는 수동태로 쓸 수 없습니다 — 시점 표현이 시제를 고정합니다."
+      ],
+      "explanation": "happen은 목적어를 갖지 않는 자동사이므로 수동태가 불가능하고 능동으로만 씁니다. just a few minutes before midnight이 명백한 과거 시점을 가리키므로 과거형이 정답입니다. 사고가 '일어나는' 것이지 '일으켜지는' 것이 아닙니다.",
+      "stem": "The accident {{blank}} just a few minutes before midnight.",
+      "given": "happen",
+      "acceptedAnswers": ["happened"],
+      "translation": "그 사고는 자정을 몇 분 앞두고 일어났습니다."
+    },
+    {
+      "id": "u03-c3-wf-002",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["intransitive-passive"],
+      "hints": [
+        "이 동사가 자동사 목록에 속하는 동사인지 확인하십시오.",
+        "자동사는 능동으로만 씁니다 — 빈도 표현이 가리키는 시제와 주어의 수에 주의하십시오."
+      ],
+      "explanation": "appear는 수동태로 쓸 수 없는 자동사이므로 능동이 유일한 선택입니다. once or twice in a century는 일반적·반복적 사실을 가리키므로 현재시제이고, 주어가 복수이므로 원형 그대로가 정답입니다. 혜성이 '나타나는' 것이지 '나타내지는' 것이 아닙니다.",
+      "stem": "Comets of this size {{blank}} only once or twice in a century.",
+      "given": "appear",
+      "acceptedAnswers": ["appear"],
+      "translation": "이 정도 크기의 혜성은 한 세기에 한두 번만 나타납니다."
+    },
+    {
+      "id": "u03-c3-wf-003",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intransitive-passive", "past-marker"],
+      "hints": [
+        "이 동사가 목적어를 갖는 동사인지 확인하고, until절의 시제를 보십시오.",
+        "자동사는 be+p.p.로 쓸 수 없습니다 — until 뒤의 과거 동사가 시제를 고정합니다."
+      ],
+      "explanation": "remain은 '남아 있다'라는 뜻의 자동사이므로 수동태가 성립하지 않습니다. until절의 과거 동사 came out이 서술 전체를 과거로 고정하므로 과거형이 정답입니다. 오류가 스스로 '남아 있던' 것이므로 능동입니다.",
+      "stem": "Several errors {{blank}} in the text until the second edition came out in 1954.",
+      "given": "remain",
+      "acceptedAnswers": ["remained"],
+      "translation": "1954년에 제2판이 나오기 전까지 본문에는 몇 가지 오류가 남아 있었습니다."
+    },
+    {
+      "id": "u03-c3-wf-004",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "이 동사가 목적어 없이 홀로 쓸 수 있는 동사인지 따져 보십시오.",
+        "'~에 위치해 있다'라는 상태는 타동사를 be+p.p.로 써서 나타냅니다 — 문두의 시간 표현이 시제를 고정합니다."
+      ],
+      "explanation": "situate는 '~을 자리 잡게 하다'라는 타동사이므로, '위치해 있다'라는 상태는 be+p.p. 수동으로 나타냅니다. 문두의 Even today가 지금도 유지되는 현재의 사실임을 못 박으므로 현재시제 단수형이 정답이며, 과거형을 쓰면 Even today와 충돌합니다. 우리말 '위치하다'에 이끌려 능동으로 쓰면 비문이 됩니다.",
+      "stem": "Even today, the old observatory {{blank}} on a ridge that visitors reach by cable car.",
+      "given": "situate",
+      "acceptedAnswers": ["is situated"],
+      "translation": "오늘날에도 그 오래된 천문대는 방문객들이 케이블카로 오르는 산등성이에 자리 잡고 있습니다."
+    },
+    {
+      "id": "u03-c3-wf-005",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intransitive-passive", "intervening-pp", "past-marker"],
+      "hints": [
+        "주어 핵과 빈칸 동사를 연결하고, 이 동사가 자동사 목록에 속하는지 확인하십시오.",
+        "자동사는 수동 불가 — last spring이 시제를 고정합니다."
+      ],
+      "explanation": "emerge는 occur·arise와 같은 묶음의 자동사이므로 수동태가 불가능합니다. 소문이 스스로 '떠오른' 것이므로 능동이고, last spring이 과거를 고정하므로 과거형이 정답입니다. about 전치사구가 길어도 판단은 주어 핵 Rumors와 동사의 관계로만 합니다.",
+      "stem": "Rumors about a possible merger {{blank}} within hours of the two executives' first meeting last spring.",
+      "given": "emerge",
+      "acceptedAnswers": ["emerged"],
+      "translation": "합병 가능성에 대한 소문은 지난봄 두 경영자의 첫 회동이 있고 몇 시간 만에 떠올랐습니다."
+    },
+    {
+      "id": "u03-c3-wf-006",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["hidden-transitive", "intervening-clause"],
+      "hints": [
+        "관계절을 걷어내고 주어 핵과 빈칸을 연결한 뒤, 이 동사가 타동사인지 따져 보십시오.",
+        "'~에 배치되어 있다'라는 상태는 타동사를 be+p.p.로 써서 나타냅니다 — 관계절의 현재 동사가 시제를 알려 줍니다."
+      ],
+      "explanation": "주어 핵은 The control room이고 that visitors see first는 삽입된 관계절입니다. position은 '~을 배치하다'라는 타동사이므로, 통제실이 '배치되어 있는' 상태는 be+p.p. 수동으로 씁니다. 관계절의 현재 동사 see가 현재의 사실임을 알려 주므로 현재시제 단수형이 정답입니다.",
+      "stem": "The control room that visitors see first {{blank}} at the exact center of the complex.",
+      "given": "position",
+      "acceptedAnswers": ["is positioned"],
+      "translation": "방문객들이 가장 먼저 보게 되는 통제실은 단지의 정중앙에 배치되어 있습니다."
+    },
+    {
+      "id": "u03-c3-wc-001",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "밑줄 동사가 목적어 없이 홀로 설 수 있는 동사인지 확인하십시오.",
+        "'~에 할애되어 있다'라는 상태는 타동사를 be+p.p.로 써서 나타냅니다."
+      ],
+      "explanation": "dedicate는 'A를 B에 바치다/할애하다'라는 타동사이므로 목적어 없이 능동으로 쓰면 비문입니다. 전시실이 스케치에 '할애되어 있는' 대상이므로 be+p.p. 수동으로 고칩니다. 전시의 일반적 구성을 말하므로 현재시제 단수형입니다.",
+      "sentence": "The last room of the exhibition [[u:dedicates]] to the artist's unfinished sketches.",
+      "wrong": "dedicates",
+      "acceptedAnswers": ["is dedicated"],
+      "translation": "전시의 마지막 방은 그 화가의 미완성 스케치들에 할애되어 있습니다."
+    },
+    {
+      "id": "u03-c3-wc-002",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["hidden-transitive"],
+      "hints": [
+        "이 동사가 '~에 뿌리를 두다'라는 뜻으로 쓰일 때 어떤 형태를 취하는지 떠올려 보십시오.",
+        "'~에 뿌리박고 있다'라는 상태는 타동사를 be+p.p.로 써서 나타냅니다."
+      ],
+      "explanation": "'~에 뿌리를 두고 있다'라는 상태는 be rooted in, 즉 be+p.p. 수동으로 나타냅니다. 불신이 과거 경험에 '뿌리내려진' 상태이므로 능동 현재형은 비문입니다. 현재의 심리 상태를 말하므로 현재시제 단수 수동형으로 고칩니다.",
+      "sentence": "Her deep distrust of experts [[u:roots]] in a humiliating experience from her school days.",
+      "wrong": "roots",
+      "acceptedAnswers": ["is rooted"],
+      "translation": "전문가에 대한 그녀의 깊은 불신은 학창 시절의 굴욕적인 경험에 뿌리를 두고 있습니다."
+    },
+    {
+      "id": "u03-c3-wc-003",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["hidden-transitive", "inserted-phrase"],
+      "hints": [
+        "삽입구를 걷어낸 뒤, 밑줄 동사 뒤의 by구가 무엇을 뜻하는지 생각해 보십시오.",
+        "by 행위자구가 있고 주어가 그 동작을 받는 쪽이라면 동사는 be+p.p.여야 합니다."
+      ],
+      "explanation": "삽입구 with its tiled roofs and narrow lanes를 걷어내면 The skyline ___ by a single Gothic spire 구조입니다. dominate는 '~을 압도하다'라는 타동사이고, 스카이라인이 첨탑에 의해 '압도되는' 대상이며 by 행위자구까지 있으므로 be+p.p. 수동으로 고칩니다. 능동을 그대로 두면 목적어도 없고 by구도 설명되지 않습니다.",
+      "sentence": "The skyline of the old town, with its tiled roofs and narrow lanes, [[u:dominates]] by a single Gothic spire.",
+      "wrong": "dominates",
+      "acceptedAnswers": ["is dominated"],
+      "translation": "기와지붕과 좁은 골목이 어우러진 구시가의 스카이라인은 단 하나의 고딕 첨탑이 압도하고 있습니다."
+    },
+    {
+      "id": "u03-c3-wc-004",
+      "unitId": "u03",
+      "conceptId": "u03-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["hidden-transitive", "past-marker"],
+      "hints": [
+        "밑줄 동사가 자동사인지 타동사인지, 그리고 이 문장에 본동사가 있는지 확인하십시오.",
+        "'~에 참여하다'라는 뜻은 타동사를 be+p.p.로 써서 나타냅니다 — 관계절의 과거 동사가 시제를 알려 줍니다."
+      ],
+      "explanation": "involve는 '~을 참여시키다/포함하다'라는 타동사이므로 목적어 없이 능동으로 쓰면 비문입니다. 자원봉사자들이 방제 작업에 '참여하게 된' 대상이므로 be involved in, 즉 be+p.p. 수동으로 고칩니다. that followed the oil spill이 과거 사건임을 알려 주므로 과거 복수형입니다.",
+      "sentence": "Hundreds of local volunteers [[u:involved]] in the cleanup operations that followed the oil spill.",
+      "wrong": "involved",
+      "acceptedAnswers": ["were involved"],
+      "translation": "수백 명의 지역 자원봉사자들이 기름 유출 이후의 방제 작업에 참여했습니다."
+    },
+    {
+      "id": "u03-c4-ox-001",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["progressive-passive"],
+      "hints": [
+        "지금 진행 중인 일인지, 그리고 주어가 동작을 받는 쪽인지 확인하십시오.",
+        "진행과 수동이 결합하면 be동사 뒤에 being과 p.p.가 차례로 옵니다."
+      ],
+      "explanation": "동관은 '보수되는' 대상이고 공사가 지금 진행 중이므로, 진행 수동 be being p.p. 형태가 정확히 맞습니다. being이 낯설어 보인다는 이유로 지우면 진행의 의미가 사라지고, been으로 바꾸면 형태 자체가 비문이 됩니다.",
+      "sentence": "The east wing of the museum [[u:is being renovated]] and will stay closed until March.",
+      "isCorrect": true,
+      "translation": "박물관 동관은 현재 보수 공사 중이며 3월까지 폐쇄된 상태로 유지될 예정입니다."
+    },
+    {
+      "id": "u03-c4-ox-002",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["perfect-passive", "since-perfect"],
+      "hints": [
+        "since절과 주어-동사의 의미 관계를 함께 확인하십시오.",
+        "완료와 수동이 결합하면 have 뒤에 been과 p.p.가 차례로 옵니다."
+      ],
+      "explanation": "항목은 '점검되는' 대상이므로 수동이 필요하고, since+과거 시점이 있으므로 현재완료와 결합해야 합니다. 완료 수동은 have/has been p.p.이므로 주어진 형태가 옳습니다. been을 being으로 바꾸면 have being이 되어 비문입니다.",
+      "sentence": "Every entry in the database [[u:has been checked]] twice since the error was first noticed.",
+      "isCorrect": true,
+      "translation": "그 오류가 처음 발견된 이후 데이터베이스의 모든 항목이 두 차례 점검되어 왔습니다."
+    },
+    {
+      "id": "u03-c4-ox-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["be-used-to"],
+      "hints": [
+        "주어가 사물인지 확인하고, be used 뒤의 to가 전치사인지 부정사의 to인지 따져 보십시오.",
+        "'~하는 데 사용되다'라는 용도의 뜻이면 be used 뒤에 to부정사(동사원형)가 옵니다."
+      ],
+      "explanation": "주어가 염료라는 사물이고 '경계를 표시하는 데 사용되었다'라는 용도의 뜻이므로, be used to-V(동사원형) 형태가 옳습니다. to 뒤를 동명사로 바꾸면 '~에 익숙하다'라는 뜻이 되는데, 사물인 염료가 익숙해질 수는 없으므로 문맥에 맞지 않습니다. be used to 삼형제는 be동사의 유무와 to 뒤의 형태로 구분합니다.",
+      "sentence": "For centuries, this bright yellow dye was [[u:used to mark]] the boundaries of common grazing land.",
+      "isCorrect": true,
+      "translation": "수 세기 동안 이 밝은 노란색 염료는 공동 방목지의 경계를 표시하는 데 사용되었습니다."
+    },
+    {
+      "id": "u03-c4-ox-004",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["perfect-passive", "inserted-phrase"],
+      "hints": [
+        "삽입구를 걷어내고, 금고를 연 과거 시점보다 앞선 기간의 일인지 확인하십시오.",
+        "과거 기준점보다 앞서 계속된 수동의 일은 had 뒤에 been과 p.p.를 차례로 씁니다."
+      ],
+      "explanation": "상속인들이 금고를 연 과거 시점(opened)보다 앞서 수십 년간 계속된 일이므로 과거완료가 필요하고, 그림은 '보관되는' 대상이므로 수동과 결합합니다. 완료 수동 had been p.p.가 정확한 형태입니다. been이 낯설다고 being으로 바꾸면 had being이 되어 비문입니다.",
+      "sentence": "The paintings, together with the letters that document their sale, [[u:had been housed]] in a bank vault for decades when the heirs finally opened it.",
+      "isCorrect": true,
+      "translation": "그 그림들은 매매를 증빙하는 편지들과 함께, 상속인들이 마침내 금고를 열었을 때까지 수십 년간 은행 금고에 보관되어 있었습니다."
+    },
+    {
+      "id": "u03-c4-ox-005",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["been-being", "perfect-passive"],
+      "hints": [
+        "have 뒤에 올 수 있는 형태가 무엇인지 확인하십시오.",
+        "완료 수동의 공식은 have+been+p.p.입니다 — have 바로 뒤의 자리가 관건입니다."
+      ],
+      "explanation": "완료 수동은 have/has been p.p. 형태이므로 has 뒤에는 being이 아니라 been이 와야 합니다. being은 진행 수동에서 be동사 뒤에 오는 형태입니다. since the accident가 현재완료와 호응하므로 시제 선택 자체는 맞고, been/being 자리만 틀렸습니다.",
+      "sentence": "The stadium [[u:has being inspected]] twice since the accident.",
+      "isCorrect": false,
+      "correction": "has been inspected",
+      "translation": "그 경기장은 사고 이후 두 차례 안전 점검을 받아 왔습니다."
+    },
+    {
+      "id": "u03-c4-ox-006",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["modal-passive"],
+      "hints": [
+        "조동사 바로 뒤에 올 수 있는 동사의 형태가 무엇인지 떠올려 보십시오.",
+        "조동사 뒤의 수동은 '조동사+be+p.p.'입니다 — been이 아니라 원형이 옵니다."
+      ],
+      "explanation": "조동사 must 뒤에는 동사원형이 와야 하므로, 수동태는 must be p.p. 형태가 됩니다. been은 have 뒤에 오는 완료형이므로 조동사 바로 뒤에는 올 수 없습니다. 기기가 '인증받는' 대상이라는 태 판단은 맞고, be의 형태만 고치면 됩니다.",
+      "sentence": "Every new device [[u:must been certified]] by an independent laboratory before it goes on sale.",
+      "isCorrect": false,
+      "correction": "must be certified",
+      "translation": "모든 신제품 기기는 판매에 들어가기 전에 독립 시험 기관의 인증을 받아야 합니다."
+    },
+    {
+      "id": "u03-c4-ox-007",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["been-being", "progressive-passive"],
+      "hints": [
+        "지금 진행 중인 공사라는 문맥과, be동사 뒤에 온 형태를 대조해 보십시오.",
+        "진행 수동의 공식은 be+being+p.p.입니다 — be동사 뒤의 자리가 관건입니다."
+      ],
+      "explanation": "동쪽 구간이 개방된 '동안' 서쪽 절반이 확장되고 있다는 진행의 문맥이므로, 진행 수동 be being p.p.가 필요합니다. is 뒤에 been을 쓰면 어떤 시제·태 공식에도 속하지 않는 비문이 됩니다. been은 have 뒤, being은 진행의 be동사 뒤라는 자리 공식을 고정해 두십시오.",
+      "sentence": "While the eastern span stays open to traffic, the western half of the bridge [[u:is been widened]] to carry the extra load.",
+      "isCorrect": false,
+      "correction": "is being widened",
+      "translation": "동쪽 구간이 차량에 개방된 상태를 유지하는 동안, 다리의 서쪽 절반은 추가 하중을 감당하도록 확장되고 있습니다."
+    },
+    {
+      "id": "u03-c4-ox-008",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["be-used-to", "prep-to"],
+      "hints": [
+        "주어가 사람인 점과, 뒤 절의 '방식을 바꿀 이유가 없다'라는 문맥을 함께 보십시오.",
+        "be used to 뒤에 동명사가 오면 '~에 익숙하다', 동사원형이 오면 '~하는 데 사용되다'입니다."
+      ],
+      "explanation": "문맥상 농부들이 빙하 융해수로 관개하는 일에 '익숙하다'라는 뜻이므로 be used to V-ing 형태가 필요합니다. 주어진 be used to-V(동사원형)는 '~하는 데 사용되다'라는 뜻이 되어, 사람인 농부들이 도구처럼 사용된다는 부자연스러운 의미가 됩니다. '익숙' 용법의 to는 전치사이므로 뒤에 동명사가 와야 합니다.",
+      "sentence": "Local farmers are [[u:used to irrigate]] their fields with glacial meltwater and see no reason to change their methods.",
+      "isCorrect": false,
+      "correction": "used to irrigating",
+      "translation": "이 지역 농부들은 빙하 융해수로 밭에 물을 대는 일에 익숙하며, 방식을 바꿀 이유를 찾지 못합니다."
+    },
+    {
+      "id": "u03-c4-wf-001",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["perfect-passive", "since-perfect"],
+      "hints": [
+        "since구가 어떤 시제를 요구하는지, 그리고 주어가 동작을 받는 쪽인지 확인하십시오.",
+        "완료와 수동을 결합하면 have+been+p.p.의 순서가 됩니다."
+      ],
+      "explanation": "since the eighteenth century가 있으므로 현재완료가 필요하고, 요리법은 '전수되는' 대상이므로 수동과 결합합니다. 완료 수동은 have/has been p.p.이며 주어가 단수이므로 has been p.p. 형태가 정답입니다.",
+      "stem": "The recipe {{blank}} down from mother to daughter since the eighteenth century.",
+      "given": "pass",
+      "acceptedAnswers": ["has been passed"],
+      "translation": "그 요리법은 18세기부터 어머니에게서 딸에게로 전수되어 왔습니다."
+    },
+    {
+      "id": "u03-c4-wf-002",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["progressive-passive"],
+      "hints": [
+        "at this very moment가 어떤 상(진행/완료)을 요구하는지, 주어가 동작을 받는 쪽인지 확인하십시오.",
+        "진행과 수동을 결합하면 be+being+p.p.의 순서가 됩니다."
+      ],
+      "explanation": "at this very moment가 바로 지금 진행 중임을 가리키므로 진행형이 필요하고, 인터뷰는 '녹음되는' 대상이므로 수동과 결합합니다. 진행 수동은 be being p.p.이므로 현재 단수 be동사와 결합한 형태가 정답입니다.",
+      "stem": "Please be quiet; the interview {{blank}} at this very moment.",
+      "given": "record",
+      "acceptedAnswers": ["is being recorded"],
+      "translation": "조용히 해 주십시오. 인터뷰가 바로 지금 녹음되고 있습니다."
+    },
+    {
+      "id": "u03-c4-wf-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["perfect-passive", "since-perfect"],
+      "hints": [
+        "since절의 과거 동사가 주절에 어떤 시제를 요구하는지 확인하십시오.",
+        "주어가 동작을 받는 대상이면 완료 수동 have+been+p.p. — 주어의 수에 맞춰 have의 형태를 정합니다."
+      ],
+      "explanation": "since+과거절(took effect)이 있으므로 주절은 현재완료가 필요하고, 시료는 '검사되는' 대상이므로 수동과 결합합니다. Every sample은 단수 취급하므로 has been p.p. 형태가 정답입니다.",
+      "stem": "Every sample {{blank}} twice since the new safety protocol took effect.",
+      "given": "test",
+      "acceptedAnswers": ["has been tested"],
+      "translation": "새 안전 규약이 시행된 이후 모든 시료가 두 차례 검사되어 왔습니다."
+    },
+    {
+      "id": "u03-c4-wf-004",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["modal-passive"],
+      "hints": [
+        "빈칸 바로 앞의 조동사가 어떤 형태를 요구하는지 확인하십시오.",
+        "조동사 뒤의 수동은 '조동사+be+p.p.'입니다 — 주어가 동작을 받는 쪽인지도 함께 확인합니다."
+      ],
+      "explanation": "조동사 must 뒤에는 동사원형이 와야 하고, 금액은 '상환되는' 대상이므로 수동이 필요합니다. 따라서 조동사+be p.p. 공식에 따라 be+p.p. 형태가 정답입니다. been이나 being을 조동사 바로 뒤에 쓰면 비문이 됩니다.",
+      "stem": "According to the contract, the full amount must {{blank}} within ninety days.",
+      "given": "repay",
+      "acceptedAnswers": ["be repaid"],
+      "translation": "계약에 따르면 전액은 90일 이내에 상환되어야 합니다."
+    },
+    {
+      "id": "u03-c4-wf-005",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["perfect-passive"],
+      "hints": [
+        "By the time+과거절이 주절에 어떤 시제를 요구하는지 확인하십시오.",
+        "과거 기준점보다 앞서 끝난 수동의 일은 had+been+p.p.로 나타냅니다."
+      ],
+      "explanation": "By the time the exhibition opened가 과거 기준점을 세우고, 액자 교체는 그보다 앞서 완료된 일이므로 과거완료가 필요합니다. 액자는 '교체되는' 대상이므로 수동과 결합해 had been p.p. 형태가 정답입니다.",
+      "stem": "By the time the exhibition opened, every single frame {{blank}} with museum-quality glass.",
+      "given": "replace",
+      "acceptedAnswers": ["had been replaced"],
+      "translation": "전시가 개막할 무렵에는 모든 액자가 하나도 빠짐없이 박물관급 유리로 교체되어 있었습니다."
+    },
+    {
+      "id": "u03-c4-wf-006",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["progressive-passive"],
+      "hints": [
+        "조사관들이 들어온 과거 시점에 작업이 끝나 있었는지, 한창 진행 중이었는지 문맥으로 판단하십시오.",
+        "과거에 진행 중이던 수동의 일은 be동사 과거형+being+p.p.로 나타냅니다."
+      ],
+      "explanation": "조사관들이 '작업을 중단시키라고 명령했다'라는 뒤 절은 그들이 들어온 순간 분해가 한창 진행 중이었음을 뜻합니다. 엔진은 '분해되는' 대상이므로 진행 수동이 필요하고, 과거 시점이므로 was being p.p. 형태가 정답입니다. 완료로 쓰면 이미 끝난 작업을 중단시키는 모순이 생깁니다.",
+      "stem": "The engine {{blank}} piece by piece when the inspectors suddenly walked in, so they ordered the work to stop.",
+      "given": "dismantle",
+      "acceptedAnswers": ["was being dismantled"],
+      "translation": "조사관들이 갑자기 들어왔을 때 엔진은 부품 하나하나 분해되고 있던 중이었고, 그래서 그들은 작업 중지를 명령했습니다."
+    },
+    {
+      "id": "u03-c4-wc-001",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["been-being", "perfect-passive"],
+      "hints": [
+        "have 뒤에 올 수 있는 형태가 무엇인지 확인하십시오.",
+        "완료 수동의 공식은 have+been+p.p.입니다 — being은 진행의 be동사 뒤에만 옵니다."
+      ],
+      "explanation": "since구가 현재완료를 요구하고 파편은 '분석되는' 대상이므로 완료 수동 have been p.p.가 필요합니다. has 뒤에는 been이 와야 하며, being을 쓰면 어떤 공식에도 속하지 않는 비문이 됩니다. been과 being을 서로 바꿔 쓰게 만드는 것이 이 유형의 단골 함정입니다.",
+      "sentence": "Each fragment of the scroll [[u:has being analyzed]] separately since the discovery of the cave.",
+      "wrong": "has being analyzed",
+      "acceptedAnswers": ["has been analyzed"],
+      "translation": "그 동굴이 발견된 이후 두루마리의 각 파편은 개별적으로 분석되어 왔습니다."
+    },
+    {
+      "id": "u03-c4-wc-002",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["modal-passive"],
+      "hints": [
+        "조동사 바로 뒤에 올 수 있는 동사의 형태를 확인하십시오.",
+        "조동사 뒤의 수동은 '조동사+be+p.p.'입니다 — been은 have 뒤에서만 씁니다."
+      ],
+      "explanation": "조동사 will 뒤에는 동사원형이 와야 하므로 수동태는 will be p.p. 형태가 됩니다. been은 완료의 have 뒤에 오는 형태라서 조동사 바로 뒤에는 설 수 없습니다. 백신이 '배포되는' 대상이라는 태 판단은 맞으므로 be의 형태만 고치면 됩니다.",
+      "sentence": "A new vaccine [[u:will been distributed]] to rural clinics early next year.",
+      "wrong": "will been distributed",
+      "acceptedAnswers": ["will be distributed"],
+      "translation": "새 백신은 내년 초에 농촌 보건소들로 배포될 예정입니다."
+    },
+    {
+      "id": "u03-c4-wc-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["been-being", "progressive-passive", "inserted-phrase"],
+      "hints": [
+        "삽입된 관계절을 걷어내고, as we speak가 요구하는 상(진행/완료)을 확인하십시오.",
+        "지금 진행 중인 수동의 일은 be+being+p.p.로 나타냅니다."
+      ],
+      "explanation": "as we speak는 바로 지금 진행 중임을 뜻하므로 진행 수동 be being p.p.가 필요합니다. is 뒤에 been을 쓰면 진행도 완료도 아닌 비문이 됩니다. 삽입절 which runs to forty pages에 흔들리지 말고 주어 The final statement와 동사의 형태 공식만 확인하면 됩니다.",
+      "sentence": "The final statement, which runs to forty pages, [[u:is been translated]] into six languages as we speak.",
+      "wrong": "is been translated",
+      "acceptedAnswers": ["is being translated"],
+      "translation": "40쪽에 달하는 그 최종 성명서는 지금 이 순간에도 여섯 개 언어로 번역되고 있습니다."
+    },
+    {
+      "id": "u03-c4-wc-004",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["be-used-to", "prep-to"],
+      "hints": [
+        "주어가 사물이라는 점에 주목하십시오 — 사물이 무언가에 익숙해질 수 있는지 생각해 보십시오.",
+        "'~하는 데 사용되다'라는 용도의 뜻이면 be used 뒤에 to부정사(동사원형)가 옵니다."
+      ],
+      "explanation": "be used to V-ing는 '~에 익숙하다'라는 뜻인데, 주어인 삼나무 궤짝은 사물이므로 익숙해질 수 없습니다. 문맥상 '리넨을 보관하는 데 사용된다'라는 용도의 뜻이므로 be used to-V(동사원형) 형태로 고쳐야 합니다. be used to 삼형제는 주어의 성격과 to 뒤의 형태로 구분합니다.",
+      "sentence": "These cedar chests [[u:are used to storing]] linen through the damp summer months.",
+      "wrong": "are used to storing",
+      "acceptedAnswers": ["are used to store"],
+      "translation": "이 삼나무 궤짝들은 습한 여름철 내내 리넨을 보관하는 데 사용됩니다."
+    }
+  ]
+}

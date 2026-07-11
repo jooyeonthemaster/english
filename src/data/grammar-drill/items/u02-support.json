@@ -1,0 +1,1214 @@
+{
+  "unitId": "u02",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u02-c1-ox-001",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "동사 바로 앞의 복수 명사가 진짜 주어인지, 전치사구 안의 미끼인지 확인해 보십시오.",
+        "주어 핵 뒤의 전치사구는 괄호로 묶고 무시합니다 — 괄호 밖에 남는 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The taste이고, of these locally grown tomatoes는 전치사구 수식어입니다. 괄호를 치면 The taste ___ heavily만 남으므로 단수 동사 depends는 어법상 옳습니다. 동사 앞의 복수 명사 tomatoes는 괄호 안의 미끼입니다.",
+      "sentence": "The taste of these locally grown tomatoes [[u:depends]] heavily on the summer weather.",
+      "isCorrect": true,
+      "translation": "이 지역에서 재배된 토마토들의 맛은 여름 날씨에 크게 좌우됩니다."
+    },
+    {
+      "id": "u02-c1-ox-002",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "밑줄 동사의 주인이 바로 앞의 명사인지, 문장 맨 앞의 명사인지 확인해 보십시오.",
+        "분사구와 전치사구는 괄호로 묶습니다 — 남는 주어 핵의 수에 동사를 일치시킵니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The documents이고, stored in the old cabinet은 분사 수식어입니다. 괄호를 걷어내면 The documents ___ transferred가 남으므로 복수 동사 were가 필요합니다. 동사 앞의 단수 명사 cabinet에 끌려 was를 그대로 두면 안 됩니다.",
+      "sentence": "The documents stored in the old cabinet [[u:was]] transferred to the city archive last month.",
+      "isCorrect": false,
+      "correction": "were",
+      "translation": "오래된 캐비닛에 보관되어 있던 그 문서들은 지난달 시립 기록보관소로 옮겨졌습니다."
+    },
+    {
+      "id": "u02-c1-ox-003",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "동사 바로 앞의 단수 명사가 아니라, 문장 맨 앞에서 주어 핵을 찾아 보십시오.",
+        "분사구 수식어를 괄호로 묶으면 주어 핵과 동사만 남습니다 — 그 핵의 수가 기준입니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The dangers이고, hidden in an ordinary household product는 분사 수식어입니다. 괄호 후 The dangers ___ far less attention이 남으므로 복수 동사 receive는 옳습니다. 바로 앞의 단수 명사 product 때문에 틀려 보이지만 괄호 안의 미끼일 뿐입니다.",
+      "sentence": "The dangers hidden in an ordinary household product [[u:receive]] far less attention than industrial accidents.",
+      "isCorrect": true,
+      "translation": "평범한 가정용 제품 하나에 숨어 있는 위험들은 산업 재해보다 훨씬 적은 주목을 받습니다."
+    },
+    {
+      "id": "u02-c1-ox-004",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "동사 앞의 복수 명사가 전치사 뒤에 있는 것은 아닌지 살펴보십시오.",
+        "for가 이끄는 전치사구는 괄호 안입니다 — 괄호 밖 주어 핵의 수를 따릅니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The schedule이고, for the weekend workshops는 전치사구 수식어입니다. 괄호를 치면 The schedule ___ every speaker가 남으므로 단수 동사 lists로 고쳐야 합니다. 복수 명사 workshops는 괄호 안의 미끼입니다.",
+      "sentence": "The schedule for the weekend workshops [[u:list]] every speaker and topic in order.",
+      "isCorrect": false,
+      "correction": "lists",
+      "translation": "주말 워크숍 일정표는 모든 발표자와 주제를 순서대로 나열합니다."
+    },
+    {
+      "id": "u02-c1-ox-005",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause"],
+      "hints": [
+        "밑줄 동사 앞에 놓인 절이 주어를 꾸미는 수식어는 아닌지 확인해 보십시오.",
+        "동격 that절은 통째로 괄호에 넣고 건너뜁니다 — 남는 주어 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The claim이고, that the new environmental policies would harm small farmers는 동격 that절 수식어입니다. 괄호를 걷어내면 The claim ___ found little support가 남으므로 단수 has는 옳습니다. 절 끝의 복수 명사 farmers는 미끼입니다.",
+      "sentence": "The claim that the new environmental policies would harm small farmers [[u:has]] found little support among professional economists.",
+      "isCorrect": true,
+      "translation": "새 환경 정책이 소농들에게 피해를 줄 것이라는 주장은 전문 경제학자들 사이에서 지지를 거의 얻지 못했습니다."
+    },
+    {
+      "id": "u02-c1-ox-006",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp"],
+      "hints": [
+        "관계사절을 지나 문장 맨 앞으로 돌아가서 주어 핵을 찾아 보십시오.",
+        "주어를 꾸미는 관계사절과 그 안의 전치사구는 전부 괄호로 묶습니다 — 괄호 밖 핵의 수가 기준입니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The delicate instruments이고, that the mountain observatory purchased from a German manufacturer a decade ago는 관계사절 수식어입니다. 괄호를 걷어내면 The instruments ___ constant calibration이 남으므로 복수 동사 require로 고쳐야 합니다. 절 안의 단수 명사 observatory와 manufacturer에 끌리면 안 됩니다.",
+      "sentence": "The delicate instruments that the mountain observatory purchased from a German manufacturer a decade ago [[u:requires]] constant calibration by trained staff.",
+      "isCorrect": false,
+      "correction": "require",
+      "translation": "그 산악 관측소가 십 년 전 독일 제조사에서 구입한 정밀 기기들은 숙련된 직원의 지속적인 보정을 필요로 합니다."
+    },
+    {
+      "id": "u02-c1-ox-007",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp"],
+      "hints": [
+        "콤마 사이에 삽입된 관계사절을 통째로 걷어내고 문장의 뼈대만 남겨 보십시오.",
+        "삽입된 수식어 안의 명사는 아무리 동사와 가까워도 수 판단에서 무시합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The report이고, 콤마 사이의 which reviews ... continents는 삽입된 관계사절입니다. 괄호를 치면 The report ___ that절이 남으므로 단수 concludes는 옳습니다. 절 안의 복수 명사 trials와 continents는 전부 미끼입니다.",
+      "sentence": "The report, which reviews dozens of clinical trials conducted across three continents, [[u:concludes]] that the treatment is safe.",
+      "isCorrect": true,
+      "translation": "세 대륙에 걸쳐 수행된 수십 건의 임상시험을 검토한 그 보고서는 그 치료법이 안전하다고 결론짓습니다."
+    },
+    {
+      "id": "u02-c1-ox-008",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "intervening-clause"],
+      "hints": [
+        "동사 앞에 수식어가 몇 겹이나 쌓여 있는지 세어 보고, 문장 맨 앞의 명사로 돌아가십시오.",
+        "분사구와 관계사절이 겹쳐도 원리는 같습니다 — 전부 괄호로 묶고 남는 핵의 수를 봅니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The paintings이고, displayed in the small gallery는 분사 수식어, that opened near the harbor last spring은 gallery를 꾸미는 관계사절입니다. 두 겹을 모두 괄호로 걷어내면 The paintings ___ visitors가 남으므로 복수 동사 attract로 고쳐야 합니다. 단수 명사 gallery와 harbor는 괄호 안의 미끼입니다.",
+      "sentence": "The paintings displayed in the small gallery that opened near the harbor last spring [[u:attracts]] visitors from across the region.",
+      "isCorrect": false,
+      "correction": "attract",
+      "translation": "지난봄 항구 근처에 문을 연 작은 미술관에 전시된 그림들은 지역 전역에서 방문객을 끌어모읍니다."
+    },
+    {
+      "id": "u02-c1-wf-001",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": [],
+      "hints": [
+        "빈칸의 동사가 어느 명사와 짝을 이루는지 주어부터 확인해 보십시오.",
+        "주어 핵의 수와 now가 가리키는 시점을 함께 판단합니다."
+      ],
+      "explanation": "주어는 단수 명사 The new laboratory이고, 부사 now가 현재 시점을 고정합니다. 따라서 be동사의 3인칭 단수 현재형 is가 정답입니다. 수식어가 없는 기본 구조이므로 주어와 동사를 바로 짝지어 판단합니다.",
+      "stem": "The new laboratory {{blank}} now open to graduate students.",
+      "given": "be",
+      "acceptedAnswers": ["is"],
+      "translation": "새 실험실은 이제 대학원생들에게 개방되어 있습니다."
+    },
+    {
+      "id": "u02-c1-wf-002",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": [],
+      "hints": [
+        "주어의 수와 함께, 문장 끝의 시간 표현이 가리키는 시점을 확인해 보십시오.",
+        "both가 붙은 주어는 둘을 가리키고, 명백한 과거 시점 부사는 동사의 시제를 과거로 고정합니다."
+      ],
+      "explanation": "주어 Both experiments는 복수이고, last week가 시제를 과거로 고정합니다. 따라서 be동사의 복수 과거형 were가 정답입니다. were repeated의 수동태 구조입니다.",
+      "stem": "Both experiments {{blank}} repeated under stricter conditions last week.",
+      "given": "be",
+      "acceptedAnswers": ["were"],
+      "translation": "두 실험 모두 지난주에 더 엄격한 조건에서 반복되었습니다."
+    },
+    {
+      "id": "u02-c1-wf-003",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "빈칸 앞의 복수 명사가 진짜 주어인지, 전치사구 안의 미끼인지 확인해 보십시오.",
+        "of가 이끄는 전치사구는 괄호로 묶습니다 — 괄호 밖에 남는 주어 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The safety이고, of the newly imported vehicles는 전치사구 수식어입니다. currently가 현재 시점을 고정하므로 3인칭 단수 현재형 requires가 정답입니다. 빈칸 앞의 복수 명사 vehicles는 괄호 안의 미끼입니다.",
+      "stem": "The safety of the newly imported vehicles currently {{blank}} independent testing by a third party.",
+      "given": "require",
+      "acceptedAnswers": ["requires"],
+      "translation": "새로 수입된 차량들의 안전성은 현재 제3자에 의한 독립적인 시험을 필요로 합니다."
+    },
+    {
+      "id": "u02-c1-wf-004",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "분사구 수식어를 걷어내고 주어 핵을 찾은 뒤, 연도 표현이 고정하는 시제를 확인하십시오.",
+        "taken이 이끄는 분사구는 괄호 안입니다 — 남는 핵의 수와 과거 시점에 맞게 판단합니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The photographs이고, taken during the expedition은 분사 수식어입니다. in 2019가 시제를 과거로 고정하므로 복수 과거형 were가 정답입니다. 단수 명사 expedition은 괄호 안의 미끼입니다.",
+      "stem": "The photographs taken during the expedition {{blank}} published in a science magazine in 2019.",
+      "given": "be",
+      "acceptedAnswers": ["were"],
+      "translation": "그 탐사 중에 촬영된 사진들은 2019년 한 과학 잡지에 게재되었습니다."
+    },
+    {
+      "id": "u02-c1-wf-005",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "intervening-clause"],
+      "hints": [
+        "of 뒤에 절까지 통째로 붙어 있습니다 — 문장 맨 앞의 명사로 돌아가 주어 핵을 찾으십시오.",
+        "주어를 꾸미는 of구와 그 안의 절은 전부 괄호로 묶습니다 — 괄호 밖 핵의 수와 even today의 시점이 기준입니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The question이고, of how ... the island는 주어를 꾸미는 수식어 덩어리입니다. even today가 현재 시점을 고정하므로 3인칭 단수 현재형 remains가 정답입니다. 수식어 안의 복수 명사 tools에 끌려 복수형을 쓰면 안 됩니다.",
+      "stem": "The question of how these massive stone tools were transported across the island {{blank}} unresolved among archaeologists even today.",
+      "given": "remain",
+      "acceptedAnswers": ["remains"],
+      "translation": "이 거대한 석기들이 어떻게 섬을 가로질러 운반되었는가 하는 문제는 오늘날에도 고고학자들 사이에서 미해결로 남아 있습니다."
+    },
+    {
+      "id": "u02-c1-wf-006",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp"],
+      "hints": [
+        "관계사절을 걷어내고 문장 맨 앞의 주어 핵을 찾은 뒤, 연도 표현의 시점을 확인하십시오.",
+        "that이 이끄는 관계사절은 통째로 괄호 안입니다 — 남는 핵의 수와 과거 시점에 맞게 판단합니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The letters이고, that the novelist exchanged with her editor during the war years는 관계사절 수식어입니다. in 2020이 시제를 과거로 고정하므로 복수 과거형 were가 정답입니다. 절 안의 단수 명사 novelist와 editor는 미끼입니다.",
+      "stem": "The letters that the novelist exchanged with her editor during the war years {{blank}} finally released to the public in 2020.",
+      "given": "be",
+      "acceptedAnswers": ["were"],
+      "translation": "그 소설가가 전쟁 기간에 편집자와 주고받은 편지들은 2020년에 마침내 대중에 공개되었습니다."
+    },
+    {
+      "id": "u02-c1-wc-001",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "밑줄 동사의 주인이 바로 앞의 단수 명사인지 의심해 보십시오.",
+        "of 전치사구는 괄호로 묶습니다 — 괄호 밖 주어 핵의 수에 동사를 맞춥니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The benefits이고, of this training program은 전치사구 수식어입니다. 괄호를 치면 The benefits ___ higher wages가 남으므로 복수 동사 include로 고쳐야 합니다. 단수 명사 program은 괄호 안의 미끼입니다.",
+      "sentence": "The benefits of this training program [[u:includes]] higher wages and better job security.",
+      "wrong": "includes",
+      "acceptedAnswers": ["include"],
+      "translation": "이 훈련 프로그램의 이점에는 더 높은 임금과 더 나은 고용 안정성이 포함됩니다."
+    },
+    {
+      "id": "u02-c1-wc-002",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "밑줄 앞의 복수 명사가 분사구 안의 미끼는 아닌지 확인해 보십시오.",
+        "stored가 이끄는 분사구는 괄호 안입니다 — 괄호 밖 주어 핵이 셀 수 있는 명사인지도 함께 보십시오."
+      ],
+      "explanation": "주어 핵은 불가산 단수 명사 The equipment이고, stored in the coastal warehouses는 분사 수식어입니다. 괄호를 걷어내면 The equipment ___ damaged가 남으므로 단수 was로 고쳐야 합니다. 복수 명사 warehouses는 괄호 안의 미끼입니다.",
+      "sentence": "The equipment stored in the coastal warehouses [[u:were]] damaged by the flood last spring.",
+      "wrong": "were",
+      "acceptedAnswers": ["was"],
+      "translation": "해안 창고들에 보관되어 있던 장비는 지난봄 홍수로 손상되었습니다."
+    },
+    {
+      "id": "u02-c1-wc-003",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause"],
+      "hints": [
+        "밑줄 동사 앞의 절이 주어를 설명하는 동격절은 아닌지 확인해 보십시오.",
+        "동격 that절은 통째로 괄호에 넣습니다 — 괄호 밖에 남는 주어 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 The theory이고, that all human languages descend from a single common ancestor는 동격 that절 수식어입니다. 괄호를 치면 The theory ___ attracted가 남으므로 단수 has로 고쳐야 합니다. 절 안의 복수 명사 languages에 끌려 복수형을 두면 안 됩니다.",
+      "sentence": "The theory that all human languages descend from a single common ancestor [[u:have]] attracted sharp criticism from several prominent linguists.",
+      "wrong": "have",
+      "acceptedAnswers": ["has"],
+      "translation": "모든 인간 언어가 단일한 공통 조상에서 갈라져 나왔다는 그 이론은 저명한 언어학자 여럿의 날카로운 비판을 받아 왔습니다."
+    },
+    {
+      "id": "u02-c1-wc-004",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "동사 앞에 전치사구가 몇 겹 쌓여 있는지 세어 보고, 문장 맨 앞의 명사로 돌아가십시오.",
+        "분사구와 그 안의 전치사구를 전부 괄호로 묶습니다 — 남는 핵의 수가 기준입니다."
+      ],
+      "explanation": "주어 핵은 복수 명사 The colorful murals이고, painted on the walls of the abandoned subway station은 분사 수식어입니다. 괄호를 걷어내면 The murals ___ photographers가 남으므로 복수 동사 draw로 고쳐야 합니다. 단수 명사 station은 괄호 안의 미끼입니다.",
+      "sentence": "The colorful murals painted on the walls of the abandoned subway station [[u:draws]] amateur photographers from all over the country.",
+      "wrong": "draws",
+      "acceptedAnswers": ["draw"],
+      "translation": "버려진 지하철역 벽에 그려진 화려한 벽화들은 전국의 아마추어 사진가들을 끌어모읍니다."
+    },
+    {
+      "id": "u02-c2-ox-001",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["indefinite-pronoun", "intervening-pp"],
+      "hints": [
+        "동사 바로 앞의 복수 명사가 아니라 문장 맨 앞의 대명사를 보십시오.",
+        "-thing형 대명사가 주어면 뒤에 어떤 명사가 붙어 있어도 수는 변하지 않습니다."
+      ],
+      "explanation": "주어는 -thing형 대명사 Everything으로 언제나 단수 취급합니다. in these crowded weekend marketplaces는 전치사구 수식어이므로 괄호에 넣고 무시합니다. 따라서 단수 동사 reflects는 옳으며, 복수 명사 marketplaces는 미끼입니다.",
+      "sentence": "Everything in these crowded weekend marketplaces [[u:reflects]] the region's long history of trade.",
+      "isCorrect": true,
+      "translation": "이 붐비는 주말 시장들의 모든 것이 그 지역의 오랜 교역 역사를 반영합니다."
+    },
+    {
+      "id": "u02-c2-ox-002",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "of 뒤의 복수 명사가 아니라 of 앞의 단어가 주어 핵입니다 — 그 단어의 수를 확인하십시오.",
+        "each가 이끄는 주어는 뒤에 복수 명사가 와도 언제나 단수 취급합니다."
+      ],
+      "explanation": "주어 핵은 Each이고, of the returning astronauts는 전치사구 수식어입니다. each는 언제나 단수 취급하므로 단수 was로 고쳐야 합니다. of 뒤의 복수 명사 astronauts는 미끼입니다.",
+      "sentence": "Each of the returning astronauts [[u:were]] examined by a medical team after landing.",
+      "isCorrect": false,
+      "correction": "was",
+      "translation": "귀환한 우주비행사들 각각은 착륙 후 의료팀의 검진을 받았습니다."
+    },
+    {
+      "id": "u02-c2-ox-003",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["gerund-subject"],
+      "hints": [
+        "주어가 명사 하나가 아니라 -ing로 시작하는 덩어리라는 점에 주목하십시오.",
+        "동명사구가 주어면 안에 복수 명사가 들어 있어도 전체를 한 덩어리로 보아 수를 판단합니다."
+      ],
+      "explanation": "주어는 동명사구 Understanding these complex tax regulations 전체이며, 덩어리 주어는 단수 취급합니다. 따라서 단수 동사 requires는 옳습니다. 동명사의 목적어인 복수 명사 regulations에 끌려 복수로 판단하면 안 됩니다.",
+      "sentence": "Understanding these complex tax regulations [[u:requires]] several years of specialized legal training.",
+      "isCorrect": true,
+      "translation": "이 복잡한 세금 규정을 이해하는 것은 수년간의 전문 법률 훈련을 필요로 합니다."
+    },
+    {
+      "id": "u02-c2-ox-004",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "and로 두 명사가 이어져 있지만, 그 앞에 붙은 한 단어가 수를 결정합니다.",
+        "every가 붙은 주어는 and로 여러 명사를 이어도 단수 취급합니다."
+      ],
+      "explanation": "every는 and로 두 명사를 연결해도 주어 전체를 단수 취급하게 만듭니다. 따라서 Every bridge and tunnel은 단수이며 was로 고쳐야 합니다. and 연결과 복수 명사 routes에 끌려 복수 동사를 두면 안 됩니다.",
+      "sentence": "Every bridge and tunnel on these routes [[u:were]] inspected after the earthquake.",
+      "isCorrect": false,
+      "correction": "was",
+      "translation": "이 노선들의 모든 교량과 터널은 지진 후에 점검을 받았습니다."
+    },
+    {
+      "id": "u02-c2-ox-005",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["clause-subject"],
+      "hints": [
+        "문장 맨 앞의 That부터 밑줄 앞까지가 하나의 주어 덩어리임을 확인해 보십시오.",
+        "that절이 주어면 절 안의 명사 수와 상관없이 전체를 한 덩어리로 보아 수를 판단합니다."
+      ],
+      "explanation": "주어는 That so many trained volunteers ... weeks라는 that절 전체이며, 절 주어는 단수 취급합니다. 따라서 단수 was는 옳습니다. 절 안의 복수 명사 volunteers와 weeks는 전부 미끼입니다.",
+      "sentence": "That so many trained volunteers abandoned the relief project within its first weeks [[u:was]] a warning sign that the organizers chose to ignore.",
+      "isCorrect": true,
+      "translation": "그렇게 많은 훈련된 자원봉사자들이 첫 몇 주 만에 구호 프로젝트를 떠났다는 것은 주최 측이 무시하기로 한 경고 신호였습니다."
+    },
+    {
+      "id": "u02-c2-ox-006",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["gerund-subject", "intervening-pp"],
+      "hints": [
+        "문장 맨 앞의 -ing 덩어리가 어디까지 이어지는지 경계를 그어 보십시오.",
+        "동명사구 주어는 안에 복수 명사가 몇 개 있어도 전체가 한 덩어리입니다."
+      ],
+      "explanation": "주어는 Donating even small amounts ... basis라는 동명사구 전체이며, 덩어리 주어는 단수 취급합니다. 따라서 makes로 고쳐야 합니다. 동명사구 안의 복수 명사 amounts와 charities는 미끼입니다.",
+      "sentence": "Donating even small amounts to local charities on a regular monthly basis [[u:make]] a measurable difference over many years.",
+      "isCorrect": false,
+      "correction": "makes",
+      "translation": "적은 금액이라도 매달 정기적으로 지역 자선단체에 기부하는 것은 여러 해에 걸쳐 측정 가능한 변화를 만들어 냅니다."
+    },
+    {
+      "id": "u02-c2-ox-007",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "복수 명사가 두 번이나 나오지만, 수를 결정하는 것은 문장 맨 앞의 한 단어입니다.",
+        "each of 뒤의 복수 명사와 분사 수식어는 전부 괄호 안입니다 — of 앞의 핵이 기준입니다."
+      ],
+      "explanation": "주어 핵은 Each이고, of the marketing strategies와 proposed by the two rival consulting firms는 전부 수식어입니다. each는 언제나 단수 취급하므로 단수 동사 carries는 옳습니다. 복수 명사 strategies와 firms가 연달아 나와 틀려 보이지만 모두 괄호 안의 미끼입니다.",
+      "sentence": "Each of the marketing strategies proposed by the two rival consulting firms [[u:carries]] its own considerable financial risks.",
+      "isCorrect": true,
+      "translation": "두 경쟁 컨설팅 회사가 제안한 마케팅 전략들 각각은 저마다 상당한 재정적 위험을 안고 있습니다."
+    },
+    {
+      "id": "u02-c2-ox-008",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["indefinite-pronoun", "intervening-clause"],
+      "hints": [
+        "관계사절을 걷어내고 문장 맨 앞의 대명사가 무엇인지 확인해 보십시오.",
+        "-one형 대명사가 주어면 뒤에 아무리 긴 수식어가 붙어도 수는 변하지 않습니다."
+      ],
+      "explanation": "주어는 -one형 대명사 Everyone으로 언제나 단수 취급합니다. who attended ... technologies는 주어를 꾸미는 관계사절이므로 괄호에 넣습니다. 따라서 was로 고쳐야 하며, 절 안의 복수 명사 lectures와 technologies는 미끼입니다.",
+      "sentence": "Everyone who attended the evening lectures on renewable energy technologies [[u:were]] later given a signed certificate of completion.",
+      "isCorrect": false,
+      "correction": "was",
+      "translation": "재생 에너지 기술에 관한 저녁 강연에 참석한 모든 사람은 나중에 서명된 수료증을 받았습니다."
+    },
+    {
+      "id": "u02-c2-wf-001",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["indefinite-pronoun"],
+      "hints": [
+        "주어로 쓰인 대명사의 종류와 now가 가리키는 시점을 확인해 보십시오.",
+        "-thing형 대명사 주어는 언제나 단수 취급합니다."
+      ],
+      "explanation": "주어 Everything은 -thing형 대명사로 언제나 단수 취급합니다. now가 현재 시점을 고정하므로 be동사의 단수 현재형 is가 정답입니다.",
+      "stem": "Everything {{blank}} now ready for tomorrow's opening ceremony.",
+      "given": "be",
+      "acceptedAnswers": ["is"],
+      "translation": "내일 개막식을 위한 모든 것이 이제 준비되어 있습니다."
+    },
+    {
+      "id": "u02-c2-wf-002",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["each-every"],
+      "hints": [
+        "주어 앞에 붙은 each가 수 판단에 어떤 영향을 주는지 떠올려 보십시오.",
+        "each가 이끄는 주어는 언제나 단수 취급하고, now는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "each가 붙은 주어 Each student는 단수 취급합니다. now가 현재 시점을 고정하므로 3인칭 단수 현재형 has가 정답입니다.",
+      "stem": "Each student now {{blank}} a tablet for classroom activities.",
+      "given": "have",
+      "acceptedAnswers": ["has"],
+      "translation": "이제 모든 학생이 각자 수업 활동용 태블릿을 하나씩 가지고 있습니다."
+    },
+    {
+      "id": "u02-c2-wf-003",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "of 뒤의 복수 명사가 아니라 of 앞의 단어가 주어 핵입니다 — 시간 표현도 함께 확인하십시오.",
+        "each of + 복수 명사는 언제나 단수 취급하고, 명백한 과거 부사는 시제를 과거로 고정합니다."
+      ],
+      "explanation": "주어 핵은 Each이고 of the rescued birds는 전치사구 수식어입니다. each는 단수 취급하며 last autumn이 시제를 과거로 고정하므로 was가 정답입니다. 복수 명사 birds는 미끼입니다.",
+      "stem": "Each of the rescued birds {{blank}} released into the wild last autumn.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "구조된 새들 각각은 지난가을 야생으로 방사되었습니다."
+    },
+    {
+      "id": "u02-c2-wf-004",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["gerund-subject"],
+      "hints": [
+        "문장 맨 앞의 -ing 덩어리가 주어 전체임을 확인하고, nowadays의 시점을 보십시오.",
+        "동명사구 주어는 안의 복수 명사와 상관없이 한 덩어리로 보아 단수 취급합니다."
+      ],
+      "explanation": "주어는 동명사구 Learning these traditional pottery techniques 전체이며 단수 취급합니다. nowadays가 현재 시점을 고정하므로 3인칭 단수 현재형 takes가 정답입니다. 동명사의 목적어인 복수 명사 techniques는 미끼입니다.",
+      "stem": "Learning these traditional pottery techniques nowadays {{blank}} several years of patient practice.",
+      "given": "take",
+      "acceptedAnswers": ["takes"],
+      "translation": "요즈음 이 전통 도예 기법을 배우는 데는 여러 해의 끈기 있는 연습이 필요합니다."
+    },
+    {
+      "id": "u02-c2-wf-005",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["clause-subject"],
+      "hints": [
+        "문장 맨 앞의 That부터 빈칸 앞까지가 하나의 주어 덩어리입니다 — 문장 끝의 when절 시제도 확인하십시오.",
+        "that절 주어는 한 덩어리로 보아 단수 취급하고, 과거 시제의 when절은 주절 시제를 과거로 고정합니다."
+      ],
+      "explanation": "주어는 That the negotiators ... communities라는 that절 전체이며 단수 취급합니다. when residents testified at last year's hearing이라는 과거 시제 부사절이 주절 시점을 과거로 고정하므로 단수 과거형 was가 정답입니다. 절 안의 복수 명사 negotiators와 communities는 미끼입니다.",
+      "stem": "That the negotiators failed to consult the affected communities {{blank}} the main complaint when residents testified at last year's hearing.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "주민들이 작년 청문회에서 증언했을 때, 협상단이 피해 지역 공동체들과 협의하지 않았다는 것이 주된 불만이었습니다."
+    },
+    {
+      "id": "u02-c2-wf-006",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "복수 명사와 분사 수식어를 걷어내고, 문장 맨 앞의 표현이 수를 어떻게 고정하는지 보십시오.",
+        "every one of + 복수 명사는 단수 취급하고, currently는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "주어 핵은 Every one이고, of the manuscripts와 recovered from the flooded basement는 전부 수식어입니다. every one은 단수 취급하며 currently가 현재 시점을 고정하므로 has가 정답입니다. 복수 명사 manuscripts는 괄호 안의 미끼입니다.",
+      "stem": "Every one of the manuscripts recovered from the flooded basement currently {{blank}} a dedicated conservation team.",
+      "given": "have",
+      "acceptedAnswers": ["has"],
+      "translation": "침수된 지하실에서 회수된 필사본 하나하나에 현재 전담 보존팀이 붙어 있습니다."
+    },
+    {
+      "id": "u02-c2-wc-001",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["indefinite-pronoun", "intervening-pp"],
+      "hints": [
+        "동사 앞의 복수 명사가 아니라 문장 맨 앞의 대명사가 주어입니다.",
+        "-thing형 대명사 주어는 언제나 단수 취급합니다 — 전치사구는 괄호로 묶으십시오."
+      ],
+      "explanation": "주어는 -thing형 대명사 Nothing으로 단수 취급합니다. in the official records는 전치사구 수식어이므로 괄호에 넣습니다. 따라서 단수형 explains로 고쳐야 하며, 복수 명사 records는 미끼입니다.",
+      "sentence": "Nothing in the official records [[u:explain]] why the expedition changed its course.",
+      "wrong": "explain",
+      "acceptedAnswers": ["explains"],
+      "translation": "공식 기록의 어떤 것도 그 탐험대가 왜 경로를 바꾸었는지 설명해 주지 않습니다."
+    },
+    {
+      "id": "u02-c2-wc-002",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["gerund-subject"],
+      "hints": [
+        "문장 맨 앞의 -ing 덩어리가 주어이고, 뒤에 이어지는 두 번째 동사의 형태도 단서가 됩니다.",
+        "동명사구 주어는 한 덩어리로 보아 단수 취급합니다."
+      ],
+      "explanation": "주어는 동명사구 Recycling common household plastics 전체이며 단수 취급합니다. 따라서 saves로 고쳐야 합니다. and 뒤에 이미 단수형 reduces가 쓰인 것도 주어가 단수 취급임을 보여 주는 단서입니다.",
+      "sentence": "Recycling common household plastics [[u:save]] energy and reduces landfill waste in every major city.",
+      "wrong": "save",
+      "acceptedAnswers": ["saves"],
+      "translation": "일반 가정용 플라스틱을 재활용하는 것은 에너지를 절약하고 모든 대도시에서 매립 쓰레기를 줄여 줍니다."
+    },
+    {
+      "id": "u02-c2-wc-003",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "복수 명사와 분사 수식어 두 겹을 걷어내고 of 앞의 핵을 확인해 보십시오.",
+        "each of + 복수 명사는 뒤에 어떤 수식어가 붙어도 언제나 단수 취급합니다."
+      ],
+      "explanation": "주어 핵은 Each이고, of the bronze sculptures와 donated by the artist's family last year는 전부 수식어입니다. each는 언제나 단수 취급하므로 was로 고쳐야 합니다. 복수 명사 sculptures는 괄호 안의 미끼입니다.",
+      "sentence": "Each of the bronze sculptures donated by the artist's family last year [[u:were]] placed in a separate climate-controlled room.",
+      "wrong": "were",
+      "acceptedAnswers": ["was"],
+      "translation": "작년에 그 예술가의 유족이 기증한 청동 조각상 각각은 별도의 항온항습실에 배치되었습니다."
+    },
+    {
+      "id": "u02-c2-wc-004",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["clause-subject"],
+      "hints": [
+        "문장 맨 앞의 That부터 밑줄 앞까지를 한 덩어리로 묶어 보십시오.",
+        "that절 주어는 절 안의 명사 수와 상관없이 단수 취급합니다."
+      ],
+      "explanation": "주어는 That the blood samples ... technicians라는 that절 전체이며, 절 주어는 단수 취급합니다. 따라서 explains로 고쳐야 합니다. 절 안의 복수 명사 samples와 technicians에 끌려 복수형을 두면 안 됩니다.",
+      "sentence": "That the blood samples were labeled by three different technicians [[u:explain]] the small inconsistencies in the final measurements.",
+      "wrong": "explain",
+      "acceptedAnswers": ["explains"],
+      "translation": "혈액 표본들이 서로 다른 세 명의 기사에 의해 라벨링되었다는 사실이 최종 측정값의 사소한 불일치를 설명해 줍니다."
+    },
+    {
+      "id": "u02-c3-ox-001",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["a-number-of"],
+      "hints": [
+        "주어가 the number of인지 a number of인지 관사부터 정확히 확인해 보십시오.",
+        "a number of는 many의 뜻으로 뒤의 복수 명사를 꾸미는 표현입니다 — 수는 뒤 명사가 결정합니다."
+      ],
+      "explanation": "주어는 a number of + 복수 명사 구조로, a number of는 many의 뜻이므로 복수 취급합니다. 따라서 복수 동사 were는 옳습니다. the number of(단수)와 혼동해 단수로 고치면 오히려 틀립니다.",
+      "sentence": "A number of small coastal villages [[u:were]] evacuated hours before the storm arrived.",
+      "isCorrect": true,
+      "translation": "많은 작은 해안 마을이 폭풍이 도착하기 몇 시간 전에 대피했습니다."
+    },
+    {
+      "id": "u02-c3-ox-002",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["the-number-of", "intervening-pp"],
+      "hints": [
+        "주어의 관사가 the인지 a인지, 그리고 무엇이 늘어난 것인지 생각해 보십시오.",
+        "the number of는 '~의 수'라는 개념 하나를 가리키는 표현입니다."
+      ],
+      "explanation": "주어는 the number of + 복수 명사 구조로, '~의 수' 하나를 가리키므로 단수 취급합니다. 따라서 has로 고쳐야 합니다. of 뒤의 복수 명사 applications는 미끼이며, 늘어난 것은 지원서들이 아니라 그 '수'입니다.",
+      "sentence": "The number of applications for the research grant [[u:have]] risen sharply this year.",
+      "isCorrect": false,
+      "correction": "has",
+      "translation": "그 연구 지원금에 대한 지원서 수가 올해 급격히 증가했습니다."
+    },
+    {
+      "id": "u02-c3-ox-003",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["one-of"],
+      "hints": [
+        "of 뒤의 복수 명사가 아니라 of 앞의 단어가 주어 핵입니다.",
+        "one of + 복수 명사는 그중 '하나'를 가리킵니다 — 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "주어 핵은 One이고, of the museum's most valuable manuscripts는 전치사구 수식어입니다. one of + 복수 명사는 그중 하나를 가리키므로 단수 취급하며, 단수 is는 옳습니다. 복수 명사 manuscripts는 미끼입니다.",
+      "sentence": "One of the museum's most valuable manuscripts [[u:is]] missing from the archive.",
+      "isCorrect": true,
+      "translation": "그 박물관의 가장 귀중한 필사본들 중 하나가 기록보관소에서 사라졌습니다."
+    },
+    {
+      "id": "u02-c3-ox-004",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["partitive", "intervening-pp"],
+      "hints": [
+        "most of 구문에서 수를 결정하는 명사가 어느 것인지 확인해 보십시오 — 동사 바로 앞 명사가 아닙니다.",
+        "부분 표현은 of 뒤 명사의 수를 그대로 따릅니다."
+      ],
+      "explanation": "부분 표현 most of의 수는 of 뒤 명사가 결정합니다. of 뒤의 water는 불가산 단수이므로 comes로 고쳐야 합니다. 동사 바로 앞의 복수 명사 reservoirs는 전치사구 안의 미끼입니다.",
+      "sentence": "Most of the water in these mountain reservoirs [[u:come]] from melting snow.",
+      "isCorrect": false,
+      "correction": "comes",
+      "translation": "이 산악 저수지들에 있는 물의 대부분은 녹는 눈에서 옵니다."
+    },
+    {
+      "id": "u02-c3-ox-005",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["the-number-of", "intervening-clause"],
+      "hints": [
+        "관계사절을 걷어내고, 문장 맨 앞의 수량 표현이 어느 쪽 공식인지 확인해 보십시오.",
+        "the number of는 '~의 수' 하나를 가리키는 표현이고, 관계사절 안의 명사는 수 판단에서 무시합니다."
+      ],
+      "explanation": "주어는 the number of + 복수 명사 구조로 '~의 수' 하나를 가리키므로 단수 취급합니다. who switch majors during their first two years는 students를 꾸미는 관계사절 수식어입니다. 따라서 단수 remains는 옳으며, 복수 명사 students와 years는 전부 미끼입니다.",
+      "sentence": "The number of students who switch majors during their first two years [[u:remains]] surprisingly stable across different universities.",
+      "isCorrect": true,
+      "translation": "첫 2년 동안 전공을 바꾸는 학생의 수는 대학이 달라도 놀라울 만큼 안정적입니다."
+    },
+    {
+      "id": "u02-c3-ox-006",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["one-of", "intervening-pp"],
+      "hints": [
+        "of 뒤의 복수 명사와 분사 수식어를 괄호로 묶고 of 앞의 핵을 보십시오.",
+        "one of + 복수 명사의 핵은 '하나'입니다 — 뒤의 보어가 아니라 주어 핵이 동사의 수를 결정합니다."
+      ],
+      "explanation": "주어 핵은 One이고, of the main reasons와 cited in the committee's final report는 전부 수식어입니다. one of + 복수 명사는 단수 취급하므로 was로 고쳐야 합니다. 복수 명사 reasons는 괄호 안의 미끼입니다.",
+      "sentence": "One of the main reasons cited in the committee's final report [[u:were]] the unexpected rise in raw material costs.",
+      "isCorrect": false,
+      "correction": "was",
+      "translation": "위원회 최종 보고서에 언급된 주요 이유들 중 하나는 원자재 비용의 예상치 못한 상승이었습니다."
+    },
+    {
+      "id": "u02-c3-ox-007",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["partitive", "intervening-pp"],
+      "hints": [
+        "percent 자체가 아니라 of 뒤의 명사를 기준으로 수를 판단해 보십시오.",
+        "부분 표현에는 고유의 수가 없습니다 — of 뒤 명사의 수를 그대로 따릅니다."
+      ],
+      "explanation": "percent of 같은 부분 표현의 수는 of 뒤 명사가 결정합니다. of 뒤의 samples는 복수이므로 복수 동사 show는 옳습니다. 'percent는 단수'라는 한 방향 암기나 단수 명사 river에 끌린 판단이 오답을 만듭니다.",
+      "sentence": "Nearly seventy percent of the soil samples collected along the lower river [[u:show]] clear traces of industrial contamination.",
+      "isCorrect": true,
+      "translation": "강 하류를 따라 채취한 토양 표본의 거의 70퍼센트가 산업 오염의 뚜렷한 흔적을 보여 줍니다."
+    },
+    {
+      "id": "u02-c3-ox-008",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["a-number-of", "intervening-pp"],
+      "hints": [
+        "주어의 수량 표현이 '수'를 가리키는지 '많은'을 뜻하는지 관사로 구분해 보십시오.",
+        "a number of는 many의 뜻입니다 — 수는 뒤의 복수 명사가 결정합니다."
+      ],
+      "explanation": "주어는 a number of + 복수 명사 구조로, a number of는 many의 뜻이므로 복수 취급합니다. 따라서 were로 고쳐야 합니다. the number of와 혼동하거나 단수 명사 master에 끌려 단수 동사를 두면 안 됩니다.",
+      "sentence": "A number of the paintings attributed to the workshop of the old master [[u:was]] later identified as student copies.",
+      "isCorrect": false,
+      "correction": "were",
+      "translation": "그 옛 거장의 공방 작품으로 여겨지던 많은 그림이 나중에 제자들의 모작으로 판명되었습니다."
+    },
+    {
+      "id": "u02-c3-wf-001",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["the-number-of"],
+      "hints": [
+        "주어의 수량 표현이 가리키는 것이 사람들인지 '수'인지 생각해 보십시오.",
+        "the number of는 '~의 수'라는 개념 하나를 가리키는 표현이고, now는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "주어 The number of visitors는 '방문객의 수' 하나를 가리키므로 단수 취급합니다. now가 현재 시점을 고정하므로 단수 현재형 is가 정답입니다. 복수 명사 visitors는 미끼입니다.",
+      "stem": "The number of visitors {{blank}} now displayed on the screen.",
+      "given": "be",
+      "acceptedAnswers": ["is"],
+      "translation": "방문객 수가 이제 화면에 표시되어 있습니다."
+    },
+    {
+      "id": "u02-c3-wf-002",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["a-number-of"],
+      "hints": [
+        "주어의 관사가 a라는 점과 at the moment가 가리키는 시점을 확인해 보십시오.",
+        "a number of는 many의 뜻으로, 수는 뒤의 복수 명사가 결정합니다."
+      ],
+      "explanation": "a number of는 many의 뜻이므로 주어는 복수 취급합니다. at the moment가 현재 시점을 고정하므로 복수 현재형 are가 정답입니다.",
+      "stem": "A number of seats {{blank}} still empty at the moment.",
+      "given": "be",
+      "acceptedAnswers": ["are"],
+      "translation": "현재 많은 좌석이 아직 비어 있습니다."
+    },
+    {
+      "id": "u02-c3-wf-003",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["one-of", "intervening-pp"],
+      "hints": [
+        "of 뒤의 복수 명사가 아니라 of 앞의 핵을 찾고, 시간 표현도 확인하십시오.",
+        "one of + 복수 명사의 핵은 '하나'이고, 명백한 과거 시점 표현은 시제를 과거로 고정합니다."
+      ],
+      "explanation": "주어 핵은 One이고 of the oldest customs in the village는 수식어입니다. one of + 복수 명사는 단수 취급하며 last year's가 과거 시점을 고정하므로 was가 정답입니다. 복수 명사 customs는 미끼입니다.",
+      "stem": "One of the oldest customs in the village {{blank}} revived at last year's harvest festival.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "그 마을의 가장 오래된 풍습들 중 하나가 작년 추수 축제에서 되살아났습니다."
+    },
+    {
+      "id": "u02-c3-wf-004",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["the-number-of", "intervening-pp"],
+      "hints": [
+        "무엇이 줄어든 것인지 — 서점들 자체인지 그 '수'인지 생각해 보십시오.",
+        "the number of는 단수 개념 하나를 가리키고, since + 과거 시점은 완료 시제와 어울립니다."
+      ],
+      "explanation": "주어 The number of independent bookstores는 '서점의 수' 하나를 가리키므로 단수 취급합니다. since 2010과 과거분사 fallen이 현재완료 구조를 요구하므로 has가 정답입니다. 복수 명사 bookstores는 미끼입니다.",
+      "stem": "The number of independent bookstores in the city {{blank}} fallen steadily since 2010.",
+      "given": "have",
+      "acceptedAnswers": ["has"],
+      "translation": "그 도시의 독립 서점 수는 2010년 이후 꾸준히 감소해 왔습니다."
+    },
+    {
+      "id": "u02-c3-wf-005",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["partitive", "intervening-pp"],
+      "hints": [
+        "half of 구문에서 수를 결정하는 명사를 찾고, 그 명사가 셀 수 있는지 확인하십시오.",
+        "부분 표현은 of 뒤 명사의 수를 그대로 따르고, 연도 표현은 시제를 과거로 고정합니다."
+      ],
+      "explanation": "부분 표현 half of의 수는 of 뒤 명사가 결정하는데, equipment는 불가산 단수 명사입니다. in 1998이 시제를 과거로 고정하므로 단수 과거형 was가 정답입니다. 분사 수식어 purchased for the polar expedition은 괄호 안입니다.",
+      "stem": "Almost half of the scientific equipment purchased for the polar expedition {{blank}} severely damaged during the crossing in 1998.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "극지 탐사를 위해 구입된 과학 장비의 거의 절반이 1998년 횡단 중에 심하게 손상되었습니다."
+    },
+    {
+      "id": "u02-c3-wf-006",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["partitive", "intervening-clause"],
+      "hints": [
+        "percentage 자체가 아니라 of 뒤의 명사를 찾고, 관계사절은 괄호로 묶으십시오.",
+        "부분 표현은 of 뒤 명사의 수를 따르고, today는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "부분 표현 percentage of의 수는 of 뒤 복수 명사 letters가 결정합니다. that the poet wrote to his patrons는 letters를 꾸미는 관계사절 수식어입니다. today가 현재 시점을 고정하므로 복수 현재형 are가 정답입니다.",
+      "stem": "Only a small percentage of the letters that the poet wrote to his patrons {{blank}} available to researchers today.",
+      "given": "be",
+      "acceptedAnswers": ["are"],
+      "translation": "그 시인이 후원자들에게 쓴 편지들 중 극히 일부만이 오늘날 연구자들에게 공개되어 있습니다."
+    },
+    {
+      "id": "u02-c3-wc-001",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["the-number-of", "intervening-pp"],
+      "hints": [
+        "줄어들고 있는 것이 불만들 자체인지 그 '수'인지 생각해 보십시오.",
+        "the number of는 '~의 수'라는 단수 개념 하나를 가리키는 표현입니다."
+      ],
+      "explanation": "주어 The number of complaints는 '불만의 수' 하나를 가리키므로 단수 취급합니다. 따라서 is로 고쳐야 합니다. 복수 명사 complaints는 of 뒤의 미끼입니다.",
+      "sentence": "The number of complaints about the new fare system [[u:are]] falling every month.",
+      "wrong": "are",
+      "acceptedAnswers": ["is"],
+      "translation": "새 요금 체계에 대한 불만 건수는 매달 줄어들고 있습니다."
+    },
+    {
+      "id": "u02-c3-wc-002",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["one-of", "intervening-pp"],
+      "hints": [
+        "of 뒤의 복수 명사가 아니라 of 앞의 단어가 주어 핵입니다.",
+        "one of + 복수 명사는 그중 '하나'를 가리키므로 핵의 수에 동사를 맞춥니다."
+      ],
+      "explanation": "주어 핵은 One이고 of the busiest ports in the region은 전치사구 수식어입니다. one of + 복수 명사는 단수 취급하므로 handles로 고쳐야 합니다. 복수 명사 ports는 미끼입니다.",
+      "sentence": "One of the busiest ports in the region [[u:handle]] over a million containers each year.",
+      "wrong": "handle",
+      "acceptedAnswers": ["handles"],
+      "translation": "그 지역에서 가장 붐비는 항구들 중 하나는 매년 백만 개가 넘는 컨테이너를 처리합니다."
+    },
+    {
+      "id": "u02-c3-wc-003",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["a-number-of", "intervening-pp"],
+      "hints": [
+        "수량 표현의 관사가 a라는 점을 확인하고, 분사 수식어는 괄호로 묶으십시오.",
+        "a number of는 many의 뜻으로, 수는 뒤의 복수 명사가 결정합니다."
+      ],
+      "explanation": "주어는 a number of + 복수 명사 구조로 복수 취급합니다. recovered from the sunken merchant vessel은 분사 수식어이므로 괄호에 넣습니다. 따라서 show로 고쳐야 하며, 단수 명사 vessel은 미끼입니다.",
+      "sentence": "A number of the bronze tools recovered from the sunken merchant vessel [[u:shows]] clear signs of skilled ancient repair.",
+      "wrong": "shows",
+      "acceptedAnswers": ["show"],
+      "translation": "침몰한 상선에서 회수된 많은 청동 도구가 고대의 숙련된 수리 흔적을 뚜렷이 보여 줍니다."
+    },
+    {
+      "id": "u02-c3-wc-004",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["partitive", "intervening-pp"],
+      "hints": [
+        "a third of 구문에서 수를 결정하는 명사를 찾고, 분사 수식어는 걷어내십시오.",
+        "부분 표현은 of 뒤 명사의 수를 그대로 따릅니다."
+      ],
+      "explanation": "부분 표현 a third of의 수는 of 뒤 복수 명사 reefs가 결정합니다. surveyed by the national marine institute last summer는 분사 수식어이므로 괄호에 넣습니다. 따라서 were로 고쳐야 하며, 단수 명사 institute는 미끼입니다.",
+      "sentence": "Roughly a third of the coral reefs surveyed by the national marine institute last summer [[u:was]] classified as severely bleached.",
+      "wrong": "was",
+      "acceptedAnswers": ["were"],
+      "translation": "지난여름 국립해양연구소가 조사한 산호초의 약 3분의 1이 심각한 백화 상태로 분류되었습니다."
+    },
+    {
+      "id": "u02-c4-ox-001",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문장이 장소 표현으로 시작합니다 — 주어가 동사 앞에 있는지 뒤에 있는지 확인하십시오.",
+        "장소구 도치에서는 동사 뒤의 명사가 진짜 주어입니다."
+      ],
+      "explanation": "장소 전치사구 Next to the old warehouses가 문두에 와서 '부사구+동사+주어' 어순이 된 도치문입니다. 진짜 주어는 동사 뒤의 단수 명사 a small brick chapel이므로 단수 stands는 옳습니다. 문두의 복수 명사 warehouses는 전치사의 목적어일 뿐 주어가 아닙니다.",
+      "sentence": "Next to the old warehouses [[u:stands]] a small brick chapel from the colonial era.",
+      "isCorrect": true,
+      "translation": "오래된 창고들 옆에는 식민지 시대의 작은 벽돌 예배당이 서 있습니다."
+    },
+    {
+      "id": "u02-c4-ox-002",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "There는 주어가 아닙니다 — 동사 뒤에서 진짜 주어를 찾아 보십시오.",
+        "There 구문의 동사는 뒤에 오는 명사의 수에 일치시킵니다."
+      ],
+      "explanation": "There는 자리만 차지하는 유도부사이고, 진짜 주어는 동사 뒤의 복수 명사 several unanswered questions입니다. 따라서 were로 고쳐야 합니다. There를 단수 주어처럼 취급하면 안 됩니다.",
+      "sentence": "There [[u:was]] several unanswered questions at the end of yesterday's press briefing.",
+      "isCorrect": false,
+      "correction": "were",
+      "translation": "어제 기자 브리핑이 끝날 무렵에는 답변되지 않은 질문이 여러 개 있었습니다."
+    },
+    {
+      "id": "u02-c4-ox-003",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문두의 장소구 속 명사가 단수라고 해서 곧바로 동사를 판단하지 마십시오.",
+        "장소구 도치에서 동사의 수는 그 뒤에 오는 진짜 주어가 결정합니다."
+      ],
+      "explanation": "장소구 Under the loose floorboard가 문두에 온 도치문으로, 진짜 주어는 동사 뒤의 복수 명사 several gold coins입니다. 따라서 복수 were는 옳습니다. 문두의 단수 명사 floorboard는 전치사의 목적어일 뿐이며, 단수 동사로 고치면 오히려 틀립니다.",
+      "sentence": "Under the loose floorboard [[u:were]] several gold coins from the previous century.",
+      "isCorrect": true,
+      "translation": "헐거운 마룻바닥 아래에는 지난 세기의 금화 여러 닢이 있었습니다."
+    },
+    {
+      "id": "u02-c4-ox-004",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문두의 복수 명사가 주어처럼 보이지만 전치사 뒤에 있습니다 — 진짜 주어는 어디에 있는지 찾으십시오.",
+        "장소구 도치에서는 동사 뒤 명사구의 핵에 동사를 일치시킵니다."
+      ],
+      "explanation": "장소구 Beyond the crumbling city gates가 문두에 온 도치문으로, 진짜 주어는 동사 뒤의 단수 명사 an ancient watchtower입니다. 따라서 stands로 고쳐야 합니다. 문두의 복수 명사 gates는 전치사의 목적어인 미끼입니다.",
+      "sentence": "Beyond the crumbling city gates [[u:stand]] an ancient watchtower overlooking the entire valley.",
+      "isCorrect": false,
+      "correction": "stands",
+      "translation": "무너져 가는 성문 너머에는 계곡 전체를 내려다보는 오래된 망루가 서 있습니다."
+    },
+    {
+      "id": "u02-c4-ox-005",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "콤마 사이의 삽입구를 걷어내고, 동사 뒤에서 진짜 주어를 찾아 보십시오.",
+        "There 구문에서는 삽입구 너머 동사 뒤에 오는 명사구의 핵이 수를 결정합니다."
+      ],
+      "explanation": "There 구문에서 진짜 주어는 동사 뒤의 a single detailed map으로 단수입니다. among the scattered records of the failed voyage는 콤마로 삽입된 전치사구 수식어입니다. 따라서 단수 exists는 옳으며, 삽입구 안의 복수 명사 records는 미끼입니다.",
+      "sentence": "There [[u:exists]], among the scattered records of the failed voyage, a single detailed map drawn by the ship's carpenter.",
+      "isCorrect": true,
+      "translation": "실패한 항해의 흩어진 기록들 사이에는 그 배의 목수가 그린 상세한 지도 한 장이 존재합니다."
+    },
+    {
+      "id": "u02-c4-ox-006",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "부정어가 문두에 와서 도치된 문장입니다 — 조동사 뒤의 주어를 찾아 그 수를 확인하십시오.",
+        "부정어 도치에서도 조동사의 수는 그 뒤에 오는 주어가 결정합니다."
+      ],
+      "explanation": "부정어 Rarely가 문두에 와서 '조동사+주어+동사원형' 어순이 된 도치문입니다. 주어는 단수 명사 a reform이므로 does로 고쳐야 합니다. 부정어 뒤에 복수 조동사를 반사적으로 붙이는 암기 습관이 주어 확인을 건너뛰게 만듭니다.",
+      "sentence": "Rarely [[u:do]] a reform of this scale win broad public approval without many months of heated parliamentary debate.",
+      "isCorrect": false,
+      "correction": "does",
+      "translation": "이 정도 규모의 개혁이 여러 달의 격렬한 의회 논쟁 없이 폭넓은 대중의 지지를 얻는 일은 드뭅니다."
+    },
+    {
+      "id": "u02-c4-ox-007",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "문두의 부정어와 장소구를 지나, 조동사 뒤에 오는 명사의 수를 확인해 보십시오.",
+        "부정어 도치에서 조동사의 수는 문두의 명사가 아니라 그 뒤의 진짜 주어가 결정합니다."
+      ],
+      "explanation": "부정어 Nowhere가 문두에 와서 조동사+주어 어순이 된 도치문입니다. 진짜 주어는 조동사 뒤의 단수 명사 the endangered lynx이므로 단수 does는 옳습니다. 문두 장소구 안의 복수 명사 forests는 미끼입니다.",
+      "sentence": "Nowhere in these dense forests [[u:does]] the endangered lynx face a greater threat than near the new highway.",
+      "isCorrect": true,
+      "translation": "이 울창한 숲 어디에서도 그 멸종 위기 스라소니가 새 고속도로 근처에서보다 더 큰 위협에 직면하는 곳은 없습니다."
+    },
+    {
+      "id": "u02-c4-ox-008",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "삽입구를 걷어내고 to be 뒤에 오는 명사구의 수를 확인해 보십시오.",
+        "There 구문에서는 동사 뒤(to be 너머)에 오는 명사구의 핵이 수를 결정합니다."
+      ],
+      "explanation": "There 구문에서 진짜 주어는 to be 뒤의 several deeper anxieties로 복수입니다. behind the residents' polite refusals는 콤마로 삽입된 전치사구입니다. 따라서 seem으로 고쳐야 하며, There를 단수 주어처럼 취급하면 안 됩니다.",
+      "sentence": "There [[u:seems]] to be, behind the residents' polite refusals, several deeper anxieties about the future of the neighborhood.",
+      "isCorrect": false,
+      "correction": "seem",
+      "translation": "주민들의 정중한 거절 뒤에는 동네의 미래에 대한 더 깊은 불안 여러 가지가 자리하고 있는 듯합니다."
+    },
+    {
+      "id": "u02-c4-wf-001",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "There 뒤의 동사가 어느 명사와 짝을 이루는지 찾아 보십시오.",
+        "There 구문의 진짜 주어는 동사 뒤의 명사이고, now는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 동사 뒤의 복수 명사 three cafeterias입니다. now가 현재 시점을 고정하므로 복수 현재형 are가 정답입니다.",
+      "stem": "There {{blank}} now three cafeterias on the main campus.",
+      "given": "be",
+      "acceptedAnswers": ["are"],
+      "translation": "이제 본교 캠퍼스에는 구내식당이 세 곳 있습니다."
+    },
+    {
+      "id": "u02-c4-wf-002",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "동사 뒤의 명사가 단수인지 복수인지, 그리고 시간 부사를 확인해 보십시오.",
+        "There 구문의 수는 동사 뒤 진짜 주어가 결정하고, 명백한 과거 부사는 시제를 과거로 고정합니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 동사 뒤의 단수 명사 a short ceremony입니다. yesterday가 시제를 과거로 고정하므로 단수 과거형 was가 정답입니다.",
+      "stem": "There {{blank}} a short ceremony before the match yesterday.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "어제 경기 전에 짧은 기념식이 있었습니다."
+    },
+    {
+      "id": "u02-c4-wf-003",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "There와 부사를 지나 동사 뒤에 오는 명사구의 핵을 찾아 보십시오.",
+        "There 구문의 수는 동사 뒤 진짜 주어가 결정하고, currently는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 동사 뒤의 복수 명사 several openings입니다. currently가 현재 시점을 고정하므로 복수 현재형 are가 정답입니다. 뒤쪽의 단수 명사 institute는 전치사구 안의 미끼입니다.",
+      "stem": "There {{blank}} currently several openings for laboratory technicians at the research institute.",
+      "given": "be",
+      "acceptedAnswers": ["are"],
+      "translation": "그 연구소에는 현재 실험실 기사 채용 공석이 여러 개 있습니다."
+    },
+    {
+      "id": "u02-c4-wf-004",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문두의 장소구 속 복수 명사에 끌리지 말고, 동사 뒤의 진짜 주어를 찾으십시오.",
+        "장소구 도치에서 동사의 수는 뒤에 오는 주어가 결정하고, today는 시제를 현재로 고정합니다."
+      ],
+      "explanation": "장소구 Above the twin staircases가 문두에 온 도치문으로, 진짜 주어는 동사 뒤의 단수 명사 the chandelier입니다. today가 현재 시점을 고정하므로 3인칭 단수 현재형 hangs가 정답입니다. 문두의 복수 명사 staircases는 미끼입니다.",
+      "stem": "Above the twin staircases today {{blank}} the chandelier imported from Vienna in the 1920s.",
+      "given": "hang",
+      "acceptedAnswers": ["hangs"],
+      "translation": "오늘날 그 쌍둥이 계단 위에는 1920년대에 빈에서 들여온 샹들리에가 걸려 있습니다."
+    },
+    {
+      "id": "u02-c4-wf-005",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "Only rarely로 시작하는 도치문입니다 — 빈칸 뒤 명사구의 핵을 찾아 수를 판단하십시오.",
+        "부정어 도치에서 조동사의 수는 그 뒤 주어 핵이 결정하고, today's 표현은 시제를 현재로 고정합니다."
+      ],
+      "explanation": "Only rarely가 문두에 와서 '조동사+주어+동사원형' 어순이 된 도치문입니다. 주어 핵은 복수 명사 the combined efforts이므로 복수 조동사 do가 정답입니다. 문두의 단수 명사 environment나 부정어 뒤에 단수 조동사를 반사적으로 붙이는 습관에 끌리면 안 됩니다.",
+      "stem": "Only rarely in today's fragmented media environment {{blank}} the combined efforts of rival networks produce a shared narrative.",
+      "given": "do",
+      "acceptedAnswers": ["do"],
+      "translation": "오늘날의 파편화된 미디어 환경에서 경쟁 방송사들의 합동 노력이 공유된 서사를 만들어 내는 일은 극히 드뭅니다."
+    },
+    {
+      "id": "u02-c4-wf-006",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "콤마 사이의 삽입구를 걷어내고 동사 뒤의 진짜 주어를 찾아 보십시오.",
+        "There 구문의 수는 동사 뒤 주어가 결정하고, 삽입된 시간 표현이 시제를 과거로 고정합니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 삽입구 너머의 복수 명사 three separate accounts입니다. at the time of last year's audit이 과거 시점을 고정하므로 복수 과거형 were가 정답입니다. 삽입구 안의 단수 명사 audit은 미끼입니다.",
+      "stem": "There {{blank}}, at the time of last year's audit, three separate accounts registered under the same name.",
+      "given": "be",
+      "acceptedAnswers": ["were"],
+      "translation": "작년 감사 시점에는 동일한 이름으로 등록된 별도의 계좌가 세 개 있었습니다."
+    },
+    {
+      "id": "u02-c4-wc-001",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "There는 주어가 아닙니다 — 동사 뒤 명사구의 수를 확인하십시오.",
+        "There 구문의 동사는 뒤에 오는 진짜 주어의 수에 일치시킵니다."
+      ],
+      "explanation": "There는 유도부사일 뿐이고 진짜 주어는 동사 뒤의 복수 명사 many practical reasons입니다. 따라서 are로 고쳐야 합니다. There 뒤에 단수 동사를 굳어진 덩어리로 쓰는 습관이 오답을 만듭니다.",
+      "sentence": "There [[u:is]] many practical reasons to delay the product launch until spring.",
+      "wrong": "is",
+      "acceptedAnswers": ["are"],
+      "translation": "제품 출시를 봄까지 미뤄야 할 현실적인 이유가 여러 가지 있습니다."
+    },
+    {
+      "id": "u02-c4-wc-002",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문장이 장소구로 시작하는 도치문입니다 — 동사 뒤에서 주어를 찾으십시오.",
+        "장소구 도치에서 동사의 수는 뒤에 오는 진짜 주어가 결정합니다."
+      ],
+      "explanation": "장소구 Along the northern border가 문두에 온 도치문으로, 진짜 주어는 동사 뒤의 복수 명사 two parallel roads입니다. 따라서 run으로 고쳐야 합니다. 문두의 단수 명사 border는 전치사의 목적어인 미끼입니다.",
+      "sentence": "Along the northern border [[u:runs]] two parallel roads built for military transport.",
+      "wrong": "runs",
+      "acceptedAnswers": ["run"],
+      "translation": "북쪽 국경을 따라 군수 수송용으로 건설된 평행한 도로 두 개가 나 있습니다."
+    },
+    {
+      "id": "u02-c4-wc-003",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "부정어 도치의 조동사 뒤에 오는 명사구의 핵을 찾아 수를 확인해 보십시오.",
+        "도치가 되어도 조동사의 수는 진짜 주어가 결정합니다 — 문두 부정어와 짝지어 암기한 형태를 의심하십시오."
+      ],
+      "explanation": "부정어 Rarely가 문두에 온 도치문으로, 주어 핵은 복수 명사 exhibits입니다. 따라서 do로 고쳐야 합니다. 소유격 the museum's의 단수 형태와 부정어 뒤에 단수 조동사를 반사적으로 붙이는 습관이 오답을 만듭니다.",
+      "sentence": "Rarely [[u:does]] the museum's most famous exhibits leave the climate-controlled main hall for touring shows in other cities.",
+      "wrong": "does",
+      "acceptedAnswers": ["do"],
+      "translation": "그 박물관의 가장 유명한 전시품들이 다른 도시 순회전을 위해 항온항습 본관을 떠나는 일은 드뭅니다."
+    },
+    {
+      "id": "u02-c4-wc-004",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "콤마 사이의 삽입구를 걷어내고, 동사 뒤 명사구의 핵을 찾아 보십시오.",
+        "There 구문의 수는 삽입구가 아니라 동사 뒤의 진짜 주어가 결정합니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 삽입구 너머의 단수 명사 a serious doubt입니다. 따라서 remains로 고쳐야 합니다. 삽입구 안의 복수 명사 assurances는 미끼입니다.",
+      "sentence": "There [[u:remain]], despite the committee's repeated assurances, a serious doubt about the fairness of the selection process.",
+      "wrong": "remain",
+      "acceptedAnswers": ["remains"],
+      "translation": "위원회의 거듭된 확언에도 불구하고 선발 과정의 공정성에 대한 심각한 의구심이 하나 남아 있습니다."
+    }
+  ]
+}

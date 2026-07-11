@@ -1,0 +1,489 @@
+{
+  "unitId": "u04",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u04-c1-mu-001",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["modifier-participle", "intervening-pp"],
+      "text": "The manuscript [[1:examined]] by two historians [[2:contains]] several maps of forgotten trade routes. Each page [[3:copying]] by hand centuries ago still shows bright ink.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "copied",
+      "rationales": [
+        "꾸며지는 명사 The manuscript는 검토되는 대상이므로 과거분사 examined가 옳습니다.",
+        "주어의 핵은 단수 The manuscript이고 examined by two historians는 수식어이므로 단수 동사 contains가 옳습니다.",
+        "꾸며지는 명사 Each page는 손으로 복제되는 대상이므로 과거분사 copied가 옳으며, 현재분사 copying은 틀립니다."
+      ],
+      "hints": [
+        "밑줄 친 분사가 실제로 꾸미는 명사를 찾아, 그 명사가 동작을 하는지 당하는지 되돌려 보십시오.",
+        "꾸며지는 명사가 동작을 당하는 쪽이면 과거분사를, 직접 하는 쪽이면 현재분사를 씁니다."
+      ],
+      "explanation": "세 번째 밑줄이 꾸미는 명사는 Each page이고, 페이지는 사람 손에 복제되는 대상이므로 과거분사 copied가 옳습니다. 뒤의 by hand가 수동 관계를 확인해 줍니다. 현재분사 copying은 페이지가 스스로 복제한다는 성립할 수 없는 뜻이 되어 틀립니다. 첫 밑줄은 검토되는 대상의 과거분사, 둘째 밑줄은 단수 주어와 일치한 동사로 모두 옳습니다."
+    },
+    {
+      "id": "u04-c2-mu-002",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "intransitive-participle"],
+      "text": "The lecture on sleep habits was so [[1:fascinated]] that few students noticed the time. Those [[2:sitting]] near the front [[3:asked]] the most questions.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "fascinating",
+      "rationales": [
+        "주어 The lecture는 감정을 느끼는 대상이 아니라 흥미를 일으키는 원인이므로 현재분사 fascinating이 옳으며, 과거분사 fascinated는 틀립니다.",
+        "sit은 목적어를 갖지 않는 자동사이고 사람들이 앉아 있는 중이므로 현재분사 sitting이 옳습니다.",
+        "문장의 본동사 자리로, 앞자리 사람들이 질문한 주체이므로 능동 과거형 asked가 옳습니다."
+      ],
+      "hints": [
+        "감정을 나타내는 분사가 설명하는 대상이 감정을 일으키는 원인인지, 감정을 느끼는 쪽인지 먼저 물어보십시오.",
+        "감정을 일으키는 원인은 현재분사로, 감정을 느끼는 쪽은 과거분사로 표현합니다."
+      ],
+      "explanation": "강의(The lecture)는 스스로 흥미를 느끼는 대상이 될 수 없고 학생들에게 흥미를 일으키는 원인이므로 현재분사 fascinating이 옳습니다. 사물을 설명하는데 과거분사 fascinated를 쓰면 강의가 감정을 느낀다는 뜻이 되어 틀립니다. 둘째 밑줄은 자동사 sit의 진행 -ing, 셋째 밑줄은 질문한 주체의 능동으로 옳습니다."
+    },
+    {
+      "id": "u04-c3-mu-003",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["complement-participle", "modifier-participle"],
+      "text": "Staff [[1:kept]] the gallery empty while the repairs went on. The curator found the ancient vase [[2:damaging]], though its painted label remained [[3:attached]].",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "damaged",
+      "rationales": [
+        "문장의 본동사 자리로, Staff가 갤러리를 비워 둔 주체이므로 능동 과거형 kept가 옳습니다.",
+        "목적격 보어가 설명하는 대상은 목적어 the ancient vase이고, 꽃병은 손상을 입는 대상이므로 과거분사 damaged가 옳으며, 현재분사 damaging은 틀립니다.",
+        "주격 보어가 설명하는 대상은 주어 its painted label이고, 라벨은 붙여지는 대상이므로 remained 뒤에 과거분사 attached가 옳습니다."
+      ],
+      "hints": [
+        "보어 자리의 분사가 설명하는 대상이 주어인지 목적어인지 먼저 가려낸 뒤, 그 대상이 동작을 하는지 당하는지 따져 보십시오.",
+        "5형식 목적격 보어는 주어가 아니라 목적어와의 능·수동 관계로 판단합니다."
+      ],
+      "explanation": "둘째 밑줄은 found의 목적격 보어이고, 그 짝은 목적어 the ancient vase입니다. 꽃병은 손상을 입는 대상이므로 과거분사 damaged가 옳고, 현재분사 damaging은 꽃병이 무언가에 손상을 가한다는 성립 불가능한 뜻이 됩니다. 첫 밑줄은 비워 둔 주체의 능동, 셋째 밑줄은 붙여지는 대상의 주격 보어로 옳습니다."
+    },
+    {
+      "id": "u04-c4-mu-004",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle"],
+      "text": "A [[1:barking]] dog [[2:led]] the rangers up the steep trail. Near the top they finally reached the [[3:cried]] child who had been lost since dawn.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "crying",
+      "rationales": [
+        "bark는 목적어를 갖지 않는 자동사이고 개가 짖는 중이므로 진행의 현재분사 barking이 옳습니다.",
+        "문장의 본동사 자리로, 개가 레인저들을 이끈 주체이므로 능동 과거형 led가 옳습니다.",
+        "cry는 목적어를 갖지 않는 자동사이고 아이가 우는 중이므로 현재분사 crying이 옳으며, 자동사에는 완료 수식형이 없어 cried는 틀립니다."
+      ],
+      "hints": [
+        "밑줄 친 분사의 원형이 목적어를 가질 수 있는 동사인지 먼저 확인해 보십시오.",
+        "자동사의 분사는 능·수동이 아니라 진행 중인지 이미 끝났는지로 판단하며, 진행 중이면 현재분사를 씁니다."
+      ],
+      "explanation": "셋째 밑줄의 cry는 목적어를 가질 수 없는 자동사이고 아이는 지금 울고 있는 상태이므로 진행을 나타내는 현재분사 crying이 옳습니다. 자동사는 '떨어뜨려진, 울려진'처럼 수동으로 해석되지 않으므로 cried 형태의 수식은 성립하지 않습니다. 첫 밑줄은 짖는 중인 자동사의 현재분사, 둘째 밑줄은 이끈 주체의 능동으로 옳습니다."
+    },
+    {
+      "id": "u04-c1-mu-005",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["modifier-participle", "reduced-relative", "intransitive-passive"],
+      "text": "Economists [[1:studied]] household debt across three decades have identified a clear warning sign. The families [[2:carrying]] the heaviest loans [[3:were]] the first to cut their spending when prices [[4:rose]].",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "studying",
+      "rationales": [
+        "문장의 본동사는 have identified이므로 밑줄 자리는 Economists를 꾸미는 수식어이고, 경제학자들은 연구를 수행하는 주체이므로 현재분사 studying이 옳으며, studied는 틀립니다.",
+        "꾸며지는 명사 The families는 빚을 떠안는 주체이고 뒤에 목적어가 있으므로 현재분사 carrying이 옳습니다.",
+        "주어의 핵은 복수 The families이고 carrying the heaviest loans는 수식어이므로 복수 동사 were가 옳습니다.",
+        "rise는 목적어를 갖지 않는 자동사이므로 수동으로 쓸 수 없고, 물가가 오른 주체로서 능동 과거형 rose가 옳습니다."
+      ],
+      "hints": [
+        "문장의 진짜 본동사를 먼저 찾아, 남는 밑줄 자리가 수식어인지 판단한 뒤 그 명사가 동작을 하는지 살펴보십시오.",
+        "본동사가 따로 있는 문장에서 명사 뒤 분사는 수식어이며, 그 명사가 동작을 직접 하면 현재분사를 씁니다."
+      ],
+      "explanation": "이 문장의 본동사는 have identified이므로 첫 밑줄 자리는 Economists를 꾸미는 수식어입니다. 경제학자들은 부채를 연구하는 주체이므로 능동의 현재분사 studying이 옳고, 과거분사처럼 보이는 studied를 쓰면 수식 관계가 수동으로 뒤집히는 데다 studied 뒤에 목적어가 남아 성립하지 않습니다. 둘째 밑줄은 빚을 떠안는 주체의 현재분사, 셋째 밑줄은 복수 주어와 일치한 동사, 넷째 밑줄은 자동사 rise의 능동 과거형으로 모두 옳습니다."
+    },
+    {
+      "id": "u04-c2-mu-006",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "modifier-participle"],
+      "text": "The gallery's new exhibit left many first-time visitors deeply [[1:moved]]. Critics [[2:describing]] the show called its central mural genuinely [[3:overwhelmed]], and ticket sales [[4:climbed]] for weeks.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "overwhelming",
+      "rationales": [
+        "목적격 보어가 설명하는 대상은 목적어 many first-time visitors이고, 관람객은 감동을 느끼는 쪽이므로 과거분사 moved가 옳습니다.",
+        "꾸며지는 명사 Critics는 전시를 묘사하는 주체이고 뒤에 목적어가 있으므로 현재분사 describing이 옳습니다.",
+        "its central mural은 감정을 느끼는 대상이 아니라 압도감을 일으키는 원인이므로 현재분사 overwhelming이 옳으며, 과거분사 overwhelmed는 틀립니다.",
+        "문장의 본동사 자리로, 티켓 판매가 오른 것이므로 자동사 climb의 능동 과거형 climbed가 옳습니다."
+      ],
+      "hints": [
+        "감정 분사가 꾸미거나 설명하는 대상이 사람인지 사물인지가 아니라, 감정을 일으키는 원인인지 느끼는 쪽인지를 물어보십시오.",
+        "사물이라도 감정을 일으키는 원인이면 현재분사를, 감정을 느끼는 쪽이면 과거분사를 씁니다."
+      ],
+      "explanation": "셋째 밑줄이 설명하는 its central mural은 스스로 감정을 느낄 수 없고 관람객에게 압도감을 일으키는 원인이므로 현재분사 overwhelming이 옳습니다. 벽화를 과거분사 overwhelmed로 쓰면 벽화가 압도당했다는 뜻이 되어 틀립니다. 첫 밑줄은 감동을 느낀 관람객의 과거분사, 둘째 밑줄은 묘사하는 주체의 현재분사로 옳습니다."
+    },
+    {
+      "id": "u04-c3-mu-007",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["complement-participle", "modifier-participle"],
+      "text": "In the crowded hall the young cellist heard her name [[1:calling]] from the balcony above. Judges [[2:seated]] along the front row [[3:watched]] as she crossed the newly [[4:polished]] stage.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "called",
+      "rationales": [
+        "지각동사 heard의 목적격 보어이고 그 짝은 목적어 her name입니다. 이름은 불리는 대상이므로 과거분사 called가 옳으며, 현재분사 calling은 틀립니다.",
+        "꾸며지는 명사 Judges는 앉혀지는 대상이므로 과거분사 seated가 옳습니다.",
+        "문장의 본동사 자리로, 심사위원들이 지켜본 주체이므로 능동 과거형 watched가 옳습니다.",
+        "꾸며지는 명사 stage는 광택이 내어지는 대상이므로 과거분사 polished가 옳습니다."
+      ],
+      "hints": [
+        "지각동사 뒤 보어가 설명하는 대상이 목적어이므로, 그 목적어가 동작을 하는지 당하는지 먼저 가려 보십시오.",
+        "목적어가 동작을 당하는 쪽이면 지각동사의 목적격 보어라도 과거분사를 씁니다."
+      ],
+      "explanation": "첫 밑줄은 heard의 목적격 보어이고 그 짝은 목적어 her name입니다. 이름은 누군가에 의해 불리는 대상이므로 과거분사 called가 옳고, 현재분사 calling은 이름이 스스로 부른다는 성립 불가능한 뜻이 됩니다. 둘째 밑줄은 앉혀지는 대상의 과거분사, 넷째 밑줄은 광택이 내어지는 대상의 과거분사로 옳습니다."
+    },
+    {
+      "id": "u04-c1-mu-008",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["modifier-participle", "reduced-relative"],
+      "text": "A tax reform [[1:proposing]] by the finance ministry [[2:has divided]] the ruling party. Lawmakers [[3:representing]] rural districts fear that the plan, [[4:designed]] for large cities, will hurt small farms.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "proposed",
+      "rationales": [
+        "꾸며지는 명사 A tax reform은 제안되는 대상이므로 과거분사 proposed가 옳으며, 현재분사 proposing은 틀립니다.",
+        "주어의 핵은 단수 A tax reform이므로 단수 동사 has divided가 옳습니다.",
+        "꾸며지는 명사 Lawmakers는 지역을 대표하는 주체이고 뒤에 목적어가 있으므로 현재분사 representing이 옳습니다.",
+        "꾸며지는 명사 the plan은 설계되는 대상이므로 과거분사 designed가 옳습니다."
+      ],
+      "hints": [
+        "명사 바로 뒤 분사가 그 명사와 능동 관계인지 수동 관계인지 되돌린 문장으로 검산해 보십시오.",
+        "명사가 동작을 당하는 대상이면 과거분사를 쓰며, 뒤에 by가 이어지면 수동 관계일 가능성이 큽니다."
+      ],
+      "explanation": "첫 밑줄이 꾸미는 A tax reform은 재무부에 의해 제안되는 대상이므로 과거분사 proposed가 옳습니다. 뒤의 by the finance ministry가 수동 관계를 확인해 주며, 현재분사 proposing은 개혁안이 스스로 제안한다는 뜻이 되어 틀립니다. 셋째 밑줄은 대표하는 주체의 현재분사, 넷째 밑줄은 설계되는 대상의 과거분사로 옳습니다."
+    },
+    {
+      "id": "u04-c4-mu-009",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "emotion-participle"],
+      "text": "Deep in the cave, biologists filmed hundreds of [[1:sleeping]] bats clinging to the ceiling. A single [[2:glowed]] beam from a headlamp was enough to wake them, and the [[3:startled]] colony [[4:poured]] out through a narrow crack.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "glowing",
+      "rationales": [
+        "sleep은 목적어를 갖지 않는 자동사이고 박쥐들이 자는 중이므로 진행의 현재분사 sleeping이 옳습니다.",
+        "glow는 목적어를 갖지 않는 자동사이고 빛줄기가 빛나는 중이므로 현재분사 glowing이 옳으며, glowed 형태의 수식은 틀립니다.",
+        "colony는 감정을 느끼는 쪽이므로 과거분사 startled가 옳습니다.",
+        "문장의 본동사 자리로, 무리가 쏟아져 나온 것이므로 자동사 pour의 능동 과거형 poured가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 분사의 원형이 자동사인지 확인하고, 자동사라면 그 동작이 진행 중인지 물어보십시오.",
+        "자동사가 진행 중인 동작을 나타내면 목적어가 없어도 현재분사를 씁니다."
+      ],
+      "explanation": "둘째 밑줄의 glow는 목적어를 가질 수 없는 자동사이고 빛줄기가 지금 빛나는 중이므로 진행의 현재분사 glowing이 옳습니다. 자동사는 수동으로 해석되지 않으므로 glowed 형태로 명사를 꾸밀 수 없어 틀립니다. 첫 밑줄은 자는 중인 자동사의 현재분사, 셋째 밑줄은 놀람을 느낀 무리의 과거분사, 넷째 밑줄은 쏟아져 나온 주체의 능동으로 옳습니다."
+    },
+    {
+      "id": "u04-c1-mu-010",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["modifier-participle", "intransitive-participle", "perfect-participle", "intervening-pp"],
+      "text": "The instruments [[1:installed]] on the mountain ridge [[2:record]] faint vibrations that travel through solid rock. A signal [[3:generating]] deep below the surface can reach the sensors within seconds, while [[4:fallen]] boulders and shifting ice add constant noise. Engineers [[5:analyzing]] the raw data must separate real tremors from this background.",
+      "underlineCount": 5,
+      "answer": 3,
+      "correction": "generated",
+      "rationales": [
+        "꾸며지는 명사 The instruments는 설치되는 대상이므로 과거분사 installed가 옳습니다.",
+        "주어의 핵은 복수 The instruments이고 installed on the mountain ridge는 수식어이므로 복수 동사 record가 옳습니다.",
+        "꾸며지는 명사 A signal은 만들어지는 대상이므로 과거분사 generated가 옳으며, 현재분사 generating은 틀립니다.",
+        "fall은 자동사이고 바위가 이미 떨어진 결과 상태이므로 완료를 나타내는 과거분사 fallen이 옳습니다.",
+        "꾸며지는 명사 Engineers는 자료를 분석하는 주체이고 뒤에 목적어가 있으므로 현재분사 analyzing이 옳습니다."
+      ],
+      "hints": [
+        "밑줄마다 꾸며지는 명사를 찾아 능동·수동 관계를 확인하되, 자동사 분사는 진행인지 완료인지로 따로 판단하십시오.",
+        "명사가 동작을 당하면 과거분사, 직접 하면 현재분사이며, 자동사의 과거분사는 이미 끝난 결과 상태를 뜻합니다."
+      ],
+      "explanation": "셋째 밑줄이 꾸미는 A signal은 지하에서 만들어지는 대상이므로 과거분사 generated가 옳고, 현재분사 generating은 신호가 스스로 무언가를 만든다는 뜻이 되어 틀립니다. 넷째 밑줄의 fallen은 수동이 아니라 자동사 fall의 완료(이미 떨어진 결과)를 나타내는 옳은 수식으로, 틀려 보이지만 정문입니다. 첫 밑줄은 설치되는 대상의 과거분사, 둘째 밑줄은 복수 주어와 일치한 동사, 다섯째 밑줄은 분석하는 주체의 현재분사로 옳습니다."
+    },
+    {
+      "id": "u04-c2-mu-011",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["emotion-participle", "modifier-participle"],
+      "text": "Volunteers [[1:tested]] in the sleep lab reported feeling strangely [[2:relaxing]] after the sessions. The researchers, [[3:puzzled]] by the pattern, found that soft music [[4:played]] before bedtime lowered stress hormones. Even the most [[5:exhausted]] participants slept longer once the routine began.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "relaxed",
+      "rationales": [
+        "꾸며지는 명사 Volunteers는 검사받는 대상이므로 과거분사 tested가 옳습니다.",
+        "지원자들은 편안함을 느끼는 쪽이므로 과거분사 relaxed가 옳으며, 현재분사 relaxing은 틀립니다.",
+        "The researchers는 어리둥절함을 느끼는 쪽이므로 과거분사 puzzled가 옳습니다.",
+        "꾸며지는 명사 soft music은 틀어지는 대상이므로 과거분사 played가 옳습니다.",
+        "participants는 지침을 느끼는 쪽이므로 과거분사 exhausted가 옳습니다."
+      ],
+      "hints": [
+        "감정을 나타내는 분사가 설명하는 대상이 그 감정을 느끼는 쪽인지, 남에게 그 감정을 일으키는 원인인지 물어보십시오.",
+        "주어가 감정을 느끼는 쪽이면 feel 뒤에도 과거분사를 씁니다."
+      ],
+      "explanation": "둘째 밑줄의 지원자들은 세션이 끝난 뒤 스스로 편안함을 느끼는 쪽이므로 과거분사 relaxed가 옳습니다. 현재분사 relaxing은 지원자들이 남을 편안하게 한다는 뜻이 되어 feel의 보어로 맞지 않아 틀립니다. 첫·넷째 밑줄은 각각 검사받고 틀어지는 대상의 과거분사, 셋째·다섯째 밑줄은 감정을 느끼는 쪽의 과거분사로 모두 옳습니다."
+    },
+    {
+      "id": "u04-c3-mu-012",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["complement-participle", "emotion-participle"],
+      "text": "Negotiators [[1:exhausted]] by three days of talks kept the final terms [[2:sealing]] until both governments approved them. Reporters [[3:waiting]] outside found the silence [[4:frustrating]], and a spokesman finally read a statement [[5:prepared]] hours earlier.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "sealed",
+      "rationales": [
+        "꾸며지는 명사 Negotiators는 협상에 지친 감정을 느끼는 쪽이므로 과거분사 exhausted가 옳습니다.",
+        "kept의 목적격 보어가 설명하는 대상은 목적어 the final terms이고, 조건은 봉인되는 대상이므로 과거분사 sealed가 옳으며, 현재분사 sealing은 틀립니다.",
+        "wait는 목적어를 갖지 않는 자동사이고 기자들이 기다리는 중이므로 현재분사 waiting이 옳습니다.",
+        "found의 목적격 보어가 설명하는 the silence는 답답함을 일으키는 원인이므로 현재분사 frustrating이 옳습니다.",
+        "꾸며지는 명사 a statement는 몇 시간 전에 준비된 대상이므로 과거분사 prepared가 옳습니다."
+      ],
+      "hints": [
+        "보어 자리의 분사가 설명하는 대상이 주어인지 목적어인지 가려낸 뒤, 그 대상이 동작을 하는지 당하는지 물어보십시오.",
+        "같은 목적격 보어 자리라도 목적어가 동작을 당하면 과거분사, 감정을 일으키는 원인이면 현재분사를 씁니다."
+      ],
+      "explanation": "둘째 밑줄은 kept의 목적격 보어이고 그 짝은 목적어 the final terms입니다. 최종 조건은 양국 정부의 승인 전까지 봉인되는 대상이므로 과거분사 sealed가 옳고, 현재분사 sealing은 조건이 스스로 봉인한다는 성립 불가능한 뜻이 됩니다. 넷째 밑줄의 침묵은 같은 목적격 보어 자리라도 감정을 일으키는 원인이어서 현재분사가 옳은, 틀려 보이지만 정문인 자리입니다. 첫째·다섯째 밑줄은 각각 감정을 느끼는 쪽과 준비되는 대상의 과거분사, 셋째 밑줄은 자동사 wait의 진행 현재분사로 옳습니다."
+    },
+    {
+      "id": "u04-c1-ps-001",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["modifier-participle", "intransitive-participle", "intransitive-passive", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Deep-sea creatures survive in a world that sunlight never reaches. Many of them produce their own light through a chemical reaction [[1:occurring]] inside special cells. A glow [[2:producing]] by these cells can attract prey, confuse predators, or signal a mate in the dark water. Some fish that [[3:drift]] near the ocean floor use a steady blue light, while faster hunters flash bright patterns to startle their targets. The energy [[4:required]] for this display is remarkably small, so the animals can glow for hours without tiring. Biologists studying these signals believe that light [[5:evolved]] many separate times, since so many unrelated species rely on it.",
+      "answer": 2,
+      "correction": "produced",
+      "rationales": [
+        "꾸며지는 명사 a chemical reaction은 세포 안에서 스스로 일어나는 것이고 occur는 자동사이므로 진행의 현재분사 occurring이 옳습니다.",
+        "꾸며지는 명사 A glow는 세포에 의해 만들어지는 대상이므로 과거분사 produced가 옳으며, 현재분사 producing은 틀립니다.",
+        "관계절의 주어는 복수 fish이므로 복수 동사 drift가 옳습니다.",
+        "꾸며지는 명사 The energy는 요구되는 대상이므로 과거분사 required가 옳습니다.",
+        "evolve는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 과거형 evolved가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u02", "u04", "u03"],
+      "gist": "심해 생물이 세포 내 화학 반응으로 스스로 빛을 내며, 이 발광이 여러 번 독립적으로 진화했음을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 분사가 꾸미는 명사를 찾아, 그 명사가 동작을 직접 하는지 당하는지 되돌려 보십시오.",
+        "꾸며지는 명사가 동작을 당하는 대상이면 과거분사를 쓰며, 행위자를 나타내는 by구는 수동 관계의 강한 단서입니다."
+      ],
+      "explanation": "두 번째 밑줄이 꾸미는 A glow는 세포에 의해 만들어지는 대상이므로 과거분사 produced가 옳고, 뒤의 by these cells가 수동 관계를 확인해 줍니다. 현재분사 producing에 행위자 by구가 붙으면 능동과 수동이 뒤엉켜 비문이 됩니다. 1번은 자동사 occur의 진행 현재분사, 4번은 요구되는 대상의 과거분사이며, 5번은 자동사 evolve라 수동이 불가능해 능동으로 쓴 옳은 표현으로 틀려 보이지만 정문입니다. 3번은 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u04-c2-ps-002",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "modifier-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Curiosity is one of the most powerful forces in human learning. Psychologists have found that a [[1:puzzling]] question can hold attention far longer than a plain fact. When people meet an idea that [[2:conflicts]] with what they already believe, the brain releases chemicals [[3:linked]] to reward, and the memory of that moment grows stronger. In one experiment, learners who felt genuinely [[4:amazing]] by a live demonstration remembered its details for months. This is why skilled teachers rarely reveal every answer at once; a mind left a little [[5:unsatisfied]] keeps working on its own.",
+      "answer": 4,
+      "correction": "amazed",
+      "rationales": [
+        "a question은 궁금증을 일으키는 원인이므로 현재분사 puzzling이 옳습니다.",
+        "관계절의 주어는 단수 an idea이므로 단수 동사 conflicts가 옳습니다.",
+        "꾸며지는 명사 chemicals는 보상과 연결되는 대상이므로 과거분사 linked가 옳습니다.",
+        "learners는 놀라움을 느끼는 쪽이고 뒤에 by a live demonstration이 이어지므로 과거분사 amazed가 옳으며, 현재분사 amazing은 틀립니다.",
+        "a mind는 만족되지 못한 상태의 대상이므로 left의 목적격 보어로 과거분사 unsatisfied가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u02", "u04", "u04", "u04"],
+      "gist": "호기심을 자극하는 놀라운 정보가 보상 회로를 통해 기억을 강화한다는 학습 심리 연구를 설명하는 글입니다.",
+      "hints": [
+        "감정을 나타내는 분사가 설명하는 대상이 그 감정을 느끼는 쪽인지, 남에게 일으키는 원인인지 물어보십시오.",
+        "대상이 감정을 느끼는 쪽이고 뒤에 by가 이어지면 과거분사를 씁니다."
+      ],
+      "explanation": "네 번째 밑줄의 learners는 시연을 보고 놀라움을 느끼는 쪽이므로 과거분사 amazed가 옳습니다. 뒤의 by a live demonstration이 학습자가 감정을 받는 쪽임을 확인해 주며, 현재분사 amazing은 학습자가 남을 놀라게 한다는 뜻이 되어 틀립니다. 1번은 궁금증을 일으키는 원인의 현재분사, 3번은 연결되는 대상의 과거분사, 5번은 만족되지 못한 대상의 과거분사로 옳고, 2번은 단수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u04-c4-ps-003",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "modifier-participle", "passive-voice"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Wildfires shape many forests far more than people once believed. In certain pine species, the cones stay tightly sealed until intense heat forces them open, so seeds [[1:released]] after a fire land on freshly cleared ground. The ash [[2:covering]] the soil returns nutrients that living trees had locked away for decades. Even hours after the flames die down, embers [[3:glowed]] beneath the gray ash keep the ground warm enough to speed germination. Ecologists argue that a forest [[4:shaped]] by regular fire is often healthier than one where every small fire [[5:is suppressed]]. Removing fire entirely, they warn, only stores up fuel for a far larger disaster.",
+      "answer": 3,
+      "correction": "glowing",
+      "rationales": [
+        "꾸며지는 명사 seeds는 방출되는 대상이므로 과거분사 released가 옳습니다.",
+        "꾸며지는 명사 The ash는 흙을 덮는 주체이고 뒤에 목적어가 있으므로 현재분사 covering이 옳습니다.",
+        "glow는 목적어를 갖지 않는 자동사이고 잉걸불이 잿더미 아래에서 아직 빛나는 중이므로 현재분사 glowing이 옳으며, glowed 형태의 수식은 틀립니다.",
+        "꾸며지는 명사 a forest는 불에 의해 형성되는 대상이므로 과거분사 shaped가 옳습니다.",
+        "every small fire는 억제되는 대상이므로 수동태 is suppressed가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u04", "u04", "u03"],
+      "gist": "산불이 소나무 씨앗 방출과 양분 순환을 도와 숲의 재생을 촉진한다는 산불 생태를 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 분사의 원형이 자동사인지 확인하고, 자동사라면 그 동작이 진행 중인지 이미 끝났는지 물어보십시오.",
+        "자동사가 진행 중인 동작을 나타내면 목적어가 없어도 현재분사를 씁니다."
+      ],
+      "explanation": "세 번째 밑줄의 glow는 목적어를 가질 수 없는 자동사이고 잉걸불이 여전히 빛나는 중이므로 진행의 현재분사 glowing이 옳습니다. 자동사는 수동으로 해석되지 않아 glowed 형태로 명사를 꾸밀 수 없고, 본동사 keep이 따로 있어 과거형으로 볼 수도 없습니다. 1번은 방출되는 대상의 과거분사, 2번은 흙을 덮는 주체의 현재분사(틀려 보이지만 능동으로 옳음), 4번은 형성되는 대상의 과거분사, 5번은 억제되는 대상의 수동태로 모두 옳습니다."
+    },
+    {
+      "id": "u04-c3-ps-004",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["complement-participle", "modifier-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "When archaeologists opened the royal tomb in 1923, they found the inner chamber [[1:sealing]] exactly as its builders had left it. Golden objects [[2:arranged]] around the coffin had not moved for three thousand years. The dry desert air, which [[3:preserves]] organic material far better than damp soil does, had kept even fragile linen intact. Scholars [[4:examining]] the site argued that the untouched layout could reveal more than the treasures themselves. Every wall [[5:painted]] with scenes of daily life told a story that written records had never captured. For historians, the silent room itself became the most valuable document of its age.",
+      "answer": 1,
+      "correction": "sealed",
+      "rationales": [
+        "목적격 보어가 설명하는 대상은 목적어 the inner chamber이고, 방은 밀폐되는 대상이므로 과거분사 sealed가 옳으며, 현재분사 sealing은 틀립니다.",
+        "꾸며지는 명사 Golden objects는 배치되는 대상이므로 과거분사 arranged가 옳습니다.",
+        "관계절의 주어는 단수 air이므로 단수 동사 preserves가 옳습니다.",
+        "꾸며지는 명사 Scholars는 유적을 조사하는 주체이고 뒤에 목적어가 있으므로 현재분사 examining이 옳습니다.",
+        "꾸며지는 명사 Every wall은 그림이 그려진 대상이므로 과거분사 painted가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u02", "u04", "u04"],
+      "gist": "손대지 않은 채 발견된 고대 무덤의 밀폐된 구조와 벽화가 유물보다 더 많은 것을 알려준다는 고고학 발견을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 분사가 목적격 보어인지 수식어인지 가려낸 뒤, 그 짝이 되는 명사가 동작을 하는지 당하는지 따져 보십시오.",
+        "밀폐되는 대상처럼 스스로 동작하지 못하는 목적어의 보어는 과거분사를 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄은 found의 목적격 보어이고 그 짝은 목적어 the inner chamber입니다. 방은 건축자들에 의해 밀폐된 대상이므로 과거분사 sealed가 옳고, 현재분사 sealing은 방이 스스로 밀폐한다는 성립 불가능한 뜻이 됩니다. 2번은 배치되는 대상의 과거분사, 4번은 조사하는 주체의 현재분사, 5번은 그려진 대상의 과거분사(본동사 told가 따로 있어 수식으로 옳음)이며, 3번은 단수 주어 air와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u04-c1-ps-005",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["modifier-participle", "reduced-relative", "intervening-clause", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Financial bubbles follow a remarkably stable pattern that historians recognize across centuries of market records. Prices [[1:driven]] by excitement rather than real value climb until nearly everyone expects them to rise forever. The crowd of investors chasing the latest craze rarely [[2:notices]] the warning signs, since a claim that promoters [[3:repeat]] loudly enough begins to feel like fact. Even seasoned traders, [[4:convinced]] that this time is different, pour their money in near the peak. When confidence finally cracks, the savings [[5:setting]] aside over many years can vanish within days. Each generation swears the lesson has been learned, and each generation repeats it.",
+      "answer": 5,
+      "correction": "set",
+      "rationales": [
+        "꾸며지는 명사 Prices는 흥분에 이끌리는 대상이고 본동사 climb이 따로 있으므로 과거분사 driven이 옳습니다.",
+        "주어의 핵은 단수 The crowd이고 of investors chasing the latest craze는 수식어이므로 단수 동사 notices가 옳습니다.",
+        "a claim을 선행사로 하는 관계절에서 목적어가 앞으로 빠진 자리이므로, 홍보자들이 반복하는 주체로서 능동 repeat가 옳습니다.",
+        "seasoned traders는 확신을 느끼는 쪽이므로 과거분사 convinced가 옳습니다.",
+        "꾸며지는 명사 the savings는 오랜 세월에 걸쳐 따로 떼어 모아지는 대상이므로 과거분사 set이 옳으며, 현재분사 setting은 틀립니다."
+      ],
+      "underlineUnits": ["u04", "u02", "u03", "u04", "u04"],
+      "gist": "흥분에 이끌린 가격 상승과 군중 심리가 금융 거품을 키우다가 신뢰가 무너지면 붕괴한다는 과정을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 분사가 꾸미는 명사를 찾아, 그 명사가 동작을 직접 하는지 당하는지 되돌려 보십시오.",
+        "명사가 오랜 시간에 걸쳐 모아지는 대상이면 과거분사를 씁니다."
+      ],
+      "explanation": "다섯 번째 밑줄이 꾸미는 the savings는 여러 해에 걸쳐 따로 떼어 모아지는 대상이므로 set aside의 수동 관계인 과거분사 set이 옳고, 현재분사 setting은 저축이 스스로 무언가를 떼어 둔다는 성립 불가능한 뜻이 됩니다. 1번은 이끌리는 대상의 과거분사(본동사 climb이 따로 있음), 3번은 목적어가 앞으로 빠진 관계절의 능동 repeat로 수동처럼 보이지만 정문이며, 4번은 확신을 느끼는 쪽의 과거분사입니다. 2번은 단수 주어 The crowd와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u04-c2-ps-006",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["emotion-participle", "modifier-participle", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "When the sculptor unveiled her towering iron figure in the town square, the reaction was anything but calm. Some residents found the work deeply [[1:moving]], while a vocal group, [[2:insulting]] by its harsh angles, demanded that the council remove it. The committee that had [[3:commissioned]] the piece refused, arguing that art [[4:meant]] to provoke discussion had already succeeded. Critics [[5:writing]] for national papers soon arrived, and the once-quiet square became a stage for debates about memory, taste, and public money. In the end the figure stayed, and the arguments it started proved more lasting than the iron itself.",
+      "answer": 2,
+      "correction": "insulted",
+      "rationales": [
+        "목적격 보어가 설명하는 대상은 목적어 the work이고, 작품은 감동을 일으키는 원인이므로 현재분사 moving이 옳습니다.",
+        "a vocal group은 모욕감을 느끼는 쪽이고 뒤에 by its harsh angles가 이어지므로 과거분사 insulted가 옳으며, 현재분사 insulting은 틀립니다.",
+        "관계대명사 that이 주어 역할을 하는 관계절로, 위원회가 작품을 의뢰한 주체이고 뒤에 목적어 the piece가 있으므로 능동 완료형 had commissioned가 옳습니다.",
+        "꾸며지는 명사 art는 논쟁을 일으키도록 의도된 대상이므로 과거분사 meant가 옳습니다.",
+        "꾸며지는 명사 Critics는 글을 쓰는 주체이고 뒤에 전치사구가 이어지므로 현재분사 writing이 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u03", "u04", "u04"],
+      "gist": "공개된 철제 조각을 두고 감동과 모욕감이 엇갈리며 도시가 예술과 공공성 논쟁의 무대가 되었다는 글입니다.",
+      "hints": [
+        "감정을 나타내는 분사가 설명하는 대상이 그 감정을 느끼는 쪽인지, 남에게 일으키는 원인인지 물어보십시오.",
+        "대상이 감정을 느끼는 쪽이고 뒤에 by가 이어지면 과거분사를 씁니다."
+      ],
+      "explanation": "두 번째 밑줄의 a vocal group은 작품의 거친 각도 때문에 모욕감을 느끼는 쪽이므로 과거분사 insulted가 옳습니다. 뒤의 by its harsh angles가 감정을 받는 쪽임을 확인해 주며, 현재분사 insulting은 이들이 남을 모욕한다는 뜻이 되어 틀립니다. 1번은 감동을 일으키는 원인 the work의 현재분사, 3번은 목적어 the piece를 거느린 능동 완료형, 4번은 의도된 대상의 과거분사로 본동사 had succeeded가 따로 있어 틀려 보이지만 정문이며, 5번은 글을 쓰는 주체의 현재분사로 모두 옳습니다."
+    },
+    {
+      "id": "u04-c4-ps-007",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["intransitive-participle", "modifier-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Self-driving cars must make sense of a world that changes every second. Cameras [[1:mounted]] around the vehicle feed a constant stream of images to an onboard computer. Software [[2:trained]] on millions of examples then labels each object as a pedestrian, a cyclist, or a stationary wall. A pedestrian suddenly [[3:stepping]] off the curb forces the system to decide in a fraction of a second. Engineers worry most about a [[4:blinked]] sensor that flickers without warning, since a single missed frame can hide a child crossing the road. To reduce this danger, designers add backup sensors that constantly [[5:check]] one another.",
+      "answer": 4,
+      "correction": "blinking",
+      "rationales": [
+        "꾸며지는 명사 Cameras는 차량에 장착되는 대상이므로 과거분사 mounted가 옳습니다.",
+        "꾸며지는 명사 Software는 예시로 학습되는 대상이므로 과거분사 trained가 옳습니다.",
+        "step은 자동사이고 보행자가 갑자기 내려서는 중이므로 현재분사 stepping이 옳습니다.",
+        "blink는 자동사이고 센서가 깜박이는 중이므로 현재분사 blinking이 옳으며, blinked 형태의 수식은 틀립니다.",
+        "관계절의 주어는 복수 backup sensors이므로 복수 동사 check가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u04", "u04", "u02"],
+      "gist": "자율주행차가 장착된 센서와 학습된 소프트웨어로 세상을 인식하며, 순간의 센서 오류가 큰 위험이 된다는 기술을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 분사의 원형이 목적어를 가질 수 있는 동사인지 확인하고, 자동사라면 그 동작이 진행 중인지 물어보십시오.",
+        "자동사가 진행 중인 동작을 나타내면 목적어가 없어도 현재분사를 씁니다."
+      ],
+      "explanation": "네 번째 밑줄의 blink는 목적어를 가질 수 없는 자동사이고 센서가 경고 없이 깜박이는 중이므로 진행의 현재분사 blinking이 옳습니다. 자동사는 수동으로 해석되지 않아 blinked 형태로 명사를 꾸밀 수 없어 틀립니다. 1번과 2번은 각각 장착되고 학습되는 대상의 과거분사, 3번은 자동사 step의 진행 현재분사로 본동사 forces가 따로 있어 옳으며, 5번은 복수 주어와 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u04-c3-ps-008",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["complement-participle", "modifier-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "For decades, city planners designed public squares from the top down, and residents used whatever they were given. A newer approach treats the people who [[1:live]] nearby as partners rather than spectators. In one district, families [[2:invited]] to the earliest meetings helped decide where benches, trees, and lights should go. For years their opinions had been dismissed by distant officials, so when they heard their own suggestions [[3:ignoring]] once again in a rival plan, they organized quickly and forced a public vote. The square that finally opened, [[4:shaped]] by hundreds of small requests, drew far larger crowds than the polished designs [[5:proposed]] by the original architects.",
+      "answer": 3,
+      "correction": "ignored",
+      "rationales": [
+        "관계절의 주어는 복수 the people이므로 복수 동사 live가 옳습니다.",
+        "꾸며지는 명사 families는 회의에 초대되는 대상이므로 과거분사 invited가 옳습니다.",
+        "지각동사 heard의 목적격 보어이고 그 짝은 목적어 their own suggestions입니다. 제안은 무시되는 대상이므로 과거분사 ignored가 옳으며, 현재분사 ignoring은 틀립니다.",
+        "꾸며지는 명사 The square는 요청들에 의해 형성되는 대상이므로 과거분사 shaped가 옳습니다.",
+        "꾸며지는 명사 the polished designs는 제안되는 대상이므로 과거분사 proposed가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u04", "u04", "u04", "u04"],
+      "gist": "주민을 파트너로 삼는 참여형 도시 계획이 무시당하던 의견을 반영해 더 사랑받는 광장을 만들었다는 사회 변화를 설명하는 글입니다.",
+      "hints": [
+        "지각동사 뒤 보어가 설명하는 대상은 목적어이므로, 그 목적어가 동작을 하는지 당하는지 먼저 가려 보십시오.",
+        "목적어가 동작을 당하는 쪽이면 지각동사의 목적격 보어라도 과거분사를 씁니다."
+      ],
+      "explanation": "세 번째 밑줄은 heard의 목적격 보어이고 그 짝은 목적어 their own suggestions입니다. 제안은 관료들에 의해 무시되는 대상이므로 과거분사 ignored가 옳고, 현재분사 ignoring은 제안이 스스로 무시한다는 성립 불가능한 뜻이 됩니다. 4번의 shaped는 본동사 drew가 따로 있어 The square를 꾸미는 과거분사로 틀려 보이지만 정문이며, 2번과 5번도 각각 초대되고 제안되는 대상의 과거분사로 옳습니다. 1번은 복수 주어 the people과 일치한 동사로 옳습니다."
+    }
+  ]
+}

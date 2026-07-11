@@ -1,0 +1,328 @@
+{
+  "unitId": "u10",
+  "concepts": [
+    {
+      "id": "u10-c1",
+      "unitId": "u10",
+      "order": 1,
+      "title": "형용사 자리 vs 부사 자리",
+      "oneLiner": "명사 수식·보어 자리는 형용사, 동사·형용사·문장 수식은 부사입니다.",
+      "algorithm": [
+        "밑줄 친 단어가 꾸미거나 설명하는 대상을 먼저 찾습니다 — 명사인지, 동사·형용사·문장 전체인지 확인합니다.",
+        "명사를 꾸미거나 연결동사(be·remain·keep·stay·become·seem·look·sound·feel) 뒤의 보어 자리라면 형용사를 씁니다.",
+        "make·find·keep·leave의 목적어 뒤 목적격보어 자리도 형용사 자리입니다 — 목적어와 '주어-보어' 관계가 성립하는지 확인합니다.",
+        "동사·형용사·다른 부사·문장 전체를 꾸민다면 부사를 씁니다 — '~하게'라는 번역이 아니라 자리로 판단합니다."
+      ],
+      "rules": [
+        {
+          "rule": "연결동사(be·remain·keep·stay·become·seem·look·sound·feel) 뒤 보어 자리에는 형용사를 씁니다.",
+          "examples": [
+            {
+              "en": "The results of the experiment remained **stable** for three weeks.",
+              "ko": "그 실험의 결과는 3주 동안 안정적으로 유지되었습니다.",
+              "note": "remain은 연결동사 → 주어 the results의 상태를 설명하는 보어 자리, stably 불가"
+            },
+            {
+              "en": "Her explanation sounded **reasonable** to everyone in the room.",
+              "ko": "그녀의 설명은 방 안의 모든 사람에게 타당하게 들렸습니다.",
+              "note": "sound+형용사 보어 — '~하게 들리다'로 번역돼도 reasonably 불가"
+            }
+          ]
+        },
+        {
+          "rule": "make·find·keep·leave + 목적어 뒤의 목적격보어 자리에도 형용사를 씁니다 — 가목적어 it의 보어도 같습니다.",
+          "examples": [
+            {
+              "en": "Regular exercise keeps the heart **healthy** even in old age.",
+              "ko": "규칙적인 운동은 노년에도 심장을 건강하게 유지해 줍니다.",
+              "note": "keep+O+보어 — 목적어 the heart의 상태 설명 → 형용사"
+            },
+            {
+              "en": "The new software made it **possible** to share files instantly.",
+              "ko": "그 새 소프트웨어는 파일을 즉시 공유하는 것을 가능하게 만들었습니다.",
+              "note": "가목적어 it(=to share files)의 보어 자리 → 형용사 possible"
+            }
+          ]
+        },
+        {
+          "rule": "동사·형용사·다른 부사·문장 전체를 꾸미는 자리에는 부사를 씁니다.",
+          "examples": [
+            {
+              "en": "The population of the city grew **rapidly** after the railway opened.",
+              "ko": "철도가 개통된 뒤 그 도시의 인구는 빠르게 증가했습니다.",
+              "note": "동사 grew(증가했다)를 꾸밈 → 부사"
+            },
+            {
+              "en": "The theory is **surprisingly** simple once you see the pattern.",
+              "ko": "그 이론은 일단 패턴을 보고 나면 놀라울 만큼 단순합니다.",
+              "note": "형용사 simple을 꾸밈 → 부사"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "감각·상태 동사 뒤에서 부사를 고르는 함정",
+          "body": "look·sound·seem·feel은 '~하게 보이다/들리다'로 번역되기 때문에 부사를 고르기 쉽습니다. 하지만 이들은 연결동사이므로 뒤에는 주어의 상태를 설명하는 형용사 보어가 옵니다. 번역이 아니라 자리로 판단해야 합니다.",
+          "example": {
+            "en": "The plan seemed **perfect** on paper, but it failed in practice.",
+            "ko": "그 계획은 서류상으로는 완벽해 보였지만 실제로는 실패했습니다.",
+            "note": "'완벽하게 보였다'로 번역돼도 자리는 보어 → perfectly 불가"
+          }
+        },
+        {
+          "title": "목적어가 길면 보어 자리가 안 보입니다",
+          "body": "make·find·keep·leave 뒤의 목적어가 길어지면 그 끝이 보어 자리라는 사실이 눈에 들어오지 않습니다. 목적어 전체를 괄호로 묶은 뒤, 남는 자리가 목적어의 상태를 설명하면 형용사를 고릅니다.",
+          "example": {
+            "en": "The committee found the report on water quality **incomplete**.",
+            "ko": "위원회는 수질에 관한 그 보고서가 불완전하다고 판단했습니다.",
+            "note": "find+(the report on water quality)+보어 → 형용사 incomplete"
+          }
+        }
+      ],
+      "confusableWith": ["u10-c2", "u04-c3"]
+    },
+    {
+      "id": "u10-c2",
+      "unitId": "u10",
+      "order": 2,
+      "title": "혼동 부사",
+      "oneLiner": "hard/hardly, late/lately, high/highly — 형태가 다르면 뜻도 다릅니다.",
+      "algorithm": [
+        "-ly로 끝나는 단어를 보면 '무조건 부사'라고 단정하지 말고, -ly를 뗀 나머지가 무엇인지 확인합니다.",
+        "cost·friend·life·death처럼 명사에 -ly가 붙은 costly·friendly·lively·deadly·likely는 형용사로 처리합니다.",
+        "hard/hardly, late/lately, high/highly, near/nearly처럼 두 형태가 모두 부사인 짝은 문맥의 뜻으로 고릅니다. hardly는 '거의 ~않다', lately는 '최근에', highly는 '매우'라는 뜻입니다.",
+        "고른 형태를 자리에 넣어 문장 전체의 해석이 자연스러운지 마지막으로 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "hard(열심히)와 hardly(거의 ~않다)는 전혀 다른 뜻의 부사입니다 — hardly는 준부정어로 씁니다.",
+          "examples": [
+            {
+              "en": "She trained **hard** for months before the national competition.",
+              "ko": "그녀는 전국 대회를 앞두고 몇 달 동안 열심히 훈련했습니다.",
+              "note": "hard=열심히 — hardly로 바꾸면 '거의 훈련하지 않았다'로 뜻이 뒤집힘"
+            },
+            {
+              "en": "The two witnesses could **hardly** remember what they had seen.",
+              "ko": "두 목격자는 자신들이 본 것을 거의 기억하지 못했습니다.",
+              "note": "hardly=거의 ~않다 — 문장을 부정으로 만드는 준부정어"
+            }
+          ]
+        },
+        {
+          "rule": "late(늦게)/lately(최근에), high(높이)/highly(매우) — -ly가 붙으면 뜻이 달라지는 짝을 구분합니다.",
+          "examples": [
+            {
+              "en": "The results were announced **late** because of a counting error.",
+              "ko": "집계 오류 때문에 결과가 늦게 발표되었습니다.",
+              "note": "late=늦게(시간) — lately(최근에)를 넣으면 뜻이 어긋남"
+            },
+            {
+              "en": "Housing prices have risen sharply **lately** in the capital region.",
+              "ko": "최근에 수도권의 주택 가격이 가파르게 상승했습니다.",
+              "note": "lately=최근에 — 현재완료와 자주 어울림"
+            }
+          ]
+        },
+        {
+          "rule": "costly·friendly·lively·deadly·likely는 -ly로 끝나지만 형용사입니다 — 부사 자리에 쓸 수 없습니다.",
+          "examples": [
+            {
+              "en": "Replacing the old pipes proved **costly** for the small town.",
+              "ko": "낡은 수도관을 교체하는 일은 그 작은 도시에 큰 비용이 드는 일로 드러났습니다.",
+              "note": "costly=형용사(prove의 보어) — '비싸게'라는 부사가 아님"
+            },
+            {
+              "en": "Rain is **likely** to continue through the weekend.",
+              "ko": "비가 주말 내내 이어질 가능성이 큽니다.",
+              "note": "likely는 형용사 — be likely to-V 구문"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "-ly만 보고 부사로 단정하는 습관",
+          "body": "-ly가 보이면 기계적으로 부사라고 판단하는 습관이 어법 선지에서 가장 많은 오답을 만듭니다. -ly를 뗀 나머지(cost·friend·life·death)가 명사이면 그 단어는 형용사입니다.",
+          "example": {
+            "en": "The tour guide was **friendly** to every visitor in the group.",
+            "ko": "그 여행 가이드는 일행의 모든 방문객에게 친절했습니다.",
+            "note": "friendly=friend(명사)+ly → 형용사, be동사의 보어"
+          }
+        },
+        {
+          "title": "highly를 '높이'로 읽는 함정",
+          "body": "highly를 물리적 높이로 해석하면 함정에 빠집니다. 물리적 높이는 high를 그대로 부사로 쓰고, highly는 '매우·크게'라는 정도의 뜻으로만 씁니다.",
+          "example": {
+            "en": "The kite flew **high** above the open field.",
+            "ko": "연이 탁 트인 들판 위로 높이 날았습니다.",
+            "note": "물리적 높이=high — highly praised(크게 칭찬받은)처럼 정도일 때만 highly"
+          }
+        },
+        {
+          "title": "near와 nearly의 혼동",
+          "body": "near는 '가까운·가까이', nearly는 '거의'라는 뜻입니다. 수치·비율 앞에서 '거의'라는 뜻이 필요하면 nearly를 씁니다.",
+          "example": {
+            "en": "**Nearly** half of the students missed the last question.",
+            "ko": "학생들의 거의 절반이 마지막 문제를 놓쳤습니다.",
+            "note": "nearly=거의 — 비율(half) 앞이므로 near 불가"
+          }
+        }
+      ],
+      "confusableWith": ["u10-c1"]
+    },
+    {
+      "id": "u10-c3",
+      "unitId": "u10",
+      "order": 3,
+      "title": "대명사 수일치",
+      "oneLiner": "it/they, that/those — 가리키는 명사의 수와 일치시킵니다.",
+      "algorithm": [
+        "대명사가 가리키는 명사를 앞 문맥에서 정확히 찾아 표시합니다.",
+        "그 명사가 단수면 it·that, 복수면 they·them·those인지 확인합니다 — 바로 앞 명사가 아니라 실제로 가리키는 명사가 기준입니다.",
+        "비교 구문에서 반복을 피하는 that of/those of는 앞에 나온 비교 대상 명사의 수를 따릅니다.",
+        "정해진 바로 그것을 가리키면 it, 같은 종류의 불특정한 하나면 one을 씁니다."
+      ],
+      "rules": [
+        {
+          "rule": "대명사는 가리키는 명사의 수와 일치해야 합니다 — 가까운 명사가 아니라 실제로 가리키는 명사를 찾습니다.",
+          "examples": [
+            {
+              "en": "The museum restored the paintings and displayed **them** in a new hall.",
+              "ko": "그 미술관은 그림들을 복원하여 새 전시실에 전시했습니다.",
+              "note": "them=the paintings(복수) — 단수 it 불가"
+            },
+            {
+              "en": "The committee rejected the proposal because **it** lacked clear evidence.",
+              "ko": "위원회는 그 제안이 명확한 근거가 부족했기 때문에 기각했습니다.",
+              "note": "it=the proposal(단수)"
+            }
+          ]
+        },
+        {
+          "rule": "비교 구문에서 반복을 피하는 that/those는 대신하는 명사가 단수면 that, 복수면 those입니다.",
+          "examples": [
+            {
+              "en": "The rules of chess are simpler than **those** of many card games.",
+              "ko": "체스의 규칙은 많은 카드 게임의 규칙보다 더 단순합니다.",
+              "note": "those=the rules(복수) — that of 불가"
+            },
+            {
+              "en": "The climate of the coast is milder than **that** of the inland plains.",
+              "ko": "해안의 기후는 내륙 평야의 기후보다 더 온화합니다.",
+              "note": "that=the climate(단수)"
+            }
+          ]
+        },
+        {
+          "rule": "앞에 나온 '바로 그것'은 it, 같은 종류의 불특정한 하나는 one으로 받습니다.",
+          "examples": [
+            {
+              "en": "I lost my umbrella, so I bought a new **one** at the station.",
+              "ko": "우산을 잃어버려서 역에서 새 우산을 하나 샀습니다.",
+              "note": "one=같은 종류의 다른 우산(a+명사) — 잃어버린 그 우산이 아님"
+            },
+            {
+              "en": "She borrowed my dictionary and returned **it** the next day.",
+              "ko": "그녀는 제 사전을 빌려 갔다가 다음 날 돌려주었습니다.",
+              "note": "it=빌려 간 바로 그 사전"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "비교 구문에서 바로 앞 명사에 낚이는 함정",
+          "body": "비교 구문에서는 바로 앞의 명사에 끌려 수를 잘못 맞추기 쉽습니다. those of/that of가 대신하는 명사는 문장 앞쪽의 비교 대상이므로, 그 명사를 직접 찾아 수를 확인해야 합니다.",
+          "example": {
+            "en": "The wings of a dragonfly beat faster than **those** of a butterfly.",
+            "ko": "잠자리의 날개는 나비의 날개보다 더 빠르게 움직입니다.",
+            "note": "those=the wings(복수) — 단수 a dragonfly·a butterfly에 낚이면 안 됨"
+          }
+        },
+        {
+          "title": "복수처럼 보이는 불가산 명사",
+          "body": "equipment·information·evidence·furniture는 여러 개를 뜻하는 것처럼 보여도 불가산 단수 명사입니다. 대명사로 받을 때는 it을 쓰고, them으로 받으면 틀립니다.",
+          "example": {
+            "en": "The lab bought new equipment and tested **it** for a week.",
+            "ko": "그 연구실은 새 장비를 사서 일주일 동안 시험했습니다.",
+            "note": "equipment=불가산 단수 → them 불가"
+          }
+        }
+      ],
+      "confusableWith": ["u10-c4", "u02-c1"]
+    },
+    {
+      "id": "u10-c4",
+      "unitId": "u10",
+      "order": 4,
+      "title": "재귀대명사",
+      "oneLiner": "주어와 목적어가 같은 대상이면 -self/-selves를 씁니다.",
+      "algorithm": [
+        "밑줄 친 대명사가 속한 절(또는 to부정사·동명사)의 주어를 찾습니다 — 문장 전체의 주어가 아닐 수 있습니다.",
+        "대명사가 가리키는 대상이 그 주어와 같은 대상인지 판단합니다.",
+        "같으면 -self/-selves 재귀대명사를, 다르면 them·him·her 같은 일반 목적격을 씁니다.",
+        "재귀를 쓸 때는 주어의 수·인칭에 맞는 형태(himself·herself·itself·themselves)인지 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "주어와 목적어가 같은 대상이면 재귀대명사(-self/-selves)를 씁니다.",
+          "examples": [
+            {
+              "en": "Successful athletes constantly compare **themselves** with their past records.",
+              "ko": "성공한 운동선수들은 끊임없이 자신을 과거 기록과 비교합니다.",
+              "note": "compare의 목적어=주어 athletes와 같은 대상 → themselves"
+            },
+            {
+              "en": "The cat saw **itself** in the mirror and jumped back.",
+              "ko": "그 고양이는 거울에 비친 자기 모습을 보고 뒤로 펄쩍 물러났습니다.",
+              "note": "saw의 목적어=주어 the cat과 같은 대상 → itself"
+            }
+          ]
+        },
+        {
+          "rule": "주어와 다른 대상을 가리키면 일반 목적격(them·him·her)을 씁니다.",
+          "examples": [
+            {
+              "en": "When the guests arrived, the host welcomed **them** at the door.",
+              "ko": "손님들이 도착하자 주인이 문에서 그들을 맞이했습니다.",
+              "note": "welcomed의 주어=the host, 목적어=the guests(다른 대상) → them"
+            }
+          ]
+        },
+        {
+          "rule": "주어나 목적어를 강조할 때 재귀대명사를 덧붙일 수 있습니다 — 이때는 빼도 문장이 성립합니다.",
+          "examples": [
+            {
+              "en": "The mayor **herself** answered the residents' questions at the meeting.",
+              "ko": "시장이 직접 회의에서 주민들의 질문에 답했습니다.",
+              "note": "강조 용법 — herself를 빼도 완전한 문장"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "to부정사의 의미상 주어 함정",
+          "body": "ask·tell·advise+목적어+to부정사 구문에서 to부정사의 의미상 주어는 문장의 주어가 아니라 목적어입니다. 재귀 판단은 그 의미상 주어와 비교해야 합니다.",
+          "example": {
+            "en": "The coach asked the players to trust **themselves** during the final match.",
+            "ko": "코치는 선수들에게 결승전에서 스스로를 믿으라고 당부했습니다.",
+            "note": "trust의 의미상 주어=the players, 목적어도 같은 대상 → themselves"
+          }
+        },
+        {
+          "title": "절이 바뀌면 비교 기준도 바뀝니다",
+          "body": "문장 맨 앞의 주어와 목적어가 같아 보이면 무조건 재귀를 고르기 쉽습니다. 재귀 판단의 기준은 밑줄이 속한 절의 주어이므로, 그 절의 주어가 다른 대상이면 일반 목적격을 씁니다.",
+          "example": {
+            "en": "The scientists were pleased when the committee praised **them** for the discovery.",
+            "ko": "과학자들은 위원회가 그 발견에 대해 자신들을 칭찬하자 기뻐했습니다.",
+            "note": "praised가 속한 절의 주어=the committee(다른 대상) → themselves 불가"
+          }
+        }
+      ],
+      "confusableWith": ["u10-c3"]
+    }
+  ]
+}

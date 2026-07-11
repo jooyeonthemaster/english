@@ -1,0 +1,1214 @@
+{
+  "unitId": "u01",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u01-c1-ox-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "sentence": "The recipes collected from village elders over forty years [[u:fill]] three volumes of the county archive.",
+      "isCorrect": true,
+      "translation": "마을 어르신들에게서 40년에 걸쳐 수집한 그 요리법들은 군 기록보관소 세 권 분량을 채웁니다.",
+      "hints": [
+        "주어 뒤의 -ed 형태가 본동사인지 수식어인지부터 가려 보십시오.",
+        "시제를 가진 동사가 문장에 하나뿐이라면 바로 그것이 본동사입니다."
+      ],
+      "explanation": "collected from village elders over forty years는 주어 The recipes를 꾸미는 과거분사 수식어입니다. 수식어를 괄호로 묶으면 시제를 가진 동사는 밑줄 친 fill 하나뿐이므로 fill이 본동사로 옳습니다. collected를 본동사로 착각하면 fill이 남는 것처럼 보이지만, 본동사 하나 원칙에 따라 fill의 자리가 맞습니다."
+    },
+    {
+      "id": "u01-c1-ox-002",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "The museum at the edge of the park [[u:containing]] one of the finest fossil collections in the country.",
+      "isCorrect": false,
+      "correction": "contains",
+      "translation": "공원 가장자리에 있는 그 박물관은 국내 최고 수준의 화석 소장품 중 하나를 보유하고 있습니다.",
+      "hints": [
+        "이 문장 안에서 시제를 가진 동사를 모두 찾아 세어 보십시오.",
+        "시제 동사가 하나도 없다면 아직 문장이 아닙니다 — 밑줄이 본동사 자리인지 검토하십시오."
+      ],
+      "explanation": "전치사구 at the edge of the park를 걷어내면 주어 The museum 뒤에 시제를 가진 동사가 하나도 없는 조각문입니다. -ing는 시제가 없어 본동사가 될 수 없으므로 containing을 단수 주어에 맞는 시제 동사 contains로 고쳐야 완전한 문장이 됩니다."
+    },
+    {
+      "id": "u01-c1-ox-003",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "The families [[u:displaced]] by the dam project received new farmland along the eastern shore.",
+      "isCorrect": true,
+      "translation": "댐 건설 사업으로 터전을 잃은 그 가족들은 동쪽 호안을 따라 새 농지를 받았습니다.",
+      "hints": [
+        "밑줄 뒤에 시제를 가진 다른 동사가 나오는지 문장 끝까지 확인해 보십시오.",
+        "한 절에 본동사는 하나 — 뒤에 본동사가 따로 있으면 앞의 형태는 수식어여야 합니다."
+      ],
+      "explanation": "문장 끝까지 읽으면 시제를 가진 본동사 received가 따로 나옵니다. 밑줄 친 displaced는 주어 The families를 꾸미는 과거분사 후치 수식이므로 그대로 옳습니다. displaced를 본동사 과거형으로 단정하면 received와 충돌하지만, 본동사 하나 원칙으로 정리하면 구조가 분명해집니다."
+    },
+    {
+      "id": "u01-c1-ox-004",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "The lighthouse on the northern cliff [[u:guiding]] ships past the hidden rocks every winter.",
+      "isCorrect": false,
+      "correction": "guides",
+      "translation": "북쪽 절벽 위의 그 등대는 겨울마다 배들을 숨은 암초 곁으로 인도합니다.",
+      "hints": [
+        "주어 뒤로 시제를 가진 동사가 실제로 있는지 끝까지 훑어 보십시오.",
+        "-ing 형태는 시제가 없으므로 홀로 문장의 동사 노릇을 하지 못합니다."
+      ],
+      "explanation": "주어 The lighthouse 뒤에 시제를 가진 동사가 전혀 없으므로 이 문장은 본동사가 빠진 조각문입니다. every winter가 나타내는 반복 상황과 단수 주어에 맞추어 guiding을 시제 동사 guides로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c1-ox-005",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "double-verb"],
+      "sentence": "The instruments that the crew calibrated before the launch [[u:measure]] radiation levels beyond the orbit of Mars.",
+      "isCorrect": true,
+      "translation": "승무원들이 발사 전에 보정한 그 계기들은 화성 궤도 너머의 방사선 수치를 측정합니다.",
+      "hints": [
+        "관계절을 괄호로 묶은 뒤, 괄호 밖 주어에 대한 동사가 있는지 확인해 보십시오.",
+        "관계사 하나가 시제 동사 하나를 더 허용합니다 — 남는 자리가 본동사 자리입니다."
+      ],
+      "explanation": "that the crew calibrated before the launch는 주어 The instruments를 꾸미는 관계절이고, 그 안의 calibrated는 관계사 that이 허용하는 동사입니다. 괄호 밖 주절에는 본동사가 따로 필요하므로 measure가 본동사로 옳습니다. calibrated 때문에 동사가 이미 나왔다고 착각하면 안 됩니다."
+    },
+    {
+      "id": "u01-c1-ox-006",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-clause"],
+      "sentence": "The manuscript that scholars recovered from the ruined monastery [[u:describing]] trade routes across the medieval Mediterranean.",
+      "isCorrect": false,
+      "correction": "describes",
+      "translation": "학자들이 무너진 수도원에서 되찾은 그 필사본은 중세 지중해를 가로지르는 교역로들을 기술합니다.",
+      "hints": [
+        "관계절 안의 동사를 주절의 본동사로 잘못 세지 않았는지 확인해 보십시오.",
+        "관계절을 괄호로 묶고 나서 주어에 대한 시제 동사가 남는지 보십시오."
+      ],
+      "explanation": "recovered는 관계절 that scholars recovered 안의 동사일 뿐이고, 괄호 밖 주어 The manuscript에는 시제를 가진 본동사가 없습니다. -ing는 본동사가 될 수 없으므로 describing을 단수 주어에 맞는 시제 동사 describes로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c1-ox-007",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "sentence": "The tunnels dug by miners in the 1880s, long sealed off for safety, [[u:extend]] beneath most of the old town.",
+      "isCorrect": true,
+      "translation": "1880년대에 광부들이 팠고 안전을 위해 오랫동안 폐쇄되어 있던 그 갱도들은 구시가지 대부분의 아래로 뻗어 있습니다.",
+      "hints": [
+        "주어와 밑줄 사이의 수식어 덩어리를 전부 괄호로 묶어 보십시오.",
+        "괄호 밖에 남는 시제 동사가 하나뿐인지 세어 보고 본동사 자리를 정하십시오."
+      ],
+      "explanation": "dug by miners in the 1880s와 long sealed off for safety는 모두 주어 The tunnels를 꾸미는 분사 수식어입니다. 두 겹의 수식어를 걷어내면 시제를 가진 동사는 extend 하나뿐이므로 본동사로 옳습니다. dug와 sealed가 동사처럼 보여도 시제가 없는 분사라는 점이 핵심입니다."
+    },
+    {
+      "id": "u01-c1-ox-008",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "The satellite launched in 2013 to survey the ocean floor [[u:transmitting]] its final images in 2024.",
+      "isCorrect": false,
+      "correction": "transmitted",
+      "translation": "해저를 조사하기 위해 2013년에 발사된 그 위성은 2024년에 마지막 영상들을 전송했습니다.",
+      "hints": [
+        "주어 뒤의 분사와 to부정사를 괄호로 묶고, 시제를 가진 동사가 남는지 확인해 보십시오.",
+        "본동사가 하나도 없으면 밑줄 친 준동사를 시제 동사로 바꿔야 하는 자리입니다."
+      ],
+      "explanation": "launched in 2013은 과거분사 수식어, to survey the ocean floor는 목적을 나타내는 to부정사여서 둘 다 본동사가 아닙니다. 시제를 가진 동사가 하나도 없는 조각문이므로, in 2024라는 과거 시점에 맞추어 transmitting을 transmitted로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c1-wf-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "The village library {{blank}} at nine every morning.",
+      "given": "open",
+      "acceptedAnswers": ["opens"],
+      "translation": "그 마을 도서관은 매일 아침 아홉 시에 문을 엽니다.",
+      "hints": [
+        "이 문장에 시제를 가진 동사가 이미 있는지 먼저 확인해 보십시오.",
+        "빈칸이 본동사 자리라면 시간 표현과 주어의 수에 맞는 시제 형태를 씁니다."
+      ],
+      "explanation": "빈칸 밖에 시제를 가진 동사가 없으므로 빈칸이 이 문장의 본동사 자리입니다. every morning은 반복되는 일을 나타내어 현재시제가 어울리고, 주어 The village library가 단수이므로 opens가 정답입니다."
+    },
+    {
+      "id": "u01-c1-wf-002",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "past-marker"],
+      "stem": "The old bell tower {{blank}} down during the earthquake of 1906.",
+      "given": "fall",
+      "acceptedAnswers": ["fell"],
+      "translation": "그 오래된 종탑은 1906년 지진 때 무너져 내렸습니다.",
+      "hints": [
+        "문장 어디에도 시제를 가진 동사가 없다면 빈칸의 역할이 무엇일지 생각해 보십시오.",
+        "명백한 과거 시점을 가리키는 표현이 있으면 그 시제에 맞춥니다."
+      ],
+      "explanation": "빈칸이 이 문장의 유일한 본동사 자리이므로 시제를 가진 형태가 필요합니다. during the earthquake of 1906이 명백한 과거 시점을 가리키므로 과거형 fell이 정답입니다."
+    },
+    {
+      "id": "u01-c1-wf-003",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "past-marker"],
+      "stem": "The paintings donated by a local collector {{blank}} in the main gallery last month.",
+      "given": "appear",
+      "acceptedAnswers": ["appeared"],
+      "translation": "한 지역 수집가가 기증한 그 그림들은 지난달 본관 전시실에 모습을 드러냈습니다.",
+      "hints": [
+        "주어 뒤의 -ed 형태가 본동사인지 수식어인지 가려 보십시오.",
+        "수식어를 괄호로 묶고 남는 본동사 자리에 시간 표현이 가리키는 시제를 씁니다."
+      ],
+      "explanation": "donated by a local collector는 주어 The paintings를 꾸미는 과거분사 수식어이고, 빈칸이 본동사 자리입니다. last month가 과거를 가리키므로 과거형 appeared가 정답입니다."
+    },
+    {
+      "id": "u01-c1-wf-004",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-clause"],
+      "stem": "The road that connects the two valleys {{blank}} impassable every winter.",
+      "given": "become",
+      "acceptedAnswers": ["becomes"],
+      "translation": "두 계곡을 잇는 그 도로는 겨울마다 통행이 불가능해집니다.",
+      "hints": [
+        "관계절 안의 동사와 주절의 본동사 자리를 구분해 보십시오.",
+        "빈칸이 주절의 본동사 자리라면 반복 표현과 주어 핵의 수에 맞는 시제를 고릅니다."
+      ],
+      "explanation": "that connects the two valleys는 주어 The road를 꾸미는 관계절이고, 빈칸이 주절의 본동사 자리입니다. every winter가 반복되는 일을 나타내고 주어 핵이 단수이므로 becomes가 정답입니다."
+    },
+    {
+      "id": "u01-c1-wf-005",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "past-marker"],
+      "stem": "The vaccine that researchers tested for nearly a decade finally {{blank}} official approval in 2018.",
+      "given": "receive",
+      "acceptedAnswers": ["received"],
+      "translation": "연구자들이 십 년 가까이 시험한 그 백신은 2018년에 마침내 공식 승인을 받았습니다.",
+      "hints": [
+        "관계절을 괄호로 묶은 뒤 주절에 시제 동사가 남는지 확인해 보십시오.",
+        "빈칸이 주절의 본동사 자리라면 문장 속 연도가 가리키는 시제로 씁니다."
+      ],
+      "explanation": "that researchers tested for nearly a decade는 관계절이고, 그 안의 tested는 관계사가 허용하는 동사입니다. 주절에는 본동사가 따로 필요하며 in 2018이 과거를 가리키므로 received가 정답입니다."
+    },
+    {
+      "id": "u01-c1-wf-006",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "intervening-clause"],
+      "stem": "The ecosystem of these lightless caves {{blank}} entirely on nutrients that seasonal floods wash in.",
+      "given": "depend",
+      "acceptedAnswers": ["depends"],
+      "translation": "빛이 들지 않는 이 동굴들의 생태계는 계절성 홍수가 실어 오는 양분에 전적으로 의존합니다.",
+      "hints": [
+        "빈칸 앞의 복수 명사가 진짜 주어인지, 전치사구 속 명사인지 확인해 보십시오.",
+        "본동사 자리에는 주어 핵의 수와 일반적 사실의 시제에 맞는 형태를 씁니다."
+      ],
+      "explanation": "of these lightless caves는 전치사구 수식어이고 주어 핵은 단수 명사 The ecosystem입니다. 빈칸이 유일한 본동사 자리이며 일반적 사실을 말하므로 현재시제 단수형 depends가 정답입니다. 바로 앞의 복수 명사 caves에 끌려 복수형을 쓰면 안 됩니다."
+    },
+    {
+      "id": "u01-c1-wc-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "Every summer, the wetlands along the river [[u:attracting]] thousands of migrating birds.",
+      "wrong": "attracting",
+      "acceptedAnswers": ["attract"],
+      "translation": "여름마다 그 강가의 습지는 수천 마리의 철새를 끌어들입니다.",
+      "hints": [
+        "이 문장에 시제를 가진 동사가 하나라도 있는지 확인해 보십시오.",
+        "본동사가 없는 조각문이라면 밑줄 친 준동사를 시제 동사로 바꿉니다."
+      ],
+      "explanation": "주어 the wetlands 뒤에 시제를 가진 동사가 없는 조각문입니다. Every summer가 반복을 나타내고 주어가 복수이므로 attracting을 현재형 attract로 고쳐야 완전한 문장이 됩니다."
+    },
+    {
+      "id": "u01-c1-wc-002",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "The museum's new wing, designed by a famous architect, [[u:welcoming]] its first visitors in 2021.",
+      "wrong": "welcoming",
+      "acceptedAnswers": ["welcomed"],
+      "translation": "유명 건축가가 설계한 그 박물관의 새 별관은 2021년에 첫 방문객들을 맞이했습니다.",
+      "hints": [
+        "콤마 사이의 분사구를 괄호로 묶고 시제 동사가 남는지 보십시오.",
+        "본동사 자리가 비어 있다면 문장 속 연도가 가리키는 시제로 밑줄을 바꿉니다."
+      ],
+      "explanation": "designed by a famous architect는 삽입된 분사 수식어여서 본동사가 아닙니다. 문장 전체에 시제 동사가 없는 조각문이므로 welcoming을 in 2021에 맞는 과거형 welcomed로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c1-wc-003",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-clause"],
+      "sentence": "The telescope that astronomers installed on the mountain in 2005 [[u:capturing]] its first clear image of the comet two years later.",
+      "wrong": "capturing",
+      "acceptedAnswers": ["captured"],
+      "translation": "천문학자들이 2005년에 그 산에 설치한 망원경은 2년 뒤 그 혜성의 첫 선명한 영상을 포착했습니다.",
+      "hints": [
+        "관계절 안의 동사를 본동사로 잘못 세지 않았는지 확인해 보십시오.",
+        "주절에 시제 동사가 없다면 밑줄 친 준동사가 본동사로 바뀌어야 합니다."
+      ],
+      "explanation": "installed는 관계절 that astronomers installed 안의 동사이고, 주절의 주어 The telescope에는 본동사가 없습니다. two years later가 2005년 이후의 과거 시점을 가리키므로 capturing을 과거형 captured로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c1-wc-004",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "since-perfect", "intervening-pp"],
+      "sentence": "The glacier at the head of the valley, once photographed by every visitor, [[u:retreating]] nearly a mile since 1990.",
+      "wrong": "retreating",
+      "acceptedAnswers": ["has retreated", "has been retreating"],
+      "translation": "한때 모든 방문객이 사진에 담던 계곡 상류의 그 빙하는 1990년 이후 거의 1마일이나 물러났습니다.",
+      "hints": [
+        "삽입된 분사구를 괄호로 묶고, 시제를 가진 동사가 남는지 확인해 보십시오.",
+        "since+과거 시점이 있으면 본동사는 현재완료 형태가 필요합니다."
+      ],
+      "explanation": "once photographed by every visitor는 삽입 수식어일 뿐이어서 문장에 본동사가 없습니다. since 1990이 '1990년 이후 지금까지'를 뜻하므로 retreating을 현재완료 has retreated로 고쳐야 합니다. 후퇴가 지금도 이어진다는 뉘앙스를 살린 현재완료진행 has been retreating도 정답으로 인정합니다."
+    },
+    {
+      "id": "u01-c2-ox-001",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "The economists [[u:advising]] the central bank expect inflation to slow by next spring.",
+      "isCorrect": true,
+      "translation": "중앙은행에 자문하는 그 경제학자들은 내년 봄쯤 물가 상승세가 꺾일 것으로 예상합니다.",
+      "hints": [
+        "문장 뒤쪽에 시제를 가진 동사가 따로 있는지 먼저 확인해 보십시오.",
+        "본동사가 이미 있으면 주어 바로 뒤의 -ing는 수식어 자리로 옳을 수 있습니다."
+      ],
+      "explanation": "시제를 가진 본동사 expect가 따로 있으므로 advising은 주어 The economists를 꾸미는 현재분사 수식어로 옳습니다. 주어 바로 뒤라서 본동사처럼 보이지만, -ing는 애초에 시제가 없어 본동사가 될 수 없다는 점을 역으로 이용한 미끼입니다."
+    },
+    {
+      "id": "u01-c2-ox-002",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "sentence": "Wild geese [[u:migrating]] across the peninsula in huge flocks every October.",
+      "isCorrect": false,
+      "correction": "migrate",
+      "translation": "야생 기러기들은 해마다 10월이면 거대한 무리를 지어 그 반도를 가로질러 이동합니다.",
+      "hints": [
+        "이 문장에서 시제를 가진 동사를 찾아보십시오 — 하나라도 있는지가 관건입니다.",
+        "-ing·to부정사·p.p.만으로는 문장이 완성되지 않습니다."
+      ],
+      "explanation": "문장 전체에 시제를 가진 동사가 하나도 없으므로 조각문입니다. -ing는 본동사가 될 수 없으니 migrating을 복수 주어와 every October의 반복 의미에 맞는 현재형 migrate로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-ox-003",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["verb-group", "ed-ambiguity"],
+      "sentence": "The committee [[u:is reviewing]] the applications submitted before the January deadline.",
+      "isCorrect": true,
+      "translation": "위원회는 1월 마감 전에 제출된 지원서들을 검토하고 있습니다.",
+      "hints": [
+        "-ing가 홀로 있는지, 시제를 가진 be동사와 결합해 있는지 확인해 보십시오.",
+        "be·have와 결합한 -ing·p.p.는 하나의 동사구로서 본동사가 될 수 있습니다."
+      ],
+      "explanation": "is reviewing은 시제를 가진 be동사와 -ing가 결합한 진행형 동사구로, 전체가 본동사 역할을 합니다. '-ing는 본동사가 될 수 없다'는 규칙은 -ing가 홀로 쓰일 때의 이야기입니다. 뒤의 submitted는 the applications를 꾸미는 과거분사 수식어입니다."
+    },
+    {
+      "id": "u01-c2-ox-004",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "to-infinitive"],
+      "sentence": "The orchard behind the farmhouse [[u:to produce]] its best harvest in a decade last autumn.",
+      "isCorrect": false,
+      "correction": "produced",
+      "translation": "농가 뒤편의 그 과수원은 지난가을 십 년 만의 최고 수확을 냈습니다.",
+      "hints": [
+        "to부정사가 문장의 동사 노릇을 할 수 있는지 생각해 보십시오.",
+        "시제 동사가 하나도 없다면 밑줄 자리가 본동사 자리입니다."
+      ],
+      "explanation": "to부정사는 시제가 없어 본동사가 될 수 없는데, 이 문장에는 다른 시제 동사도 없습니다. last autumn이 과거를 가리키므로 to produce를 과거형 produced로 고쳐야 완전한 문장이 됩니다."
+    },
+    {
+      "id": "u01-c2-ox-005",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "intervening-clause"],
+      "sentence": "The archaeologists [[u:excavating]] the site that a winter flood exposed have catalogued hundreds of artifacts.",
+      "isCorrect": true,
+      "translation": "겨울 홍수가 드러낸 그 유적지를 발굴 중인 고고학자들은 수백 점의 유물을 목록으로 정리했습니다.",
+      "hints": [
+        "관계절 안의 동사와 주절의 본동사를 구분한 뒤 밑줄의 역할을 정해 보십시오.",
+        "본동사가 따로 있으면 주어 뒤 -ing는 명사를 꾸미는 수식어일 수 있습니다."
+      ],
+      "explanation": "본동사는 have catalogued이고, exposed는 관계절 that a winter flood exposed 안의 동사입니다. 따라서 excavating은 주어 The archaeologists를 꾸미는 현재분사 수식어로 옳습니다. 동사 모양이 세 개나 보여서 excavating이 틀린 듯하지만, 각자 자리가 다릅니다."
+    },
+    {
+      "id": "u01-c2-ox-006",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "sentence": "The firm's engineers, working around the clock after the recall, [[u:redesigning]] the faulty valve before regulators stepped in.",
+      "isCorrect": false,
+      "correction": "redesigned",
+      "translation": "리콜 이후 밤낮없이 일하던 그 회사의 기술자들은 규제 당국이 개입하기 전에 결함이 있는 밸브를 재설계했습니다.",
+      "hints": [
+        "콤마 사이의 분사구를 괄호로 묶고, 주절에 시제 동사가 남는지 확인해 보십시오.",
+        "before가 이끄는 절의 동사는 주절의 본동사가 아닙니다."
+      ],
+      "explanation": "working around the clock은 삽입된 분사구이고 stepped는 before절 안의 동사이므로, 주절의 주어 engineers에는 본동사가 없습니다. -ing는 본동사가 될 수 없으니 redesigning을 과거형 redesigned로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-ox-007",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["verb-group", "intervening-clause"],
+      "sentence": "The glaciers [[u:are retreating]] faster than the models that scientists built a decade ago predicted.",
+      "isCorrect": true,
+      "translation": "빙하들은 과학자들이 십 년 전에 구축한 모델들이 예측한 것보다 더 빠르게 후퇴하고 있습니다.",
+      "hints": [
+        "밑줄이 시제를 가진 be동사를 포함한 동사구인지 확인해 보십시오.",
+        "than과 관계사가 각각 시제 동사 하나씩을 더 허용한다는 점을 계산에 넣으십시오."
+      ],
+      "explanation": "are retreating은 be동사와 -ing가 결합한 진행형 동사구로 주절의 본동사입니다. built는 관계사 that이, predicted는 비교 접속사 than이 각각 허용하는 동사이므로 시제 동사 세 개가 모두 정당합니다. 동사가 많아 보여도 연결어 수와 맞아떨어집니다."
+    },
+    {
+      "id": "u01-c2-ox-008",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "to-infinitive", "intervening-clause"],
+      "sentence": "The council members, alarmed by the audit that leaked to the press, [[u:to demand]] a full inquiry at yesterday's session.",
+      "isCorrect": false,
+      "correction": "demanded",
+      "translation": "언론에 유출된 감사 결과에 놀란 시의원들은 어제 회의에서 전면적인 조사를 요구했습니다.",
+      "hints": [
+        "콤마 사이의 분사구와 그 안의 관계절을 모두 괄호로 묶어 보십시오.",
+        "괄호 밖에 시제 동사가 없다면 밑줄 친 준동사가 본동사로 바뀌어야 합니다."
+      ],
+      "explanation": "alarmed by the audit that leaked to the press는 삽입 수식어이고, leaked는 그 안의 관계절 동사입니다. 주절에는 시제 동사가 없으므로 to demand를 yesterday's session이 가리키는 과거에 맞춰 demanded로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-wf-001",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The volunteers {{blank}} meals at the shelter receive free safety training every month.",
+      "given": "serve",
+      "acceptedAnswers": ["serving"],
+      "translation": "쉼터에서 식사를 나르는 자원봉사자들은 매달 무료 안전 교육을 받습니다.",
+      "hints": [
+        "문장에 시제를 가진 본동사가 이미 있는지 확인해 보십시오.",
+        "본동사가 있으면 빈칸은 명사를 꾸미는 준동사 자리이고, 뒤의 목적어와의 관계가 형태를 정합니다."
+      ],
+      "explanation": "본동사 receive가 이미 있으므로 빈칸은 주어를 꾸미는 준동사 자리입니다. 자원봉사자들이 식사를 '나르는' 능동 관계이고 뒤에 목적어 meals가 있으므로 현재분사 serving이 정답입니다."
+    },
+    {
+      "id": "u01-c2-wf-002",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "past-marker"],
+      "stem": "In the nineteenth century, whalers {{blank}} on the stars to navigate the open sea.",
+      "given": "depend",
+      "acceptedAnswers": ["depended"],
+      "translation": "19세기에 고래잡이들은 망망대해를 항해하기 위해 별에 의존했습니다.",
+      "hints": [
+        "to navigate가 본동사가 될 수 있는지부터 판단해 보십시오.",
+        "본동사 자리라면 문장 맨 앞의 시간 표현이 가리키는 시제를 씁니다."
+      ],
+      "explanation": "to navigate는 목적을 나타내는 to부정사여서 본동사가 아니므로 빈칸이 본동사 자리입니다. In the nineteenth century가 과거를 가리키므로 과거형 depended가 정답입니다."
+    },
+    {
+      "id": "u01-c2-wf-003",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "Economists {{blank}} the housing market warned of rising household debt last week.",
+      "given": "study",
+      "acceptedAnswers": ["studying"],
+      "translation": "주택 시장을 연구하는 경제학자들은 지난주 가계 부채 증가를 경고했습니다.",
+      "hints": [
+        "문장 뒤쪽의 시제 동사를 찾고, 빈칸과 그 동사가 한 절에서 공존할 수 있는지 보십시오.",
+        "접속사 없이 시제 동사 두 개는 불가능합니다 — 하나는 준동사로 물러나야 합니다."
+      ],
+      "explanation": "시제를 가진 본동사 warned가 이미 있고 연결어가 없으므로 빈칸은 준동사 자리입니다. 경제학자들이 시장을 '연구하는' 능동 관계이고 뒤에 목적어가 있으므로 현재분사 studying이 정답입니다."
+    },
+    {
+      "id": "u01-c2-wf-004",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-clause"],
+      "stem": "The theory that early cities grew around temples now {{blank}} strong support from recent excavations.",
+      "given": "enjoy",
+      "acceptedAnswers": ["enjoys"],
+      "translation": "초기 도시들이 신전을 중심으로 성장했다는 그 이론은 이제 최근 발굴 성과로부터 강력한 지지를 받고 있습니다.",
+      "hints": [
+        "that절 안의 동사를 본동사로 잘못 세지 않았는지 확인해 보십시오.",
+        "빈칸이 주절의 본동사 자리라면 now와 주어 핵의 수에 맞는 형태를 고릅니다."
+      ],
+      "explanation": "that early cities grew around temples는 The theory의 내용을 설명하는 동격 that절이고, grew는 그 절 안의 동사입니다. 주절의 본동사 자리인 빈칸에는 now가 가리키는 현재시제와 단수 주어 핵에 맞는 enjoys가 정답입니다."
+    },
+    {
+      "id": "u01-c2-wf-005",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "intervening-pp"],
+      "stem": "The team of divers {{blank}} the wreck first noticed the cargo that earlier expeditions had overlooked.",
+      "given": "explore",
+      "acceptedAnswers": ["exploring"],
+      "translation": "그 난파선을 탐사하던 잠수부 팀이 이전 원정대들이 놓쳤던 화물을 처음 알아차렸습니다.",
+      "hints": [
+        "시제 동사와 연결어의 개수를 먼저 센 뒤 빈칸의 역할을 정해 보십시오.",
+        "본동사가 이미 있고 연결어가 남지 않으면 빈칸은 명사를 꾸미는 형태여야 합니다."
+      ],
+      "explanation": "본동사 noticed가 있고 had overlooked는 관계사 that이 허용하는 동사이므로, 빈칸까지 시제 동사가 되면 개수가 어긋납니다. 팀이 난파선을 '탐사하는' 능동 관계이고 뒤에 목적어가 있으므로 현재분사 exploring이 정답입니다."
+    },
+    {
+      "id": "u01-c2-wf-006",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "past-marker", "no-main-verb"],
+      "stem": "The theory that comets deliver frozen water to young planets finally {{blank}} wide acceptance in the 1980s.",
+      "given": "gain",
+      "acceptedAnswers": ["gained"],
+      "translation": "혜성이 어린 행성들에 얼음 상태의 물을 실어 나른다는 그 이론은 1980년대에 마침내 폭넓은 지지를 얻었습니다.",
+      "hints": [
+        "동격 that절을 괄호로 묶고 주절에 시제 동사가 있는지 확인해 보십시오.",
+        "빈칸이 주절의 본동사 자리라면 문장 속 연대가 가리키는 시제로 씁니다."
+      ],
+      "explanation": "that comets deliver frozen water to young planets는 동격 that절이고 deliver는 그 안의 동사입니다. 주절의 본동사 자리가 비어 있으며 in the 1980s가 과거를 가리키므로 gained가 정답입니다."
+    },
+    {
+      "id": "u01-c2-wc-001",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "sentence": "Many residents [[u:owning]] two or more bicycles in this cycling-friendly city.",
+      "wrong": "owning",
+      "acceptedAnswers": ["own"],
+      "translation": "자전거 타기 좋은 이 도시에서는 많은 주민이 자전거를 두 대 이상 보유하고 있습니다.",
+      "hints": [
+        "이 문장에 시제를 가진 동사가 있는지부터 확인해 보십시오.",
+        "-ing만으로는 문장이 성립하지 않습니다 — 주어의 수에 맞는 시제 형태가 필요합니다."
+      ],
+      "explanation": "문장 전체에 시제를 가진 동사가 없어 조각문입니다. -ing는 본동사가 될 수 없으므로 owning을 복수 주어 Many residents에 맞는 현재형 own으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-wc-002",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "double-verb"],
+      "sentence": "The region has few natural resources, and its economy [[u:depending]] almost entirely on skilled labor.",
+      "wrong": "depending",
+      "acceptedAnswers": ["depends"],
+      "translation": "그 지역은 천연자원이 거의 없으며, 그 지역 경제는 거의 전적으로 숙련 노동에 의존합니다.",
+      "hints": [
+        "and가 잇는 뒤 절에 시제를 가진 동사가 있는지 확인해 보십시오.",
+        "접속사가 절을 이으면 각 절마다 본동사가 하나씩 필요합니다."
+      ],
+      "explanation": "접속사 and가 두 절을 이으므로 뒤 절에도 시제 동사가 하나 필요합니다. -ing는 본동사가 될 수 없으니 depending을 단수 주어 its economy에 맞는 현재형 depends로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-wc-003",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-clause"],
+      "sentence": "The researchers whose first design failed in the field finally [[u:developing]] a far cheaper filter in 2016.",
+      "wrong": "developing",
+      "acceptedAnswers": ["developed"],
+      "translation": "첫 설계가 현장에서 실패했던 그 연구자들은 2016년에 마침내 훨씬 더 저렴한 필터를 개발했습니다.",
+      "hints": [
+        "whose가 이끄는 관계절을 괄호로 묶고 주절에 시제 동사가 남는지 보십시오.",
+        "주절에 본동사가 없다면 밑줄 친 준동사를 연도에 맞는 시제로 바꿉니다."
+      ],
+      "explanation": "failed는 관계절 whose first design failed 안의 동사이고, 주절의 주어 The researchers에는 본동사가 없습니다. in 2016이 과거를 가리키므로 developing을 과거형 developed로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c2-wc-004",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "to-infinitive", "intervening-pp"],
+      "sentence": "The founders, convinced that demand would double, [[u:to open]] a second assembly plant in 2007.",
+      "wrong": "to open",
+      "acceptedAnswers": ["opened"],
+      "translation": "수요가 두 배가 될 것이라 확신한 그 창업자들은 2007년에 두 번째 조립 공장을 열었습니다.",
+      "hints": [
+        "콤마 사이의 분사구와 그 안의 that절을 모두 괄호로 묶어 보십시오.",
+        "괄호 밖에 시제 동사가 없으면 밑줄 자리가 본동사 자리입니다."
+      ],
+      "explanation": "convinced that demand would double은 삽입된 분사 수식어이고 would double은 그 안의 that절 동사입니다. 주절에는 시제 동사가 없으므로 to open을 in 2007에 맞는 과거형 opened로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c3-ox-001",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "The tide rose quickly, and the fishing boats [[u:returned]] to the harbor before noon.",
+      "isCorrect": true,
+      "translation": "물이 빠르게 차올랐고, 고깃배들은 정오가 되기 전에 항구로 돌아왔습니다.",
+      "hints": [
+        "시제 동사와 연결어의 개수를 각각 세어 보십시오.",
+        "'동사 개수 = 접속사·관계사 개수 + 1'이 성립하면 밑줄은 정당한 자리입니다."
+      ],
+      "explanation": "시제 동사는 rose와 returned 두 개이고 접속사 and가 하나 있으므로 '동사 개수 = 연결어 개수 + 1'이 정확히 성립합니다. 따라서 returned는 뒤 절의 본동사로 옳습니다. 동사가 두 개라고 무조건 틀린 것이 아니라 연결어가 있는지가 기준입니다."
+    },
+    {
+      "id": "u01-c3-ox-002",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "double-verb"],
+      "sentence": "The theory won wide support after two laboratories [[u:confirming]] its central prediction.",
+      "isCorrect": false,
+      "correction": "confirmed",
+      "translation": "두 실험실이 그 이론의 핵심 예측을 확인한 뒤에 그 이론은 폭넓은 지지를 얻었습니다.",
+      "hints": [
+        "after가 접속사로서 절을 이끌고 있는지, 그 절에 시제 동사가 있는지 보십시오.",
+        "접속사가 하나면 시제 동사 자리도 하나 더 필요합니다."
+      ],
+      "explanation": "접속사 after가 주어 two laboratories를 갖춘 절을 이끌므로 그 절에는 시제 동사가 필요합니다. 시제 동사는 won 하나뿐이어서 '동사 개수 = 연결어 개수 + 1'이 깨져 있습니다. confirming을 confirmed로 고쳐야 공식이 맞습니다."
+    },
+    {
+      "id": "u01-c3-ox-003",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "The bridge sways noticeably when strong winds [[u:blow]] through the valley.",
+      "isCorrect": true,
+      "translation": "강한 바람이 계곡을 통과해 불 때 그 다리는 눈에 띄게 흔들립니다.",
+      "hints": [
+        "when이 연결어로서 시제 동사를 몇 개까지 허용하는지 세어 보십시오.",
+        "연결어 하나에 시제 동사 둘이면 공식이 성립합니다."
+      ],
+      "explanation": "접속사 when이 하나 있으므로 시제 동사는 두 개까지 정당합니다. sways가 주절, blow가 when절의 본동사로 각각 자리를 차지하므로 blow는 옳습니다. 복수 주어 strong winds와의 수일치도 맞습니다."
+    },
+    {
+      "id": "u01-c3-ox-004",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "sentence": "Because the harbor froze early that winter, supply ships [[u:remaining]] at sea until the spring thaw.",
+      "isCorrect": false,
+      "correction": "remained",
+      "translation": "그해 겨울 항구가 일찍 얼어붙었기 때문에, 보급선들은 봄 해빙기까지 바다에 머물렀습니다.",
+      "hints": [
+        "Because절의 동사 말고 주절에 시제 동사가 있는지 확인해 보십시오.",
+        "접속사가 하나면 시제 동사는 두 개여야 합니다 — 모자라면 밑줄을 의심하십시오."
+      ],
+      "explanation": "접속사 Because가 있으므로 시제 동사가 두 개 필요한데, froze 하나뿐입니다. 주절의 주어 supply ships에 본동사가 없으므로 remaining을 과거형 remained로 고쳐야 공식이 성립합니다."
+    },
+    {
+      "id": "u01-c3-ox-005",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inserted-clause", "intervening-clause"],
+      "sentence": "The theory that many geologists, I suspect, once ridiculed now [[u:anchors]] the standard model of plate tectonics.",
+      "isCorrect": true,
+      "translation": "제 짐작으로는 많은 지질학자들이 한때 조롱했던 그 이론이 이제 판구조론의 표준 모형을 떠받치고 있습니다.",
+      "hints": [
+        "콤마 사이에 낀 짧은 절을 계산에서 빼고 동사와 연결어를 다시 세어 보십시오.",
+        "관계사 하나에 시제 동사 둘이면 남는 동사는 주절의 본동사입니다."
+      ],
+      "explanation": "I suspect는 삽입절이므로 계산에서 뺍니다. 관계사 that 하나에 시제 동사 ridiculed와 anchors 두 개이므로 공식이 성립하고, anchors는 주절의 본동사로 옳습니다. 삽입절 때문에 동사가 남아 보이는 착시에 넘어가면 안 됩니다."
+    },
+    {
+      "id": "u01-c3-ox-006",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["inserted-clause", "no-main-verb", "intervening-clause"],
+      "sentence": "The reforms that the minister, many argue, [[u:introducing]] too hastily have destabilized several rural banks.",
+      "isCorrect": false,
+      "correction": "introduced",
+      "translation": "많은 이들의 주장에 따르면 장관이 너무 성급하게 도입한 그 개혁들은 여러 지방 은행을 불안정하게 만들었습니다.",
+      "hints": [
+        "콤마 사이의 삽입절을 빼고, 관계절 안에 시제 동사가 있는지 확인해 보십시오.",
+        "관계사가 이끄는 절에도 시제를 가진 동사가 하나 필요합니다."
+      ],
+      "explanation": "many argue는 삽입절이므로 빼고 세면, 관계사 that이 이끄는 절 안에 시제 동사가 없습니다. 주절의 have destabilized만으로는 관계절 몫이 채워지지 않으므로 introducing을 introduced로 고쳐야 '동사 개수 = 연결어 개수 + 1'이 성립합니다."
+    },
+    {
+      "id": "u01-c3-ox-007",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["semicolon-clause", "double-verb"],
+      "sentence": "The company expanded overseas; its founders, however, [[u:kept]] the original workshop exactly as it was.",
+      "isCorrect": true,
+      "translation": "그 회사는 해외로 확장했지만, 창업자들은 원래의 작업장을 예전 모습 그대로 유지했습니다.",
+      "hints": [
+        "세미콜론이 절과 절을 어떻게 잇는지, however가 접속사인지 따져 보십시오.",
+        "세미콜론 뒤의 절에는 시제를 가진 본동사가 따로 하나 필요합니다."
+      ],
+      "explanation": "세미콜론은 두 독립절을 이으므로 뒤 절에도 본동사가 하나 필요하고, kept가 바로 그 본동사입니다. however는 접속부사여서 동사 개수 계산에 들어가지 않습니다. 동사가 남는 것처럼 보여도 세미콜론이 연결어 몫을 하므로 옳습니다."
+    },
+    {
+      "id": "u01-c3-ox-008",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["semicolon-clause", "no-main-verb"],
+      "sentence": "The negotiations collapsed at midnight; both delegations [[u:leaving]] the capital without issuing a statement.",
+      "isCorrect": false,
+      "correction": "left",
+      "translation": "협상은 자정에 결렬되었고, 양측 대표단은 성명도 내지 않은 채 수도를 떠났습니다.",
+      "hints": [
+        "세미콜론 뒤의 절에 시제를 가진 동사가 있는지 확인해 보십시오.",
+        "접속부사나 분사로는 세미콜론 뒤 절의 본동사 자리를 채울 수 없습니다."
+      ],
+      "explanation": "세미콜론이 두 독립절을 이으므로 뒤 절에는 시제 동사가 하나 필요합니다. leaving은 시제가 없어 그 자리를 채울 수 없으므로 과거형 left로 고쳐야 합니다. without issuing의 issuing은 전치사 뒤 동명사로 정당합니다."
+    },
+    {
+      "id": "u01-c3-wf-001",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The alarm sounded, and everyone {{blank}} the building within three minutes.",
+      "given": "leave",
+      "acceptedAnswers": ["left"],
+      "translation": "경보가 울렸고, 모두가 3분 안에 건물을 떠났습니다.",
+      "hints": [
+        "and가 두 절을 잇고 있는지, 앞 절의 시제가 무엇인지 확인해 보십시오.",
+        "접속사가 있으면 뒤 절에도 앞 절과 시간대가 맞는 시제 동사가 필요합니다."
+      ],
+      "explanation": "접속사 and가 두 절을 이으므로 빈칸은 뒤 절의 본동사 자리입니다. 앞 절의 sounded와 같은 과거 시간대의 일이므로 과거형 left가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wf-002",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "Because the trail {{blank}} steeply near the summit, most hikers rest twice on the way up.",
+      "given": "climb",
+      "acceptedAnswers": ["climbs"],
+      "translation": "그 등산로는 정상 부근에서 가파르게 올라가기 때문에, 대부분의 등산객은 올라가는 길에 두 번 쉽니다.",
+      "hints": [
+        "Because가 이끄는 절에도 시제 동사가 필요하다는 점부터 확인해 보십시오.",
+        "주절의 시제와 주어의 수에 맞춰 빈칸의 형태를 정합니다."
+      ],
+      "explanation": "접속사 Because가 절을 이끌므로 그 절에도 본동사가 하나 필요합니다. 주절의 rest가 일반적 사실의 현재시제이고 주어 the trail이 단수이므로 climbs가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wf-003",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["semicolon-clause", "past-marker"],
+      "stem": "The harvest failed twice in a row; the villagers therefore {{blank}} hardier crops the following spring.",
+      "given": "plant",
+      "acceptedAnswers": ["planted"],
+      "translation": "수확이 두 해 연속으로 실패했고, 그래서 마을 사람들은 이듬해 봄에 더 강인한 작물을 심었습니다.",
+      "hints": [
+        "세미콜론 뒤의 절에 시제 동사가 필요한지, therefore가 그 자리를 채우는지 따져 보십시오.",
+        "앞 절의 시제와 같은 시간대라면 그 시제를 그대로 잇습니다."
+      ],
+      "explanation": "세미콜론이 두 독립절을 이으므로 뒤 절에도 본동사가 필요하고, 접속부사 therefore는 동사가 아닙니다. 앞 절의 failed와 이어지는 과거 서사이므로 과거형 planted가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wf-004",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["intervening-clause"],
+      "stem": "The novel that critics once dismissed now {{blank}} on every major reading list in the country.",
+      "given": "appear",
+      "acceptedAnswers": ["appears"],
+      "translation": "평론가들이 한때 무시했던 그 소설은 이제 전국의 모든 주요 추천 도서 목록에 오릅니다.",
+      "hints": [
+        "관계절 안의 동사와 주절의 본동사 자리를 구분해 보십시오.",
+        "빈칸이 주절의 본동사 자리라면 now와 주어 핵의 수에 맞는 형태를 씁니다."
+      ],
+      "explanation": "dismissed는 관계사 that이 허용하는 관계절 동사이고, 주절의 본동사 자리는 빈칸입니다. now가 현재를 가리키고 주어 핵 The novel이 단수이므로 appears가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wf-005",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["inserted-clause", "intervening-clause"],
+      "stem": "The method that this workshop, I believe, still {{blank}} today dates back to medieval guilds.",
+      "given": "follow",
+      "acceptedAnswers": ["follows"],
+      "translation": "제 생각에는 이 공방이 오늘날에도 여전히 따르고 있는 그 기법은 중세 길드로 거슬러 올라갑니다.",
+      "hints": [
+        "콤마 사이의 삽입절을 계산에서 빼고 동사와 연결어를 다시 세어 보십시오.",
+        "관계절 몫의 시제 동사 자리가 비어 있다면 빈칸이 바로 그 자리입니다."
+      ],
+      "explanation": "I believe는 삽입절이므로 계산에서 뺍니다. 주절의 본동사 dates가 있고 관계사 that이 이끄는 절의 동사 자리가 빈칸이므로, still과 today가 가리키는 현재시제와 단수 주어 this workshop에 맞는 follows가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wf-006",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "past-marker"],
+      "stem": "When the dam finally opened in 1936, engineers {{blank}} that the reservoir would take six years to fill.",
+      "given": "estimate",
+      "acceptedAnswers": ["estimated"],
+      "translation": "1936년에 댐이 마침내 개방되었을 때, 기술자들은 저수지를 채우는 데 6년이 걸릴 것으로 추정했습니다.",
+      "hints": [
+        "When절과 that절이 각각 시제 동사를 하나씩 데리고 있는지 세어 보십시오.",
+        "주절의 본동사 자리가 비어 있다면 문장 속 연도가 가리키는 시제로 채웁니다."
+      ],
+      "explanation": "접속사 When과 that이 각각 opened와 would take를 허용하므로, 주절의 본동사 자리인 빈칸에는 시제 동사가 하나 더 필요합니다. in 1936이 과거를 가리키므로 estimated가 정답입니다."
+    },
+    {
+      "id": "u01-c3-wc-001",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["semicolon-clause", "no-main-verb"],
+      "sentence": "The archive holds thousands of photographs; nearly half of them [[u:belonging]] to the pre-war collection.",
+      "wrong": "belonging",
+      "acceptedAnswers": ["belong"],
+      "translation": "그 기록보관소는 수천 장의 사진을 소장하고 있으며, 그중 거의 절반은 전쟁 이전 컬렉션에 속합니다.",
+      "hints": [
+        "세미콜론 뒤의 절에 시제를 가진 동사가 있는지 확인해 보십시오.",
+        "세미콜론은 접속사 몫을 하므로 뒤 절에도 본동사가 하나 필요합니다."
+      ],
+      "explanation": "세미콜론이 두 독립절을 이으므로 뒤 절에도 시제 동사가 필요합니다. belonging은 시제가 없어 본동사가 될 수 없으므로, 복수 주어에 맞는 현재형 belong으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c3-wc-002",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "double-verb"],
+      "sentence": "The two manuscripts differ in length, and the shorter one [[u:lacking]] a final chapter.",
+      "wrong": "lacking",
+      "acceptedAnswers": ["lacks"],
+      "translation": "그 두 필사본은 길이가 서로 다르며, 더 짧은 쪽은 마지막 장이 빠져 있습니다.",
+      "hints": [
+        "and가 잇는 뒤 절에 시제 동사가 있는지 세어 보십시오.",
+        "접속사가 하나 늘면 시제 동사도 하나 더 필요합니다."
+      ],
+      "explanation": "접속사 and가 두 절을 이으므로 뒤 절에도 시제 동사가 필요합니다. lacking은 시제가 없어 그 자리를 채울 수 없고, 앞 절의 differ와 같은 현재 시간대의 일반적 사실이므로 단수 주어에 맞는 lacks로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c3-wc-003",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["inserted-clause", "no-main-verb", "past-marker"],
+      "sentence": "The strategy that the board, I believe, [[u:adopting]] last spring has already doubled the company's exports.",
+      "wrong": "adopting",
+      "acceptedAnswers": ["adopted"],
+      "translation": "제가 알기로 이사회가 지난봄에 채택한 그 전략은 이미 회사의 수출을 두 배로 늘렸습니다.",
+      "hints": [
+        "콤마 사이의 삽입절을 빼고, 관계절 안에 시제 동사가 있는지 확인해 보십시오.",
+        "명백한 과거 시점을 가리키는 표현이 있으면 그 시제로 맞춥니다."
+      ],
+      "explanation": "I believe는 삽입절이므로 계산에서 빼면, 관계사 that이 이끄는 절 안에 시제 동사가 없습니다. last spring이 명백한 과거 시점을 가리키므로 adopting을 과거형 adopted로 고쳐야 '동사 개수 = 연결어 개수 + 1'이 성립합니다."
+    },
+    {
+      "id": "u01-c3-wc-004",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["semicolon-clause", "no-main-verb"],
+      "sentence": "The forecast promised clear skies; however, thick fog [[u:remaining]] over the stadium until the ceremony ended.",
+      "wrong": "remaining",
+      "acceptedAnswers": ["remained"],
+      "translation": "일기예보는 맑은 하늘을 약속했지만, 짙은 안개는 행사가 끝날 때까지 경기장 위에 머물렀습니다.",
+      "hints": [
+        "세미콜론 뒤 절의 본동사를 찾고, however가 그 자리를 채울 수 있는지 따져 보십시오.",
+        "until절의 시제 동사는 세미콜론 뒤 절의 본동사 몫이 아닙니다."
+      ],
+      "explanation": "세미콜론이 두 독립절을 이으며 however는 접속부사여서 연결어로 세지 않습니다. ended는 until절 안의 동사이므로, 뒤 절의 본동사가 비어 있습니다. remaining을 until절의 ended와 같은 과거 시간대에 맞춰 remained로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-ox-001",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "The candidates [[u:interviewed]] by the panel last Friday will hear the results within a week.",
+      "isCorrect": true,
+      "translation": "지난 금요일 심사위원단의 면접을 치른 지원자들은 일주일 안에 결과를 듣게 됩니다.",
+      "hints": [
+        "밑줄 뒤로 시제를 가진 다른 동사가 나오는지 문장 끝까지 읽어 보십시오.",
+        "-ed 동형은 뒤에 본동사가 따로 있으면 과거분사 수식으로 판정합니다."
+      ],
+      "explanation": "문장 뒤에 본동사 will hear가 따로 있으므로 interviewed는 The candidates를 꾸미는 과거분사 후치 수식으로 옳습니다. last Friday라는 과거 표현이 곁에 있어 과거형 본동사처럼 보이지만, 그 시간 표현은 면접이 있었던 시점을 말할 뿐입니다. '지원자들이 면접을 받은'이라는 수동 해석이 자연스럽다는 점도 근거가 됩니다."
+    },
+    {
+      "id": "u01-c4-ox-002",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "The poems [[u:wrote]] during her years of exile appear in every major anthology today.",
+      "isCorrect": false,
+      "correction": "written",
+      "translation": "그녀가 망명 시절에 쓴 시들은 오늘날 모든 주요 선집에 실려 있습니다.",
+      "hints": [
+        "문장 끝까지 읽어 시제를 가진 본동사가 따로 있는지 확인해 보십시오.",
+        "명사 뒤에서 꾸미는 자리라면 과거형이 아니라 과거분사가 와야 합니다."
+      ],
+      "explanation": "본동사 appear가 따로 있으므로 밑줄은 The poems를 꾸미는 후치 수식 자리입니다. write는 과거형(wrote)과 과거분사(written)의 모양이 다른 동사여서 수식 자리에 과거형 wrote를 쓸 수 없습니다. 시가 '쓰인' 대상이라는 수동 관계에 맞춰 written으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-ox-003",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "sentence": "After the storm passed, the crew [[u:repaired]] the antenna damaged by falling branches.",
+      "isCorrect": true,
+      "translation": "폭풍이 지나간 뒤, 승무원들은 떨어진 나뭇가지에 손상된 안테나를 수리했습니다.",
+      "hints": [
+        "-ed 형태가 두 개 보이면 각각 본동사인지 수식어인지 하나씩 판정해 보십시오.",
+        "접속사 하나에 시제 동사 둘 — 남은 -ed는 명사 수식일 수 있습니다."
+      ],
+      "explanation": "접속사 After가 passed를 허용하고, 주절의 본동사 자리는 repaired가 채웁니다. 뒤의 damaged는 the antenna를 꾸미는 과거분사 수식어입니다. -ed가 연달아 나와 repaired가 남는 동사처럼 보이지만, 구조상 정확히 본동사 자리에 있으므로 옳습니다."
+    },
+    {
+      "id": "u01-c4-ox-004",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "sentence": "The equipment [[u:stored]] carefully in the basement, but the flood still ruined most of it.",
+      "isCorrect": false,
+      "correction": "was stored",
+      "translation": "그 장비는 지하실에 조심스럽게 보관되어 있었지만, 홍수는 그래도 그 대부분을 망가뜨렸습니다.",
+      "hints": [
+        "but 앞의 절에 시제를 가진 본동사가 있는지 세어 보십시오.",
+        "주어가 동작을 받는 대상인데 -ed 홀로 서 있다면 무엇이 빠졌는지 생각해 보십시오."
+      ],
+      "explanation": "접속사 but이 두 절을 이으므로 앞 절에도 본동사가 필요합니다. stored를 과거분사 수식으로 읽으면 앞 절에 시제 동사가 없는 조각이 되고, 능동 과거형으로 읽자니 장비가 스스로 보관했다는 뜻이 되어 비문입니다. 장비는 '보관되는' 대상이므로 was stored로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-ox-005",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "sentence": "The funds [[u:raised]] at the winter auction supported shelters that the city budget had ignored for years.",
+      "isCorrect": true,
+      "translation": "겨울 자선 경매에서 모금된 기금은 시 예산이 여러 해 동안 외면해 온 쉼터들을 지원했습니다.",
+      "hints": [
+        "밑줄과 그다음 -ed 형태 중 어느 쪽이 본동사인지 구조로 판정해 보십시오.",
+        "명사 뒤 -ed는 '~된'이라는 수동 해석이 자연스러우면 후치 수식입니다."
+      ],
+      "explanation": "문장을 끝까지 읽으면 시제를 가진 본동사 supported가 따로 나옵니다. raised는 The funds를 꾸미는 과거분사 후치 수식이고, '기금이 모금된'이라는 수동 해석이 자연스럽습니다. raised를 본동사로 단정하면 supported가 남아돌게 되므로 구조가 어긋납니다."
+    },
+    {
+      "id": "u01-c4-ox-006",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "sentence": "The villagers [[u:rebuilt]] the schoolhouse destroyed by the flood held classes in the church that autumn.",
+      "isCorrect": false,
+      "correction": "rebuilding",
+      "translation": "홍수로 무너진 학교 건물을 다시 짓던 마을 사람들은 그해 가을 교회에서 수업을 열었습니다.",
+      "hints": [
+        "문장 끝의 시제 동사까지 모두 찾고, 연결어가 몇 개인지 세어 보십시오.",
+        "연결어 없이 시제 동사가 두 개면 하나는 준동사로 바뀌어야 합니다 — 능·수동 관계가 형태를 정합니다."
+      ],
+      "explanation": "문장 끝의 held가 본동사인데 연결어가 없으므로 rebuilt까지 시제 동사로 두면 동사가 하나 남습니다. 마을 사람들이 학교를 '다시 짓는' 능동 관계이고 뒤에 목적어 the schoolhouse가 있으므로 현재분사 rebuilding으로 고쳐야 합니다. destroyed는 the schoolhouse를 꾸미는 과거분사로 정당합니다."
+    },
+    {
+      "id": "u01-c4-ox-007",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "sentence": "The proposal drafted by the youngest board member [[u:secured]] votes that seasoned officials had failed to win.",
+      "isCorrect": true,
+      "translation": "최연소 이사가 작성한 그 제안서는 노련한 임원들이 얻어 내지 못했던 표를 확보했습니다.",
+      "hints": [
+        "앞의 -ed와 밑줄 -ed 중 어느 쪽이 본동사 자리인지 수식어 괄호치기로 가려 보십시오.",
+        "수식어를 걷어낸 뒤 시제 동사가 남는 자리가 본동사 자리입니다."
+      ],
+      "explanation": "drafted by the youngest board member는 주어 The proposal을 꾸미는 과거분사 수식어입니다. 수식어를 괄호로 묶으면 남는 본동사 자리를 secured가 정확히 채우고 있으므로 옳습니다. had failed는 관계사 that이 허용하는 관계절 동사입니다."
+    },
+    {
+      "id": "u01-c4-ox-008",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "sentence": "The merchants [[u:traded]] silk along this route built the fortified towns that still line the valley.",
+      "isCorrect": false,
+      "correction": "trading",
+      "translation": "이 길을 따라 비단을 거래하던 상인들이 지금도 계곡을 따라 늘어선 요새 도시들을 세웠습니다.",
+      "hints": [
+        "문장 전체의 시제 동사와 연결어 개수를 먼저 맞춰 보십시오.",
+        "명사 뒤 수식 자리라도 뒤에 목적어가 있으면 수동의 -ed가 아니라 능동의 형태가 필요합니다."
+      ],
+      "explanation": "본동사 built와 관계절의 line까지 세면, 연결어 that 하나로는 traded까지 시제 동사 세 개를 감당할 수 없습니다. traded는 주어를 꾸미는 수식어로 물러나야 하는데, 상인들이 비단을 '거래하는' 능동 관계이고 목적어 silk가 있으므로 현재분사 trading으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-wf-001",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["past-marker"],
+      "stem": "Last night the city council {{blank}} a plan to widen the coastal road.",
+      "given": "approve",
+      "acceptedAnswers": ["approved"],
+      "translation": "어젯밤 시의회는 해안 도로를 넓히는 계획을 승인했습니다.",
+      "hints": [
+        "이 문장에 시제를 가진 동사가 따로 있는지 확인해 보십시오.",
+        "빈칸이 본동사 자리라면 문장 맨 앞의 시간 표현이 시제를 정합니다."
+      ],
+      "explanation": "to widen은 계획의 내용을 설명하는 to부정사여서 본동사가 아니므로 빈칸이 본동사 자리입니다. Last night이 명백한 과거 시점을 가리키므로 과거형 approved가 정답입니다."
+    },
+    {
+      "id": "u01-c4-wf-002",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["ed-ambiguity"],
+      "stem": "The candidates {{blank}} for the final round will receive an email tomorrow morning.",
+      "given": "select",
+      "acceptedAnswers": ["selected"],
+      "translation": "최종 단계에 선발된 지원자들은 내일 아침 이메일을 받게 됩니다.",
+      "hints": [
+        "문장에 본동사가 이미 있는지 확인하고 빈칸의 역할을 정해 보십시오.",
+        "명사를 꾸미는 자리라면 그 명사와의 능·수동 관계가 형태를 정합니다."
+      ],
+      "explanation": "본동사 will receive가 이미 있으므로 빈칸은 주어를 꾸미는 분사 자리입니다. 지원자들은 '선발되는' 대상이므로 과거분사 selected가 정답입니다."
+    },
+    {
+      "id": "u01-c4-wf-003",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "stem": "The recipes {{blank}} down through four generations still shape the region's cooking.",
+      "given": "hand",
+      "acceptedAnswers": ["handed"],
+      "translation": "4대에 걸쳐 전해 내려온 그 요리법들은 지금도 그 지역의 요리를 규정합니다.",
+      "hints": [
+        "문장 뒤쪽의 시제 동사를 찾은 뒤 빈칸이 본동사인지 수식어인지 정해 보십시오.",
+        "꾸며지는 명사가 동작을 받는 쪽이면 과거분사를 씁니다."
+      ],
+      "explanation": "본동사 shape가 따로 있으므로 빈칸은 The recipes를 꾸미는 분사 자리입니다. 요리법은 '전해 내려지는' 대상이므로 과거분사 handed가 정답입니다."
+    },
+    {
+      "id": "u01-c4-wf-004",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["past-marker", "ed-ambiguity"],
+      "stem": "In 1859, the naturalist {{blank}} a book that reshaped the study of life.",
+      "given": "publish",
+      "acceptedAnswers": ["published"],
+      "translation": "1859년에 그 박물학자는 생명 연구의 판도를 바꾼 책을 출간했습니다.",
+      "hints": [
+        "관계절 안의 동사와 본동사 자리를 구분해 보십시오.",
+        "빈칸이 본동사 자리라면 문장 맨 앞의 연도가 시제를 정합니다."
+      ],
+      "explanation": "reshaped는 관계사 that이 허용하는 관계절 동사이고, 주절의 본동사 자리는 빈칸입니다. In 1859가 명백한 과거를 가리키므로 과거형 published가 정답입니다."
+    },
+    {
+      "id": "u01-c4-wf-005",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "stem": "The safety rules {{blank}} after the 2011 accident remain far stricter than the ones they replaced.",
+      "given": "introduce",
+      "acceptedAnswers": ["introduced"],
+      "translation": "2011년 사고 이후에 도입된 그 안전 규정은 그것이 대체한 규정보다 여전히 훨씬 더 엄격합니다.",
+      "hints": [
+        "문장 끝까지 읽어 시제를 가진 본동사를 먼저 확정해 보십시오.",
+        "명사 뒤 수식 자리라면 그 명사가 '~된' 대상인지로 형태를 정합니다."
+      ],
+      "explanation": "본동사 remain이 따로 있으므로 빈칸은 The safety rules를 꾸미는 분사 자리입니다. 규정은 '도입되는' 대상이므로 과거분사 introduced가 정답입니다. after the 2011 accident라는 과거 표현에 끌려 과거형 본동사로 착각하면 remain과 충돌합니다."
+    },
+    {
+      "id": "u01-c4-wf-006",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "past-marker"],
+      "stem": "The committee that had rejected two earlier drafts finally {{blank}} the revised charter in 2019.",
+      "given": "accept",
+      "acceptedAnswers": ["accepted"],
+      "translation": "앞선 두 초안을 부결했던 그 위원회는 2019년에 마침내 수정된 헌장을 승인했습니다.",
+      "hints": [
+        "관계절을 괄호로 묶은 뒤 주절의 본동사 자리가 비어 있는지 확인해 보십시오.",
+        "빈칸이 본동사 자리라면 문장 속 연도가 가리키는 시제로 씁니다."
+      ],
+      "explanation": "that had rejected two earlier drafts는 관계절이고, 주절의 본동사 자리는 빈칸입니다. in 2019가 명백한 과거 시점이므로 과거형 accepted가 정답입니다. 뒤의 revised는 the charter를 꾸미는 과거분사여서 본동사 계산에 들어가지 않습니다."
+    },
+    {
+      "id": "u01-c4-wc-001",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "The photographs [[u:took]] at the summit in 1953 show the entire mountain range below.",
+      "wrong": "took",
+      "acceptedAnswers": ["taken"],
+      "translation": "1953년 정상에서 촬영된 그 사진들은 아래로 펼쳐진 산맥 전체를 보여 줍니다.",
+      "hints": [
+        "문장 끝까지 읽어 시제를 가진 본동사가 따로 있는지 확인해 보십시오.",
+        "명사 뒤 수식 자리에는 과거형이 아니라 과거분사가 와야 합니다."
+      ],
+      "explanation": "본동사 show가 따로 있으므로 밑줄은 The photographs를 꾸미는 후치 수식 자리입니다. take는 과거형(took)과 과거분사(taken)의 모양이 다른 동사여서, 사진이 '촬영된' 대상이라는 수동 관계에 맞는 taken으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-wc-002",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "The evidence [[u:presenting]] at the trial convinced even the most skeptical jurors.",
+      "wrong": "presenting",
+      "acceptedAnswers": ["presented"],
+      "translation": "재판에서 제시된 그 증거는 가장 회의적인 배심원들까지 설득했습니다.",
+      "hints": [
+        "본동사를 확정한 뒤, 밑줄이 꾸미는 명사와의 능·수동 관계를 따져 보십시오.",
+        "꾸며지는 명사가 동작을 받는 대상이면 과거분사가 필요합니다."
+      ],
+      "explanation": "본동사 convinced가 따로 있으므로 밑줄은 The evidence를 꾸미는 분사 자리입니다. 증거는 스스로 제시하는 것이 아니라 '제시되는' 대상이므로 presenting을 과거분사 presented로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-wc-003",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "intervening-pp"],
+      "sentence": "The maps [[u:drew]] by naval surveyors in the 1700s guided merchant fleets for a century.",
+      "wrong": "drew",
+      "acceptedAnswers": ["drawn"],
+      "translation": "1700년대에 해군 측량사들이 그린 그 지도들은 한 세기 동안 상선단을 인도했습니다.",
+      "hints": [
+        "by 행위자 표현과 문장 끝의 시제 동사를 단서로 밑줄의 역할을 정해 보십시오.",
+        "명사 뒤 수식 자리에는 과거형을 쓸 수 없습니다 — 수동 관계에 맞는 형태를 고릅니다."
+      ],
+      "explanation": "본동사 guided가 따로 있고 by naval surveyors라는 행위자 표현이 있으므로, 밑줄은 The maps를 꾸미는 수동 의미의 후치 수식 자리입니다. draw는 과거형(drew)과 과거분사(drawn)가 다른 동사이므로 drawn으로 고쳐야 합니다."
+    },
+    {
+      "id": "u01-c4-wc-004",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "sentence": "The commission [[u:established]] by royal decree in 1804 and reported its findings within a year.",
+      "wrong": "established",
+      "acceptedAnswers": ["was established"],
+      "translation": "그 위원회는 1804년 칙령으로 설립되었고, 1년 안에 조사 결과를 보고했습니다.",
+      "hints": [
+        "and가 무엇과 무엇을 잇는지 확인하고, 앞쪽에 시제 동사가 있는지 세어 보십시오.",
+        "주어가 동작을 받는 대상인데 시제 동사가 비어 있다면 무엇이 빠졌는지 생각해 보십시오."
+      ],
+      "explanation": "and가 reported와 짝을 이루려면 앞쪽에도 시제를 가진 동사가 필요합니다. established를 과거분사 수식으로 읽으면 앞부분에 본동사가 없는 조각이 되고, 위원회는 '설립되는' 대상이므로 능동 과거형으로도 읽을 수 없습니다. 따라서 was established로 고쳐야 합니다."
+    }
+  ]
+}

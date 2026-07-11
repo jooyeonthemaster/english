@@ -1,0 +1,294 @@
+{
+  "unitId": "u11",
+  "concepts": [
+    {
+      "id": "u11-c1",
+      "unitId": "u11",
+      "order": 1,
+      "title": "동명사 목적어 vs to부정사 목적어",
+      "oneLiner": "enjoy·finish·avoid는 동명사만, want·decide·hope는 to부정사만 취합니다.",
+      "algorithm": [
+        "밑줄 바로 앞의 동사를 확인하고, 그 동사가 목적어로 어떤 형태를 요구하는지 떠올립니다.",
+        "enjoy·finish·avoid·mind·give up·keep 계열이면 동명사(-ing)를 고릅니다.",
+        "want·decide·hope·plan·promise 계열이면 to부정사를 고릅니다.",
+        "앞에 to가 보이면 부정사의 to인지 전치사 to인지 구분합니다 — to 뒤에 명사를 넣어 말이 되면 전치사이므로 동명사를 씁니다."
+      ],
+      "rules": [
+        {
+          "rule": "enjoy·finish·avoid·mind·give up·keep은 동명사만 목적어로 취합니다.",
+          "examples": [
+            {
+              "en": "The children **enjoyed watching** the dolphins swim near the boat.",
+              "ko": "아이들은 돌고래들이 배 근처에서 헤엄치는 모습을 보는 것을 즐겼습니다.",
+              "note": "enjoy는 동명사 전용 — enjoyed to watch는 불가"
+            },
+            {
+              "en": "She **avoided answering** questions about her next project.",
+              "ko": "그녀는 자신의 다음 프로젝트에 관한 질문에 답하기를 피했습니다.",
+              "note": "avoid + -ing 고정 — to answer는 불가"
+            }
+          ]
+        },
+        {
+          "rule": "want·decide·hope·plan·promise는 to부정사만 목적어로 취합니다.",
+          "examples": [
+            {
+              "en": "The committee **decided to postpone** the vote until next week.",
+              "ko": "위원회는 투표를 다음 주로 연기하기로 결정했습니다.",
+              "note": "decide + to-V 고정 — decided postponing은 불가"
+            },
+            {
+              "en": "He **promised to return** the borrowed tools by Friday.",
+              "ko": "그는 빌린 공구들을 금요일까지 돌려주겠다고 약속했습니다.",
+              "note": "promise + to-V 고정"
+            }
+          ]
+        },
+        {
+          "rule": "look forward to·be used to·object to·contribute to의 to는 전치사이므로 뒤에 동명사가 옵니다.",
+          "examples": [
+            {
+              "en": "We **look forward to hearing** your decision soon.",
+              "ko": "우리는 당신의 결정을 곧 듣게 되기를 고대합니다.",
+              "note": "이 to는 전치사 — to hear로 쓰면 오답"
+            },
+            {
+              "en": "Many residents **objected to building** a factory near the river.",
+              "ko": "많은 주민들이 강 근처에 공장을 짓는 것에 반대했습니다.",
+              "note": "object to(전치사) + 동명사 — to build는 불가"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "to만 보면 동사원형을 붙이는 반사 함정",
+          "body": "look forward to, be used to, object to, contribute to의 to를 부정사의 to로 착각해 동사원형을 붙이는 것이 이 유닛 오답 최다 함정입니다. to 뒤에 명사(the plan 등)를 넣어 문장이 성립하면 그 to는 전치사이므로 반드시 동명사를 씁니다.",
+          "example": {
+            "en": "She is **used to speaking** in front of large audiences.",
+            "ko": "그녀는 많은 청중 앞에서 말하는 데 익숙합니다.",
+            "note": "be used to(익숙하다)의 to는 전치사 — to speak로 쓰면 오답"
+          }
+        },
+        {
+          "title": "두 단어짜리 표현도 규칙은 그대로",
+          "body": "give up, put off, keep on처럼 여러 단어로 된 표현이 나오면 규칙이 흐려지기 쉽습니다. 단어 수가 늘어도 이 계열은 전부 동명사만 목적어로 취한다는 판단 기준은 변하지 않습니다.",
+          "example": {
+            "en": "He **gave up trying** to fix the old printer himself.",
+            "ko": "그는 낡은 프린터를 직접 고치려는 시도를 포기했습니다.",
+            "note": "give up + -ing 고정 — gave up to try는 불가"
+          }
+        }
+      ],
+      "confusableWith": ["u11-c2", "u05-c3"]
+    },
+    {
+      "id": "u11-c2",
+      "unitId": "u11",
+      "order": 2,
+      "title": "의미가 갈리는 동사",
+      "oneLiner": "remember/forget/try + -ing(과거의 일) vs to-V(앞으로의 일)입니다.",
+      "algorithm": [
+        "밑줄 앞 동사가 remember·forget·try·stop인지 확인합니다 — 이 동사들은 목적어 형태에 따라 뜻이 달라집니다.",
+        "문장 안의 시간 단서(before, already, tomorrow, last year 등)로 목적어의 일이 과거인지 미래인지 고정합니다.",
+        "이미 한 과거의 일이면 -ing, 앞으로 할 일이면 to부정사를 고릅니다.",
+        "stop 뒤의 to-V는 목적어가 아니라 '~하기 위해서'라는 목적의 부사구임을 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "remember/forget + -ing은 이미 한 일을, + to-V는 앞으로 할 일을 나타냅니다.",
+          "examples": [
+            {
+              "en": "I clearly **remember locking** the door before we left the house.",
+              "ko": "나는 집을 나서기 전에 문을 잠갔던 것을 분명히 기억합니다.",
+              "note": "before we left — 이미 한 과거의 일 → -ing"
+            },
+            {
+              "en": "Please **remember to lock** the door when you leave tonight.",
+              "ko": "오늘 밤 나갈 때 문을 잠글 것을 기억해 주십시오.",
+              "note": "when you leave tonight — 앞으로 할 일 → to-V"
+            }
+          ]
+        },
+        {
+          "rule": "try + -ing은 '시험 삼아 해 보다', try + to-V는 '~하려고 애쓰다'입니다.",
+          "examples": [
+            {
+              "en": "**Try adding** a little salt if the soup tastes flat.",
+              "ko": "국이 싱거우면 소금을 조금 넣어 보십시오.",
+              "note": "시험 삼아 한번 해 보는 것 → -ing"
+            },
+            {
+              "en": "Rescuers **tried to reach** the climbers before the storm arrived.",
+              "ko": "구조대원들은 폭풍이 오기 전에 등반가들에게 도달하려고 애썼습니다.",
+              "note": "힘든 일을 이루려는 노력 → to-V"
+            }
+          ]
+        },
+        {
+          "rule": "stop + -ing은 하던 행동을 멈추는 것이고, stop 뒤의 to-V는 멈춘 목적을 나타내는 부사구입니다.",
+          "examples": [
+            {
+              "en": "The factory **stopped releasing** waste into the river last year.",
+              "ko": "그 공장은 작년에 강으로 폐수를 방류하는 것을 중단했습니다.",
+              "note": "하던 행동(방류)을 그만둠 → -ing"
+            },
+            {
+              "en": "She **stopped to answer** a phone call on her way to class.",
+              "ko": "그녀는 수업에 가는 길에 걸려 온 전화를 받으려고 멈춰 섰습니다.",
+              "note": "to answer는 멈춘 목적(부사구) — stop의 목적어가 아님"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "시간 단서를 건너뛰고 형태만 보는 함정",
+          "body": "remember -ing과 remember to-V는 둘 다 문법적으로 정문이므로 형태만 봐서는 정오를 가릴 수 없습니다. 출제자는 before, already, by tomorrow 같은 시간 단서를 문장 안에 심어 시점을 고정합니다 — 단서를 먼저 찾아 시점을 확정한 뒤 형태를 판단해야 합니다.",
+          "example": {
+            "en": "Don't **forget to submit** the form by tomorrow morning.",
+            "ko": "내일 아침까지 그 서류를 제출할 것을 잊지 마십시오.",
+            "note": "by tomorrow morning이 시점을 미래로 고정 → to-V"
+          }
+        },
+        {
+          "title": "stop to-V를 '~하는 것을 멈추다'로 해석하는 함정",
+          "body": "stop은 to부정사를 목적어로 취하지 못합니다. stop 뒤에 to-V가 보이면 그것은 '~하기 위해 멈추다'라는 목적의 부사구입니다. 행동을 그만두었다는 뜻이면 반드시 stop -ing이어야 합니다."
+        }
+      ],
+      "confusableWith": ["u11-c1"]
+    },
+    {
+      "id": "u11-c3",
+      "unitId": "u11",
+      "order": 3,
+      "title": "대동사 do vs be",
+      "oneLiner": "일반동사를 대신하면 do/does/did, be동사를 대신하면 be입니다.",
+      "algorithm": [
+        "than·as·비교 구문 뒤의 대동사가 앞 절의 어떤 동사를 대신하는지, 원본 동사를 먼저 찾습니다.",
+        "원본이 일반동사(read·consume·know 등)면 do/does/did로 받습니다.",
+        "원본이 be동사(is·was 등)면 be동사로, 조동사·완료(has p.p. 등)면 그 조동사로 받습니다.",
+        "마지막으로 대동사의 수와 시제를 새 주어와 문맥에 맞춥니다."
+      ],
+      "rules": [
+        {
+          "rule": "일반동사를 대신할 때는 do를 쓰고, 수와 시제는 대동사 자리의 주어와 문맥에 맞춥니다.",
+          "examples": [
+            {
+              "en": "My brother reads much faster than I **do**.",
+              "ko": "내 형은 나보다 훨씬 빨리 읽습니다.",
+              "note": "reads(일반동사)를 대신 → do (am은 불가)"
+            },
+            {
+              "en": "This engine consumes more fuel than older models **did**.",
+              "ko": "이 엔진은 예전 모델들이 그랬던 것보다 더 많은 연료를 소비합니다.",
+              "note": "예전 모델들의 과거 소비를 대신 → 과거형 did"
+            }
+          ]
+        },
+        {
+          "rule": "be동사를 대신할 때는 반드시 be동사를 씁니다.",
+          "examples": [
+            {
+              "en": "She is more patient with children than her sister **is**.",
+              "ko": "그녀는 여동생보다 아이들에게 더 인내심이 있습니다.",
+              "note": "is(be동사)를 대신 → is (does는 불가)"
+            }
+          ]
+        },
+        {
+          "rule": "조동사나 완료형이 있으면 그 조동사를 그대로 받습니다.",
+          "examples": [
+            {
+              "en": "He has traveled to more countries than most people **have**.",
+              "ko": "그는 대부분의 사람들이 가 본 것보다 더 많은 나라를 여행해 왔습니다.",
+              "note": "has traveled의 완료 조동사를 대신 → have (do는 불가)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "원본 동사를 확인하지 않고 습관적으로 do를 쓰는 함정",
+          "body": "비교 구문에서는 대동사가 거의 반사적으로 나오기 때문에 앞 절을 확인하지 않고 do를 고르기 쉽습니다. 원본이 be동사면 be로, 조동사가 있으면 그 조동사로 받아야 하므로, 반드시 앞 절로 돌아가 원본 동사의 종류부터 확인합니다.",
+          "example": {
+            "en": "Winters here are colder than they **were** a decade ago.",
+            "ko": "이곳의 겨울은 십 년 전보다 더 춥습니다.",
+            "note": "are(be동사)의 과거를 대신 → were (did는 불가)"
+          }
+        }
+      ],
+      "confusableWith": ["u12-c1", "u11-c4"]
+    },
+    {
+      "id": "u11-c4",
+      "unitId": "u11",
+      "order": 4,
+      "title": "시제 호응",
+      "oneLiner": "since+과거 시점 → 현재완료, ago·last year 등 명백한 과거 부사 → 과거시제입니다.",
+      "algorithm": [
+        "문장 안의 시간 부사(구)를 먼저 찾아 표시합니다 — since+과거 시점, ago, last year, for+기간, so far 등이 판단 근거입니다.",
+        "since+과거 시점, over the past ~ 처럼 '과거부터 지금까지'를 뜻하는 단서면 현재완료(have p.p.)를 씁니다.",
+        "ago·last year·in+과거 연도처럼 이미 끝난 시점을 가리키는 단서면 단순 과거를 씁니다 — 이 부사들은 현재완료와 함께 쓸 수 없습니다."
+      ],
+      "rules": [
+        {
+          "rule": "since + 과거 시점이 있으면 주절의 동사는 현재완료입니다.",
+          "examples": [
+            {
+              "en": "Air quality in the city **has improved** since the new law passed.",
+              "ko": "새 법이 통과된 이후 그 도시의 공기 질은 개선되어 왔습니다.",
+              "note": "since+과거 시점(passed) → 주절은 현재완료"
+            },
+            {
+              "en": "She **has worked** at the museum since 2019.",
+              "ko": "그녀는 2019년부터 그 박물관에서 일해 왔습니다.",
+              "note": "since 2019(과거 출발점) → 현재완료 (worked는 불가)"
+            }
+          ]
+        },
+        {
+          "rule": "ago·last year·in+과거 연도 같은 명백한 과거 표시어는 단순 과거와만 어울립니다.",
+          "examples": [
+            {
+              "en": "The old bridge **collapsed** during a flood three years ago.",
+              "ko": "그 오래된 다리는 3년 전 홍수 때 무너졌습니다.",
+              "note": "three years ago → 과거시제 (has collapsed는 불가)"
+            },
+            {
+              "en": "Scientists first **discovered** the ancient cave paintings in 1994.",
+              "ko": "과학자들은 1994년에 그 고대 동굴 벽화를 처음 발견했습니다.",
+              "note": "in 1994(끝난 시점) → 과거시제"
+            }
+          ]
+        },
+        {
+          "rule": "for + 기간, so far, over the past ~는 지금까지 이어지는 일을 뜻하므로 현재완료와 어울립니다.",
+          "examples": [
+            {
+              "en": "The team **has studied** these birds for more than ten years.",
+              "ko": "그 연구팀은 10년 넘게 이 새들을 연구해 왔습니다.",
+              "note": "for+기간(지금까지 계속) → 현재완료"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "since절과 주절의 시제를 뒤바꾸는 함정",
+          "body": "since 뒤의 시점 표현에는 과거시제가 오고, 주절에는 현재완료가 옵니다. 출제자는 이 짝을 뒤집어 주절에 과거시제를 놓거나 since절에 현재완료를 놓습니다. '과거의 출발점(since절) → 지금까지의 결과(주절)'라는 방향을 기억하면 흔들리지 않습니다.",
+          "example": {
+            "en": "Membership **has doubled** since the library opened its new wing.",
+            "ko": "도서관이 새 별관을 연 이후 회원 수가 두 배가 되었습니다.",
+            "note": "opened(과거 출발점) → 주절은 has doubled(현재완료)"
+          }
+        },
+        {
+          "title": "현재완료 + 끝난 과거 부사 조합",
+          "body": "last night, in 2015, ago처럼 이미 끝난 시점을 가리키는 부사는 현재완료와 함께 쓸 수 없습니다. 시간 부사를 먼저 찾아 표시한 뒤, 그 부사가 요구하는 시제를 기계적으로 적용하는 것이 가장 안전한 판단 순서입니다."
+        }
+      ],
+      "confusableWith": ["u03-c4", "u12-c2"]
+    }
+  ]
+}

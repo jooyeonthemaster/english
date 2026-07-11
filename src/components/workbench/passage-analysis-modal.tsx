@@ -618,6 +618,7 @@ export function PassageAnalysisModal({
               passageId={passage.id}
               legacyAnalysisData={analysisData}
               passageContent={passage.content}
+              passageTitle={passage.title}
               onToolbarStateChange={setEditorToolbar}
             />
           </div>

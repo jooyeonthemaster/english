@@ -40,6 +40,8 @@ import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passag
 import { PassageCardGrid } from "@/app/(director)/director/workbench/generate/passage-card-grid";
 import type { PassageItem } from "@/app/(director)/director/workbench/generate/generate-page-types";
 import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import { KoreanExamPassageLibrary } from "@/components/workbench/korean-exam-passage-library";
+import type { KoExamPick } from "@/components/workbench/korean-exam-passage-library/use-korean-exam-passage-library";
 import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { ExtractionDetailModal } from "@/app/(director)/director/workbench/generate/intake/extraction-detail-modal";
 import {
@@ -385,6 +387,52 @@ export function PassageRegistrationClient({
   // 본문은 서버가 코퍼스에서 해석(클라는 id 만). 등록 후 목록 재조회 → 새 지문 선택
   // → 내 지문함(library) 뷰로 전환해 바로 워크스페이스로 불러올 수 있게 한다.
   const [examImporting, setExamImporting] = useState(false);
+  // 국어 라우트 — 국어 기출 코퍼스 id 를 국어 전용 액션으로 지문함(subject=KOREAN) 등록.
+  const handleImportKoreanExamPassages = useCallback(
+    async (picks: KoExamPick[]) => {
+      if (!picks || picks.length === 0) return false;
+      setExamImporting(true);
+      try {
+        const { importKoreanExamPassages } = await import("@/actions/workbench");
+        const result = await importKoreanExamPassages(picks.map((p) => p.id));
+        if (!result.success) {
+          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
+          return false;
+        }
+        const created = result.createdIds;
+        const skipped = result.skippedExamIds.length;
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+        if (created.length > 0) {
+          setSelectedIds(new Set(created));
+          setIntakeView("library");
+          toast.success(
+            skipped > 0
+              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외)`
+              : `기출 지문 ${created.length}개를 내 지문함에 담았어요.`,
+          );
+        } else if (skipped > 0) {
+          setIntakeView("library");
+          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
+        }
+        return true;
+      } catch {
+        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
+        return false;
+      } finally {
+        setExamImporting(false);
+      }
+    },
+    [
+      loadPassages,
+      setPassageSearch,
+      setSelectedCollectionId,
+      setAnalysisStatusFilter,
+      setSelectedIds,
+    ],
+  );
   const handleImportExamPassages = useCallback(
     async (picks: ExamPassagePick[]) => {
       if (!picks || picks.length === 0) return false;
@@ -1332,13 +1380,22 @@ export function PassageRegistrationClient({
             setIncludeWorksheet={setIncludeWorksheet}
             libraryLabel="내 지문함"
             examBrowser={
-              <ExamPassageLibrary
-                onPick={handleImportExamPassages}
-                busy={examImporting}
-                pickLabel="다음으로 (내 지문함)"
-                // 모바일: '다음으로 (내 지문함)' 선택 바를 하단 고정(스텝 플로우).
-                mobileFixedFooter
-              />
+              subjectScope === "KOREAN" ? (
+                <KoreanExamPassageLibrary
+                  onPick={handleImportKoreanExamPassages}
+                  busy={examImporting}
+                  pickLabel="다음으로 (내 지문함)"
+                  mobileFixedFooter
+                />
+              ) : (
+                <ExamPassageLibrary
+                  onPick={handleImportExamPassages}
+                  busy={examImporting}
+                  pickLabel="다음으로 (내 지문함)"
+                  // 모바일: '다음으로 (내 지문함)' 선택 바를 하단 고정(스텝 플로우).
+                  mobileFixedFooter
+                />
+              )
             }
             library={
               <PassageCardGrid

@@ -1,11 +1,13 @@
 "use client";
 
 // ============================================================================
-// 학생 시험 리포트 v3 — 학생 워크스페이스 셸 (스텝: 답안 판독 → 정오표 → 리포트)
+// 학생 시험 리포트 v3 — 학생 워크스페이스 셸 (스텝: 답안 수집 → 정오표 → 리포트)
 //
-// 분석 detail(examMap 소유) + 학생 detail 동시 로드. 상태/저장/판독/확정/생성
+// 분석 detail(examMap 소유) + 학생 detail 동시 로드. 상태/저장/확정/생성
 // 로직은 useVerdictState 훅에 위임하고, 여기서는 로드·스텝 전환·레이아웃만 담당.
 // 리포트 스텝은 기존 ReportEditor(무수정)를 report-step 이 감싼다.
+// 플로우 개편(26-07-08): AI 사진 판독(E2) 배선 제거 — 답안 수집은 학생 링크와
+// 직접 입력 2경로만.
 // ============================================================================
 
 import {
@@ -24,7 +26,6 @@ import {
   FileText,
   ListChecks,
   Loader2,
-  ScanLine,
   UserRound,
 } from "lucide-react";
 
@@ -44,7 +45,7 @@ interface StudentWorkspaceClientProps {
 
 type Step = "read" | "verdict" | "report";
 
-const STEP_META: { key: Step; label: string; icon: typeof ScanLine }[] = [
+const STEP_META: { key: Step; label: string; icon: typeof ListChecks }[] = [
   { key: "read", label: "답안 수집", icon: ListChecks },
   { key: "verdict", label: "정오표 확인", icon: CheckCircle2 },
   { key: "report", label: "리포트", icon: FileText },
@@ -67,7 +68,11 @@ export function ExamReportStudentWorkspaceClient({
   const [student, setStudent] = useState<ExamStudentDetail | null>(null);
   const [phase, setPhase] = useState<"loading" | "ready" | "notFound" | "error">("loading");
   const [step, setStep] = useState<Step>("read");
-  const [stepInit, setStepInit] = useState(false);
+  // 초기 스텝 소비 가드 — state 가 아닌 ref 인 이유: StrictMode 의 이중 load() 에서
+  // 두 번째 호출이 스테일 클로저(stepInit=false)로 가드를 우회해, 첫 호출이
+  // replaceState 로 소거한 ?step=verdict 를 재판독 실패 → read 로 덮어쓰는 레이스가
+  // 실측됐다(플로우 개편 검증 라운드2). ref 는 동기 소비라 이중 호출에 면역.
+  const stepInitRef = useRef(false);
 
   const workspaceHref = `/director/workbench/exam-report/${analysisId}`;
 
@@ -95,17 +100,43 @@ export function ExamReportStudentWorkspaceClient({
       const studentData = (await sRes.json()) as { student: ExamStudentDetail };
       setAnalysis(analysisData.analysis);
       setStudent(studentData.student);
-      if (!stepInit) {
-        setStep(deriveInitialStep(studentData.student));
-        setStepInit(true);
+      if (!stepInitRef.current) {
+        stepInitRef.current = true;
+        // ㉡ 선생님 직접 입력 딥링크(?step=verdict) — 학생 추가 다이얼로그의
+        // "정오표에서 답안 입력" 버튼이 라벨 약속대로 정오표 스텝에 착지하게
+        // 한다. 파라미터가 없으면 기존 deriveInitialStep 파생 그대로(불변),
+        // examMap 미준비(정오표 진입 불가)면 파라미터를 무시한다.
+        const params = new URLSearchParams(window.location.search);
+        const wantsVerdict = params.get("step") === "verdict";
+        const verdictOk =
+          !!analysisData.analysis.examMap &&
+          analysisData.analysis.examMap.questions.length > 0;
+        setStep(
+          wantsVerdict && verdictOk
+            ? "verdict"
+            : deriveInitialStep(studentData.student),
+        );
+        if (wantsVerdict) {
+          // 소비한 파라미터는 URL 에서 제거 — 새로고침/뒤로가기 재발화 방지.
+          params.delete("step");
+          const qs = params.toString();
+          window.history.replaceState(
+            window.history.state,
+            "",
+            `${window.location.pathname}${qs ? `?${qs}` : ""}`,
+          );
+        }
       }
       setPhase("ready");
     } catch {
       setPhase("error");
     }
-  }, [analysisId, studentId, stepInit]);
+  }, [analysisId, studentId]);
 
   useEffect(() => {
+    // 마운트 시 1회 서버 로드(외부 시스템 동기화) — setState 는 fetch 콜백에서만
+    // 일어나므로 캐스케이드 렌더 우려가 없다(규칙 오탐).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 
@@ -243,8 +274,8 @@ function Workspace({
     () => !!analysis.examMap && analysis.examMap.questions.length > 0,
     [analysis.examMap],
   );
-  // 답안 수집 3경로(사진 판독·학생 링크·직접 입력) 개방 — examMap 만 있으면 정오표
-  // 진입 가능(전 문항 UNKNOWN 프리필 + 수동/선지 입력). 사진 없는 학생 데드엔드 해소.
+  // 답안 수집 2경로(학생 링크·직접 입력) 개방 — examMap 만 있으면 정오표
+  // 진입 가능(전 문항 UNKNOWN 프리필 + 수동/선지 입력).
   const verdictReady = examMapReady;
   const reportReady = student.gradingConfirmed || student.reportStatus !== "NONE";
 
@@ -253,13 +284,6 @@ function Workspace({
     verdict: verdictReady,
     report: reportReady,
   };
-
-  // 판독 성공 → 정오표로 자동 진행.
-  const handleRead = useCallback(async () => {
-    const ok = await vs.runRead();
-    if (ok) onStepChange("verdict");
-    return ok;
-  }, [vs, onStepChange]);
 
   // 답안 수집 → 정오표 진입 시 서버 리싱크 — 페이지 로드 후 학생이 링크로 제출한
   // 답안(responses/version 서버 갱신)을 반영해 첫 저장 CAS 충돌을 예방한다.
@@ -328,13 +352,8 @@ function Workspace({
         {/* 스텝 콘텐츠 */}
         {step === "read" && (
           <ReadStep
-            analysisId={analysis.id}
             student={student}
             examMapReady={examMapReady}
-            reading={vs.reading}
-            readRemaining={vs.readRemaining}
-            onRead={handleRead}
-            onUploaded={() => void vs.reloadStudent()}
             onStudentChange={onStudentChange}
             onAdvance={handleAdvanceToVerdict}
           />
@@ -399,7 +418,7 @@ function StepTab({
   disabled,
   onClick,
 }: {
-  icon: typeof ScanLine;
+  icon: typeof ListChecks;
   label: string;
   active: boolean;
   disabled?: boolean;

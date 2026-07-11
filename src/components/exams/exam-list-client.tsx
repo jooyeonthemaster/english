@@ -23,6 +23,11 @@ import {
   removeExamsFromCollection,
   updateExamCollection,
 } from "@/actions/exams";
+import {
+  getExamDeploymentSummaries,
+  type ExamDeploymentSummary,
+} from "@/actions/exams/deployment-summary";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { confirmNative } from "@/lib/browser-confirm";
 
 // Shared folder modules
@@ -50,6 +55,9 @@ import { DragSelect } from "@/components/ui/drag-select";
 import { FiltersToolbar } from "./exam-list-client-parts/filters-toolbar";
 import type { ClassOption, ExamItem } from "./exam-list-client-parts/types";
 
+// 과제 배포 컴포저(통합 배포 위저드) — 카드/행 "과제 배포" 액션의 착륙점.
+import { AssignmentComposer } from "@/components/study-assignments/assignment-composer";
+
 interface Props {
   exams: ExamItem[];
   classes: ClassOption[];
@@ -76,10 +84,12 @@ const folderActions = {
 
 type ExamViewMode = "grid-3" | "grid-2" | "list";
 
+// 라벨에 "시험" 스코프를 명시 — 바로 위 폴더 섹션 헤더의 폴더 보기 전환
+// 버튼("그리드/목록 보기")과 상하로 나란히 노출되므로 대상이 구분되게 한다.
 const EXAM_VIEW_OPTIONS = [
-  { value: "grid-3", label: "3열 보기", Icon: Grid3x3 },
-  { value: "grid-2", label: "2열 보기", Icon: Grid2x2 },
-  { value: "list", label: "목록 보기", Icon: List },
+  { value: "grid-3", label: "시험 3열 보기", Icon: Grid3x3 },
+  { value: "grid-2", label: "시험 2열 보기", Icon: Grid2x2 },
+  { value: "list", label: "시험 목록 보기", Icon: List },
 ] satisfies ReadonlyArray<ViewModeCycleOption<ExamViewMode>>;
 
 // 열 수 → Tailwind 그리드 클래스. 목록은 별도 렌더라 여기서 다루지 않는다.
@@ -87,6 +97,29 @@ const EXAM_GRID_COL_CLASS: Record<"grid-3" | "grid-2", string> = {
   "grid-3": "grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
   "grid-2": "grid-cols-1 sm:grid-cols-2",
 };
+
+// ---------------------------------------------------------------------------
+// 폴더 영역 기본 높이 시드 — 폴더가 1행뿐일 때의 빈 밴드 제거.
+// FolderSection(enableFolderControls, storageKey="exams")은 저장된 값이 없으면
+// 156px 고정 높이로 시작해 1행(칩 80px + 상하 패딩 16px = 96px) 아래 ~60px 가
+// 빈 밴드로 남는다. 공유 컴포넌트는 자동 수축을 지원하지 않으므로, 저장된
+// 높이가 "없을 때만" 1행 콘텐츠 높이를 기본값으로 심는다. 유저가 리사이즈
+// 핸들로 조절한 값은 그대로 저장·우선된다(리사이즈 기능 무회귀).
+// ---------------------------------------------------------------------------
+const FOLDER_LIST_HEIGHT_KEY = "smoat:folder-section:exams:list-height";
+const FOLDER_ONE_ROW_HEIGHT = 96;
+if (typeof window !== "undefined") {
+  try {
+    if (window.localStorage.getItem(FOLDER_LIST_HEIGHT_KEY) === null) {
+      window.localStorage.setItem(
+        FOLDER_LIST_HEIGHT_KEY,
+        String(FOLDER_ONE_ROW_HEIGHT),
+      );
+    }
+  } catch {
+    /* localStorage 접근 불가(사파리 시크릿 등) — 기본 높이로 동작 */
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Shared chrome helpers (mirrors question-bank-client)
@@ -178,6 +211,12 @@ export function ExamListClient({
   );
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  // 과제 배포 컴포저 대상 시험지 — null 이면 닫힘(EXAM 프리셋 고정 진입).
+  const [assignExam, setAssignExam] = useState<{
+    id: string;
+    title: string;
+    questionCount: number;
+  } | null>(null);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   // 동형 생성 시험지의 분석 정보(설정의 patternProfile 기반).
   const [analysisExam, setAnalysisExam] = useState(null);
@@ -230,6 +269,38 @@ export function ExamListClient({
   } = useMobilePagination(displayedExams, {
     resetKey: `${folder.activeFolder ?? "root"}|${search}|${typeFilter}|${statusFilter}|${classFilter}`,
   });
+
+  // ─── 배포 현황 미니 배지(ENABLE_EXAM_DEPLOYMENT) ───
+  // 목록 렌더를 블로킹하지 않도록 마운트 후 현재 화면에 보이는 카드 id 만 요약을
+  // 조회한다. 이미 요청한 id 는 재요청하지 않고(페이지 넘김 누적), 실패하면 배지만
+  // 미표시하고 다음 목록 변화 때 재시도한다. 로드 전엔 prop 이 undefined → 배지 없음.
+  const [deploymentSummaries, setDeploymentSummaries] = useState<
+    Record<string, ExamDeploymentSummary>
+  >({});
+  const requestedDeploymentIdsRef = useRef<Set<string>>(new Set());
+  const visibleExamIdsKey = useMemo(
+    () => visibleExams.map((e) => e.id).join(","),
+    [visibleExams],
+  );
+  useEffect(() => {
+    if (!FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT) return;
+    const ids = visibleExamIdsKey
+      .split(",")
+      .filter((id) => id && !requestedDeploymentIdsRef.current.has(id));
+    if (ids.length === 0) return;
+    for (const id of ids) requestedDeploymentIdsRef.current.add(id);
+    getExamDeploymentSummaries(ids)
+      .then((result) => {
+        if (!result.success || !result.data) {
+          throw new Error(result.error || "배포 현황 조회 실패");
+        }
+        setDeploymentSummaries((prev) => ({ ...prev, ...result.data }));
+      })
+      .catch(() => {
+        // 배지는 부가 정보 — 토스트 없이 조용히 물러나고 재시도 여지만 남긴다.
+        for (const id of ids) requestedDeploymentIdsRef.current.delete(id);
+      });
+  }, [visibleExamIdsKey]);
 
   // ─── Folder action wrappers ───
   const onAddToFolder = useCallback(
@@ -299,6 +370,24 @@ export function ExamListClient({
     setQuickViewExamId(examId);
     setQuickViewOpen(true);
   }, []);
+
+  // ─── 과제 배포(U5) — 시험지 → AssignmentComposer preset EXAM 진입 ───
+  // 국어 목록(subjectScope="KOREAN")은 서버 가드(createStudyAssignment KOREAN
+  // 거부)와 대칭으로 버튼을 비활성한다(툴팁 안내). 영어 목록엔 국어 시험지가
+  // 서버 필터로 애초에 없다.
+  const assignLocked = subjectScope === "KOREAN";
+  const openAssignComposer = useCallback(
+    (examId: string) => {
+      const exam = exams.find((e) => e.id === examId);
+      if (!exam) return;
+      setAssignExam({
+        id: exam.id,
+        title: exam.title,
+        questionCount: exam._count?.questions ?? 0,
+      });
+    },
+    [exams],
+  );
 
   // ─── Delete handler ───
   async function handleDelete(targetId: string) {
@@ -624,6 +713,9 @@ export function ExamListClient({
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
+                      onAssign={openAssignComposer}
+                      assignLocked={assignLocked}
+                      deploymentSummary={deploymentSummaries[exam.id]}
                     />
                   ))}
                 </DragSelect>
@@ -648,6 +740,8 @@ export function ExamListClient({
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
+                      onAssign={openAssignComposer}
+                      assignLocked={assignLocked}
                     />
                   ))}
                 </DragSelect>
@@ -673,6 +767,36 @@ export function ExamListClient({
         examId={quickViewExamId}
         open={quickViewOpen}
         onOpenChange={setQuickViewOpen}
+      />
+
+      {/* 과제 배포 컴포저 — EXAM 프리셋 고정(기본 태블릿 응시).
+          완료 시 목록 새로고침 + 과제 관리 딥링크 토스트. */}
+      <AssignmentComposer
+        open={assignExam !== null}
+        onClose={() => setAssignExam(null)}
+        preset={
+          assignExam
+            ? {
+                kind: "EXAM",
+                content: {
+                  refId: assignExam.id,
+                  title: assignExam.title,
+                  meta: `${assignExam.questionCount}문항`,
+                },
+                examMode: "TABLET",
+              }
+            : null
+        }
+        onCreated={(assignmentId) => {
+          router.refresh();
+          toast("과제 관리에서 배포 현황을 확인할 수 있습니다.", {
+            action: {
+              label: "과제 관리에서 보기",
+              onClick: () =>
+                router.push(`/director/students/assignments?open=${assignmentId}`),
+            },
+          });
+        }}
       />
 
       {analysisExam && (

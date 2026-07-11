@@ -125,7 +125,16 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
       const data = (await res.json()) as { analysis: ExamAnalysisDetail };
       setDetail(data.analysis);
       if (!stepInitializedRef.current) {
-        setStep(deriveInitialStep(data.analysis));
+        // 허브 보드 "학생 추가" CTA(?openAddStudent=1) — 기본 탭 파생과 무관하게
+        // 학생 관리 탭으로 직행해야 StudentsTab 이 마운트되어 파라미터를 소비
+        // (학생 추가 다이얼로그 오픈 + URL 정리)한다. 학생 0명(ANALYZED)이면
+        // deriveInitialStep 이 analysis 탭을 골라 CTA 가 무산되는 갭을 막는다.
+        const wantsAddStudent =
+          new URLSearchParams(window.location.search).get("openAddStudent") ===
+          "1";
+        setStep(
+          wantsAddStudent ? "students" : deriveInitialStep(data.analysis),
+        );
         stepInitializedRef.current = true;
       }
       setPhase("ready");
@@ -135,6 +144,9 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
   }, [analysisId]);
 
   useEffect(() => {
+    // 마운트 시 1회 서버 로드(외부 시스템 동기화) — setState 는 fetch 콜백에서만
+    // 일어나므로 캐스케이드 렌더 우려가 없다(규칙 오탐, 학생 워크스페이스와 동일).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 

@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   Check,
@@ -9,8 +10,11 @@ import {
   Users,
   ClipboardList,
   FileSearch,
+  FileText,
   Pencil,
   Printer,
+  Send,
+  TabletSmartphone,
   Trash2,
 } from "lucide-react";
 import { cn, formatDate, formatDateTime } from "@/lib/utils";
@@ -46,6 +50,13 @@ interface ExamItem {
   _count: { questions: number; submissions: number };
 }
 
+/** 배포 현황 미니 배지 데이터 — deployment-summary 액션 산출물(로드 전엔 undefined) */
+interface DeploymentSummaryBadge {
+  assigned: number;
+  submitted: number;
+  graded: number;
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -58,6 +69,9 @@ export function ExamFileCard({
   onEdit,
   onDelete,
   onShowAnalysis,
+  onAssign,
+  assignLocked,
+  deploymentSummary,
 }: {
   exam: ExamItem;
   selected: boolean;
@@ -68,6 +82,12 @@ export function ExamFileCard({
   onDelete?: (id: string) => void;
   /** 동형 생성 시험지에만 전달 — 누르면 분석 정보 모달을 연다. */
   onShowAnalysis?: (id: string) => void;
+  /** 과제 배포 — AssignmentComposer(EXAM 프리셋) 진입. 미지정 시 버튼 숨김. */
+  onAssign?: (id: string) => void;
+  /** 국어 시험지 목록 — 과제 배포 비활성(툴팁 안내, 서버 가드 대칭). */
+  assignLocked?: boolean;
+  /** 배포(태블릿/OMR) 현황 요약 — 로드 전·할당 0이면 배지 미표시. */
+  deploymentSummary?: DeploymentSummaryBadge;
 }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -126,8 +146,17 @@ export function ExamFileCard({
       )}
     >
       {/* 좌측: 첫 장 실제 렌더 미리보기 — 카드 높이를 위→아래로 가득 채운다 */}
-      <div className="relative w-[24%] min-w-[74px] max-w-[96px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white md:w-[164px] md:min-w-[118px] md:max-w-[164px]">
-        <ExamCardPaperPreview examId={exam.id} />
+      <div className="relative w-[24%] min-w-[74px] max-w-[96px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-slate-50 md:w-[164px] md:min-w-[118px] md:max-w-[164px]">
+        {/* 썸네일 부재("미리보기 없음") 대비 플레이스홀더 — 정상 렌더/스켈레톤이
+            위를 덮으므로 빈 상태에서만 드러난다. 아이콘은 중앙 문구와 겹치지
+            않도록 살짝 위로 올린다. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <FileText className="h-6 w-6 -translate-y-5 text-slate-300" />
+        </div>
+        <ExamCardPaperPreview examId={exam.id} className="bg-transparent" />
       </div>
 
       {/* 우측: 기존 카드 본문 */}
@@ -147,11 +176,12 @@ export function ExamFileCard({
           <Check className="w-3 h-3" />
         </button>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 min-w-0">
-            <h4 className="min-w-0 flex-1 text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+          <div className="flex items-start gap-1.5 min-w-0">
+            <h4 className="min-w-0 flex-1 text-[13px] font-semibold leading-snug text-slate-800 line-clamp-2 break-words group-hover:text-blue-600 transition-colors">
               {exam.title}
             </h4>
-            {/* 제목 줄 우측 끝: 단건 삭제(휴지통) — 제목과 세로 가운데정렬. */}
+            {/* 제목 줄 우측 상단: 단건 삭제(휴지통) — 제목이 2줄로 흐를 수 있어
+                상단 고정. 기본은 저채도(slate), hover 시에만 rose 로 경고 강조. */}
             {onDelete ? (
               <button
                 type="button"
@@ -162,7 +192,7 @@ export function ExamFileCard({
                   e.stopPropagation();
                   onDelete(exam.id);
                 }}
-                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-300 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -192,6 +222,35 @@ export function ExamFileCard({
                 {formatDate(exam.examDate)}
               </span>
             )}
+            {/* 배포 현황 미니 배지 — 할당이 있을 때만. 클릭 시 상세 응시 현황 탭으로
+                이동(카드 선택/더블클릭과 이벤트 충돌 방지: stopPropagation). */}
+            {deploymentSummary && deploymentSummary.assigned > 0 && (
+              <Link
+                href={`/director/exams/${exam.id}?tab=deployment`}
+                title="응시 현황 보기"
+                aria-label="응시 현황 보기"
+                onClick={(e) => e.stopPropagation()}
+                onDoubleClick={(e) => e.stopPropagation()}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded text-[11px] tabular-nums transition-colors",
+                  deploymentSummary.graded === deploymentSummary.assigned
+                    ? "font-medium text-blue-600 hover:text-blue-700"
+                    : "text-slate-500 hover:text-blue-600",
+                )}
+              >
+                <TabletSmartphone
+                  className={cn(
+                    "w-3 h-3",
+                    deploymentSummary.graded === deploymentSummary.assigned
+                      ? "text-blue-600"
+                      : "text-slate-400",
+                  )}
+                />
+                {deploymentSummary.graded === deploymentSummary.assigned
+                  ? "채점 완료"
+                  : `${deploymentSummary.submitted}/${deploymentSummary.assigned} 응시`}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -215,7 +274,12 @@ export function ExamFileCard({
       {/* Bottom: 수정(편집 이동) / 인쇄(바로 인쇄) / 저장(횟수 표시 전용) —
           카드 하단 정렬, 무채색. 우측에 분석 정보(동형 한정)·상세 열기. */}
       <div className="mt-auto flex items-center gap-1.5 pt-3">
-        <div className="grid min-w-0 flex-1 grid-cols-2 gap-1.5">
+        <div
+          className={cn(
+            "grid min-w-0 flex-1 gap-1.5",
+            onAssign ? "grid-cols-3" : "grid-cols-2",
+          )}
+        >
           {/* 수정: 누르면 편집 화면으로 이동 */}
           <button
             type="button"
@@ -272,6 +336,26 @@ export function ExamFileCard({
               인쇄<span className="hidden md:inline"> {exam.printCount}회</span>
             </span>
           </button>
+
+          {/* 과제 배포: 학생 앱으로 배포하는 통합 과제 컴포저(EXAM 프리셋)를 연다.
+              국어 시험지는 비활성(툴팁) — 서버 KOREAN 거부 가드와 대칭. */}
+          {onAssign ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!assignLocked) onAssign(exam.id);
+              }}
+              disabled={assignLocked}
+              title={assignLocked ? "국어 시험지는 지원 예정입니다" : "학생 앱으로 과제 배포"}
+              aria-label="과제 배포"
+              className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-slate-200 disabled:hover:bg-white disabled:hover:text-slate-600"
+            >
+              <Send className="h-3 w-3 shrink-0" />
+              <span className="truncate">과제 배포</span>
+            </button>
+          ) : null}
         </div>
 
         {/* 동형 생성 시험지: 분석 정보 — 카드 클릭(상세 열기)과 구분되는 별도 액션 */}

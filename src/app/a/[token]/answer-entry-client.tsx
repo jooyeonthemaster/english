@@ -7,6 +7,10 @@
 // 제출 바. 제출은 POST /api/answer/[token] — 서버가 reviewed:true(강사 확정)
 // 행을 보존하고 정오/점수는 응답에도 포함하지 않는다.
 //
+// 전 문항 기입 강제(유저 결정 2): 미기입 문항이 있으면 제출 버튼 비활성 +
+// "N문항 남았습니다" 카운터(누르면 남은 첫 문항으로 스크롤 점프+잠깐 강조).
+// 서버도 동일 검증(400 INCOMPLETE)으로 클라 우회를 차단한다.
+//
 // 이 컴포넌트의 props 에는 정답·정오·점수가 구조적으로 존재하지 않는다(§1-7).
 // ============================================================================
 
@@ -75,6 +79,17 @@ export function AnswerEntryClient({
   const [skippedCount, setSkippedCount] = useState(0);
   // 제출 시각 표기는 클라 전용(서버-클라 타임존 상이로 인한 hydration 불일치 방지).
   const [submittedLabel, setSubmittedLabel] = useState<string | null>(null);
+  // 점프 강조 대상 — 같은 문항 재점프도 재강조되도록 { number, at } 객체로 갱신.
+  const [highlight, setHighlight] = useState<{
+    number: string;
+    at: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!highlight) return;
+    const timer = setTimeout(() => setHighlight(null), 1600);
+    return () => clearTimeout(timer);
+  }, [highlight]);
 
   useEffect(() => {
     if (!submittedAt) return;
@@ -108,6 +123,16 @@ export function AnswerEntryClient({
   const remaining = total - filledCount;
   const percent = total > 0 ? Math.round((filledCount / total) * 100) : 0;
 
+  /** 남은 첫 문항으로 스크롤 점프 + 잠깐 강조 — 카운터 버튼·INCOMPLETE 응답 공용. */
+  const jumpToFirstUnfilled = useCallback(() => {
+    const first = questions.find((question) => !isFilled(question));
+    if (!first) return;
+    document
+      .querySelector(`[data-qnum="${CSS.escape(first.number)}"]`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHighlight({ number: first.number, at: Date.now() });
+  }, [questions, isFilled]);
+
   const handleChoice = useCallback((number: string, choice: string) => {
     setDraft((prev) => ({ ...prev, [number]: { ...prev[number], choice } }));
   }, []);
@@ -121,6 +146,12 @@ export function AnswerEntryClient({
 
   const handleSubmit = useCallback(async () => {
     if (submitting || lockedNow) return;
+    // 전 문항 기입 강제 — 버튼 비활성의 방어 이중화(서버도 400 으로 거절).
+    if (remaining > 0) {
+      toast.error(`아직 ${remaining}문항이 남았습니다. 모든 문항을 입력해 주세요.`);
+      jumpToFirstUnfilled();
+      return;
+    }
 
     // 입력이 있는 문항만 전송 — 빈 entry 는 서버도 스킵하지만 애초에 싣지 않는다.
     const entries = questions
@@ -139,11 +170,6 @@ export function AnswerEntryClient({
       })
       .filter((entry) => entry !== null)
       .slice(0, MAX_ENTRIES);
-
-    if (entries.length === 0) {
-      toast.error("입력한 답이 없어요. 한 문항 이상 입력해 주세요.");
-      return;
-    }
 
     setSubmitting(true);
     try {
@@ -167,6 +193,10 @@ export function AnswerEntryClient({
       if (res.status === 409 && body?.code === "LOCKED") {
         setLockedNow(true);
         toast.error("채점이 확정되어 답안을 수정할 수 없습니다.");
+      } else if (res.status === 400 && body?.code === "INCOMPLETE") {
+        // 서버측 전 문항 기입 검증 — 정상 UI 에선 도달하지 않는 방어선.
+        toast.error("아직 입력하지 않은 문항이 있어요. 모든 문항을 입력해 주세요.");
+        jumpToFirstUnfilled();
       } else if (res.status === 409 && body?.code === "NOT_READY") {
         toast.error("답안지가 아직 준비되지 않았어요. 잠시 후 다시 시도해 주세요.");
       } else if (res.status === 404) {
@@ -179,7 +209,15 @@ export function AnswerEntryClient({
     } finally {
       setSubmitting(false);
     }
-  }, [draft, lockedNow, questions, submitting, token]);
+  }, [
+    draft,
+    jumpToFirstUnfilled,
+    lockedNow,
+    questions,
+    remaining,
+    submitting,
+    token,
+  ]);
 
   // ── 제출 완료 화면 ─────────────────────────────────────────────────────────
   if (phase === "done") {
@@ -189,11 +227,12 @@ export function AnswerEntryClient({
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
             <CheckCircle2 className="h-7 w-7" />
           </div>
-          <h1 className="text-lg font-semibold text-slate-800">
-            답안을 제출했어요
-          </h1>
+          <h1 className="text-lg font-semibold text-slate-800">제출됐습니다</h1>
           <p className="mt-2 text-sm leading-relaxed text-slate-500">
-            선생님이 채점을 확정하기 전까지 이 링크에서 다시 수정할 수 있어요.
+            선생님이 확인 후 리포트를 보내드립니다.
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-slate-400">
+            채점이 확정되기 전까지는 이 링크에서 답을 수정할 수 있어요.
           </p>
           {skippedCount > 0 && (
             <p className="mt-2 text-xs leading-relaxed text-slate-400">
@@ -235,7 +274,8 @@ export function AnswerEntryClient({
           </p>
           {lockedNow ? null : (
             <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
-              본인이 시험지에 표기한 답을 그대로 입력하세요.
+              본인이 시험지에 표기한 답을 그대로 입력하세요. 모든 문항을
+              입력해야 제출할 수 있어요.
             </p>
           )}
           {submittedLabel && !lockedNow && (
@@ -290,6 +330,7 @@ export function AnswerEntryClient({
               text={draft[question.number]?.text}
               filled={isFilled(question)}
               disabled={lockedNow}
+              highlighted={highlight?.number === question.number}
               onChoice={handleChoice}
               onText={handleText}
             />
@@ -300,19 +341,29 @@ export function AnswerEntryClient({
       {!lockedNow && (
         <div className="sticky bottom-0 z-20 border-t border-slate-200 bg-white px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
           <div className="mx-auto w-full max-w-lg">
-            {remaining > 0 && (
-              <p className="mb-2 text-center text-xs text-slate-500">
-                아직 입력하지 않은 문항이{" "}
+            {remaining > 0 ? (
+              <button
+                type="button"
+                onClick={jumpToFirstUnfilled}
+                className="mb-2 flex w-full items-center justify-center gap-1 rounded-md py-1 text-xs text-slate-500 transition-colors hover:text-slate-700"
+              >
                 <span className="font-semibold text-rose-500 tabular-nums">
                   {remaining}
                 </span>
-                개 있어요
+                <span>문항 남았습니다</span>
+                <span className="font-medium text-blue-600 underline underline-offset-2">
+                  남은 문항으로 이동
+                </span>
+              </button>
+            ) : (
+              <p className="mb-2 text-center text-xs font-medium text-emerald-600">
+                모든 문항을 입력했어요. 제출해 주세요.
               </p>
             )}
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={submitting || filledCount === 0}
+              disabled={submitting || remaining > 0}
               className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
             >
               {submitting ? (

@@ -55,6 +55,8 @@ import {
   resolveKoSetSlots,
 } from "@/lib/korean/sets/presets";
 import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import { KoreanExamPassageLibrary } from "@/components/workbench/korean-exam-passage-library";
+import type { KoExamPick } from "@/components/workbench/korean-exam-passage-library/use-korean-exam-passage-library";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { useGenerateExtraction } from "./intake/use-generate-extraction";
@@ -1759,6 +1761,51 @@ export function GeneratePageClient({
     [loadPassages],
   );
 
+  // ── 국어 기출 지문 → 내 지문함(subject=KOREAN) 일괄 등록 ──
+  // 영어 handleImportExamPassages 의 국어 대칭. 국어 코퍼스 id 를 국어 전용 액션으로
+  // 보내 Passage(subject=KOREAN)+KO_KIND 태그로 등록한다. 후처리는 동일.
+  const handleImportKoreanExamPassages = useCallback(
+    async (picks: KoExamPick[]) => {
+      if (!picks || picks.length === 0) return false;
+      setExamImporting(true);
+      try {
+        const { importKoreanExamPassages } = await import("@/actions/workbench");
+        const result = await importKoreanExamPassages(picks.map((p) => p.id));
+        if (!result.success) {
+          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
+          return false;
+        }
+        const created = result.createdIds;
+        const skipped = result.skippedExamIds.length;
+
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+
+        if (created.length > 0) {
+          setSelectedIds(new Set(created));
+          setIntakeView("library");
+          toast.success(
+            skipped > 0
+              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외) 유형·난이도를 설정해 문제를 생성하세요.`
+              : `기출 지문 ${created.length}개를 내 지문함에 담았어요. 유형·난이도를 설정해 문제를 생성하세요.`,
+          );
+        } else if (skipped > 0) {
+          setIntakeView("library");
+          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
+        }
+        return true;
+      } catch {
+        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
+        return false;
+      } finally {
+        setExamImporting(false);
+      }
+    },
+    [loadPassages],
+  );
+
   // ── Image/PDF extraction completion → drafts promoted to Passages ──
   // Refetch the list in place so the new passages appear as cards, drop the
   // job's loading cards (after the real ones are loaded → seamless), flip to the
@@ -2882,8 +2929,15 @@ export function GeneratePageClient({
         />
       }
       examBrowser={
-        // 수능·모평 기출 코퍼스는 영어 지문 전용 — 국어 라우트에선 탭 미노출.
-        subjectScope === "KOREAN" ? undefined : (
+        subjectScope === "KOREAN" ? (
+          // 국어 라우트 — 국어 기출 코퍼스 picker(subject=KOREAN 로 지문함 등록).
+          <KoreanExamPassageLibrary
+            onPick={handleImportKoreanExamPassages}
+            busy={examImporting}
+            pickLabel="다음으로 (내 지문함)"
+            mobileFixedFooter
+          />
+        ) : (
           <ExamPassageLibrary
             onPick={handleImportExamPassages}
             busy={examImporting}

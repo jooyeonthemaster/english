@@ -8,6 +8,8 @@
 import { NextResponse } from "next/server";
 import { requireStaff } from "@/lib/extraction/api-utils";
 import { prisma } from "@/lib/prisma";
+// P2022(신규 컬럼 미ALTER DB) 우아한 강등 게이트 — deployment-summary.ts 와 동일 소스.
+import { isMissingColumnError } from "@/actions/workbench/_collection-where";
 // reconcile.ts 는 병렬 구축 중 — 계약 시그니처(reconcileExamAnalysis)를 믿고 사용.
 import { reconcileExamAnalysis } from "@/lib/exam-report/reconcile";
 import { parseExamAiMeta } from "@/lib/exam-report/schemas";
@@ -19,29 +21,65 @@ export async function GET() {
   const auth = await requireStaff();
   if (auth instanceof NextResponse) return auth;
 
-  const rows = await prisma.examAnalysis.findMany({
-    where: { academyId: auth.academyId, deletedAt: null },
-    select: {
-      id: true,
-      title: true,
-      schoolName: true,
-      grade: true,
-      examType: true,
-      examYear: true,
-      semester: true,
-      status: true,
-      sourceType: true,
-      sourceFiles: true,
-      // 진행률/미분석 수 추출용 — raw 는 응답에 싣지 않는다(structure/analysis 는
-      // egress 관례상 select 자체 금지 유지).
-      aiMeta: true,
-      createdAt: true,
-      updatedAt: true,
-      _count: { select: { students: { where: { deletedAt: null } } } },
-    },
-    orderBy: { updatedAt: "desc" },
-    take: 50,
-  });
+  // sourceExamId 는 surgical ALTER(20260709_exam_deployment_omr.sql)로만 존재하는
+  // 신규 컬럼 — 코드 선배포/ALTER 지연(또는 dev 서버 미재시작) 창에서 SELECT 하면
+  // Prisma P2022 로 터진다. 그때는 딥링크(sourceExamId)만 생략하고 목록(기존 외부
+  // 분석 카드 포함)은 그대로 내려보내 500 회귀를 막는다(deployment-summary.ts 미러).
+  const rows = await prisma.examAnalysis
+    .findMany({
+      where: { academyId: auth.academyId, deletedAt: null },
+      select: {
+        id: true,
+        title: true,
+        schoolName: true,
+        grade: true,
+        examType: true,
+        examYear: true,
+        semester: true,
+        status: true,
+        sourceType: true,
+        // INTERNAL(자체 시험지 합성 분석) 카드의 "시험지 열기" 딥링크용(V7) — 스칼라 1개.
+        sourceExamId: true,
+        sourceFiles: true,
+        // 진행률/미분석 수 추출용 — raw 는 응답에 싣지 않는다(structure/analysis 는
+        // egress 관례상 select 자체 금지 유지).
+        aiMeta: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: { select: { students: { where: { deletedAt: null } } } },
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 50,
+    })
+    .catch(async (error) => {
+      if (!isMissingColumnError(error)) throw error;
+      // 신규 컬럼 없이 재조회 후 sourceExamId 를 null 로 채워 응답 형태를 통일.
+      const fallback = await prisma.examAnalysis.findMany({
+        where: { academyId: auth.academyId, deletedAt: null },
+        select: {
+          id: true,
+          title: true,
+          schoolName: true,
+          grade: true,
+          examType: true,
+          examYear: true,
+          semester: true,
+          status: true,
+          sourceType: true,
+          sourceFiles: true,
+          aiMeta: true,
+          createdAt: true,
+          updatedAt: true,
+          _count: { select: { students: { where: { deletedAt: null } } } },
+        },
+        orderBy: { updatedAt: "desc" },
+        take: 50,
+      });
+      return fallback.map((row) => ({
+        ...row,
+        sourceExamId: null as string | null,
+      }));
+    });
 
   // 리포트 생성 완료(GENERATED) 학생 수 — 라이브러리 '리포트' 컬럼용 배치 집계.
   const reportCounts = await prisma.examReportStudent.groupBy({

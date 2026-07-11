@@ -26,6 +26,8 @@ interface AnswerQuestionRowProps {
   text?: string;
   filled: boolean;
   disabled: boolean;
+  /** '남은 문항으로 이동' 점프 직후 잠깐 강조(rose 링) — 클라가 타임아웃으로 해제. */
+  highlighted: boolean;
   onChoice: (number: string, choice: string) => void;
   onText: (number: string, text: string) => void;
 }
@@ -36,6 +38,7 @@ export const AnswerQuestionRow = memo(function AnswerQuestionRow({
   text,
   filled,
   disabled,
+  highlighted,
   onChoice,
   onText,
 }: AnswerQuestionRowProps) {
@@ -48,9 +51,11 @@ export const AnswerQuestionRow = memo(function AnswerQuestionRow({
 
   return (
     <li
+      data-qnum={question.number}
       className={cn(
-        "rounded-lg border bg-white p-3 shadow-sm",
+        "rounded-lg border bg-white p-3 shadow-sm transition-shadow",
         filled ? "border-blue-200" : "border-slate-200",
+        highlighted && "border-rose-300 ring-2 ring-rose-200",
       )}
     >
       <div className="flex items-center gap-2">

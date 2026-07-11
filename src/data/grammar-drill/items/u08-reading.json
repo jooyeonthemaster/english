@@ -1,0 +1,486 @@
+{
+  "unitId": "u08",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u08-c2-mu-001",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["while-during", "clause-vs-np"],
+      "hints": [
+        "밑줄 친 연결어를 만나면 해석보다 먼저 바로 뒤에 '주어+동사' 짝이 있는지 확인해 보십시오.",
+        "절 앞에는 접속사만, 동사 없는 명사구 앞에는 전치사만 설 수 있습니다."
+      ],
+      "explanation": "② during은 전치사이므로 뒤에 동사 없는 명사구만 올 수 있습니다. 그런데 the budget figures were being checked라는 '주어+동사' 짝을 갖춘 절이 이어지므로, 같은 뜻의 접속사 while로 고쳐야 합니다. ①은 본동사 decided가 따로 있어 분사 수식이 옳고, ③은 진행형 수동태의 바른 형태입니다.",
+      "text": "The committee [[1:reviewing]] the proposal decided to postpone its final vote [[2:during]] the budget figures [[3:were being checked]] again.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "while",
+      "rationales": [
+        "본동사 decided가 따로 있으므로 reviewing은 The committee를 수식하는 현재분사이고, 위원회가 검토의 주체이므로 -ing이 옳습니다.",
+        "during 뒤에 주어(the budget figures)와 동사(were being checked)를 갖춘 절이 오므로 전치사 during은 틀렸고 접속사 while이 필요합니다.",
+        "예산 수치는 점검을 받는 대상이고 점검이 진행 중이므로 진행형 수동태 were being checked가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c2-mu-002",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["despite-although", "clause-vs-np"],
+      "hints": [
+        "각 연결어의 뒤 구조와 각 동사의 태를 차례로 점검해 보십시오.",
+        "'~에도 불구하고'로 해석되더라도, 절 앞에는 접속사만 설 수 있습니다."
+      ],
+      "explanation": "① Despite는 전치사이므로 절을 이끌 수 없습니다. 뒤에 the storm had damaged라는 '주어+동사' 짝이 있으므로 접속사 Although로 고쳐야 합니다. ② returned는 이 절의 본동사로 옳고, ③ 수리는 완료되는 대상이므로 수동태 were completed가 옳습니다.",
+      "text": "[[1:Despite]] the storm had damaged the harbor badly, fishing boats [[2:returned]] to the sea within days, and repairs [[3:were completed]] before winter.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "Although",
+      "rationales": [
+        "Despite 뒤에 주어(the storm)와 동사(had damaged)를 갖춘 절이 오므로 전치사 Despite는 틀렸고 접속사 Although가 필요합니다.",
+        "주어 fishing boats 뒤에 오는 이 절의 본동사이므로 과거형 returned가 옳습니다.",
+        "수리는 완료되는 대상이므로 수동태 were completed가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c2-mu-003",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["because-of", "clause-vs-np"],
+      "hints": [
+        "이유를 나타내는 연결어 뒤에 본동사가 있는지 확인해 보십시오.",
+        "of가 붙은 이유 표현은 전치사구이므로 뒤에 명사구만 올 수 있습니다."
+      ],
+      "explanation": "② because of는 전치사구여서 뒤에 명사구만 와야 하는데, the ceiling showed라는 '주어+동사' 짝이 이어지므로 접속사 because로 고쳐야 합니다. ① 콤마 뒤에서 The museum을 받아 주어가 빠진 절을 이끄는 which는 옳고, ③ 문제는 발견되는 대상이므로 과거분사 discovered가 옳습니다.",
+      "text": "The museum, [[1:which]] opened to the public in 1912, closed its east wing [[2:because of]] the ceiling showed signs of water damage, a problem [[3:discovered]] during a routine inspection.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "because",
+      "rationales": [
+        "콤마 뒤에서 선행사 The museum을 받아 주어가 빠진 불완전한 절을 이끄는 계속적 용법의 which이므로 옳습니다.",
+        "because of 뒤에 주어(the ceiling)와 동사(showed)를 갖춘 절이 오므로 전치사구 because of는 틀렸고 접속사 because가 필요합니다.",
+        "문제는 정기 점검에서 발견되는 대상이므로 a problem을 수식하는 과거분사 discovered가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c2-mu-004",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["while-during", "clause-vs-np"],
+      "hints": [
+        "'~동안'으로 해석되는 연결어 뒤에 '주어+동사' 짝이 있는지 확인해 보십시오.",
+        "해석이 같아도 절 앞에는 접속사, 명사구 앞에는 전치사만 설 수 있습니다."
+      ],
+      "explanation": "② while은 절을 이끄는 접속사인데 뒤에 본동사 없는 명사구 the long dry season만 오므로, 같은 뜻의 전치사 during으로 고쳐야 합니다. '~동안'이라는 해석은 같아도 뒤 구조가 품사를 결정합니다. ③ bloom은 and가 앞의 remain과 연결하는 병렬 동사로 옳습니다.",
+      "text": "Many desert plants [[1:remain]] dormant [[2:while]] the long dry season and then [[3:bloom]] within days after rain [[4:falls]].",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "during",
+      "rationales": [
+        "복수 주어 Many desert plants에 수일치한 이 문장의 본동사이므로 remain이 옳습니다.",
+        "while 뒤에 동사 없는 명사구 the long dry season만 오므로 접속사 while은 틀렸고 전치사 during이 필요합니다.",
+        "등위접속사 and가 앞의 remain과 연결하는 병렬 동사이므로 bloom이 옳습니다.",
+        "단수 주어 rain에 수일치한 동사이므로 falls가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c1-mu-005",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "clause-vs-np", "long-np"],
+      "hints": [
+        "연결어 뒤에 이어지는 말이 길더라도 그 안에 본동사가 있는지부터 확인해 보십시오.",
+        "수식어가 아무리 길게 붙어도 '주어+동사' 짝이 없으면 명사구이고, 명사구 앞에는 전치사가 섭니다."
+      ],
+      "explanation": "① Although 뒤의 months of repeated warnings about supply shortages는 길지만 본동사가 하나도 없는 명사구입니다. 접속사는 절만 이끌 수 있으므로 전치사 Despite로 고쳐야 합니다. ③ was는 단수 주어 핵 demand에 일치한 동사로, 바로 앞의 복수 명사 devices에 끌리면 안 됩니다.",
+      "text": "[[1:Although]] months of repeated warnings about supply shortages, investors [[2:kept]] buying shares, convinced that demand for the new devices [[3:was]] still growing.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "Despite",
+      "rationales": [
+        "Although 뒤에 본동사 없는 긴 명사구만 오므로 접속사 Although는 틀렸고 전치사 Despite가 필요합니다.",
+        "주어 investors 뒤에 오는 이 절의 본동사이므로 과거형 kept가 옳습니다.",
+        "주어 핵이 단수 명사 demand이고 for the new devices는 수식어이므로 단수 동사 was가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c1-mu-006",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["because-of", "clause-vs-np"],
+      "hints": [
+        "이유 표현 뒤에 오는 명사만 보지 말고, 그 뒤에 동사가 이어지는지까지 확인해 보십시오.",
+        "연결어 바로 뒤가 명사라도 그 명사가 동사의 주어라면 전체는 절이고, 절 앞에는 접속사가 필요합니다."
+      ],
+      "explanation": "② because of 뒤의 heavy rain까지는 명사구로 보이지만, 이어지는 had flooded가 본동사이므로 전체는 절입니다. 절 앞에는 접속사 because가 와야 합니다. ④ who는 주어가 빠진 불완전한 절을 이끄는 관계대명사로 옳습니다.",
+      "text": "The festival [[1:was postponed]] until early October [[2:because of]] heavy rain had flooded the main square, and organizers [[3:offered]] refunds to visitors [[4:who]] had already purchased tickets.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "because",
+      "rationales": [
+        "축제는 연기되는 대상이므로 수동태 was postponed가 옳습니다.",
+        "because of 뒤에 주어(heavy rain)와 동사(had flooded)를 갖춘 절이 오므로 전치사구 because of는 틀렸고 접속사 because가 필요합니다.",
+        "주어 organizers 뒤에 오는 이 절의 본동사이므로 과거형 offered가 옳습니다.",
+        "선행사 visitors를 받아 주어가 빠진 불완전한 절을 이끄는 관계대명사이므로 who가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c3-mu-007",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["thanks-to", "clause-vs-np"],
+      "hints": [
+        "여러 단어로 된 연결 표현도 뒤에 '주어+동사' 짝이 오는지부터 확인해 보십시오.",
+        "감사·이유를 나타내는 to형 표현은 전치사구이므로 뒤에 명사구만 올 수 있습니다."
+      ],
+      "explanation": "③ thanks to는 전치사구여서 뒤에 명사구만 올 수 있는데, the new filtration systems remove라는 '주어+동사' 짝이 이어지므로 접속사 because로 고쳐야 합니다. ② the number of + 복수 명사는 단수 취급하므로 has fallen이 옳다는 점도 함께 확인합니다.",
+      "text": "Urban air quality [[1:has improved]] noticeably in recent years, and the number of asthma admissions [[2:has fallen]] sharply, [[3:thanks to]] the new filtration systems remove most of the fine dust [[4:that]] older equipment missed.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "because",
+      "rationales": [
+        "단수 주어 Urban air quality에 수일치한 본동사이므로 has improved가 옳습니다.",
+        "the number of + 복수 명사는 단수 취급하므로 단수 동사 has fallen이 옳습니다.",
+        "thanks to 뒤에 주어(the new filtration systems)와 동사(remove)를 갖춘 절이 오므로 전치사구 thanks to는 틀렸고 접속사 because가 필요합니다.",
+        "선행사 the fine dust가 있고 missed의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c1-mu-008",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["while-during", "long-np", "clause-vs-np"],
+      "hints": [
+        "'~동안' 연결어 뒤에 이어지는 말이 길어도 본동사가 있는지부터 세어 보십시오.",
+        "전치사구 수식이 겹겹이 붙은 명사구는 절처럼 보여도 동사 짝이 없으면 명사구입니다."
+      ],
+      "explanation": "② while은 접속사인데 뒤에 본동사 없는 명사구 the final weeks of the election campaign만 이어지므로 전치사 during으로 고쳐야 합니다. 명사구가 길어서 절처럼 보여도 동사 짝이 없으면 명사구입니다. ① appeared는 자동사의 능동으로 옳고, ⑤ attacking은 promising과의 병렬로 옳습니다.",
+      "text": "The two candidates [[1:appeared]] on television almost nightly [[2:while]] the final weeks of the election campaign, each promising reforms [[3:that]] experts [[4:considered]] impossible and [[5:attacking]] each other's records with statistics from friendly think tanks.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "during",
+      "rationales": [
+        "appear는 수동태로 쓸 수 없는 자동사이므로 능동 appeared가 옳습니다.",
+        "while 뒤에 동사 없는 긴 명사구만 오므로 접속사 while은 틀렸고 전치사 during이 필요합니다.",
+        "선행사 reforms가 있고 considered의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "관계사절 안에서 주어 experts의 본동사이므로 과거형 considered가 옳습니다.",
+        "and가 앞의 promising과 연결하는 분사 병렬이므로 attacking이 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c3-mu-009",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["unless-without", "clause-vs-np"],
+      "hints": [
+        "조건을 나타내는 연결어 뒤에 '주어+동사' 짝이 있는지 확인해 보십시오.",
+        "조건의 접속사는 절만 이끌 수 있고, 명사구 앞에는 같은 의미의 전치사가 필요합니다."
+      ],
+      "explanation": "③ unless는 조건의 절을 이끄는 접속사인데 뒤에 본동사 없는 명사구 the approval of national regulators만 오므로, '~ 없이는'이라는 뜻의 전치사 without으로 고쳐야 합니다. ①과 ④의 that은 각각 목적어와 주어가 빠진 불완전한 절을 이끄는 관계대명사로 옳습니다.",
+      "text": "No experimental drug [[1:that]] laboratories develop [[2:can reach]] the market [[3:unless]] the approval of national regulators, a process [[4:that]] often takes years and involves thousands of pages of clinical data.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "without",
+      "rationales": [
+        "선행사 No experimental drug가 있고 develop의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "조동사 can 뒤의 동사원형으로 이 문장의 본동사 자리이므로 can reach가 옳습니다.",
+        "unless 뒤에 동사 없는 명사구만 오므로 접속사 unless는 틀렸고 전치사 without이 필요합니다.",
+        "선행사 a process를 받아 주어가 빠진 불완전한 절을 이끄는 관계대명사이므로 that이 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c1-mu-010",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["despite-although", "gerund-subject", "clause-vs-np"],
+      "hints": [
+        "연결어 뒤에 -ing가 보이면 그 뒤에 본동사가 또 있는지까지 확인해 보십시오.",
+        "동명사구 뒤에 본동사가 이어지면 그 동명사구는 절의 주어이고, 전체는 절입니다."
+      ],
+      "explanation": "① Despite 뒤의 recording the observations by hand는 동명사구처럼 보이지만, 이어지는 slows가 본동사이므로 이 동명사구는 절의 주어이고 전체는 완전한 절입니다. 절 앞에 전치사 Despite는 설 수 없으므로 접속사 Although로 고쳐야 합니다. -ing만 보고 명사구로 단정하지 말고 본동사 유무까지 확인해야 하는 최고난도 함정입니다.",
+      "text": "[[1:Despite]] recording the observations by hand slows the entire analysis, many field biologists still [[2:prefer]] it, insisting that handwritten notes capture details [[3:that]] digital forms often lose.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "Although",
+      "rationales": [
+        "Despite 뒤의 동명사구 recording ... hand가 본동사 slows의 주어여서 전체가 절이므로 전치사 Despite는 틀렸고 접속사 Although가 필요합니다.",
+        "복수 주어 many field biologists에 수일치한 이 절의 본동사이므로 prefer가 옳습니다.",
+        "선행사 details가 있고 lose의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c3-mu-011",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["now-that", "in-that", "clause-vs-np"],
+      "hints": [
+        "여러 단어로 된 연결어도 뒤 구조부터 확인해 보십시오.",
+        "단어 수가 아니라 뒤에 '주어+동사' 짝이 오는지가 접속사와 전치사구를 가릅니다."
+      ],
+      "explanation": "① Now that는 절을 이끄는 구접속사인데 뒤에 본동사 없는 명사구 the sudden collapse of several local currencies만 오므로, 전치사구 Because of로 고쳐야 합니다. ③ in that는 두 단어지만 완전한 절을 이끄는 구접속사로 옳다는 점이 이 문항의 미끼입니다.",
+      "text": "[[1:Now that]] the sudden collapse of several local currencies, governments across the region suspended foreign currency trading, a measure [[2:that]] economists criticized [[3:in that]] it punished ordinary savers [[4:who]] played no part in the speculation.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "Because of",
+      "rationales": [
+        "Now that는 절을 이끄는 구접속사인데 뒤에 동사 없는 명사구만 오므로 틀렸고, 전치사구 Because of가 필요합니다.",
+        "선행사 a measure가 있고 criticized의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "in that는 '~라는 점에서'라는 뜻의 구접속사로, 뒤에 완전한 절(it punished ...)이 오므로 옳습니다.",
+        "선행사 ordinary savers를 받아 주어가 빠진 불완전한 절을 이끄는 관계대명사이므로 who가 옳습니다."
+      ]
+    },
+    {
+      "id": "u08-c3-mu-012",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["even-though", "despite-although", "clause-vs-np"],
+      "hints": [
+        "연결어 뒤에 -ing형 단어가 보여도 그것이 명사를 꾸미는 분사인지 본동사인지 구분해 보십시오.",
+        "명사구 안에 분사가 끼어 있어도 '주어+동사' 짝이 없으면 여전히 명사구입니다."
+      ],
+      "explanation": "② even though는 두 단어로 된 구접속사이므로 절만 이끌 수 있습니다. 뒤의 the rising acidity of the surrounding water는 rising이라는 분사가 끼어 있어도 본동사가 없는 명사구이므로, 전치사 despite로 고쳐야 합니다. ④ puzzling은 회복력이 어리둥절함을 유발하는 쪽이므로 현재분사가 옳습니다.",
+      "text": "Several coral species [[1:continue]] to build sturdy reefs [[2:even though]] the rising acidity of the surrounding water, a resilience [[3:that]] marine biologists find both [[4:puzzling]] and encouraging.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "despite",
+      "rationales": [
+        "복수 주어 Several coral species에 수일치한 본동사이므로 continue가 옳습니다.",
+        "even though 뒤에 본동사 없는 명사구만 오므로 구접속사 even though는 틀렸고 전치사 despite가 필요합니다.",
+        "선행사 a resilience가 있고 find의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "회복력이 어리둥절함을 유발하는 쪽이므로 현재분사 puzzling이 옳고, and 뒤의 encouraging과 형태도 일치합니다."
+      ]
+    },
+    {
+      "id": "u08-c2-ps-001",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["while-during", "clause-vs-np", "conj-that"],
+      "hints": [
+        "다섯 밑줄 가운데 연결어가 보이면 해석하기 전에 바로 뒤에 '주어+동사' 짝이 있는지부터 확인해 보십시오.",
+        "'~동안'으로 해석되는 연결어라도 절 앞에는 접속사만, 명사구 앞에는 전치사만 설 수 있습니다."
+      ],
+      "explanation": "③ during 뒤에는 the brain replays the day's experiences라는 '주어+동사' 짝을 갖춘 절이 이어집니다. 전치사 during 뒤에는 동사 없는 명사구만 올 수 있으므로, 절을 이끄는 같은 뜻의 접속사 while로 고쳐야 합니다. ⑤ that은 뒤 절이 완전하고 The evidence와 동격을 이루므로 옳은 접속사 that이라는 점에 주의합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The results of decades of sleep research [[1:suggest]] that sleep is far more than physical rest. In one series of experiments, participants [[2:deprived]] of deep sleep for a single night performed poorly on memory tasks the next day, even when their total hours in bed remained unchanged. Neuroscientists now believe that [[3:during]] the brain replays the day's experiences, fragile memories are gradually converted into stable long-term knowledge. This nightly replay, once dismissed as idle downtime, appears essential to [[4:what]] researchers call memory consolidation. The evidence [[5:that]] disrupted sleep weakens both memory and emotional balance has therefore convinced many schools to reconsider early start times.",
+      "answer": 3,
+      "correction": "while",
+      "rationales": [
+        "주어의 핵이 복수 명사 The results이고 of decades of sleep research는 전치사구 수식어이므로 복수 동사 suggest가 옳습니다.",
+        "참가자들은 깊은 잠을 빼앗기는 대상이므로 명사 participants를 수식하는 과거분사 deprived가 옳습니다.",
+        "during 뒤에 주어(the brain)와 동사(replays)를 갖춘 절이 이어지므로 전치사 during은 틀렸고 접속사 while로 고쳐야 합니다.",
+        "앞에 선행사가 없고 call의 목적어가 빠진 불완전한 절을 이끌므로 what이 옳습니다.",
+        "뒤에 성분이 모두 갖춰진 완전한 절이 오고 The evidence의 내용을 설명하므로 동격 접속사 that이 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u04", "u08", "u06", "u06"],
+      "gist": "수면 중 뇌가 낮의 경험을 재생하며 기억을 강화한다는 신경과학 연구를 소개합니다."
+    },
+    {
+      "id": "u08-c2-ps-002",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "clause-vs-np"],
+      "hints": [
+        "연결어 밑줄은 뒤 구조부터, 동사 밑줄은 주어와의 관계부터 확인해 보십시오.",
+        "'~에도 불구하고'라는 해석이 자연스러워도, 절 앞에 전치사가 서 있으면 틀린 것입니다."
+      ],
+      "explanation": "⑤ despite는 전치사이므로 뒤에 동사 없는 명사구만 올 수 있습니다. 그런데 they privately knew the correct answer라는 완전한 절이 이어지므로 접속사 although로 고쳐야 합니다. ① seated는 '앉다'로 외운 탓에 -ing을 기대하기 쉽지만, seat는 '앉히다'라는 타동사여서 과거분사 seated가 옳은 미끼 밑줄입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Conformity has fascinated psychologists since the mid-twentieth century. In one classic type of experiment, participants [[1:seated]] among trained actors were asked to judge the lengths of printed lines aloud. When every actor confidently offered the same wrong answer, a surprising share of participants [[2:abandoned]] the clear evidence of their own eyes. Later interviews revealed [[3:what]] the researchers had suspected: many people conformed simply to avoid standing out, while others genuinely doubted their perception. Follow-up studies showed that the pressure [[4:was reduced]] dramatically when even one actor dissented. Remarkably, some participants continued to agree with the group [[5:despite]] they privately knew the correct answer, a finding that reshaped theories of social influence.",
+      "answer": 5,
+      "correction": "although",
+      "rationales": [
+        "참가자들은 배우들 사이에 앉혀진 대상이므로 participants를 수식하는 과거분사 seated가 옳습니다.",
+        "관계사나 접속사 없이 주어 a surprising share of participants 뒤에 오는 이 절의 본동사이므로 과거형 abandoned가 옳습니다.",
+        "앞에 선행사가 없고 had suspected의 목적어가 빠진 불완전한 절을 이끌므로 what이 옳습니다.",
+        "압력은 줄여지는 대상이므로 수동태 was reduced가 옳습니다.",
+        "despite 뒤에 주어(they)와 동사(knew)를 갖춘 절이 오므로 전치사 despite는 틀렸고 접속사 although로 고쳐야 합니다."
+      ],
+      "underlineUnits": ["u04", "u01", "u06", "u03", "u08"],
+      "gist": "집단 압력 앞에서 자신의 지각을 부정하고 동조하는 인간 심리를 실험으로 보여 줍니다."
+    },
+    {
+      "id": "u08-c2-ps-003",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["because-of", "clause-vs-np", "intransitive-passive"],
+      "hints": [
+        "이유를 나타내는 연결 표현 뒤에 오는 명사만 보지 말고, 그 뒤에 동사가 이어지는지까지 확인해 보십시오.",
+        "연결어 바로 뒤가 명사라도 그 명사가 동사의 주어라면 전체는 절이고, 절 앞에는 접속사가 필요합니다."
+      ],
+      "explanation": "② because of는 전치사구여서 뒤에 명사구만 올 수 있는데, housing costs have risen이라는 '주어+동사' 짝이 이어지므로 접속사 because로 고쳐야 합니다. housing costs까지만 보면 명사구처럼 보이지만, 뒤의 본동사 have risen이 절임을 알려 줍니다. ⑤ emerged는 수동처럼 보여도 emerge가 자동사이므로 능동이 옳은 미끼입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Cities around the world are being reshaped by the movement of young workers. One of the most striking changes [[1:is]] the revival of neighborhoods that older generations had abandoned. Partly [[2:because of]] housing costs have risen faster than wages in city centers, newcomers have settled in districts once considered undesirable. Warehouses [[3:renovated]] into shared studios now host small businesses, and cafes serve residents [[4:that]] the area never attracted before. Sociologists note, however, that tensions have [[5:emerged]] between long-time residents and the newcomers, since rising rents often push out the very families who gave these neighborhoods their character. How cities balance renewal with protection for older communities has become a central question of urban policy.",
+      "answer": 2,
+      "correction": "because",
+      "rationales": [
+        "one of + 복수 명사가 주어일 때 동사는 단수 취급하므로, 주어 핵 One에 맞춘 단수 동사 is가 옳습니다.",
+        "because of 뒤에 주어(housing costs)와 동사(have risen)를 갖춘 절이 오므로 전치사구 because of는 틀렸고 접속사 because로 고쳐야 합니다.",
+        "창고는 개조되는 대상이므로 Warehouses를 수식하는 과거분사 renovated가 옳습니다.",
+        "선행사 residents가 있고 attracted의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "emerge는 수동태로 쓸 수 없는 자동사이므로 능동 have emerged가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u08", "u04", "u06", "u03"],
+      "gist": "젊은 층의 유입으로 되살아난 도심 지역과 그로 인한 사회적 긴장을 다룹니다."
+    },
+    {
+      "id": "u08-c2-ps-004",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["while-during", "clause-vs-np", "ed-ambiguity"],
+      "hints": [
+        "'~동안'으로 해석되는 연결어 뒤에 '주어+동사' 짝이 있는지, 명사구뿐인지 확인해 보십시오.",
+        "해석이 자연스러워도 구조가 어긋나면 틀린 것입니다 — 절 앞에는 접속사, 명사구 앞에는 전치사만 섭니다."
+      ],
+      "explanation": "④ While은 절을 이끄는 접속사인데, 뒤에는 본동사 없는 명사구 the following decades만 이어집니다. 명사구 앞에는 같은 뜻의 전치사 During이 와야 합니다. ② spread는 과거형과 과거분사가 같은 동형 동사여서 분사로 착각하기 쉽지만, 이 절에 다른 본동사가 없으므로 본동사 과거형으로 옳은 미끼 밑줄입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Before the printing press, every copy of a book [[1:was produced]] by hand, a process so slow that libraries measured their wealth in dozens of volumes rather than thousands. When movable type appeared in fifteenth-century Europe, news of the technique [[2:spread]] along trade routes with remarkable speed. Printers could suddenly supply [[3:what]] scholars had demanded for generations: identical, affordable texts. [[4:While]] the following decades, presses opened in hundreds of cities, and pamphlets carried new religious and scientific ideas across borders faster than any authority could control them. Historians argue that the consequences of this single invention [[5:were]] as far-reaching as those of any political revolution.",
+      "answer": 4,
+      "correction": "During",
+      "rationales": [
+        "책은 손으로 만들어지는 대상이므로 수동태 was produced가 옳습니다.",
+        "관계사나 접속사 없이 주어 news of the technique 뒤에 오는 본동사 자리이므로 과거형 spread가 옳습니다.",
+        "앞에 선행사가 없고 had demanded의 목적어가 빠진 불완전한 절을 이끌므로 what이 옳습니다.",
+        "While 뒤에 동사 없는 명사구 the following decades만 오므로 접속사 While은 틀렸고 전치사 During으로 고쳐야 합니다.",
+        "주어의 핵이 복수 명사 the consequences이고 of this single invention은 수식어이므로 복수 동사 were가 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u01", "u06", "u08", "u02"],
+      "gist": "인쇄술의 발명이 지식의 확산과 사회 변화를 가속했다는 역사적 사실을 설명합니다."
+    },
+    {
+      "id": "u08-c1-ps-005",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["despite-although", "long-np", "clause-vs-np", "conj-that"],
+      "hints": [
+        "문장 첫머리의 연결어 뒤에 이어지는 말이 아무리 길어도, 그 안에 본동사가 있는지부터 세어 보십시오.",
+        "수식어가 겹겹이 붙은 명사구는 절처럼 보이지만, '주어+동사' 짝이 없으면 여전히 명사구입니다."
+      ],
+      "explanation": "① Although는 접속사이므로 뒤에 '주어+동사'를 갖춘 절이 와야 합니다. years of harsh reviews and repeated rejection by the official academies는 길지만 본동사가 하나도 없는 명사구이므로 전치사 Despite로 고쳐야 합니다. 뒤가 아무리 길어도 동사 짝이 없으면 명사구라는 원칙을 그대로 적용합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "[[1:Although]] years of harsh reviews and repeated rejection by the official academies, a small group of nineteenth-century painters [[2:continued]] to exhibit independently, renting studios and organizing their own shows. Their canvases, [[3:painted]] outdoors with quick visible strokes, broke the rule that a finished picture should hide the artist's hand. Buyers were scarce at first, and several members sold almost nothing for years. Yet the belief [[4:that]] fleeting light deserved as much attention as historical scenes slowly won followers among younger artists and collectors. Today the influence of those once-ridiculed experiments [[5:extends]] far beyond painting, shaping photography, film, and even the design of everyday objects.",
+      "answer": 1,
+      "correction": "Despite",
+      "rationales": [
+        "Although 뒤에 본동사 없이 years of harsh reviews and repeated rejection이라는 명사구만 오므로 접속사 Although는 틀렸고 전치사 Despite로 고쳐야 합니다.",
+        "주어 a small group of nineteenth-century painters 뒤에 오는 이 문장의 본동사이므로 continued가 옳습니다.",
+        "화폭은 그려지는 대상이므로 Their canvases를 수식하는 과거분사 painted가 옳습니다.",
+        "뒤에 성분이 모두 갖춰진 완전한 절이 오고 the belief의 내용을 설명하므로 동격 접속사 that이 옳습니다.",
+        "주어의 핵이 단수 명사 the influence이고 of those once-ridiculed experiments는 수식어이므로 단수 동사 extends가 옳습니다."
+      ],
+      "underlineUnits": ["u08", "u01", "u04", "u06", "u02"],
+      "gist": "혹평과 낙선에도 독자적 전시를 이어 간 화가들이 미술의 흐름을 바꾼 과정을 다룹니다."
+    },
+    {
+      "id": "u08-c1-ps-006",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["despite-although", "gerund-subject", "clause-vs-np", "prep-rel"],
+      "hints": [
+        "연결어 뒤에 -ing형이 보이면 명사구라고 단정하지 말고, 그 뒤에 본동사가 또 나오는지 확인해 보십시오.",
+        "동명사구 바로 뒤에 본동사가 이어지면 그 동명사구는 절의 주어이고, 전체는 절입니다."
+      ],
+      "explanation": "③ despite 뒤의 protecting existing wetlands만 보면 동명사구(명사구)여서 옳아 보입니다. 그러나 그 뒤에 본동사 costs가 이어지므로 protecting existing wetlands는 절의 주어이고, 전체는 '주어+동사'를 갖춘 절입니다. 절 앞에는 전치사 despite가 설 수 없으므로 접속사 although로 고쳐야 합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coastal wetlands are among the most effective natural defenses against flooding. A single hectare of healthy marsh [[1:absorbs]] enormous volumes of storm water and releases it slowly over days. Communities [[2:exposed]] to repeated storm surges have therefore begun restoring the marshes that earlier generations drained for farmland. Remarkably, [[3:despite]] protecting existing wetlands costs far less than rebuilding towns after disasters, coastal development continues to destroy them at an alarming rate. Engineers point to recent hurricanes, [[4:in which]] neighborhoods behind intact marshes suffered visibly less damage than exposed ones. Unless stronger rules [[5:are adopted]] soon, scientists warn, much of this natural infrastructure will vanish within a generation.",
+      "answer": 3,
+      "correction": "although",
+      "rationales": [
+        "주어의 핵이 단수 명사 A single hectare이고 of healthy marsh는 수식어이므로 단수 동사 absorbs가 옳습니다.",
+        "지역 사회는 폭풍 해일에 노출되는 대상이므로 Communities를 수식하는 과거분사 exposed가 옳습니다.",
+        "despite 뒤에 동명사구 주어(protecting existing wetlands)와 본동사(costs)를 갖춘 절이 오므로 전치사 despite는 틀렸고 접속사 although로 고쳐야 합니다.",
+        "전치사+관계대명사 in which 뒤에 성분이 모두 갖춰진 완전한 절이 오므로 옳습니다.",
+        "규칙은 채택되는 대상이므로 수동태 are adopted가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u04", "u08", "u07", "u03"],
+      "gist": "해안 습지가 홍수 방어에 필수적인데도 계속 파괴되고 있는 현실을 경고합니다."
+    },
+    {
+      "id": "u08-c3-ps-007",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["thanks-to", "clause-vs-np", "ed-ambiguity"],
+      "hints": [
+        "여러 단어로 된 연결 표현이 밑줄에 있으면, 그 뒤에 '주어+동사' 짝이 오는지부터 확인해 보십시오.",
+        "to로 끝나는 이유 표현은 전치사구여서 명사구만 이끌 수 있습니다 — 뒤에 본동사가 나오면 틀린 것입니다."
+      ],
+      "explanation": "⑤ thanks to는 전치사구여서 뒤에 명사구만 올 수 있습니다. consumer demand까지는 명사구로 보이지만 뒤에 본동사 recovered가 있으므로 전체는 절이고, 절을 이끄는 접속사 because로 고쳐야 합니다. ① displayed는 과거형처럼 보이지만 본동사 reflects가 따로 있으므로 분사 수식이 옳은 미끼입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Modern consumers rarely notice the complex journey behind an ordinary purchase. The price [[1:displayed]] on a supermarket shelf reflects decisions made months earlier in ports, factories, and trading offices around the world. Economists emphasize that the stability of global supply chains [[2:depends]] on thousands of independent firms fulfilling their contracts on time. When even one link fails, shortages appear in places [[3:that]] the original disruption never touched. This fragility [[4:was demonstrated]] vividly in recent years, when the cost of moving a single container between continents rose nearly tenfold, [[5:thanks to]] consumer demand recovered far faster than shipping capacity after the global slowdown. Policymakers now treat supply chains not as invisible plumbing but as critical infrastructure worth monitoring in advance.",
+      "answer": 5,
+      "correction": "because",
+      "rationales": [
+        "가격은 진열대에 표시되는 대상이고 본동사 reflects가 따로 있으므로 The price를 수식하는 과거분사 displayed가 옳습니다.",
+        "주어의 핵이 단수 명사 the stability이고 of global supply chains는 수식어이므로 단수 동사 depends가 옳습니다.",
+        "선행사 places가 있고 touched의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "취약성은 입증되는 대상이므로 수동태 was demonstrated가 옳습니다.",
+        "thanks to 뒤에 주어(consumer demand)와 동사(recovered)를 갖춘 절이 오므로 전치사구 thanks to는 틀렸고 접속사 because로 고쳐야 합니다."
+      ],
+      "underlineUnits": ["u01", "u02", "u06", "u03", "u08"],
+      "gist": "일상적 소비 뒤에 있는 세계 공급망의 복잡성과 취약성을 설명합니다."
+    },
+    {
+      "id": "u08-c3-ps-008",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["unless-without", "clause-vs-np", "inverted-subject", "shared-aux"],
+      "hints": [
+        "조건을 나타내는 연결어가 밑줄에 있으면 그 뒤에 본동사가 있는지부터 확인해 보십시오.",
+        "조건의 접속사는 절만 이끕니다 — 뒤에 동사 없는 명사구만 오면 같은 의미의 전치사가 필요합니다."
+      ],
+      "explanation": "② unless는 '~하지 않으면'이라는 조건의 절을 이끄는 접속사입니다. 그런데 뒤에 본동사 없는 명사구 continuous human oversight만 이어지므로, '~ 없이'라는 뜻의 전치사 without으로 고쳐야 합니다. ③ lies는 주어보다 먼저 나와 틀려 보이지만, 장소구 도치문에서 동사 뒤의 단수 주어 a tangle과 일치하므로 옳은 미끼입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Automated systems now manage tasks that once required teams of trained specialists. Power grids, hospital pharmacies, and airport control rooms all depend on software with [[1:growing]] autonomy. Engineers caution, however, that no such system should operate [[2:unless]] continuous human oversight, because rare events still confuse even the best models. Behind every smooth interface [[3:lies]] a tangle of statistical rules that no single programmer fully understands. When failures occur, investigators often struggle to reconstruct [[4:what]] the software actually did in the critical seconds. The most reliable designs therefore allow operators to monitor decisions and [[5:intervene]] within moments, keeping human judgment inside the loop precisely where automation is weakest.",
+      "answer": 2,
+      "correction": "without",
+      "rationales": [
+        "자율성이 스스로 커져 가는 진행의 의미이므로 자동사의 현재분사 growing이 옳습니다.",
+        "unless 뒤에 동사 없는 명사구 continuous human oversight만 오므로 접속사 unless는 틀렸고 전치사 without으로 고쳐야 합니다.",
+        "장소 부사구 Behind every smooth interface가 문두로 나간 도치문으로, 동사 뒤 진짜 주어 a tangle이 단수이므로 lies가 옳습니다.",
+        "앞에 선행사가 없고 did의 목적어가 빠진 불완전한 절을 이끌므로 what이 옳습니다.",
+        "allow operators to monitor and intervene의 병렬로, 공유된 to 뒤의 동사원형 intervene이 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u08", "u02", "u06", "u05"],
+      "gist": "자동화 시스템의 확산 속에서도 인간의 감독이 필수적이라는 점을 강조합니다."
+    }
+  ]
+}

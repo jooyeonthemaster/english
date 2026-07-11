@@ -1,0 +1,1214 @@
+{
+  "unitId": "u09",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u09-c1-ox-001",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "The volcano erupted without warning, [[u:covering]] the nearby valley in a thick layer of gray ash.",
+      "isCorrect": true,
+      "translation": "그 화산은 예고 없이 분화하여 인근 계곡을 두꺼운 잿빛 화산재로 뒤덮었습니다.",
+      "hints": [
+        "콤마 앞에서 이 문장의 본동사를 먼저 찾아 보십시오.",
+        "본동사가 이미 하나 있다면, 접속사 없이 이어지는 자리에는 동사가 아니라 분사가 옵니다."
+      ],
+      "explanation": "본동사는 erupted이고, 콤마 뒤는 접속사 없이 이어지는 문미 분사구문 자리입니다. 분사 covering의 의미상 주어를 주절 주어 The volcano로 복원하면 '화산이 계곡을 뒤덮으면서'로 자연스럽게 이어집니다. covered로 바꾸면 접속사 없이 본동사가 두 개가 되어 비문이 됩니다."
+    },
+    {
+      "id": "u09-c1-ox-002",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb", "inserted-clause"],
+      "sentence": "The comet, [[u:trailing]] a tail of ice and dust, passed within a few million kilometers of Mars.",
+      "isCorrect": true,
+      "translation": "그 혜성은 얼음과 먼지로 된 꼬리를 끌며 화성에서 수백만 킬로미터 이내를 지나갔습니다.",
+      "hints": [
+        "콤마 두 개로 삽입된 덩어리를 괄호로 묶고, 남는 뼈대에서 본동사를 확인해 보십시오.",
+        "삽입 덩어리 안에는 본동사가 올 수 없습니다 — 접속사 없이 동사가 두 개가 되기 때문입니다."
+      ],
+      "explanation": "문장의 뼈대는 The comet passed이고, 콤마 사이의 trailing a tail of ice and dust는 문중 삽입 분사구문입니다. 의미상 주어를 주절 주어 The comet으로 복원하면 '혜성이 꼬리를 끌면서'로 자연스럽습니다. 본동사 과거형 trailed로 읽으면 접속사 없이 동사가 두 개가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c1-ox-003",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "sentence": "[[u:Migrating]] thousands of kilometers each autumn, the monarch butterflies that reach central Mexico are the great-grandchildren of those that left the north in spring.",
+      "isCorrect": true,
+      "translation": "매년 가을 수천 킬로미터를 이동하면서, 멕시코 중부에 도착하는 제왕나비들은 봄에 북쪽을 떠난 개체들의 증손 세대에 해당합니다.",
+      "hints": [
+        "문두 분사를 보자마자 판단하지 말고, 콤마 뒤 주절에서 진짜 주어부터 찾아 보십시오.",
+        "분사 앞에 주절 주어를 복원해 '주어가 그 동작을 하면서'로 읽히면 옳은 분사구문입니다."
+      ],
+      "explanation": "문두 분사구문의 의미상 주어는 주절 주어 the monarch butterflies입니다. 복원해 읽으면 '나비들이 이동하면서'가 되어 능동 관계가 성립하므로 -ing가 옳습니다. 주어 뒤에 관계절 that reach central Mexico가 붙어 주어가 멀어 보여도 판단 기준은 달라지지 않습니다."
+    },
+    {
+      "id": "u09-c1-ox-004",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["double-verb"],
+      "sentence": "The dam released far more water than the engineers had predicted, [[u:flooding]] fields that had stayed dry through even the worst monsoon seasons.",
+      "isCorrect": true,
+      "translation": "그 댐은 기술자들이 예측했던 것보다 훨씬 많은 물을 방류하여, 최악의 몬순 시기에도 마른 채로 남아 있던 들판까지 물에 잠기게 했습니다.",
+      "hints": [
+        "앞 절에 이미 본동사가 있는지 확인하고, 콤마 뒤 자리가 어떤 자리인지 판단해 보십시오.",
+        "접속사가 없다면 두 번째 본동사 자리는 성립하지 않습니다 — 결과를 이어 주는 것은 분사의 몫입니다."
+      ],
+      "explanation": "본동사 released가 이미 있으므로 콤마 뒤는 결과를 나타내는 문미 분사구문 자리입니다. flooding의 의미상 주어는 주절 주어 The dam이고, 댐의 방류가 들판을 잠기게 하는 능동 관계이므로 -ing가 옳습니다. flooded로 바꾸면 접속사 없이 동사가 두 개가 되어 비문입니다."
+    },
+    {
+      "id": "u09-c1-ox-005",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "Heavy snow closed the mountain pass overnight, [[u:blocked]] the only road into the valley.",
+      "isCorrect": false,
+      "correction": "blocking",
+      "translation": "폭설이 밤사이 산길을 막아 계곡으로 들어가는 유일한 도로를 차단했습니다.",
+      "hints": [
+        "이 문장에서 동사처럼 보이는 단어가 몇 개인지, 그리고 접속사가 있는지 세어 보십시오.",
+        "접속사가 없다면 한 문장에 본동사는 하나뿐입니다 — 나머지는 분사로 이어야 합니다."
+      ],
+      "explanation": "본동사 closed가 이미 있는데 접속사 없이 과거형 blocked가 또 오면 동사가 두 개가 되어 비문입니다. 콤마 뒤는 결과를 이어 주는 분사구문 자리이므로 blocking으로 고쳐야 합니다. 의미상 주어는 주절 주어 Heavy snow로, 눈이 도로를 막는 능동 관계입니다."
+    },
+    {
+      "id": "u09-c1-ox-006",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "sentence": "Every summer, thousands of tourists [[u:visiting]] the tiny fishing village to photograph its glass beach.",
+      "isCorrect": false,
+      "correction": "visit",
+      "translation": "매년 여름 수천 명의 관광객이 유리 해변을 촬영하려고 그 작은 어촌을 찾습니다.",
+      "hints": [
+        "이 문장에서 본동사 역할을 하는 단어가 실제로 있는지 확인해 보십시오.",
+        "-ing는 혼자서 문장의 본동사 노릇을 하지 못합니다 — 절마다 본동사가 하나 필요합니다."
+      ],
+      "explanation": "이 문장에는 본동사가 없습니다. 분사 visiting은 혼자 동사 노릇을 못 하므로, 주어 thousands of tourists에 맞는 본동사 visit으로 고쳐야 합니다. Every summer가 반복되는 일을 나타내므로 현재시제가 알맞습니다."
+    },
+    {
+      "id": "u09-c1-ox-007",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "inserted-clause"],
+      "sentence": "The theory, though several respected researchers once doubted it, [[u:explaining]] why earthquakes cluster along this coastline.",
+      "isCorrect": false,
+      "correction": "explains",
+      "translation": "몇몇 저명한 연구자들이 한때 의심하기는 했지만, 그 이론은 왜 지진이 이 해안선을 따라 몰려서 일어나는지를 설명합니다.",
+      "hints": [
+        "though가 이끄는 삽입절을 괄호로 묶고, 남는 뼈대에 본동사가 있는지 확인해 보십시오.",
+        "삽입절의 동사는 그 절의 것입니다 — 주절에는 주절만의 본동사가 따로 있어야 합니다."
+      ],
+      "explanation": "though ... doubted it은 삽입된 양보절이고, 이를 걷어내면 주절에 본동사가 없습니다. 분사 explaining은 본동사가 될 수 없으므로 단수 주어 The theory에 맞는 explains로 고쳐야 합니다. 삽입절의 doubted를 주절의 동사로 착각하면 안 됩니다."
+    },
+    {
+      "id": "u09-c1-ox-008",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["double-verb"],
+      "sentence": "The company doubled its output in only two years, [[u:hired]] hundreds of new workers without lowering its safety standards.",
+      "isCorrect": false,
+      "correction": "hiring",
+      "translation": "그 회사는 불과 2년 만에 생산량을 두 배로 늘리면서, 안전 기준을 낮추지 않고 수백 명의 신규 직원을 고용했습니다.",
+      "hints": [
+        "콤마 앞뒤로 동사처럼 보이는 단어를 모두 표시하고, 이를 이어 줄 접속사가 있는지 보십시오.",
+        "접속사 없이 이어지는 두 번째 동작은 본동사가 아니라 분사로 표현합니다."
+      ],
+      "explanation": "본동사 doubled가 이미 있고 접속사가 없으므로, 과거형 hired가 또 오면 동사가 두 개가 되어 비문입니다. 부대 상황을 이어 주는 분사구문 hiring으로 고쳐야 하며, 의미상 주어는 주절 주어 The company입니다. and hired처럼 접속사를 넣지 않는 한 본동사는 하나뿐입니다."
+    },
+    {
+      "id": "u09-c1-wf-001",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "{{blank}} the heavy box with both hands, the mover climbed the stairs one step at a time.",
+      "given": "carry",
+      "acceptedAnswers": ["Carrying"],
+      "translation": "두 손으로 무거운 상자를 든 채, 짐꾼은 한 계단씩 천천히 올라갔습니다.",
+      "hints": [
+        "콤마 뒤 주절의 주어를 찾아 빈칸 앞에 복원해 보십시오.",
+        "본동사가 이미 있고 복원한 주어가 동작을 직접 하는 관계라면, 빈칸에는 분사가 옵니다."
+      ],
+      "explanation": "본동사 climbed가 이미 있으므로 빈칸은 문두 분사구문 자리입니다. 의미상 주어를 주절 주어 the mover로 복원하면 짐꾼이 상자를 드는 능동 관계이고 목적어 the heavy box도 있으므로 Carrying이 옳습니다."
+    },
+    {
+      "id": "u09-c1-wf-002",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The dog lay by the warm fire, {{blank}} softly in its sleep.",
+      "given": "breathe",
+      "acceptedAnswers": ["breathing"],
+      "translation": "그 개는 따뜻한 난롯가에 누워 잠결에 부드럽게 숨을 쉬었습니다.",
+      "hints": [
+        "콤마 앞에 이미 본동사가 있는지 확인해 보십시오.",
+        "접속사 없이 이어지는 동시 동작은 본동사가 아니라 분사로 나타냅니다."
+      ],
+      "explanation": "본동사 lay가 이미 있고 접속사가 없으므로 빈칸은 문미 분사구문 자리입니다. 의미상 주어 The dog가 숨을 쉬는 능동 관계이므로 breathing이 옳습니다. 과거형을 넣으면 접속사 없이 동사가 두 개가 되어 비문입니다."
+    },
+    {
+      "id": "u09-c1-wf-003",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "Every winter the shallow lake {{blank}} completely, drawing skaters from all the nearby towns.",
+      "given": "freeze",
+      "acceptedAnswers": ["freezes"],
+      "translation": "매년 겨울 그 얕은 호수는 완전히 얼어붙어, 인근 모든 마을에서 스케이트 타는 사람들을 끌어모읍니다.",
+      "hints": [
+        "이 문장에서 본동사 역할을 하는 단어가 이미 있는지 먼저 확인해 보십시오.",
+        "분사구문은 본동사를 대신하지 못합니다 — 절에는 본동사가 반드시 하나 있어야 하며, 반복을 나타내는 시간 표현이 시제를 정합니다."
+      ],
+      "explanation": "문미의 drawing 이하는 분사구문일 뿐 본동사가 아니므로, 빈칸이 이 문장의 유일한 본동사 자리입니다. 주어 the shallow lake는 단수이고 Every winter가 반복되는 일을 나타내므로 현재형 freezes가 옳습니다."
+    },
+    {
+      "id": "u09-c1-wf-004",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "The train pulled out of the station exactly on time, {{blank}} the crowded platform behind.",
+      "given": "leave",
+      "acceptedAnswers": ["leaving"],
+      "translation": "기차는 정확히 정시에 역을 빠져나가며 붐비는 승강장을 뒤로했습니다.",
+      "hints": [
+        "콤마 앞 절에 본동사가 이미 있는지 확인하고, 빈칸 뒤에 목적어가 있는지도 보십시오.",
+        "본동사가 이미 하나 있다면, 접속사 없는 두 번째 동작 자리에는 분사가 옵니다."
+      ],
+      "explanation": "본동사 pulled가 이미 있으므로 빈칸은 문미 분사구문 자리입니다. 의미상 주어 The train이 승강장을 뒤로하는 능동 관계이고 목적어 the crowded platform이 있으므로 leaving이 옳습니다. 과거형을 넣으면 접속사 없이 동사가 두 개가 됩니다."
+    },
+    {
+      "id": "u09-c1-wf-005",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "inserted-clause", "past-marker"],
+      "stem": "Yesterday the city council, after months of heated public debate, finally {{blank}} the new flood defense plan, ending years of uncertainty.",
+      "given": "approve",
+      "acceptedAnswers": ["approved"],
+      "translation": "어제 시의회는 수개월에 걸친 격렬한 공개 토론 끝에 마침내 새 홍수 방어 계획을 승인하여 수년간의 불확실성을 끝냈습니다.",
+      "hints": [
+        "삽입된 전치사구를 괄호로 묶고, 이 문장의 본동사가 어디에 있어야 하는지 찾아 보십시오.",
+        "문미의 -ing 덩어리는 분사구문입니다 — 본동사는 따로 있어야 하며, 시간 부사가 시제를 결정합니다."
+      ],
+      "explanation": "after months of heated public debate는 삽입 수식어이고 문미의 ending 이하는 분사구문이므로, 빈칸이 이 문장의 유일한 본동사 자리입니다. 문두의 Yesterday가 명백한 과거 시점을 못 박으므로 과거형 approved가 옳습니다. 분사형을 넣으면 문장에 본동사가 없어집니다."
+    },
+    {
+      "id": "u09-c1-wf-006",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} no sign of weakening, the storm forced officials to close every school along the coast.",
+      "given": "show",
+      "acceptedAnswers": ["Showing"],
+      "translation": "약해질 기미를 전혀 보이지 않으면서, 그 폭풍은 당국이 해안가의 모든 학교 문을 닫게 만들었습니다.",
+      "hints": [
+        "콤마 뒤 주절의 주어를 찾아 빈칸 앞에 복원한 뒤, 본동사가 이미 있는지 확인해 보십시오.",
+        "주절 주어가 그 동작을 직접 하는 관계이고 빈칸 뒤에 목적어가 있다면 분사의 형태가 정해집니다."
+      ],
+      "explanation": "본동사 forced가 이미 있으므로 빈칸은 문두 분사구문 자리입니다. 의미상 주어를 주절 주어 the storm으로 복원하면 폭풍이 기미를 보이는 능동 관계이고, 목적어 no sign of weakening이 있으므로 Showing이 옳습니다."
+    },
+    {
+      "id": "u09-c1-wc-001",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "Heavy rain flooded the subway line during the evening rush, [[u:forced]] thousands of commuters to walk home.",
+      "wrong": "forced",
+      "acceptedAnswers": ["forcing"],
+      "translation": "저녁 혼잡 시간에 폭우가 지하철 노선을 침수시켜 수천 명의 통근자가 집까지 걸어가게 만들었습니다.",
+      "hints": [
+        "이 문장에서 본동사와 접속사의 개수를 먼저 세어 보십시오.",
+        "접속사가 없다면 본동사는 하나뿐입니다 — 이어지는 결과는 분사로 표현합니다."
+      ],
+      "explanation": "본동사 flooded가 이미 있는데 접속사 없이 과거형이 또 오면 동사가 두 개가 되어 비문입니다. 결과를 이어 주는 문미 분사구문 forcing으로 고쳐야 합니다. 의미상 주어는 주절 주어 Heavy rain입니다."
+    },
+    {
+      "id": "u09-c1-wc-002",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "sentence": "The lecture ended half an hour early, [[u:gave]] the students extra time to prepare for the exam.",
+      "wrong": "gave",
+      "acceptedAnswers": ["giving"],
+      "translation": "강의가 30분 일찍 끝나서 학생들에게 시험을 준비할 시간이 더 생겼습니다.",
+      "hints": [
+        "콤마 앞 절에 이미 본동사가 있는지 확인해 보십시오.",
+        "본동사가 하나 있고 접속사가 없다면, 두 번째 동작 자리에는 분사가 와야 합니다."
+      ],
+      "explanation": "본동사 ended가 이미 있으므로 접속사 없는 콤마 뒤 자리에 과거형은 올 수 없습니다. 결과를 나타내는 분사구문 giving으로 고칩니다. 의미상 주어는 주절 주어 The lecture로, 강의가 시간을 주는 능동 관계입니다."
+    },
+    {
+      "id": "u09-c1-wc-003",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb"],
+      "sentence": "Each spring the cherry trees along the old canal [[u:blooming]] for barely two weeks, drawing photographers from across the country.",
+      "wrong": "blooming",
+      "acceptedAnswers": ["bloom"],
+      "translation": "매년 봄 그 오래된 운하를 따라 늘어선 벚나무들은 겨우 2주 남짓 꽃을 피우며 전국에서 사진가들을 불러 모읍니다.",
+      "hints": [
+        "문미의 -ing 덩어리를 분사구문으로 표시한 뒤, 이 문장의 본동사가 어디에 있는지 찾아 보십시오.",
+        "절에는 본동사가 반드시 하나 있어야 하며, 반복을 나타내는 시간 표현이 시제를 결정합니다."
+      ],
+      "explanation": "문미의 drawing 이하는 분사구문이므로 밑줄 자리가 이 문장의 유일한 본동사 자리인데, 분사는 본동사가 될 수 없습니다. 주어 the cherry trees는 복수이고 Each spring이 반복되는 일을 나타내므로 현재형 bloom으로 고칩니다."
+    },
+    {
+      "id": "u09-c1-wc-004",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "inserted-clause"],
+      "sentence": "The new policy, officials insisted, would protect small farms, [[u:offered]] them cheaper loans and simpler paperwork.",
+      "wrong": "offered",
+      "acceptedAnswers": ["offering"],
+      "translation": "새 정책은, 관계자들이 강조했듯이, 소규모 농가에 더 저렴한 대출과 더 간단한 행정 절차를 제공함으로써 그들을 보호할 것입니다.",
+      "hints": [
+        "콤마로 삽입된 절을 괄호로 묶고, 주절의 본동사를 확인해 보십시오.",
+        "본동사가 이미 있다면 접속사 없는 다음 동작 자리는 분사의 몫입니다."
+      ],
+      "explanation": "officials insisted는 삽입절이고 주절의 본동사는 would protect입니다. 접속사 없이 과거형이 또 오면 동사가 두 개가 되어 비문이므로, 수단과 부대 상황을 나타내는 분사구문 offering으로 고칩니다. 의미상 주어는 주절 주어 The new policy입니다."
+    },
+    {
+      "id": "u09-c2-ox-001",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle"],
+      "sentence": "[[u:Kneeling]] beside the shallow stream, the biologist collected samples of the muddy water.",
+      "isCorrect": true,
+      "translation": "얕은 개울가에 무릎을 꿇고 앉아, 그 생물학자는 흙탕물 표본을 채집했습니다.",
+      "hints": [
+        "주절 주어를 분사 앞에 복원하고, 그 주어가 동작을 하는 쪽인지 받는 쪽인지 판단해 보십시오.",
+        "목적어가 없다고 곧바로 수동으로 단정하지 말고, 그 동사가 자동사인지 먼저 확인하십시오."
+      ],
+      "explanation": "의미상 주어를 주절 주어 the biologist로 복원하면 생물학자가 무릎을 꿇는 능동 관계입니다. kneel은 자동사라서 목적어가 없어도 -ing가 옳습니다. '목적어가 없으면 p.p.'라는 암기에 기대면 바로 이 자리에서 틀립니다."
+    },
+    {
+      "id": "u09-c2-ox-002",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "ed-ambiguity"],
+      "sentence": "[[u:Stunned]] by the unexpected verdict, the young lawyer sat in silence for several minutes.",
+      "isCorrect": true,
+      "translation": "예상 밖의 평결에 큰 충격을 받아, 그 젊은 변호사는 몇 분 동안 말없이 앉아 있었습니다.",
+      "hints": [
+        "문두의 p.p.가 본동사의 과거형이 아닌지부터 확인해 보십시오 — 생략된 Being을 복원해 읽어 봅니다.",
+        "주절 주어가 그 감정을 느끼는 쪽이면 p.p., 일으키는 쪽이면 -ing입니다."
+      ],
+      "explanation": "문두의 Stunned는 Being이 생략된 수동 분사구문입니다. 의미상 주어 the young lawyer가 평결에 충격을 느끼는 쪽이므로 감정동사의 p.p.가 옳습니다. 본동사의 과거형으로 읽으면 sat과 함께 동사가 두 개라고 착각하게 됩니다."
+    },
+    {
+      "id": "u09-c2-ox-003",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle"],
+      "sentence": "[[u:Sleeping]] less than five hours a night for weeks, the resident doctors began to make small but dangerous errors.",
+      "isCorrect": true,
+      "translation": "몇 주 동안 하루 다섯 시간도 못 자면서, 그 전공의들은 작지만 위험한 실수를 저지르기 시작했습니다.",
+      "hints": [
+        "분사 뒤의 명사 덩어리가 정말 목적어인지, 아니면 시간이나 정도를 나타내는 부사어인지 구분해 보십시오.",
+        "자동사는 목적어가 없어도 주어가 동작을 직접 하므로 능동 형태를 씁니다."
+      ],
+      "explanation": "의미상 주어를 주절 주어 the resident doctors로 복원하면 의사들이 잠을 자는 능동 관계입니다. sleep은 자동사이고 less than five hours a night는 목적어가 아니라 부사어이므로 -ing가 옳습니다. 목적어가 안 보인다는 이유로 p.p.를 고르면 안 됩니다."
+    },
+    {
+      "id": "u09-c2-ox-004",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "dangling-subject"],
+      "sentence": "[[u:Buried]] under volcanic ash for nearly two thousand years, the city's streets, shops, and painted walls remain remarkably intact.",
+      "isCorrect": true,
+      "translation": "거의 2천 년 동안 화산재 아래 묻혀 있었기에, 그 도시의 거리와 상점과 채색 벽화는 놀라울 만큼 온전하게 남아 있습니다.",
+      "hints": [
+        "문두의 p.p. 앞에 생략된 Being을 복원하고, 콤마 뒤에서 진짜 주어를 찾아 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 p.p.가 옳은 형태입니다."
+      ],
+      "explanation": "Buried는 Being이 생략된 수동 분사구문이고, 의미상 주어는 주절 주어인 the city's streets, shops, and painted walls입니다. 거리와 상점이 화산재에 묻히는 쪽이므로 p.p.가 옳습니다. 주어가 길게 나열되어 멀어 보여도 판단 기준은 같습니다."
+    },
+    {
+      "id": "u09-c2-ox-005",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "sentence": "[[u:Comparing]] with its rivals, the new engine uses far less fuel.",
+      "isCorrect": false,
+      "correction": "Compared",
+      "translation": "경쟁 제품들과 비교하면 그 새 엔진은 연료를 훨씬 적게 씁니다.",
+      "hints": [
+        "주절 주어를 분사 앞에 복원해, 그 주어가 비교를 하는 쪽인지 되는 쪽인지 따져 보십시오.",
+        "주어가 동작을 받는 관계라면 -ing가 아니라 p.p.를 씁니다."
+      ],
+      "explanation": "의미상 주어를 주절 주어 the new engine으로 복원하면, 엔진은 경쟁 제품들과 비교되는 쪽입니다. 수동 관계이므로 Compared로 고쳐야 합니다. 분사 뒤에 목적어가 없다는 점도 능동 -ing가 어색하다는 신호입니다."
+    },
+    {
+      "id": "u09-c2-ox-006",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "sentence": "[[u:Locating]] on a busy corner near the station, the bakery attracts customers from early morning.",
+      "isCorrect": false,
+      "correction": "Located",
+      "translation": "역 근처 번화한 모퉁이에 자리 잡고 있어서 그 빵집은 이른 아침부터 손님을 끌어모읍니다.",
+      "hints": [
+        "콤마 뒤 주절의 주어를 분사 앞에 복원해 보십시오.",
+        "그 주어가 동작을 하는 쪽이면 -ing, 받는 쪽이면 p.p.입니다."
+      ],
+      "explanation": "locate는 '~을 특정 장소에 두다'라는 타동사이므로, 의미상 주어 the bakery는 그 자리에 위치되는 쪽입니다. 수동 관계인데 -ing를 썼으므로 Located로 고쳐야 합니다. 분사 뒤에 목적어 없이 장소 전치사구만 있는 것도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c2-ox-007",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object"],
+      "sentence": "[[u:Giving]] only a week to finish the entire translation, the team worked through several nights.",
+      "isCorrect": false,
+      "correction": "Given",
+      "translation": "번역 전체를 끝낼 시간을 겨우 일주일밖에 받지 못해서, 그 팀은 여러 밤을 새워 일했습니다.",
+      "hints": [
+        "분사 바로 뒤에 명사가 보인다고 능동으로 단정하지 말고, 주절 주어를 복원해 누가 주고 누가 받는지 따져 보십시오.",
+        "수여동사의 수동에서는 동작을 받은 뒤에도 명사 하나가 그대로 남을 수 있습니다."
+      ],
+      "explanation": "의미상 주어를 주절 주어 the team으로 복원하면, 팀은 일주일을 주는 쪽이 아니라 받는 쪽이므로 수동 Given이 옳습니다. give는 목적어를 두 개 취하는 수여동사여서 수동태가 되어도 only a week라는 명사가 뒤에 남습니다. 분사 뒤 명사만 보고 능동 -ing로 판단하면 바로 이 함정에 걸립니다."
+    },
+    {
+      "id": "u09-c2-ox-008",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity"],
+      "sentence": "[[u:Faced]] the collapse of its main export market, the small country turned quickly to tourism.",
+      "isCorrect": false,
+      "correction": "Facing",
+      "translation": "주력 수출 시장의 붕괴에 직면하자, 그 작은 나라는 재빨리 관광업으로 눈을 돌렸습니다.",
+      "hints": [
+        "분사 바로 뒤에 목적어 역할의 명사구가 있는지 확인해 보십시오.",
+        "주절 주어가 그 대상을 마주하는 능동 관계라면, 목적어를 직접 취하는 형태를 써야 합니다."
+      ],
+      "explanation": "밑줄 바로 뒤에 목적어 the collapse of its main export market가 있으므로 능동 Facing이 필요합니다. 의미상 주어 the small country가 붕괴를 마주하는 능동 관계입니다. p.p.는 with와 결합한 형태로만 가능하고, 목적어를 직접 취할 수 없습니다."
+    },
+    {
+      "id": "u09-c2-wf-001",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle"],
+      "stem": "{{blank}} by the sudden thunder, the baby began to cry loudly.",
+      "given": "frighten",
+      "acceptedAnswers": ["Frightened"],
+      "translation": "갑작스러운 천둥소리에 겁을 먹고 아기는 큰 소리로 울기 시작했습니다.",
+      "hints": [
+        "콤마 뒤 주절의 주어를 빈칸 앞에 복원해 보십시오.",
+        "주어가 그 감정을 느끼는 쪽이면 p.p., 일으키는 쪽이면 -ing를 씁니다."
+      ],
+      "explanation": "의미상 주어 the baby가 천둥에 겁을 느끼는 쪽이므로 수동 관계입니다. Being이 생략된 p.p. 형태 Frightened가 옳습니다. 빈칸 뒤의 by 행위자 표시도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c2-wf-002",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} the loose gravel carefully, the climbers reached the ridge before sunset.",
+      "given": "avoid",
+      "acceptedAnswers": ["Avoiding"],
+      "translation": "흘러내리는 자갈을 조심스럽게 피하면서, 등반가들은 해가 지기 전에 능선에 도착했습니다.",
+      "hints": [
+        "빈칸 뒤에 목적어가 있는지 먼저 확인해 보십시오.",
+        "주절 주어가 동작을 직접 하고 뒤에 목적어가 있으면 능동 형태의 분사를 씁니다."
+      ],
+      "explanation": "의미상 주어 the climbers가 자갈을 피하는 능동 관계이고, 빈칸 뒤에 목적어 the loose gravel이 있습니다. 따라서 능동 분사 Avoiding이 옳습니다."
+    },
+    {
+      "id": "u09-c2-wf-003",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} of recycled plastic, the park benches need no paint and never rust.",
+      "given": "make",
+      "acceptedAnswers": ["Made"],
+      "translation": "재활용 플라스틱으로 만들어져서 그 공원 벤치들은 칠이 필요 없고 녹슬지도 않습니다.",
+      "hints": [
+        "주절 주어를 빈칸 앞에 복원해, 그 주어가 만드는 쪽인지 만들어지는 쪽인지 판단해 보십시오.",
+        "주어가 동작을 받는 관계면 Being이 생략된 p.p.를 씁니다."
+      ],
+      "explanation": "의미상 주어 the park benches는 재활용 플라스틱으로 만들어지는 쪽이므로 수동 관계입니다. Being이 생략된 p.p. Made가 옳습니다. 빈칸 뒤에 목적어 없이 of 전치사구만 있다는 점도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c2-wf-004",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "stem": "The results, {{blank}} independently by twelve laboratories, left little room for doubt.",
+      "given": "confirm",
+      "acceptedAnswers": ["confirmed"],
+      "translation": "열두 개 연구소가 독립적으로 확인한 그 결과는 의심의 여지를 거의 남기지 않았습니다.",
+      "hints": [
+        "콤마 사이에 삽입된 분사 덩어리의 의미상 주어가 무엇인지 확인해 보십시오.",
+        "그 주어가 동작을 받는 쪽이면 p.p., 하는 쪽이면 -ing입니다."
+      ],
+      "explanation": "문중 삽입 분사구문의 의미상 주어는 주절 주어 The results입니다. 결과는 연구소들에 의해 확인되는 쪽이므로 수동 p.p. confirmed가 옳습니다. by twelve laboratories라는 행위자 표시가 수동 관계를 뒷받침합니다."
+    },
+    {
+      "id": "u09-c2-wf-005",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} that the old bridge might fail under the extra weight, engineers closed it to heavy trucks last month.",
+      "given": "fear",
+      "acceptedAnswers": ["Fearing"],
+      "translation": "그 낡은 다리가 추가 하중을 못 견딜지도 모른다고 우려하여, 기술자들은 지난달 대형 트럭의 통행을 금지했습니다.",
+      "hints": [
+        "빈칸 뒤의 that절이 어떤 성분인지 확인해 보십시오.",
+        "주절 주어가 동작을 직접 하고 뒤에 목적어 성분이 있으면 능동 분사를 씁니다."
+      ],
+      "explanation": "빈칸 뒤의 that절은 목적어이므로 능동의 신호입니다. 의미상 주어 engineers가 다리 붕괴를 우려하는 능동 관계이므로 Fearing이 옳습니다. 수동 p.p.를 쓰면 뒤의 that절 목적어를 설명할 수 없습니다."
+    },
+    {
+      "id": "u09-c2-wf-006",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} from a single block of white marble, the statue shows no seam or joint anywhere on its surface.",
+      "given": "carve",
+      "acceptedAnswers": ["Carved"],
+      "translation": "하나의 흰 대리석 덩어리를 깎아 만들어졌기에, 그 조각상은 표면 어디에도 이음매나 접합부가 없습니다.",
+      "hints": [
+        "주절 주어를 빈칸 앞에 복원해, 그 주어가 깎는 쪽인지 깎이는 쪽인지 따져 보십시오.",
+        "동작을 받는 관계이고 목적어가 없다면 Being이 생략된 p.p.가 옳습니다."
+      ],
+      "explanation": "의미상 주어 the statue는 대리석에서 깎여 만들어지는 쪽이므로 수동 관계입니다. Being이 생략된 p.p. Carved가 옳습니다. 빈칸 뒤에 목적어 없이 from 전치사구만 있는 것도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c2-wc-001",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle"],
+      "sentence": "[[u:Exhausting]] by the double shift, the nurse fell asleep on the train ride home.",
+      "wrong": "Exhausting",
+      "acceptedAnswers": ["Exhausted"],
+      "translation": "연속 2교대 근무에 지쳐서 그 간호사는 집으로 가는 기차에서 잠들어 버렸습니다.",
+      "hints": [
+        "주절 주어를 분사 앞에 복원해, 그 주어가 감정과 상태를 느끼는 쪽인지 일으키는 쪽인지 판단해 보십시오.",
+        "느끼는 쪽이면 p.p., 일으키는 쪽이면 -ing입니다 — by 행위자 표시도 함께 보십시오."
+      ],
+      "explanation": "의미상 주어 the nurse는 근무 때문에 지침을 느끼는 쪽이므로 수동 관계입니다. 감정·상태 동사의 p.p.인 Exhausted로 고칩니다. by the double shift라는 행위자 표시도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c2-wc-002",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "sentence": "The recipe, [[u:handing]] down through four generations, still uses no written measurements.",
+      "wrong": "handing",
+      "acceptedAnswers": ["handed"],
+      "translation": "4대에 걸쳐 전해 내려온 그 조리법은 지금도 문서화된 계량을 전혀 쓰지 않습니다.",
+      "hints": [
+        "콤마 사이 삽입 분사의 의미상 주어를 주절에서 찾아 보십시오.",
+        "그 주어가 동작을 받는 쪽이면 p.p.로 써야 합니다."
+      ],
+      "explanation": "삽입 분사구문의 의미상 주어는 주절 주어 The recipe입니다. 조리법은 세대를 거쳐 전해지는 쪽이므로 수동 p.p. handed로 고칩니다. 분사 뒤에 목적어가 없다는 점도 능동 -ing가 틀렸다는 신호입니다."
+    },
+    {
+      "id": "u09-c2-wc-003",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object"],
+      "sentence": "[[u:Denying]] access to clean water for years, the villagers finally took their case to the national court.",
+      "wrong": "Denying",
+      "acceptedAnswers": ["Denied", "Having been denied"],
+      "translation": "수년 동안 깨끗한 물의 이용을 거부당한 끝에, 마을 주민들은 마침내 그 사건을 국가 법원으로 가져갔습니다.",
+      "hints": [
+        "분사 뒤에 명사가 보여도 능동으로 단정하지 말고, 주절 주어가 거부를 하는 쪽인지 당하는 쪽인지 복원해 보십시오.",
+        "수여동사의 수동에서는 동작을 받은 뒤에도 명사 하나가 남을 수 있습니다."
+      ],
+      "explanation": "의미상 주어 the villagers는 물 이용을 거부당하는 쪽이므로 수동 Denied가 옳습니다. deny는 목적어를 두 개 취하는 수여동사여서 수동이 되어도 access라는 명사가 뒤에 남습니다. 분사 뒤 명사만 보고 능동으로 판단하면 안 됩니다. for years가 보여 주는 앞선 시간을 살린 완료 수동 Having been denied도 정답으로 인정합니다."
+    },
+    {
+      "id": "u09-c2-wc-004",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "sentence": "[[u:Interpreting]] narrowly, the new regulation would exempt almost every small business in the region.",
+      "wrong": "Interpreting",
+      "acceptedAnswers": ["Interpreted"],
+      "translation": "좁게 해석하면 그 새 규정은 그 지역의 거의 모든 소상공인을 적용 대상에서 제외하게 됩니다.",
+      "hints": [
+        "주절 주어를 분사 앞에 복원해, 그 주어가 해석을 하는 쪽인지 되는 쪽인지 따져 보십시오.",
+        "동작을 받는 관계이고 분사 뒤에 목적어가 없다면 p.p.가 옳습니다."
+      ],
+      "explanation": "의미상 주어를 주절 주어 the new regulation으로 복원하면, 규정은 사람에 의해 해석되는 쪽입니다. 수동 관계이므로 Interpreted로 고칩니다. 규정이 스스로 해석을 한다는 능동 읽기는 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c3-ox-001",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "[[u:When asked]] about her sources, the investigative reporter refused to give any names.",
+      "isCorrect": true,
+      "translation": "취재원에 대해 질문을 받았을 때, 그 탐사 보도 기자는 어떤 이름도 밝히기를 거부했습니다.",
+      "hints": [
+        "접속사 뒤에 주어와 be동사가 없다고 바로 틀렸다고 판단하지 마십시오.",
+        "접속사가 남은 분사구문에서도 주절 주어를 복원해 능·수동만 판단하면 됩니다."
+      ],
+      "explanation": "뜻을 분명히 하려고 접속사 When을 남긴 분사구문으로, When she was asked에서 '주어+be'가 생략된 정상 구문입니다. 의미상 주어 the investigative reporter가 질문을 받는 쪽이므로 p.p. asked가 옳습니다. 주어와 be동사가 없다고 비문이 되는 것이 아닙니다."
+    },
+    {
+      "id": "u09-c3-ox-002",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "If [[u:stored]] in a cool, dry place, these seeds remain viable for up to ten years.",
+      "isCorrect": true,
+      "translation": "서늘하고 건조한 곳에 보관하면 이 씨앗들은 최장 10년까지 발아력을 유지합니다.",
+      "hints": [
+        "If 뒤에 주어와 동사가 없는 이 형태가 무엇의 생략인지 떠올려 보십시오.",
+        "접속사 잔류형에서도 판단 기준은 하나 — 주절 주어가 동작을 하는 쪽인지 받는 쪽인지입니다."
+      ],
+      "explanation": "If they are stored에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 these seeds는 보관되는 쪽이므로 p.p. stored가 옳습니다. If 바로 뒤에 p.p.가 오는 형태는 시험에 자주 나오는 정상 구문입니다."
+    },
+    {
+      "id": "u09-c3-ox-003",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle"],
+      "sentence": "[[u:Having spent]] a decade mapping the seafloor, the survey team knew exactly where to lay the new cables.",
+      "isCorrect": true,
+      "translation": "10년 동안 해저 지도를 만들어 온 터라, 그 조사팀은 새 케이블을 어디에 놓아야 할지 정확히 알고 있었습니다.",
+      "hints": [
+        "분사 앞에 붙은 요소가 나타내는 시간 관계를 먼저 확인해 보십시오.",
+        "분사구문의 일이 주절의 일보다 앞서 일어났다면 완료형 분사가 옳은 형태입니다."
+      ],
+      "explanation": "해저 지도를 만든 10년이 알고 있었던 시점보다 앞선 시간이므로 완료분사 Having spent가 옳습니다. 의미상 주어 the survey team이 시간을 들인 능동 관계이고 목적어 a decade도 있습니다. 형태가 낯설다고 틀렸다고 단정하는 것이 가장 흔한 실수입니다."
+    },
+    {
+      "id": "u09-c3-ox-004",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle", "participle-negation"],
+      "sentence": "[[u:Never having seen]] snow before, the children from the island stared at the white hills in silence.",
+      "isCorrect": true,
+      "translation": "이전에 눈을 한 번도 본 적이 없었기에, 그 섬 아이들은 하얀 언덕을 말없이 바라보았습니다.",
+      "hints": [
+        "부정어와 완료형이 겹친 이 어순이 규칙에 맞는지, 각 요소의 위치를 뜯어 보십시오.",
+        "분사구문의 부정어는 분사(완료형 포함) 바로 앞에 놓는 것이 원칙입니다."
+      ],
+      "explanation": "부정어 Never가 완료분사 having seen 앞에 놓인 올바른 어순입니다. 눈을 본 적이 없는 것은 바라본 시점보다 앞선 경험이므로 완료형도 적절합니다. 부정어를 분사 앞에 두는 원칙에 맞는 정상 구문입니다."
+    },
+    {
+      "id": "u09-c3-ox-005",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "When [[u:questioning]] by the border officers, travelers must show proof of onward travel.",
+      "isCorrect": false,
+      "correction": "questioned",
+      "translation": "국경 심사관에게 질문을 받을 때, 여행자는 다음 목적지로 이동한다는 증빙을 제시해야 합니다.",
+      "hints": [
+        "접속사 뒤 분사의 의미상 주어를 주절에서 찾아 복원해 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 -ing가 아니라 p.p.를 써야 합니다."
+      ],
+      "explanation": "의미상 주어 travelers는 심사관에게 질문을 받는 쪽이므로 수동 p.p. questioned로 고쳐야 합니다. by the border officers라는 행위자 표시가 수동 관계를 분명히 보여 줍니다. 접속사가 남아 있어도 능·수동 판단 방법은 일반 분사구문과 같습니다."
+    },
+    {
+      "id": "u09-c3-ox-006",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["participle-negation"],
+      "sentence": "[[u:Knowing not]] the local language, the visitor simply pointed at the pictures on the menu.",
+      "isCorrect": false,
+      "correction": "Not knowing",
+      "translation": "현지 언어를 몰라서 그 방문객은 그저 메뉴판의 사진을 손가락으로 가리켰습니다.",
+      "hints": [
+        "부정어가 놓인 위치가 분사구문의 원칙에 맞는지 확인해 보십시오.",
+        "분사구문의 부정어는 분사 뒤가 아니라 분사 바로 앞에 놓습니다."
+      ],
+      "explanation": "분사구문의 부정은 부정어를 분사 바로 앞에 두어 Not knowing으로 써야 합니다. 부정어가 분사 뒤에 오는 어순은 틀린 형태입니다. 의미상 주어 the visitor가 언어를 모르는 능동 관계라는 판단은 그대로 유지됩니다."
+    },
+    {
+      "id": "u09-c3-ox-007",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle"],
+      "sentence": "[[u:Having warned]] twice by the city inspector, the contractor still submitted plans that ignored the fire code.",
+      "isCorrect": false,
+      "correction": "Having been warned",
+      "translation": "시 감독관에게 두 차례 경고를 받고도, 그 시공업자는 소방 규정을 무시한 도면을 그대로 제출했습니다.",
+      "hints": [
+        "by 행위자 표시를 단서로, 주절 주어가 경고를 한 쪽인지 받은 쪽인지 복원해 보십시오.",
+        "앞선 시간의 일이 수동 관계라면 완료형에도 수동 표지가 함께 있어야 합니다."
+      ],
+      "explanation": "의미상 주어 the contractor는 감독관에게 경고를 받은 쪽이고, by the city inspector가 이를 못 박습니다. 앞선 시간의 수동이므로 Having been warned로 고쳐야 합니다. 완료형이라도 수동 표지 been이 빠지면 능동이 되어 뒤의 by 행위자와 충돌합니다."
+    },
+    {
+      "id": "u09-c3-ox-008",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "Until formally [[u:completing]] and inspected, the new stadium remains closed to the public.",
+      "isCorrect": false,
+      "correction": "completed",
+      "translation": "공식적으로 완공되고 점검을 마칠 때까지, 그 새 경기장은 일반에 개방되지 않습니다.",
+      "hints": [
+        "and 뒤에 이미 놓인 분사의 형태와 짝을 맞춰 보고, 주절 주어를 복원해 보십시오.",
+        "접속사 잔류형에서 주절 주어가 동작을 받는 쪽이면 p.p.를 씁니다."
+      ],
+      "explanation": "의미상 주어 the new stadium은 완공되는 쪽이므로 수동 p.p. completed가 필요합니다. and로 병렬된 inspected가 p.p.라는 점도 강한 단서입니다. 접속사 Until이 남은 분사구문에서도 능·수동 판단은 주절 주어 복원으로 합니다."
+    },
+    {
+      "id": "u09-c3-wf-001",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["perfect-participle"],
+      "stem": "{{blank}} his homework the night before, the boy spent the whole afternoon playing soccer.",
+      "given": "finish",
+      "acceptedAnswers": ["Having finished"],
+      "translation": "전날 밤에 숙제를 끝내 두었기에, 그 소년은 오후 내내 축구를 하며 보냈습니다.",
+      "hints": [
+        "the night before라는 시간 표현이 주절의 시점과 어떤 순서 관계인지 확인해 보십시오.",
+        "분사구문의 일이 주절보다 앞선 시간이면 완료형 분사를 씁니다."
+      ],
+      "explanation": "숙제를 끝낸 것은 전날 밤으로, 축구를 한 오후보다 앞선 시간입니다. 따라서 완료분사 Having finished가 옳습니다. 단순 -ing를 쓰면 두 일이 같은 때 일어난 것처럼 읽혀 the night before와 충돌합니다."
+    },
+    {
+      "id": "u09-c3-wf-002",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["conjunction-retained"],
+      "stem": "If {{blank}} in salt water for even a few days, these steel parts begin to rust.",
+      "given": "leave",
+      "acceptedAnswers": ["left"],
+      "translation": "단 며칠이라도 소금물에 방치되면 이 강철 부품들은 녹슬기 시작합니다.",
+      "hints": [
+        "If 뒤에 생략된 '주어+be'를 복원해 보십시오.",
+        "주절 주어가 동작을 받는 쪽이면 접속사 뒤에는 p.p.가 옵니다."
+      ],
+      "explanation": "If they are left에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 these steel parts는 소금물에 방치되는 쪽이므로 수동 p.p. left가 옳습니다."
+    },
+    {
+      "id": "u09-c3-wf-003",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["perfect-participle", "participle-negation"],
+      "stem": "Never {{blank}} a real glacier before, the students took hundreds of photographs on the first day.",
+      "given": "see",
+      "acceptedAnswers": ["having seen"],
+      "translation": "실제 빙하를 한 번도 본 적이 없었던 터라, 학생들은 첫날에 수백 장의 사진을 찍었습니다.",
+      "hints": [
+        "before가 가리키는 시간 관계와 문두 부정어의 위치를 함께 살펴 보십시오.",
+        "주절보다 앞선 경험을 나타내는 분사구문에는 완료형 분사가 필요합니다."
+      ],
+      "explanation": "빙하를 본 적이 없다는 것은 사진을 찍은 시점보다 앞선 경험이므로 완료분사 having seen이 옳습니다. 부정어 Never는 이미 분사 앞에 놓여 있으므로 빈칸에는 완료형만 채우면 됩니다. before가 앞선 시간임을 못 박는 단서입니다."
+    },
+    {
+      "id": "u09-c3-wf-004",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "stem": "When {{blank}} why she became a nurse, she always tells the story of her grandmother.",
+      "given": "ask",
+      "acceptedAnswers": ["asked"],
+      "translation": "왜 간호사가 되었느냐는 질문을 받으면, 그녀는 언제나 할머니 이야기를 들려줍니다.",
+      "hints": [
+        "접속사 뒤에 생략된 '주어+be'를 복원해 보십시오.",
+        "주절 주어가 그 동작을 받는 쪽이면 접속사 뒤 분사는 p.p.입니다."
+      ],
+      "explanation": "When she is asked에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 she는 질문을 받는 쪽이므로 수동 p.p. asked가 옳습니다."
+    },
+    {
+      "id": "u09-c3-wf-005",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle"],
+      "stem": "{{blank}} all the evidence carefully before the trial began, the defense lawyers wasted no time on routine questions.",
+      "given": "review",
+      "acceptedAnswers": ["Having reviewed"],
+      "translation": "재판이 시작되기 전에 모든 증거를 꼼꼼히 검토해 두었기에, 변호인단은 형식적인 질문에 시간을 낭비하지 않았습니다.",
+      "hints": [
+        "before the trial began이라는 시간 표현이 분사구문과 주절의 순서를 어떻게 정하는지 보십시오.",
+        "앞선 시간의 능동 동작에는 완료형 분사를 씁니다 — 목적어 유무도 함께 확인하십시오."
+      ],
+      "explanation": "증거 검토는 재판 시작 전, 즉 주절의 일보다 앞선 시간에 완료된 일이므로 완료분사 Having reviewed가 옳습니다. 의미상 주어 the defense lawyers가 검토를 한 능동 관계이고 목적어 all the evidence가 있으므로 수동형은 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c3-wf-006",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained"],
+      "stem": "Unless {{blank}} within thirty days, the packages, whatever their contents, are returned to the sender.",
+      "given": "claim",
+      "acceptedAnswers": ["claimed"],
+      "translation": "30일 안에 찾아가지 않으면, 그 소포들은 내용물이 무엇이든 발신인에게 반송됩니다.",
+      "hints": [
+        "Unless 뒤에 생략된 '주어+be'를 복원하고, 주절에서 진짜 주어를 찾아 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 접속사 뒤에는 p.p.가 옵니다."
+      ],
+      "explanation": "Unless they are claimed에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 the packages는 수령되는 쪽이므로 수동 p.p. claimed가 옳습니다. 주절에 삽입된 whatever their contents에 흔들리지 말고 주어만 복원하면 됩니다."
+    },
+    {
+      "id": "u09-c3-wc-001",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["participle-negation"],
+      "sentence": "[[u:Not wanted]] to wake the sleeping baby, the parents spoke in whispers all evening.",
+      "wrong": "Not wanted",
+      "acceptedAnswers": ["Not wanting"],
+      "translation": "잠든 아기를 깨우고 싶지 않아서, 부모는 저녁 내내 속삭이며 말했습니다.",
+      "hints": [
+        "부정어 뒤 분사의 의미상 주어를 주절에서 복원해 보십시오.",
+        "주어가 그 마음을 직접 품는 능동 관계라면 -ing가 옳고, 부정어는 그 앞에 그대로 둡니다."
+      ],
+      "explanation": "의미상 주어 the parents가 원하지 않는 능동 관계이고 뒤에 to부정사 목적어가 있으므로 Not wanting으로 고칩니다. 부정어 Not의 위치는 분사 앞으로 이미 올바릅니다. p.p.를 쓰면 부모가 원해지는 수동 읽기가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c3-wc-002",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "If [[u:heating]] above sixty degrees, this plastic container releases harmful chemicals.",
+      "wrong": "heating",
+      "acceptedAnswers": ["heated"],
+      "translation": "섭씨 60도 이상으로 가열되면 이 플라스틱 용기는 유해 화학물질을 방출합니다.",
+      "hints": [
+        "If 뒤에 생략된 '주어+be'를 복원해 보십시오.",
+        "주절 주어가 동작을 받는 쪽이면 접속사 뒤 분사는 p.p.여야 합니다."
+      ],
+      "explanation": "If it is heated에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 this plastic container는 가열되는 쪽이므로 수동 p.p. heated로 고칩니다. 분사 뒤에 목적어가 없다는 점도 능동 -ing가 틀렸다는 신호입니다."
+    },
+    {
+      "id": "u09-c3-wc-003",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle"],
+      "sentence": "[[u:Having taught]] by the same coach since early childhood, the twin skaters share an almost identical style.",
+      "wrong": "Having taught",
+      "acceptedAnswers": ["Having been taught", "Taught"],
+      "translation": "어린 시절부터 같은 코치에게 배워 왔기에, 그 쌍둥이 스케이트 선수들은 거의 똑같은 스타일을 공유합니다.",
+      "hints": [
+        "by 행위자 표시를 단서로, 주절 주어가 가르친 쪽인지 배운 쪽인지 복원해 보십시오.",
+        "수동 관계라면 완료형이든 아니든 수동 표지가 반드시 들어가야 합니다."
+      ],
+      "explanation": "의미상 주어 the twin skaters는 코치에게 가르침을 받은 쪽이므로 수동이 필요합니다. 앞선 시간을 살린 완료 수동 Having been taught가 대표 답이고, 단순 수동분사 Taught도 정문이므로 정답으로 인정합니다. 수동 표지 been이 빠진 완료형은 능동이어서 by the same coach와 충돌합니다."
+    },
+    {
+      "id": "u09-c3-wc-004",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained"],
+      "sentence": "Once [[u:signing]], the contract cannot be altered without the written consent of both parties.",
+      "wrong": "signing",
+      "acceptedAnswers": ["signed"],
+      "translation": "일단 서명이 이루어지면, 그 계약서는 양 당사자의 서면 동의 없이는 변경될 수 없습니다.",
+      "hints": [
+        "Once 뒤에 생략된 '주어+be'를 복원하고, 주절의 주어가 무엇인지 확인해 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 p.p.로 써야 합니다."
+      ],
+      "explanation": "Once it is signed에서 '주어+be'가 생략된 접속사 잔류 분사구문입니다. 의미상 주어 the contract는 서명되는 쪽이므로 수동 p.p. signed로 고칩니다. 사람이 서명을 하는 능동 문장에 익숙해서 -ing를 고르기 쉬운 자리입니다."
+    },
+    {
+      "id": "u09-c4-ox-001",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["absolute-construction"],
+      "sentence": "The fog [[u:being]] too thick for the ferry to sail, the islanders waited another day in the harbor.",
+      "isCorrect": true,
+      "translation": "안개가 여객선이 다니기에는 너무 짙어서, 섬 주민들은 항구에서 하루를 더 기다렸습니다.",
+      "hints": [
+        "분사 앞에 남아 있는 명사가 무엇인지, 주절 주어와 같은지 확인해 보십시오.",
+        "분사구문의 주어가 주절 주어와 다르면 분사 앞에 그 주어를 그대로 남깁니다."
+      ],
+      "explanation": "being의 의미상 주어는 The fog로, 주절 주어 the islanders와 다르기 때문에 분사 앞에 남긴 독립분사구문입니다. 분사 앞에 명사가 있다고 비문이 아니라, 주어가 달라서 일부러 남긴 정상 구문입니다. was 같은 본동사를 쓰면 접속사 없이 절 두 개가 이어져 오히려 비문이 됩니다."
+    },
+    {
+      "id": "u09-c4-ox-002",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "sentence": "The kite dipped and rose against the strong wind, with its long tail [[u:fluttering]] behind it.",
+      "isCorrect": true,
+      "translation": "그 연은 강한 바람을 맞으며 오르내렸고, 긴 꼬리는 그 뒤에서 펄럭였습니다.",
+      "hints": [
+        "with 뒤의 목적어를 찾고, 판단 기준을 주절 주어가 아니라 그 목적어로 옮겨 보십시오.",
+        "with 뒤 목적어가 동작을 직접 하면 -ing, 받으면 p.p.입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 분사의 의미상 주어는 with 뒤의 its long tail입니다. 꼬리가 스스로 펄럭이는 능동 관계이므로 -ing가 옳습니다. flutter는 자동사여서 목적어가 없어도 능동이며, 주절 주어 The kite를 기준으로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u09-c4-ox-003",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["with-absolute"],
+      "sentence": "She stood calmly at the podium with her notes [[u:hidden]] inside the cover of her tablet.",
+      "isCorrect": true,
+      "translation": "그녀는 발표 원고를 태블릿 커버 안에 감춘 채, 연단에 차분히 서 있었습니다.",
+      "hints": [
+        "판단 기준을 주절 주어가 아니라 with 뒤의 목적어로 옮겨 보십시오.",
+        "그 목적어가 동작을 하는 쪽이면 -ing, 받는 쪽이면 p.p.입니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 with 뒤의 her notes입니다. 원고는 감춰지는 쪽이므로 수동 p.p. hidden이 옳습니다. 주절 주어 She가 감추는 행동을 했다는 데 끌려 -ing로 판단하면 능·수동이 뒤집힙니다."
+    },
+    {
+      "id": "u09-c4-ox-004",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["absolute-construction", "perfect-participle"],
+      "sentence": "The negotiations [[u:having collapsed]] at midnight, both delegations flew home without a joint statement.",
+      "isCorrect": true,
+      "translation": "협상이 자정에 결렬되자, 양측 대표단은 공동 성명 없이 귀국길에 올랐습니다.",
+      "hints": [
+        "분사 앞에 남은 명사와 완료형이 각각 무엇을 나타내는지 나눠서 확인해 보십시오.",
+        "주어가 다르면 분사 앞에 남기고, 앞선 시간이면 완료형을 씁니다 — 두 장치는 함께 쓸 수 있습니다."
+      ],
+      "explanation": "having collapsed의 의미상 주어는 The negotiations로, 주절 주어 both delegations와 달라 분사 앞에 남긴 독립분사구문입니다. 결렬이 귀국보다 앞선 시간이므로 완료형도 적절합니다. collapse는 자동사이므로 수동형이 아닌 능동 완료형이 옳습니다."
+    },
+    {
+      "id": "u09-c4-ox-005",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["with-absolute"],
+      "sentence": "The captain listened to the long complaint with his arms [[u:folding]] across his chest.",
+      "isCorrect": false,
+      "correction": "folded",
+      "translation": "선장은 팔짱을 낀 채 그 기나긴 항의를 들었습니다.",
+      "hints": [
+        "with 뒤의 목적어를 기준으로 능·수동을 판단해 보십시오.",
+        "그 목적어가 동작을 받는 쪽이면 p.p.를 씁니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 his arms입니다. 팔은 접히는 쪽이므로 수동 p.p. folded로 고쳐야 합니다. 주절 주어인 선장이 팔짱을 끼는 능동 행동에 끌려 -ing를 고르면 틀립니다."
+    },
+    {
+      "id": "u09-c4-ox-006",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["absolute-construction"],
+      "sentence": "The bridge [[u:destroying]] by the flood, the villagers crossed the river by boat for months.",
+      "isCorrect": false,
+      "correction": "destroyed",
+      "translation": "다리가 홍수로 파괴되어, 마을 사람들은 몇 달 동안 배로 강을 건넜습니다.",
+      "hints": [
+        "분사 앞에 남은 명사를 의미상 주어로 삼아 능·수동을 판단해 보십시오.",
+        "그 명사가 동작을 받는 쪽이면 p.p.가 필요합니다 — by 행위자 표시도 단서입니다."
+      ],
+      "explanation": "독립분사구문의 의미상 주어는 분사 앞의 The bridge입니다. 다리는 홍수에 파괴되는 쪽이므로 Being이 생략된 수동 p.p. destroyed로 고칩니다. by the flood라는 행위자 표시도 수동 관계를 못 박습니다."
+    },
+    {
+      "id": "u09-c4-ox-007",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "sentence": "The orchestra tuned their instruments quietly with the guest conductor [[u:waited]] in the wings.",
+      "isCorrect": false,
+      "correction": "waiting",
+      "translation": "객원 지휘자가 무대 옆에서 기다리는 가운데, 오케스트라는 조용히 악기를 조율했습니다.",
+      "hints": [
+        "with 뒤 목적어를 의미상 주어로 삼고, 그 동사가 자동사인지도 확인해 보십시오.",
+        "목적어가 없다고 p.p.로 단정하지 마십시오 — 자동사는 목적어 없이도 능동입니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 the guest conductor입니다. 지휘자가 스스로 기다리는 능동 관계이고 wait는 자동사이므로 waiting으로 고쳐야 합니다. 목적어가 안 보인다는 이유로 p.p.를 두면 바로 이 자리에서 틀립니다."
+    },
+    {
+      "id": "u09-c4-ox-008",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "sentence": "With the submission deadline [[u:approached]], the design team canceled every outside meeting for the week.",
+      "isCorrect": false,
+      "correction": "approaching",
+      "translation": "제출 마감이 다가오자, 디자인팀은 그 주의 외부 회의를 전부 취소했습니다.",
+      "hints": [
+        "with 뒤의 명사를 의미상 주어로 삼아, 그 명사가 동작을 하는 쪽인지 받는 쪽인지 보십시오.",
+        "다가오다류의 자동사적 쓰임에는 수동 관계가 성립하지 않으므로 형태가 하나로 정해집니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 the submission deadline입니다. 마감이 스스로 다가오는 능동 관계이고 approach는 여기서 목적어 없이 쓰인 자동사적 용법이므로 approaching이 옳습니다. p.p.는 마감이 접근되는 수동 읽기가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c4-wf-001",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["with-absolute"],
+      "stem": "She read the farewell letter with tears {{blank}} down her cheeks.",
+      "given": "run",
+      "acceptedAnswers": ["running"],
+      "translation": "그녀는 뺨을 타고 눈물이 흘러내리는 채로 그 작별 편지를 읽었습니다.",
+      "hints": [
+        "with 뒤의 목적어를 찾아 그 명사를 의미상 주어로 삼아 보십시오.",
+        "그 명사가 동작을 직접 하면 -ing, 받으면 p.p.입니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 tears입니다. 눈물이 스스로 흘러내리는 능동 관계이므로 running이 옳습니다. 주절 주어 She를 기준으로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u09-c4-wf-002",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["with-absolute"],
+      "stem": "He watched the final minutes of the game with his arms {{blank}} tightly across his chest.",
+      "given": "cross",
+      "acceptedAnswers": ["crossed"],
+      "translation": "그는 가슴 위로 팔짱을 꽉 낀 채 경기의 마지막 몇 분을 지켜보았습니다.",
+      "hints": [
+        "with 뒤의 목적어를 의미상 주어로 삼아 보십시오.",
+        "그 목적어가 동작을 받는 쪽이면 p.p.를 씁니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 his arms입니다. 팔은 교차되는 쪽이므로 수동 p.p. crossed가 옳습니다. 그가 팔짱을 끼는 능동 행동에 끌려 -ing를 쓰면 틀립니다."
+    },
+    {
+      "id": "u09-c4-wf-003",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["absolute-construction"],
+      "stem": "The concert {{blank}} over, the crowd streamed slowly toward the subway station.",
+      "given": "be",
+      "acceptedAnswers": ["being"],
+      "translation": "공연이 끝나자, 관중은 지하철역 쪽으로 천천히 빠져나갔습니다.",
+      "hints": [
+        "콤마 앞 덩어리의 명사가 주절 주어와 같은지 확인해 보십시오.",
+        "주어가 서로 다르면 그 주어를 남긴 채 분사로 이어야 합니다 — 본동사를 그대로 두면 절 두 개가 접속사 없이 이어집니다."
+      ],
+      "explanation": "The concert는 주절 주어 the crowd와 다른 별도의 의미상 주어이므로, 독립분사구문으로 만들려면 분사 being이 필요합니다. was를 쓰면 접속사 없이 절 두 개가 이어져 비문이 됩니다."
+    },
+    {
+      "id": "u09-c4-wf-004",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "stem": "The hikers pushed on with the summit finally {{blank}} into view above the clouds.",
+      "given": "come",
+      "acceptedAnswers": ["coming"],
+      "translation": "구름 위로 마침내 정상이 시야에 들어오는 가운데, 등산객들은 계속 나아갔습니다.",
+      "hints": [
+        "with 뒤의 목적어를 의미상 주어로 삼아 보십시오.",
+        "목적어가 없다고 p.p.로 단정하지 마십시오 — 자동사는 목적어 없이도 능동입니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 the summit입니다. 정상이 시야에 들어오는 능동 관계이고 come은 자동사이므로 coming이 옳습니다. 목적어가 없다는 이유로 p.p.를 고르면 안 됩니다."
+    },
+    {
+      "id": "u09-c4-wf-005",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["absolute-construction", "perfect-participle"],
+      "stem": "The last train {{blank}} already left, the stranded tourists shared a taxi back to their hotel.",
+      "given": "have",
+      "acceptedAnswers": ["having"],
+      "translation": "막차가 이미 떠난 뒤라, 발이 묶인 관광객들은 택시를 나눠 타고 호텔로 돌아갔습니다.",
+      "hints": [
+        "콤마 앞 덩어리의 주어가 주절 주어와 다른 점, 그리고 already가 가리키는 시간 관계를 함께 보십시오.",
+        "주어가 다르면 앞에 남기고, 주절보다 앞선 일이면 완료형 분사로 잇습니다."
+      ],
+      "explanation": "The last train은 주절 주어 the stranded tourists와 다른 의미상 주어이므로 분사 앞에 남긴 독립분사구문입니다. 기차가 떠난 것이 택시를 탄 것보다 앞선 시간이므로 완료형 분사가 필요해 having이 옳습니다. had를 쓰면 접속사 없이 절 두 개가 이어져 비문이 됩니다."
+    },
+    {
+      "id": "u09-c4-wf-006",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["with-absolute"],
+      "stem": "The lab stayed sealed for a full week, with every sample inside {{blank}} against any possible contamination.",
+      "given": "protect",
+      "acceptedAnswers": ["protected"],
+      "translation": "내부의 모든 표본이 혹시 모를 오염으로부터 보호되는 채로, 그 실험실은 꼬박 일주일 동안 봉쇄되어 있었습니다.",
+      "hints": [
+        "with 뒤의 목적어를 수식어까지 포함해 찾아 의미상 주어로 삼아 보십시오.",
+        "그 목적어가 동작을 받는 쪽이면 p.p.가 옳습니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 every sample입니다. 표본은 오염으로부터 보호되는 쪽이므로 수동 p.p. protected가 옳습니다. inside라는 수식어가 끼어 있어도 판단 기준은 with 뒤의 명사입니다."
+    },
+    {
+      "id": "u09-c4-wc-001",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["with-absolute"],
+      "sentence": "The storm finally passed, with the streets [[u:covering]] in broken branches and wet leaves.",
+      "wrong": "covering",
+      "acceptedAnswers": ["covered"],
+      "translation": "마침내 폭풍이 지나갔고, 거리는 부러진 나뭇가지와 젖은 낙엽으로 뒤덮여 있었습니다.",
+      "hints": [
+        "with 뒤의 목적어를 의미상 주어로 삼아 능·수동을 판단해 보십시오.",
+        "그 목적어가 동작을 받는 쪽이면 p.p.로 고쳐야 합니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 the streets입니다. 거리는 나뭇가지로 뒤덮이는 쪽이므로 수동 p.p. covered로 고칩니다. 분사 뒤에 목적어 없이 in 전치사구만 있다는 점도 수동의 신호입니다."
+    },
+    {
+      "id": "u09-c4-wc-002",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["absolute-construction"],
+      "sentence": "All flights [[u:grounding]] by the ash cloud, thousands of travelers spent the night in the terminal.",
+      "wrong": "grounding",
+      "acceptedAnswers": ["grounded", "having been grounded", "being grounded"],
+      "translation": "화산재 구름 때문에 모든 항공편의 운항이 중단되어, 수천 명의 여행객이 터미널에서 밤을 보냈습니다.",
+      "hints": [
+        "분사 앞에 남아 있는 명사를 의미상 주어로 삼아 보십시오 — by 행위자 표시도 단서입니다.",
+        "그 명사가 동작을 받는 쪽이면 p.p.가 필요합니다."
+      ],
+      "explanation": "독립분사구문의 의미상 주어는 분사 앞의 All flights입니다. 항공편은 화산재 구름에 의해 운항이 묶이는 쪽이므로 수동 p.p. grounded로 고칩니다. by the ash cloud라는 행위자 표시가 수동 관계를 분명히 합니다. 같은 수동 관계를 나타내는 having been grounded와 being grounded도 정답으로 인정합니다."
+    },
+    {
+      "id": "u09-c4-wc-003",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "sentence": "She answered every question calmly, with her voice never [[u:risen]] above a whisper.",
+      "wrong": "risen",
+      "acceptedAnswers": ["rising"],
+      "translation": "그녀는 목소리가 속삭임 이상으로 커지는 일 없이, 모든 질문에 차분히 대답했습니다.",
+      "hints": [
+        "with 뒤 목적어를 의미상 주어로 삼고, 그 동사가 자동사인지 확인해 보십시오.",
+        "자동사는 수동 관계가 성립하지 않으므로 목적어가 없어도 능동 형태를 씁니다."
+      ],
+      "explanation": "with+목적어+분사에서 의미상 주어는 her voice입니다. rise는 자동사여서 목소리가 스스로 높아지는 능동 관계만 성립하므로 rising으로 고칩니다. p.p.를 두면 목소리가 높여지는 수동 읽기가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c4-wc-004",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["absolute-construction", "double-verb"],
+      "sentence": "The economy [[u:showed]] clear signs of recovery, investors slowly returned to the stock market.",
+      "wrong": "showed",
+      "acceptedAnswers": ["showing"],
+      "translation": "경제가 뚜렷한 회복 조짐을 보이자, 투자자들은 서서히 주식 시장으로 돌아왔습니다.",
+      "hints": [
+        "두 덩어리를 잇는 접속사가 있는지 먼저 확인해 보십시오.",
+        "접속사 없이 주어가 다른 두 상황을 이으려면 앞 덩어리를 독립분사구문으로 바꿔야 합니다."
+      ],
+      "explanation": "접속사 없이 절 두 개가 콤마로 이어져 있어 비문입니다. 앞 덩어리의 주어 The economy가 주절 주어 investors와 다르므로, 주어를 남긴 채 분사 showing으로 바꾼 독립분사구문이 옳습니다. 분사 뒤에 목적어 clear signs가 있으므로 능동 -ing입니다."
+    }
+  ]
+}

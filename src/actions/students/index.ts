@@ -27,3 +27,5 @@ export {
 } from "./mutations";
 export { getStudentStats } from "./stats";
 export { getSchools, getClasses } from "./lookups";
+export { exportStudentsRosterCsv } from "./export";
+export type { ExportStudentsCsvResult } from "./export";

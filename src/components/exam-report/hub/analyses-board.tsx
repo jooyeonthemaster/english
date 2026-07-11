@@ -126,6 +126,17 @@ export function AnalysesBoard({
     [router, workspaceBase],
   );
 
+  // 분석 완료 카드 "학생 추가" — ?openAddStudent=1 딥링크로 워크스페이스 진입.
+  // (analysis-step 의 ?start=1 관례 미러 — 워크스페이스가 파라미터를 읽어
+  // 학생 관리 탭으로 직행하고, students-tab 이 같은 파라미터로 학생 추가
+  // 다이얼로그를 바로 연 뒤 URL 에서 소비한다.)
+  const handleAddStudent = useCallback(
+    (row: ExamReportSummaryRow) => {
+      router.push(`${workspaceBase}/${row.id}?openAddStudent=1`);
+    },
+    [router, workspaceBase],
+  );
+
   // 다시 분석/이어서 분석 — fire-and-forget 후 폴만 갱신(서버 자가연쇄가 완주).
   const handleRestart = useCallback(
     (row: ExamReportSummaryRow) => {
@@ -278,6 +289,7 @@ export function AnalysesBoard({
                 onOpen={handleOpen}
                 onRestart={handleRestart}
                 onResumeDraft={onResumeDraft}
+                onAddStudent={handleAddStudent}
                 onRequestDelete={setDeleteTarget}
               />
             ))}

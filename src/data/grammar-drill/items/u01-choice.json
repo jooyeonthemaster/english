@@ -1,0 +1,822 @@
+{
+  "unitId": "u01",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u01-c1-ch-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "Sunlight in the early morning {{blank}} the surface of the lake.",
+      "options": ["warms", "warming"],
+      "answer": 0,
+      "translation": "이른 아침의 햇살은 호수의 표면을 데워 줍니다.",
+      "hints": [
+        "이 문장에서 시제를 가진 동사가 몇 개인지 세어 보십시오.",
+        "완전한 문장에는 시제를 가진 본동사가 정확히 하나 있어야 합니다."
+      ],
+      "explanation": "주어 핵은 Sunlight이고 in the early morning은 전치사구 수식어입니다. 빈칸 밖에 시제를 가진 동사가 하나도 없으므로 빈칸이 본동사 자리이며, 시제가 있는 warms가 옳습니다. warming은 시제가 없는 준동사라서 문장을 조각문으로 만듭니다."
+    },
+    {
+      "id": "u01-c1-ch-002",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "The ancient wall around the harbor {{blank}} strong ocean winds.",
+      "options": ["blocking", "blocks"],
+      "answer": 1,
+      "translation": "항구를 둘러싼 그 오래된 성벽은 거센 바닷바람을 막아 줍니다.",
+      "hints": [
+        "주어 뒤에 붙은 전치사구를 괄호로 묶고 문장의 뼈대만 남겨 보십시오.",
+        "괄호 밖에 시제를 가진 동사가 하나 남아야 완전한 문장입니다."
+      ],
+      "explanation": "주어 핵은 The ancient wall이고 around the harbor는 전치사구 수식어입니다. 이 문장에는 빈칸 말고 시제 동사가 없으므로 빈칸에 본동사 blocks가 와야 합니다. blocking을 고르면 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c1-ch-003",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "Most birds on this island {{blank}} in the tall coastal pines.",
+      "options": ["nest", "nesting"],
+      "answer": 0,
+      "translation": "이 섬의 새들 대부분은 키 큰 해안 소나무에 둥지를 틉니다.",
+      "hints": [
+        "주어와 빈칸 사이의 전치사구를 걷어내고 남는 구조를 확인해 보십시오.",
+        "-ing 형태는 시제가 없어서 혼자서는 문장의 동사가 될 수 없습니다."
+      ],
+      "explanation": "주어는 Most birds이고 on this island는 전치사구 수식어입니다. 문장 전체에 시제 동사가 없으므로 빈칸이 본동사 자리이며, 복수 주어와 어울리는 현재형 nest가 옳습니다. nesting은 준동사라서 본동사 노릇을 하지 못합니다."
+    },
+    {
+      "id": "u01-c1-ch-004",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "Heavy rain in late summer {{blank}} the level of the river.",
+      "options": ["to raise", "raises"],
+      "answer": 1,
+      "translation": "늦여름의 폭우는 강의 수위를 끌어올립니다.",
+      "hints": [
+        "빈칸을 제외하고 이 문장에 시제를 가진 동사가 있는지 확인해 보십시오.",
+        "to부정사는 시제가 없으므로 문장의 본동사가 될 수 없습니다."
+      ],
+      "explanation": "주어 핵은 Heavy rain이고 in late summer는 전치사구 수식어입니다. 빈칸 밖에 시제 동사가 전혀 없으므로 빈칸에는 본동사 raises가 필요합니다. to raise는 준동사라서 이 문장을 본동사 없는 조각문으로 만듭니다."
+    },
+    {
+      "id": "u01-c1-ch-005",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "The tapestries woven by mountain villagers in the last century {{blank}} scenes from local legends.",
+      "options": ["depicting", "depict"],
+      "answer": 1,
+      "translation": "지난 세기에 산악 마을 주민들이 짠 그 태피스트리들은 지역 전설의 장면들을 묘사합니다.",
+      "hints": [
+        "woven 이하가 시제를 가진 동사인지, 명사를 꾸미는 수식어인지 따져 보십시오.",
+        "수식어를 모두 괄호로 묶은 뒤에도 시제를 가진 본동사 하나가 반드시 남아야 합니다."
+      ],
+      "explanation": "woven by mountain villagers in the last century는 The tapestries를 꾸미는 과거분사 후치 수식이고, woven은 p.p. 전용형이라 본동사가 될 수 없습니다. 문장에 시제 동사가 없으므로 빈칸에 본동사 depict가 와야 합니다. depicting을 고르면 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c1-ch-006",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "Volunteers working at the food bank every weekend {{blank}} hundreds of families.",
+      "options": ["support", "supporting"],
+      "answer": 0,
+      "translation": "주말마다 푸드뱅크에서 일하는 자원봉사자들은 수백 가구를 돕습니다.",
+      "hints": [
+        "working 이하가 본동사인지 주어를 꾸미는 수식어인지부터 판정해 보십시오.",
+        "-ing 분사는 시제가 없으므로, 문장 어딘가에 시제 동사가 따로 하나 있어야 합니다."
+      ],
+      "explanation": "working at the food bank every weekend는 Volunteers를 꾸미는 현재분사 수식어이고 시제가 없습니다. 따라서 빈칸이 이 문장의 유일한 본동사 자리이며 support가 옳습니다. supporting을 고르면 문장 전체에 시제 동사가 하나도 남지 않습니다."
+    },
+    {
+      "id": "u01-c1-ch-007",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "The recipe for this traditional bread, unchanged for centuries, {{blank}} only four ingredients.",
+      "options": ["requiring", "requires"],
+      "answer": 1,
+      "translation": "수 세기 동안 변하지 않은 이 전통 빵의 조리법은 단 네 가지 재료만을 필요로 합니다.",
+      "hints": [
+        "콤마 사이에 낀 어구와 전치사구를 괄호로 묶고 뼈대만 남겨 보십시오.",
+        "주어에 수식어가 아무리 길게 붙어도 본동사 자리는 따로 남아 있어야 합니다."
+      ],
+      "explanation": "주어 핵은 The recipe이고, for this traditional bread는 전치사구, unchanged for centuries는 콤마 사이의 삽입 수식어입니다. 수식어를 전부 걷어내면 The recipe 뒤에 시제 동사가 없으므로 빈칸에 본동사 requires가 필요합니다. requiring은 준동사라서 문장을 완성하지 못합니다."
+    },
+    {
+      "id": "u01-c1-ch-008",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "Smoke rising from the distant factories often {{blank}} visibility on the highway.",
+      "options": ["reduces", "to reduce"],
+      "answer": 0,
+      "translation": "멀리 있는 공장들에서 피어오르는 연기가 종종 고속도로의 가시거리를 떨어뜨립니다.",
+      "hints": [
+        "rising 이하가 시제를 가진 동사인지 확인해 보십시오.",
+        "시제 없는 형태들만으로는 문장이 성립하지 않습니다 — 본동사 하나가 반드시 필요합니다."
+      ],
+      "explanation": "rising from the distant factories는 Smoke를 꾸미는 현재분사 수식어일 뿐 시제 동사가 아닙니다. 문장에 시제 동사가 없으므로 빈칸이 본동사 자리이고 reduces가 옳습니다. to reduce는 준동사라서 본동사 없는 조각문을 만듭니다."
+    },
+    {
+      "id": "u01-c1-ch-009",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-clause"],
+      "stem": "The software that engineers refined through years of user feedback now {{blank}} millions of devices around the world.",
+      "options": ["powers", "powering"],
+      "answer": 0,
+      "translation": "기술자들이 수년간의 사용자 피드백으로 다듬어 온 그 소프트웨어는 이제 전 세계 수백만 대의 기기를 구동합니다.",
+      "hints": [
+        "that이 이끄는 관계절을 괄호로 묶고, 괄호 밖에 시제 동사가 남는지 보십시오.",
+        "관계절 안의 동사는 관계절의 몫입니다 — 주어의 본동사는 괄호 밖에 따로 있어야 합니다."
+      ],
+      "explanation": "that engineers refined through years of user feedback는 The software를 꾸미는 관계절이고, 그 안의 refined는 관계절의 동사입니다. 관계절을 걷어내면 주어 The software의 본동사가 없으므로 빈칸에 시제 동사 powers가 와야 합니다. powering을 고르면 주절이 본동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c1-ch-010",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb"],
+      "stem": "The lighthouse standing at the edge of the rocky cape, repainted by local volunteers every spring, {{blank}} ships safely past the hidden reefs.",
+      "options": ["guiding", "guides"],
+      "answer": 1,
+      "translation": "바위 곶 끝자락에 서 있는, 지역 자원봉사자들이 봄마다 새로 칠하는 그 등대는 배들을 숨은 암초 옆으로 안전하게 인도합니다.",
+      "hints": [
+        "standing 이하와 콤마 사이의 분사구, 두 겹의 수식어를 모두 괄호로 묶어 보십시오.",
+        "수식어를 전부 걷어낸 뒤에도 시제를 가진 본동사 하나가 반드시 남아야 합니다."
+      ],
+      "explanation": "standing at the edge of the rocky cape와 repainted by local volunteers every spring은 모두 The lighthouse를 꾸미는 분사 수식어이고 시제가 없습니다. 두 겹의 수식어를 걷어내면 본동사 자리가 비어 있으므로 시제 동사 guides가 옳습니다. guiding을 고르면 문장 전체에 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c1-ch-011",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "Interest in urban farming, fueled by rising food prices and shrinking green space, {{blank}} steadily among young city dwellers.",
+      "options": ["grows", "growing"],
+      "answer": 0,
+      "translation": "치솟는 식료품 가격과 줄어드는 녹지에 힘입어, 도시 농업에 대한 관심이 젊은 도시 거주자들 사이에서 꾸준히 커지고 있습니다.",
+      "hints": [
+        "콤마 사이의 분사구와 주어 뒤 전치사구를 모두 괄호로 묶어 보십시오.",
+        "긴 수식어 때문에 문장이 끝난 듯 보여도, 시제 동사가 없으면 아직 문장이 아닙니다."
+      ],
+      "explanation": "주어 핵은 Interest이고, in urban farming은 전치사구, fueled by 이하는 콤마 사이의 분사 수식어입니다. 수식어를 걷어내면 빈칸이 본동사 자리임이 드러나므로 시제 동사 grows가 옳습니다. rising과 shrinking도 명사를 꾸미는 분사일 뿐이어서, growing을 고르면 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c1-ch-012",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb"],
+      "stem": "The manuscript drawn up by the treaty's original negotiators, complete with notes in three languages, {{blank}} in a climate-controlled vault beneath the library.",
+      "options": ["resting", "rests"],
+      "answer": 1,
+      "translation": "조약의 원 협상가들이 작성한, 세 개 언어의 주석까지 갖춘 그 원본 문서는 도서관 지하의 항온 금고에 보관되어 있습니다.",
+      "hints": [
+        "drawn up 이하의 분사구와 콤마 사이의 형용사구를 괄호로 묶고 뼈대를 확인해 보십시오.",
+        "주어 뒤에 수식이 두 겹으로 붙어도 본동사 자리는 반드시 따로 남아 있어야 합니다."
+      ],
+      "explanation": "drawn up by the treaty's original negotiators는 과거분사 후치 수식이고, complete with notes in three languages는 콤마 사이의 형용사구 수식입니다. 두 수식을 걷어내면 The manuscript의 시제 동사가 없으므로 빈칸에 본동사 rests가 와야 합니다. resting은 준동사라서 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u01-c2-ch-001",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "Bees {{blank}} pollen from one flower to another across the orchard.",
+      "options": ["carrying", "carry"],
+      "answer": 1,
+      "translation": "벌들은 과수원 곳곳에서 꽃가루를 이 꽃에서 저 꽃으로 옮깁니다.",
+      "hints": [
+        "빈칸에 -ing 형태를 넣었을 때 이 문장에 시제 동사가 남는지 확인해 보십시오.",
+        "-ing는 시제가 없어서 혼자서는 문장의 동사 노릇을 하지 못합니다."
+      ],
+      "explanation": "이 문장에는 빈칸 말고 시제를 가진 동사가 없습니다. carrying은 -ing 준동사라서 본동사가 될 수 없으므로, 시제가 있는 carry가 와야 완전한 문장이 됩니다. 주어 바로 뒤의 -ing가 동사처럼 읽히는 착시를 경계해야 합니다."
+    },
+    {
+      "id": "u01-c2-ch-002",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The dancers {{blank}} on the outdoor stage drew a large evening crowd.",
+      "options": ["performing", "perform"],
+      "answer": 0,
+      "translation": "야외 무대에서 공연하던 무용수들은 저녁 무렵 많은 관중을 끌어모았습니다.",
+      "hints": [
+        "문장을 끝까지 읽고 시제를 가진 동사가 이미 있는지 확인해 보십시오.",
+        "본동사가 이미 있으면 두 번째 동사 모양은 준동사로 물러나야 합니다."
+      ],
+      "explanation": "문장 뒤쪽의 drew가 이미 시제를 가진 본동사입니다. 접속사나 관계사가 없으므로 시제 동사는 하나뿐이어야 하고, 빈칸에는 The dancers를 꾸미는 현재분사 performing이 옳습니다. perform을 고르면 연결어 없이 시제 동사가 두 개가 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-003",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "This small museum {{blank}} rare musical instruments from the colonial era.",
+      "options": ["displaying", "displays"],
+      "answer": 1,
+      "translation": "이 작은 박물관은 식민지 시대의 희귀 악기들을 전시하고 있습니다.",
+      "hints": [
+        "이 문장에 시제를 가진 동사가 몇 개인지 세어 보십시오.",
+        "-ing 형태는 be동사와 결합해야만 본동사 역할을 할 수 있습니다."
+      ],
+      "explanation": "빈칸 밖에 시제 동사가 하나도 없으므로 빈칸이 본동사 자리입니다. displaying은 be동사 없이 홀로 쓰이면 시제가 없는 준동사이므로, 시제를 가진 displays가 옳습니다. 준동사만 있는 문장은 조각문입니다."
+    },
+    {
+      "id": "u01-c2-ch-004",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The children {{blank}} in the schoolyard ignored the first bell.",
+      "options": ["playing", "play"],
+      "answer": 0,
+      "translation": "운동장에서 놀던 아이들은 첫 번째 종소리를 무시했습니다.",
+      "hints": [
+        "문장을 끝까지 읽고 시제 동사가 어디에 있는지 찾아보십시오.",
+        "연결어가 없다면 한 문장에 시제 동사는 하나뿐입니다."
+      ],
+      "explanation": "본동사는 뒤에 나오는 ignored입니다. 접속사·관계사가 없으므로 빈칸에 또 다른 시제 동사가 올 수 없고, The children을 꾸미는 현재분사 playing이 옳습니다. play를 고르면 연결어 없이 동사가 두 개인 비문이 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-005",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "Every spring the meltwater from the high peaks {{blank}} the valley farms with mineral-rich silt.",
+      "options": ["supplies", "supplying"],
+      "answer": 0,
+      "translation": "봄마다 높은 봉우리에서 흘러내린 눈 녹은 물이 계곡의 농장들에 무기질이 풍부한 퇴적토를 실어다 줍니다.",
+      "hints": [
+        "주어 뒤의 전치사구를 괄호로 묶고, 시제 동사가 남는지 확인해 보십시오.",
+        "문장 어디에도 시제 동사가 없다면 빈칸이 바로 그 자리입니다."
+      ],
+      "explanation": "주어 핵은 the meltwater이고 from the high peaks는 전치사구 수식어입니다. 문장 전체에 시제 동사가 없으므로 빈칸이 본동사 자리이며, 단수 주어와 어울리는 supplies가 옳습니다. supplying은 준동사라서 문장을 완성하지 못합니다."
+    },
+    {
+      "id": "u01-c2-ch-006",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "The journalist {{blank}} the mayor's spending records uncovered a pattern of missing funds.",
+      "options": ["examines", "examining"],
+      "answer": 1,
+      "translation": "시장의 지출 기록을 검토하던 그 기자는 자금 누락의 패턴을 밝혀냈습니다.",
+      "hints": [
+        "문장을 끝까지 읽고 시제를 가진 동사가 이미 있는지 확인해 보십시오.",
+        "접속사가 없다면 한 문장에 본동사는 하나뿐입니다."
+      ],
+      "explanation": "뒤쪽의 uncovered가 이미 이 문장의 본동사입니다. 연결어가 없으므로 빈칸에 시제 동사 examines가 오면 동사가 두 개가 되어 비문입니다. 따라서 The journalist를 꾸미는 현재분사 examining이 옳습니다."
+    },
+    {
+      "id": "u01-c2-ch-007",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "The old ferry between the two port towns {{blank}} the strait twice a day, even in rough winter weather.",
+      "options": ["crosses", "crossing"],
+      "answer": 0,
+      "translation": "두 항구 도시를 오가는 그 낡은 여객선은 거친 겨울 날씨에도 하루에 두 번 해협을 건넙니다.",
+      "hints": [
+        "주어와 빈칸 사이의 전치사구를 걷어내고 문장의 뼈대를 확인해 보십시오.",
+        "시제 없는 형태만 있는 문장은 아직 문장이 아닙니다."
+      ],
+      "explanation": "주어 핵은 The old ferry이고 between the two port towns는 전치사구 수식어입니다. 빈칸 밖에 시제 동사가 없으므로 빈칸이 본동사 자리이고 crosses가 옳습니다. crossing을 고르면 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-008",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "Engineers {{blank}} the dam's aging foundations discovered several deep cracks last month.",
+      "options": ["inspecting", "inspect"],
+      "answer": 0,
+      "translation": "댐의 노후한 기초를 점검하던 기술자들은 지난달 여러 개의 깊은 균열을 발견했습니다.",
+      "hints": [
+        "빈칸 뒤쪽에서 시제를 가진 동사가 또 나오는지 문장 끝까지 확인해 보십시오.",
+        "본동사가 이미 있으면 남은 동사 모양은 명사를 꾸미는 수식어여야 합니다."
+      ],
+      "explanation": "문장의 본동사는 discovered입니다. 접속사·관계사가 없으므로 시제 동사는 하나만 허용되고, 빈칸에는 Engineers를 꾸미는 현재분사 inspecting이 옳습니다. inspect를 고르면 연결어 없이 시제 동사가 두 개가 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-009",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb"],
+      "stem": "The committee reviewing grant applications from rural hospitals {{blank}} its final decisions until next year's budget becomes clear.",
+      "options": ["delaying", "is delaying"],
+      "answer": 1,
+      "translation": "농촌 병원들이 낸 보조금 신청서를 검토 중인 위원회는 내년도 예산이 명확해질 때까지 최종 결정을 미루고 있습니다.",
+      "hints": [
+        "reviewing 이하가 본동사인지 수식어인지, 그리고 until절 밖에 시제 동사가 있는지 확인해 보십시오.",
+        "-ing도 be동사와 결합하면 하나의 시제 동사구로서 본동사가 될 수 있습니다."
+      ],
+      "explanation": "reviewing grant applications from rural hospitals는 The committee를 꾸미는 분사 수식어이고, until절의 becomes는 종속절의 동사입니다. 주절에는 시제 동사가 없으므로 빈칸에 본동사가 필요한데, is delaying은 be와 -ing가 결합한 시제 동사구라서 본동사 역할을 합니다. delaying 단독으로는 시제가 없어 주절이 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-010",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "ed-ambiguity"],
+      "stem": "Passengers {{blank}} at the rain-soaked platform for the last night train, already forty minutes late, grew increasingly restless.",
+      "options": ["waited", "waiting"],
+      "answer": 1,
+      "translation": "이미 40분이나 늦어진 마지막 야간열차를 비에 젖은 승강장에서 기다리던 승객들은 점점 더 초조해졌습니다.",
+      "hints": [
+        "콤마 사이의 삽입 어구를 괄호로 묶고, 문장 끝까지 읽어 시제 동사를 전부 찾아보십시오.",
+        "연결어가 없는데 시제 동사가 두 개라면 하나는 반드시 준동사로 바뀌어야 합니다."
+      ],
+      "explanation": "문장 끝의 grew가 이미 본동사이고, already forty minutes late는 콤마 사이의 삽입 수식어입니다. 접속사가 없으므로 waited를 고르면 시제 동사가 두 개가 되어 비문이고, Passengers를 꾸미는 현재분사 waiting이 옳습니다. 주어 바로 뒤라고 해서 과거형부터 넣으면 안 됩니다."
+    },
+    {
+      "id": "u01-c2-ch-011",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "stem": "A thick layer of volcanic ash, deposited over the fields during the last eruption, {{blank}} the region's soil unusually fertile.",
+      "options": ["keeps", "keeping"],
+      "answer": 0,
+      "translation": "지난 분화 때 들판 위에 쌓인 두꺼운 화산재 층이 그 지역의 토양을 유난히 비옥하게 유지해 줍니다.",
+      "hints": [
+        "콤마 사이의 분사구를 괄호로 묶고 주어의 짝이 되는 시제 동사를 찾아보십시오.",
+        "수식어를 걷어낸 뒤 시제 동사가 하나도 없다면 빈칸이 본동사 자리입니다."
+      ],
+      "explanation": "주어 핵은 A thick layer이고, deposited over the fields during the last eruption은 콤마 사이의 과거분사 수식어입니다. 수식어를 걷어내면 문장에 시제 동사가 없으므로 빈칸에 본동사 keeps가 와야 합니다. keeping은 준동사라서 문장을 조각문으로 만듭니다."
+    },
+    {
+      "id": "u01-c2-ch-012",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb"],
+      "stem": "The startup {{blank}} affordable solar-powered water filters for remote villages has attracted several major investors this year.",
+      "options": ["develops", "developing"],
+      "answer": 1,
+      "translation": "외딴 마을을 위한 저가형 태양광 정수 필터를 개발하는 그 스타트업은 올해 여러 주요 투자자들을 유치했습니다.",
+      "hints": [
+        "문장 뒤쪽의 has attracted가 어떤 역할인지 먼저 판정해 보십시오.",
+        "have와 결합한 p.p.는 하나의 시제 동사구입니다 — 연결어 없이 시제 동사를 더 늘릴 수 없습니다."
+      ],
+      "explanation": "has attracted는 have와 p.p.가 결합한 이 문장의 본동사입니다. 접속사·관계사가 없으므로 빈칸에 시제 동사 develops가 오면 동사가 두 개가 되어 비문입니다. 따라서 The startup을 꾸미는 현재분사 developing이 옳습니다."
+    },
+    {
+      "id": "u01-c3-ch-001",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "The market closed early because a storm {{blank}} toward the coast.",
+      "options": ["was moving", "moving"],
+      "answer": 0,
+      "translation": "폭풍이 해안 쪽으로 다가오고 있었기 때문에 시장은 일찍 문을 닫았습니다.",
+      "hints": [
+        "접속사의 개수와 시제 동사의 개수를 각각 세어 보십시오.",
+        "시제 동사의 개수는 접속사·관계사의 개수보다 정확히 하나 많아야 합니다."
+      ],
+      "explanation": "접속사 because가 하나 있으므로 이 문장에는 시제 동사가 두 개 필요합니다. 주절의 closed 하나뿐이면 계산이 모자라므로, because절에도 시제 동사구 was moving이 와야 합니다. moving만 쓰면 because절이 본동사 없는 조각이 됩니다."
+    },
+    {
+      "id": "u01-c3-ch-002",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "Everyone stood up when the conductor {{blank}} onto the stage.",
+      "options": ["stepping", "stepped"],
+      "answer": 1,
+      "translation": "지휘자가 무대 위로 올라서자 모두가 자리에서 일어났습니다.",
+      "hints": [
+        "when이 무엇을 이끄는지, 그 절 안에 시제 동사가 있는지 확인해 보십시오.",
+        "접속사가 하나면 시제 동사는 두 개가 필요합니다."
+      ],
+      "explanation": "접속사 when이 절을 하나 더 이끌므로 시제 동사는 stood까지 포함해 두 개여야 합니다. when절 안에 시제 동사가 없으면 계산이 모자라므로 과거형 stepped가 옳습니다. stepping은 시제가 없어 when절을 완성하지 못합니다."
+    },
+    {
+      "id": "u01-c3-ch-003",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "The recipe works well if you {{blank}} the dough overnight.",
+      "options": ["rest", "resting"],
+      "answer": 0,
+      "translation": "반죽을 하룻밤 재워 두면 그 조리법은 잘 맞아떨어집니다.",
+      "hints": [
+        "접속사 if 뒤의 절에 시제 동사가 필요한지 따져 보십시오.",
+        "'동사 개수 = 접속사·관계사 개수 + 1' 공식으로 확인합니다."
+      ],
+      "explanation": "접속사 if가 하나 있으므로 시제 동사는 두 개가 필요합니다. 주절의 works에 더해 if절에도 시제 동사 rest가 있어야 공식이 맞습니다. resting을 고르면 if절이 본동사 없는 조각이 됩니다."
+    },
+    {
+      "id": "u01-c3-ch-004",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "Ticket sales fell sharply, yet the theater {{blank}} open through the winter.",
+      "options": ["staying", "stayed"],
+      "answer": 1,
+      "translation": "입장권 판매가 급감했지만, 그 극장은 겨울 내내 문을 열어 두었습니다.",
+      "hints": [
+        "yet이 두 절을 잇는 등위접속사임을 확인하고 동사 개수를 세어 보십시오.",
+        "연결어가 하나 늘면 시제 동사도 하나 더 올 수 있습니다."
+      ],
+      "explanation": "등위접속사 yet이 두 절을 연결하므로 시제 동사가 두 개 필요합니다. 앞 절의 fell에 이어 뒤 절에도 본동사 stayed가 와야 합니다. staying은 시제가 없어 뒤 절을 완성하지 못합니다."
+    },
+    {
+      "id": "u01-c3-ch-005",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb", "intervening-clause"],
+      "stem": "The award that the national academy {{blank}} each spring honors young chemists from small laboratories.",
+      "options": ["presents", "presenting"],
+      "answer": 0,
+      "translation": "국립 학술원이 봄마다 수여하는 그 상은 소규모 연구실의 젊은 화학자들에게 영예를 안깁니다.",
+      "hints": [
+        "관계사 that의 개수와 시제 동사의 개수를 나란히 세어 보십시오.",
+        "관계사가 하나 있으면 시제 동사는 정확히 두 개여야 합니다."
+      ],
+      "explanation": "관계사 that이 하나 있으므로 시제 동사는 두 개여야 합니다. 주절의 honors에 더해 관계절 안에도 시제 동사 presents가 필요합니다. 뒤에 honors가 보인다고 presenting으로 줄이면 관계절에 동사가 없어 계산이 모자랍니다."
+    },
+    {
+      "id": "u01-c3-ch-006",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "Colonies of seabirds {{blank}} on these cliffs while fishing boats crowd the waters below.",
+      "options": ["nesting", "nest"],
+      "answer": 1,
+      "translation": "어선들이 아래쪽 바다를 가득 메우는 동안에도 바닷새 무리는 이 절벽에 둥지를 틉니다.",
+      "hints": [
+        "while이 이끄는 절의 동사와 주절의 동사를 구분해 세어 보십시오.",
+        "종속절의 동사는 종속절의 몫입니다 — 주절에는 본동사가 따로 필요합니다."
+      ],
+      "explanation": "접속사 while이 하나이므로 시제 동사는 두 개가 필요합니다. while절의 crowd는 종속절의 동사이고, 주절 주어 Colonies의 본동사가 따로 있어야 하므로 nest가 옳습니다. nesting을 고르면 주절이 본동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c3-ch-007",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "The bakery {{blank}} before sunrise so that fresh loaves reach the cafes by seven.",
+      "options": ["opens", "opening"],
+      "answer": 0,
+      "translation": "갓 구운 빵이 7시까지 카페들에 도착할 수 있도록 그 빵집은 해 뜨기 전에 문을 엽니다.",
+      "hints": [
+        "so that이 절을 하나 더 이끈다는 점을 계산에 넣어 보십시오.",
+        "접속사 하나에 시제 동사 둘 — 공식이 맞아떨어지는 쪽을 고릅니다."
+      ],
+      "explanation": "so that이 목적의 절을 이끄는 접속사이므로 시제 동사는 두 개여야 합니다. so that절의 reach는 그 절의 동사이고, 주절에는 본동사 opens가 따로 필요합니다. opening을 고르면 주절에 시제 동사가 없어 공식이 깨집니다."
+    },
+    {
+      "id": "u01-c3-ch-008",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "The comet {{blank}} across the northern sky for three nights drew crowds onto the rooftops.",
+      "options": ["streaks", "streaking"],
+      "answer": 1,
+      "translation": "사흘 밤 동안 북쪽 하늘을 가로지른 그 혜성은 사람들을 옥상 위로 불러 모았습니다.",
+      "hints": [
+        "이 문장에 접속사나 관계사가 있는지부터 확인해 보십시오.",
+        "연결어가 없다면 시제 동사는 하나만 허용됩니다."
+      ],
+      "explanation": "이 문장에는 접속사·관계사가 하나도 없으므로 시제 동사는 하나뿐이어야 합니다. 문장 뒤쪽의 drew가 이미 본동사이므로, 빈칸에는 The comet을 꾸미는 현재분사 streaking이 옳습니다. streaks를 고르면 연결어 없이 동사가 두 개가 되어 비문입니다."
+    },
+    {
+      "id": "u01-c3-ch-009",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["inserted-clause", "double-verb"],
+      "stem": "The reforms that the minister, I believe, {{blank}} last autumn have already reshaped the hiring practices of major firms.",
+      "options": ["proposing", "proposed"],
+      "answer": 1,
+      "translation": "제 생각에는, 장관이 지난가을 발의한 그 개혁안들이 이미 주요 기업들의 채용 관행을 바꾸어 놓았습니다.",
+      "hints": [
+        "콤마 사이의 I believe를 괄호로 묶고 나서 동사와 연결어를 세어 보십시오.",
+        "삽입절을 빼고 나면 '동사 개수 = 연결어 개수 + 1' 공식이 다시 맞아야 합니다."
+      ],
+      "explanation": "콤마 사이의 I believe는 삽입절이므로 계산에서 뺍니다. 남는 연결어는 관계사 that 하나이고, 주절의 have reshaped에 더해 관계절 안에 시제 동사가 하나 더 필요하므로 과거형 proposed가 옳습니다. proposing을 고르면 관계절에 본동사가 없어 공식이 깨집니다."
+    },
+    {
+      "id": "u01-c3-ch-010",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["semicolon-clause", "no-main-verb"],
+      "stem": "The harvest failed for the third year; therefore, the villagers {{blank}} to buy grain from distant coastal markets.",
+      "options": ["began", "beginning"],
+      "answer": 0,
+      "translation": "수확이 3년째 실패했습니다. 그래서 마을 사람들은 멀리 떨어진 해안 시장들에서 곡물을 사들이기 시작했습니다.",
+      "hints": [
+        "세미콜론과 therefore가 각각 어떤 역할인지 구분해 보십시오.",
+        "접속부사는 접속사가 아닙니다 — 세미콜론 뒤의 절에는 시제 동사가 따로 필요합니다."
+      ],
+      "explanation": "therefore는 접속부사일 뿐 접속사가 아니므로, 세미콜론 뒤의 절에는 시제를 가진 본동사가 따로 하나 필요합니다. 따라서 과거형 began이 옳습니다. beginning을 고르면 뒤 절이 본동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c3-ch-011",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["semicolon-clause", "no-main-verb"],
+      "stem": "The trail follows the river for the first mile; it then {{blank}} sharply toward the bare granite summit.",
+      "options": ["climbing", "climbs"],
+      "answer": 1,
+      "translation": "그 등산로는 처음 1마일 동안 강을 따라가다가, 그다음에 헐벗은 화강암 정상을 향해 가파르게 올라갑니다.",
+      "hints": [
+        "세미콜론이 두 개의 독립된 절을 잇고 있다는 점에 주목해 보십시오.",
+        "세미콜론 뒤의 새 주어에는 짝이 되는 시제 동사가 반드시 필요합니다."
+      ],
+      "explanation": "세미콜론은 접속사 없이 두 독립절을 잇는 부호이므로, 뒤 절의 주어 it에는 시제 동사가 따로 필요합니다. then은 부사일 뿐 연결어가 아니므로 climbs가 옳습니다. climbing을 고르면 뒤 절에 본동사가 없어 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u01-c3-ch-012",
+      "unitId": "u01",
+      "conceptId": "u01-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "intervening-clause"],
+      "stem": "Historians who study the letters that the explorer sent home {{blank}} that his famous journal exaggerates the dangers he faced.",
+      "options": ["argue", "arguing"],
+      "answer": 0,
+      "translation": "탐험가가 고향으로 부친 편지들을 연구하는 역사가들은 그의 유명한 일지가 그가 겪은 위험을 과장하고 있다고 주장합니다.",
+      "hints": [
+        "who절과 that절 안의 동사들을 각 절에 배당하고, 주어 Historians의 몫이 남는지 보십시오.",
+        "관계절·명사절의 동사는 각자의 연결어 몫입니다 — 주절의 본동사는 따로 있어야 합니다."
+      ],
+      "explanation": "who study와 that the explorer sent home은 각각 관계절로, 그 안의 동사들은 각 절의 몫입니다. 주절 주어 Historians의 본동사는 따로 있어야 하므로 빈칸에 시제 동사 argue가 와야 하고, 뒤의 that절은 argue의 목적어입니다. arguing을 고르면 주절 전체가 본동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-001",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The plan discussed at the meeting {{blank}} too costly.",
+      "options": ["seemed", "seeming"],
+      "answer": 0,
+      "translation": "회의에서 논의된 그 계획은 비용이 너무 많이 드는 것으로 보였습니다.",
+      "hints": [
+        "discussed가 과거형 본동사인지 명사를 꾸미는 과거분사인지 아직 단정하지 말고, 문장 끝까지 읽어 보십시오.",
+        "명사 뒤의 -ed가 '~된'이라는 수동 해석으로 자연스러우면 수식어이고, 그렇다면 본동사는 따로 필요합니다."
+      ],
+      "explanation": "discussed at the meeting은 The plan을 꾸미는 과거분사 후치 수식이며, '회의에서 논의된 계획'이라는 수동 해석이 자연스럽습니다. 따라서 문장의 본동사가 따로 필요하므로 시제를 가진 seemed가 옳습니다. seeming을 고르면 시제 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-002",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "stem": "The keys {{blank}} under the doormat opened the side gate.",
+      "options": ["hidden", "hid"],
+      "answer": 0,
+      "translation": "현관 깔개 밑에 숨겨져 있던 그 열쇠들이 옆문을 열어 주었습니다.",
+      "hints": [
+        "문장 끝까지 읽고 시제를 가진 동사가 이미 있는지 확인해 보십시오.",
+        "'그 명사가 ~된 것'이라는 수동 해석이 자연스러우면 명사 뒤의 형태는 수식하는 과거분사입니다."
+      ],
+      "explanation": "문장의 본동사는 뒤에 나오는 opened입니다. 연결어가 없으므로 빈칸에 과거형 hid가 오면 시제 동사가 두 개가 되어 비문이고, '깔개 밑에 숨겨진 열쇠'라는 수동 해석에 맞는 과거분사 hidden이 옳습니다. hide처럼 과거형과 p.p.의 모양이 다른 동사는 형태 자체가 판단 단서가 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-003",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "After a decade of failures, the lab finally {{blank}} a stable prototype.",
+      "options": ["producing", "produced"],
+      "answer": 1,
+      "translation": "10년의 실패 끝에 그 연구소는 마침내 안정적인 시제품을 만들어 냈습니다.",
+      "hints": [
+        "이 문장에 빈칸 말고 시제를 가진 동사가 있는지 확인해 보십시오.",
+        "다른 본동사가 없다면 -ed 자리는 과거형 본동사의 몫입니다."
+      ],
+      "explanation": "문장 어디에도 다른 시제 동사가 없으므로 빈칸이 본동사 자리입니다. 이때의 -ed는 과거분사가 아니라 과거형 본동사이므로 produced가 옳습니다. producing은 시제가 없어 문장을 조각문으로 만듭니다."
+    },
+    {
+      "id": "u01-c4-ch-004",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "stem": "The bridge {{blank}} in 1902 still carries heavy freight trucks.",
+      "options": ["completed", "was completed"],
+      "answer": 0,
+      "translation": "1902년에 완공된 그 다리는 여전히 무거운 화물 트럭들의 통행을 감당하고 있습니다.",
+      "hints": [
+        "문장 끝까지 읽고 시제 동사가 이미 있는지 확인해 보십시오.",
+        "연결어가 없는데 시제 동사가 두 개가 되는 선택지는 정답이 될 수 없습니다."
+      ],
+      "explanation": "문장의 본동사는 carries입니다. 접속사가 없으므로 was completed를 고르면 시제 동사가 두 개가 되어 비문입니다. 따라서 The bridge를 꾸미는 과거분사 completed가 후치 수식으로 옳습니다."
+    },
+    {
+      "id": "u01-c4-ch-005",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The figures released by the statistics office last week {{blank}} a sharp fall in youth employment.",
+      "options": ["showing", "show"],
+      "answer": 1,
+      "translation": "통계청이 지난주 발표한 수치들은 청년 고용의 가파른 감소를 보여 줍니다.",
+      "hints": [
+        "released가 본동사인지 주어를 꾸미는 수식어인지부터 판정해 보십시오.",
+        "'~된'이라는 수동 해석이 자연스러운 -ed는 후치 수식 과거분사입니다 — 그렇다면 본동사는 따로 필요합니다."
+      ],
+      "explanation": "released by the statistics office last week는 The figures를 꾸미는 과거분사 후치 수식입니다('발표된 수치'). 본동사가 따로 없으므로 빈칸에 시제 동사 show가 와야 합니다. released를 과거형 본동사로 착각하고 showing을 고르면 문장 전체에 본동사가 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-006",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The model outlined by early climate researchers {{blank}} several key feedback effects.",
+      "options": ["overlooking", "overlooked"],
+      "answer": 1,
+      "translation": "초기 기후 연구자들이 개괄적으로 제시한 그 모형은 몇 가지 핵심적인 되먹임 효과를 간과했습니다.",
+      "hints": [
+        "outlined가 과거형인지 과거분사인지 판단을 보류하고 문장 구조부터 확인해 보십시오.",
+        "같은 -ed라도 하나는 수식어, 하나는 본동사일 수 있습니다 — 본동사가 없는 문장은 성립하지 않습니다."
+      ],
+      "explanation": "outlined by early climate researchers는 The model을 꾸미는 과거분사 후치 수식입니다('연구자들이 개괄한 모형'). 그 뒤로 본동사가 없으므로 빈칸에는 과거형 본동사 overlooked가 와야 합니다. overlooking을 고르면 시제 동사가 하나도 없는 조각문이 됩니다. 같은 -ed 모양이라도 앞의 것은 수식어, 빈칸의 것은 본동사입니다."
+    },
+    {
+      "id": "u01-c4-ch-007",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The witnesses questioned by the detectives {{blank}} very different accounts of the accident.",
+      "options": ["gave", "given"],
+      "answer": 0,
+      "translation": "형사들에게 심문받은 목격자들은 그 사고에 대해 서로 매우 다른 진술을 내놓았습니다.",
+      "hints": [
+        "questioned 이하가 주어를 꾸미는 수식어임을 확인한 뒤, 본동사 자리가 남아 있는지 보십시오.",
+        "p.p. 전용형은 본동사가 될 수 없습니다 — 시제를 가진 형태가 하나는 있어야 합니다."
+      ],
+      "explanation": "questioned by the detectives는 The witnesses를 꾸미는 과거분사 후치 수식입니다. 문장에 본동사가 따로 없으므로 빈칸에 시제를 가진 과거형 gave가 와야 합니다. given은 p.p. 전용형이라 본동사가 될 수 없고, 고르면 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-008",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["ed-ambiguity", "double-verb"],
+      "stem": "The land {{blank}} to the city by a wealthy merchant now hosts a public botanical garden.",
+      "options": ["donated", "was donated"],
+      "answer": 0,
+      "translation": "한 부유한 상인이 시에 기증한 그 땅에는 이제 시립 식물원이 들어서 있습니다.",
+      "hints": [
+        "문장 끝까지 읽어 시제를 가진 동사가 이미 있는지 확인해 보십시오.",
+        "연결어가 없다면 시제 동사는 하나뿐 — 나머지 동사 모양은 수식어여야 합니다."
+      ],
+      "explanation": "문장의 본동사는 hosts입니다. 접속사·관계사가 없으므로 was donated를 고르면 시제 동사가 두 개가 되어 비문입니다. 따라서 The land를 꾸미는 과거분사 donated가 후치 수식으로 옳으며, '기증된 땅'이라는 수동 해석과도 맞아떨어집니다."
+    },
+    {
+      "id": "u01-c4-ch-009",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The safety rules agreed on after the mine collapse, though costly for smaller operators, {{blank}} hundreds of lives over the following decade.",
+      "options": ["saving", "saved"],
+      "answer": 1,
+      "translation": "광산 붕괴 사고 이후 합의된 그 안전 규정들은, 소규모 사업자들에게는 부담이 컸지만, 이후 10년간 수백 명의 목숨을 구했습니다.",
+      "hints": [
+        "agreed on이 본동사인지 수식어인지 판단을 보류하고, 콤마 사이 어구를 괄호로 묶은 뒤 시제 동사를 세어 보십시오.",
+        "-ed 뒤에서 다른 시제 동사가 나오지 않으면, 남은 -ed 자리가 본동사의 몫입니다."
+      ],
+      "explanation": "agreed on after the mine collapse는 The safety rules를 꾸미는 과거분사 후치 수식이고('합의된 규정'), though costly for smaller operators는 콤마 사이의 삽입 어구입니다. 수식과 삽입을 걷어내면 본동사가 없으므로 빈칸에 과거형 saved가 와야 합니다. saving을 고르면 문장 전체가 본동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u01-c4-ch-010",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "double-verb", "intervening-pp"],
+      "stem": "The portrait {{blank}} for decades in a private collection in Vienna finally returned to the artist's hometown museum last month.",
+      "options": ["kept", "was kept"],
+      "answer": 0,
+      "translation": "빈의 개인 소장품 속에 수십 년간 보관되어 있던 그 초상화는 지난달 마침내 화가의 고향 미술관으로 돌아왔습니다.",
+      "hints": [
+        "문장 끝까지 읽어 시제를 가진 동사가 이미 있는지 확인해 보십시오.",
+        "시제 동사가 이미 하나 있다면, 빈칸은 명사를 꾸미는 수식어 자리입니다."
+      ],
+      "explanation": "문장의 본동사는 returned입니다. 연결어가 없으므로 was kept를 고르면 시제 동사가 두 개가 되어 비문입니다. 따라서 The portrait를 꾸미는 과거분사 kept가 후치 수식으로 옳으며, '보관된 초상화'라는 수동 해석과 일치합니다."
+    },
+    {
+      "id": "u01-c4-ch-011",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The contract offered to the factory workers, drafted in unusually plain language, {{blank}} annual wage reviews and paid training days.",
+      "options": ["guaranteeing", "guaranteed"],
+      "answer": 1,
+      "translation": "공장 노동자들에게 제시된, 이례적으로 쉬운 문구로 작성된 그 계약서는 연례 임금 심사와 유급 연수일을 보장했습니다.",
+      "hints": [
+        "offered와 drafted가 각각 본동사인지 수식어인지, 콤마 구조를 따라 판정해 보십시오.",
+        "수식어를 전부 걷어낸 뒤에도 시제 동사가 없다면, 빈칸의 -ed가 본동사 과거형입니다."
+      ],
+      "explanation": "offered to the factory workers와 drafted in unusually plain language는 모두 The contract를 꾸미는 과거분사 수식어입니다. 두 겹의 수식을 걷어내면 본동사가 없으므로 빈칸에는 과거형 본동사 guaranteed가 와야 합니다. guaranteeing을 고르면 시제 동사가 하나도 없는 조각문이 됩니다. 같은 -ed 모양이 세 번 나와도 구조상 역할은 제각각입니다."
+    },
+    {
+      "id": "u01-c4-ch-012",
+      "unitId": "u01",
+      "conceptId": "u01-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["ed-ambiguity", "no-main-verb"],
+      "stem": "The seeds stored in the arctic vault, collected from farms on every continent, {{blank}} crop varieties that disease or war might otherwise erase.",
+      "options": ["preserving", "preserve"],
+      "answer": 1,
+      "translation": "북극 저장고에 보관된, 모든 대륙의 농장에서 수집된 그 씨앗들은 질병이나 전쟁으로 자칫 사라질 수도 있는 작물 품종들을 지켜 줍니다.",
+      "hints": [
+        "stored와 collected를 괄호로 묶고, 괄호 밖에 시제 동사가 남는지 확인해 보십시오.",
+        "that절의 동사는 그 절의 몫입니다 — 주절에는 본동사가 따로 있어야 합니다."
+      ],
+      "explanation": "stored in the arctic vault와 collected from farms on every continent는 The seeds를 꾸미는 과거분사 수식어 두 겹입니다. that절의 might erase는 관계절의 동사이므로 주절에는 본동사가 따로 필요하고, 복수 주어와 어울리는 preserve가 옳습니다. preserving을 고르면 주절이 본동사 없는 조각문이 됩니다."
+    }
+  ]
+}

@@ -880,8 +880,12 @@ model ExamAnalysis {
   examYear    Int?
   semester    String?
   status      String    @default("DRAFT")
-  sourceType  String    @default("MANUAL")
+  sourceType  String    @default("MANUAL") // "MANUAL" | "INTERNAL"(자체 생성 시험지 합성 분석 — vision 미경유)
   sourceFiles Json? // [{path, page}] — Supabase Storage(extraction-sources) 키
+
+  /// 자체 생성 시험지(Exam) 내부 분석 링크 — sourceType="INTERNAL" 전용 soft-ref(FK 미설정).
+  /// structure/analysis 는 Question 뱅크에서 합성(src/lib/exam-scoring/internal-analysis.ts).
+  sourceExamId String?
   structure   Json? // ExamPaperStructure
   analysis    Json? // ExamAnalysisResult (배치 체크포인트 증분 저장 대상)
   reviewState Json? // {structureConfirmed, confirmedNumbers[], staleNumbers[]}
@@ -896,6 +900,7 @@ model ExamAnalysis {
 
   @@index([academyId, status, createdAt])
   @@index([academyId, deletedAt, updatedAt])
+  @@index([sourceExamId])
   @@map("exam_analyses")
 }
 
@@ -923,6 +928,10 @@ model ExamReportStudent {
   answerToken       String?   @unique // 학생 답안입력 링크 /a/[token] — 리포트 공유 shareToken 과 별개
   answerEnabled     Boolean   @default(false)
   answerSubmittedAt DateTime? // 학생이 마지막으로 답안을 제출한 시각
+
+  // ── 26-07-09 로스터 귀속(soft-ref, FK 미설정) — 자체 시험지 응시 이력을 Student 에 축적 ──
+  studentId        String? // Student.id — null=기존 자유 이름입력(하위호환)
+  examSubmissionId String? // ExamSubmission.id — 자체 시험지 채점 브리지 역링크
   version          Int       @default(1)
   deletedAt        DateTime? // soft delete
   createdAt        DateTime  @default(now())
@@ -933,6 +942,7 @@ model ExamReportStudent {
 
   @@index([examAnalysisId, deletedAt])
   @@index([academyId, createdAt])
+  @@index([studentId])
   @@map("exam_report_students")
 }
 
@@ -1323,6 +1333,14 @@ model Exam {
   editCount  Int @default(0) // 기존 시험지를 다시 저장(수정)한 횟수 (생성 제외)
   printCount Int @default(0) // 출력 횟수 (PDF 인쇄 + HWPX/HWPX해설 + DOCX 내보내기)
 
+  // ── 26-07-09 공유 QR 자기등록(OMR/종이 배포) — 시험지 1개당 공유 등록 토큰 1개.
+  //    인쇄 시험지에 QR 인쇄 → 학생 스캔 → 이름 선택+코드 확인 → ExamSubmission 자기등록.
+  //    개별 링크(assignStudentsToExam) 모델과 공존. DB 반영은 surgical ALTER
+  //    (prisma/migrations-manual/20260709_exam_shared_enrollment.sql). ──
+  enrollToken   String? @unique // 공유 등록 토큰(QR 인코딩) — share-token.ts 규격
+  enrollEnabled Boolean @default(false)
+  enrollMode    String? // "OMR" | "TABLET" — 자기등록 학생 기본 응시 모드
+
   // ── Extraction lineage ──
   sourceMaterialId String?
 
@@ -1363,20 +1381,43 @@ model ExamQuestion {
 }
 
 /// ExamSubmission — Student exam submissions
-/// status: "IN_PROGRESS" | "SUBMITTED" | "GRADED"
+/// status: "ASSIGNED" | "IN_PROGRESS" | "SUBMITTED" | "GRADED"
+///
+/// 26-07-09 시험지 배포·OMR 대개편: 할당(ASSIGNED)→응시→제출→채점 전 수명주기를 이 한 행이
+/// 담당한다(시험당 학생 1행, 재응시=원장 reset). DB 반영은 surgical ALTER 관례
+/// (prisma/migrations-manual/20260709_exam_deployment_omr.sql — migrate deploy / db push 금지).
 model ExamSubmission {
   id          String    @id @default(cuid())
   examId      String
   studentId   String
-  answers     String    @db.Text // JSON: { "questionId": "answer", ... }
+  answers     String    @db.Text // JSON: { "questionId": "answer", ... } (레거시 exam-taking 경로 — 신규 경로는 responses 사용)
   score       Int? // Total score (null until graded)
   maxScore    Int?
   percent     Float?
-  status      String    @default("IN_PROGRESS") // "IN_PROGRESS" | "SUBMITTED" | "GRADED"
+  status      String    @default("IN_PROGRESS") // "ASSIGNED" | "IN_PROGRESS" | "SUBMITTED" | "GRADED"
   startedAt   DateTime  @default(now())
   submittedAt DateTime?
   gradedAt    DateTime?
   gradedBy    String? // staffId who graded (for manual grading)
+
+  // ── 배포·응시 링크(/t/[token]) ──
+  accessToken   String?  @unique // 학생 응시 링크 토큰 — share-token.ts 발급 규격
+  accessEnabled Boolean  @default(false)
+  mode          String? // "TABLET"(웹 응시) | "OMR"(답안만 입력)
+
+  // ── 결정론 채점(AI 0콜) ──
+  responses     Json? // SubmissionResponse[] — src/lib/exam-scoring/types.ts 계약
+  scoreSummary  Json? // exam-report ScoreSummary 동형(서버 결정론 계산 캐시)
+  orderSnapshot Json? // [{questionId,orderNum,points}] 할당 시점 고정 — 빌더 재저장/셔플로부터 응시 순서 보호
+
+  // ── 할당 메타 ──
+  assignedAt DateTime?
+  assignedBy String? // staff.id soft-ref (FK 미설정)
+
+  // ── 리포트 브리지 ──
+  examReportStudentId String? // ExamReportStudent.id soft-ref — 채점 완료 시 리포트 학생 upsert
+
+  version Int @default(1) // 낙관적 락(CAS) — 자동저장↔제출↔강사입력 클로버 방지
 
   exam    Exam    @relation(fields: [examId], references: [id])
   student Student @relation(fields: [studentId], references: [id])
@@ -1492,6 +1533,11 @@ model StudentAnalytics {
   // Detailed weak points
   weakPoints     String?  @db.Text // JSON: ["관계대명사 who/which 구분", ...]
   updatedAt      DateTime @updatedAt
+
+  // ── 26-07-09 AI 추세변화 분석(프리미엄 1콜, EXAM_TREND_ANALYSIS 5cr) ──
+  examTrendReport      Json? // 추세 내러티브 문서(합니다체) + 약점→강점 전환 추적
+  examTrendGeneratedAt DateTime?
+  examTrendStatus      String? // "GENERATING" | "GENERATED" | "FAILED" — CAS 게이트
 
   student Student @relation(fields: [studentId], references: [id])
 
@@ -3803,6 +3849,69 @@ model Webtoon {
   @@map("webtoons")
 }
 
+/// ExamPassageWebtoonAsset — Platform-owned, pre-generated webtoon for a static
+/// 수능·모평 기출 corpus passage. Only REVIEWED/APPROVED assets are exposed for
+/// teacher download; generation success alone must not unlock the image.
+/// status: "PENDING" | "GENERATING" | "REVIEW_REQUIRED" | "APPROVED" | "REJECTED" | "FAILED"
+model ExamPassageWebtoonAsset {
+  id            String @id @default(cuid())
+  examPassageId String
+
+  style    String @default("KOREAN_WEBTOON")
+  language String @default("KO") // "KO" | "KO_EN" | "EN" | "EN_KO_GLOSS"
+  status   String @default("PENDING")
+
+  imageUrl    String? @db.Text
+  storagePath String?
+  rawAtlasUrl String? @db.Text
+
+  promptSnapshot    String? @db.Text
+  promptHash        String?
+  imageModel        String?
+  imageSize         String?
+  imageQuality      String?
+  imageOutputFormat String?
+  atlasPredictionId String?
+
+  sourceHash String?
+  sourceMeta Json?
+  qaReport   Json?
+  attempts   Int   @default(0)
+
+  errorMessage String? @db.Text
+  generatedAt  DateTime?
+  reviewedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([examPassageId, language, style])
+  @@index([examPassageId])
+  @@index([status])
+  @@index([updatedAt])
+  @@map("exam_passage_webtoon_assets")
+}
+
+/// ExamPassageWebtoonPurchase — Per-academy unlock ledger for downloading an
+/// approved platform-owned 기출 웹툰. One unlock covers one passage/language/style.
+model ExamPassageWebtoonPurchase {
+  id            String @id @default(cuid())
+  academyId     String
+  createdById   String
+  examPassageId String
+  assetId       String
+  language      String
+  style         String @default("KOREAN_WEBTOON")
+
+  creditTransactionId String @unique
+  createdAt           DateTime @default(now())
+
+  @@unique([academyId, examPassageId, language, style])
+  @@index([academyId])
+  @@index([assetId])
+  @@index([examPassageId])
+  @@map("exam_passage_webtoon_purchases")
+}
+
 // ============================================================================
 // WEBTOON COLLECTIONS — Folder-like organization for webtoons
 // ============================================================================
@@ -4768,4 +4877,178 @@ model SeminarRequest {
 
   @@index([status, createdAt])
   @@map("seminar_requests")
+}
+
+// ============================================================================
+// 어법 드릴 — 모바일 어법 학습 툴 (/g)
+//
+// 콘텐츠(유닛·개념·문항)는 코드 번들(src/data/grammar-drill)이 정본이므로
+// DB에는 학생 학습 데이터만 축적한다. Student 와의 관계는 의도적으로
+// relation-free(컬럼만) — 공유 Student 모델 블록을 건드리지 않기 위함이며,
+// 조회는 액션 레이어에서 명시 조인한다. 적용은 surgical SQL
+// (scripts/sql/grammar-drill-tables.sql, prisma db execute) — migrate 금지.
+// ============================================================================
+
+/// 문항 시도 로그 — 축적의 원장. 모든 분석은 이 테이블에서 파생된다.
+model GrammarDrillAttempt {
+  id            String   @id @default(cuid())
+  academyId     String
+  studentId     String
+  itemId        String // 번들 문항 ID (예: u02-c1-ch-009)
+  unitId        String
+  conceptId     String
+  itemType      String // CHOICE | OX | MULTI_UNDERLINE | PASSAGE | WRITE_FORM | WRITE_CORRECT
+  difficulty    Int
+  correct       Boolean
+  answer        String   @db.Text // 학생 응답(인덱스·번호·서술 텍스트)
+  timeMs        Int      @default(0)
+  hintUsed      Int      @default(0) // 0~2 (본 힌트 단계 수)
+  conceptPeeked Boolean  @default(false) // 풀이 중 개념 시트 열람 여부
+  source        String   @default("DRILL") // DRILL | CONCEPT_CHECK | READING | WRITTEN | UNIT_TEST | MIXED | REVIEW | ASSIGNMENT
+  assignmentId  String?
+  createdAt     DateTime @default(now())
+
+  @@index([studentId, createdAt])
+  @@index([studentId, conceptId])
+  @@index([studentId, itemId])
+  @@index([academyId, createdAt])
+  @@map("grammar_drill_attempts")
+}
+
+/// 개념 숙달도 — 시도 로그의 실시간 집계(서빙 엔진·취약점 분석의 축).
+model GrammarDrillMastery {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  conceptId     String
+  unitId        String
+  attempts      Int       @default(0)
+  correct       Int       @default(0)
+  streak        Int       @default(0) // 현재 연속 정답
+  masteryScore  Float     @default(0) // 0~100 지수가중이동평균
+  box           Int       @default(0) // 0~5 (간격 반복 라이트너 박스)
+  lastAttemptAt DateTime?
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([studentId, conceptId])
+  @@index([studentId, unitId])
+  @@index([academyId, updatedAt])
+  @@map("grammar_drill_mastery")
+}
+
+/// 유닛 단계 진행 — CONCEPT → DRILL → READING → WRITTEN → TEST → MASTERED.
+model GrammarDrillUnitProgress {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  unitId        String
+  stage         String    @default("CONCEPT")
+  conceptDoneAt DateTime?
+  drillDoneAt   DateTime?
+  readingDoneAt DateTime?
+  writtenDoneAt DateTime?
+  masteredAt    DateTime?
+  bestTestScore Int? // 유닛 테스트 최고점(0~100)
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([studentId, unitId])
+  @@index([academyId, updatedAt])
+  @@map("grammar_drill_unit_progress")
+}
+
+/// 선생님 → 학생 추가 학습 할당.
+model GrammarDrillAssignment {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  staffId       String?
+  title         String
+  note          String?   @db.Text // 학생에게 보이는 선생님 메모(합니다체)
+  spec          Json // { conceptIds?, unitIds?, itemTypes?, difficulties?, count }
+  status        String    @default("ASSIGNED") // ASSIGNED | IN_PROGRESS | DONE
+  createdAt     DateTime  @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+  resultSummary Json? // { total, correct, timeMs }
+
+  @@index([studentId, status])
+  @@index([academyId, createdAt])
+  @@map("grammar_drill_assignments")
+}
+
+/// 질문 탭 챗 로그 — 행 단위(선생님 열람·감사 대상). 무과금이지만 원가는 별도 원장 기록.
+model GrammarDrillChatMessage {
+  id               String   @id @default(cuid())
+  academyId        String
+  studentId        String
+  contextItemId    String? // 질문 시점에 보고 있던 문항
+  contextConceptId String?
+  role             String // user | assistant
+  content          String   @db.Text
+  createdAt        DateTime @default(now())
+
+  @@index([studentId, createdAt])
+  @@index([academyId, createdAt])
+  @@map("grammar_drill_chat_messages")
+}
+
+// ============================================================================
+// 통합 학습 과제(StudyAssignment) — 시험지/학습지/문제세트/어법훈련 배포·과제
+//
+// 시험지(Exam)·학습지(PassageReport)·문제세트(Question[])·어법훈련(GrammarDrill
+// spec)을 학생/반 단위로 배포하고 마감일·진행을 추적하는 통합 레이어.
+// GrammarDrill* 과 동일하게 relation-free(FK 없는 soft-ref) — 공유 모델
+// (Student/Exam/PassageReport) 블록을 건드리지 않는다. 조회는 액션 레이어에서
+// 명시 조인. 적용은 surgical SQL
+// (prisma/migrations-manual/20260711_study_assignments.sql) — migrate 금지.
+//
+// kind 별 브리지: EXAM→ExamSubmission(응시·채점 수명주기 전부 위임),
+// GRAMMAR→GrammarDrillAssignment(드릴 엔진 위임). WORKSHEET/QUESTIONS 는
+// 태스크 행 자체가 상태 정본. 라이브 상태 계산은
+// src/lib/study-assignments/status.ts 가 정본.
+// ============================================================================
+
+/// 과제 1건 — 대상(targets)은 생성 시점 스냅샷으로 확장되어 tasks 가 만들어진다.
+model StudyAssignment {
+  id            String    @id @default(cuid())
+  academyId     String
+  createdById   String? // staff soft-ref (FK 미설정)
+  kind          String // "EXAM" | "WORKSHEET" | "QUESTIONS" | "GRAMMAR"
+  refId         String? // EXAM→Exam.id, WORKSHEET→PassageReport.id (soft-ref)
+  payload       Json      @default("{}") // kind별 스펙 — src/lib/study-assignments/types.ts 계약
+  title         String
+  instructions  String?   @db.Text // 학생에게 보이는 안내문(합니다체)
+  availableFrom DateTime  @default(now())
+  dueAt         DateTime?
+  status        String    @default("ACTIVE") // "ACTIVE" | "CLOSED" | "ARCHIVED"
+  targets       Json      @default("[]") // [{type:"CLASS"|"STUDENT", id, name}] 배포 시점 스냅샷
+  targetSummary String? // "고1 정예반 외 2명" 표시 캐시
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([academyId, createdAt])
+  @@index([academyId, dueAt])
+  @@map("study_assignments")
+}
+
+/// 과제의 학생 1명 태스크 — EXAM/GRAMMAR 는 브리지 soft-ref 로 실행을 위임한다.
+model StudyAssignmentTask {
+  id                  String    @id @default(cuid())
+  academyId           String
+  assignmentId        String
+  studentId           String
+  status              String    @default("ASSIGNED") // "ASSIGNED" | "IN_PROGRESS" | "DONE"
+  examSubmissionId    String? // EXAM 브리지 — 라이브 상태는 exam_submissions 조인으로 계산
+  grammarAssignmentId String? // GRAMMAR 브리지 — grammar_drill_assignments 조인
+  responses           Json? // QUESTIONS: SubmissionResponse[] 동형(학생 응답)
+  result              Json? // {score,maxScore,percent,correct,total,...} 표시 캐시
+  startedAt           DateTime?
+  completedAt         DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@unique([assignmentId, studentId])
+  @@index([studentId, status, createdAt])
+  @@index([academyId, createdAt])
+  @@map("study_assignment_tasks")
 }

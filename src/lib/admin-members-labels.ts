@@ -53,6 +53,8 @@ export const OPERATION_TYPE_LABELS: Record<string, string> = {
   AI_CHAT: "AI 튜터링",
   PASSAGE_RESTORATION: "AI 지문 복원",
   WEBTOON_IMAGE: "웹툰 이미지 생성",
+  WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
+  WEBTOON_EXAM_DOWNLOAD: "기출 웹툰 다운로드",
   EXAM_GENERATION: "시험지 생성",
 };
 

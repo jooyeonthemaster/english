@@ -48,6 +48,7 @@ import { QuestionCard } from "./question-card";
 import { QuestionBankCard } from "./question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
+import { AssignQuestionsAction } from "./question-bank-client/assign-questions-action";
 import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
 import { GridToggle } from "./question-bank-client/grid-toggle";
@@ -974,6 +975,15 @@ export function QuestionBankClient({
         <span className="@max-[30rem]:hidden">검수완료</span>
       </button>
 
+      {/* 과제로 배포 — 선택 문항을 QUESTIONS 과제로 학생 앱에 배포.
+          국어 문제 은행(KO_*)은 학생 앱 문항 플레이어 미검증이라 미노출(무회귀). */}
+      {subjectScope !== "KOREAN" ? (
+        <AssignQuestionsAction
+          selectedIds={selectedIds}
+          onAssigned={clearSelection}
+        />
+      ) : null}
+
       <button
         type="button"
         onClick={() => {
@@ -1541,6 +1551,7 @@ export function QuestionBankClient({
         examTitle={examTitle}
         setExamTitle={setExamTitle}
         selectedCount={selectedIds.size}
+        selectedQuestionIds={Array.from(selectedIds)}
         creating={creatingExam}
         onCreate={handleCreateExam}
       />

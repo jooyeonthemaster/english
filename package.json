@@ -23,6 +23,8 @@
     "demo:record": "tsx scripts/demo/record.ts",
     "demo:manifest": "tsx scripts/demo/manifest.ts",
     "demo:render": "remotion render remotion/index.ts",
+    "exam:webtoons": "tsx --conditions=react-server --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-exam-passage-webtoons.ts",
+    "exam:webtoons:import-codex": "tsx --conditions=react-server --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/import-codex-exam-passage-webtoon.ts",
     "test:webkit": "playwright test --project=webkit-desktop",
     "test:webkit:headed": "playwright test --project=webkit-desktop --headed",
     "safari:open": "playwright open --browser=webkit http://localhost:3000/dev/annotation-editor"
@@ -81,6 +83,7 @@
     "react-konva": "^19.2.5",
     "recharts": "^3.7.0",
     "resend": "^6.12.3",
+    "server-only": "^0.0.1",
     "sharp": "^0.34.5",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",

@@ -177,6 +177,7 @@ export async function createClass(
       },
     });
     revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
     return { success: true, id: cls.id };
   } catch (error) {
     return {
@@ -210,6 +211,7 @@ export async function updateClass(
       data: updateData,
     });
     revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -227,6 +229,7 @@ export async function deleteClass(classId: string): Promise<ActionResult> {
     }
     await prisma.class.delete({ where: { id: classId } });
     revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -271,11 +274,101 @@ export async function enrollStudent(
     });
 
     revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : "수강 등록에 실패했습니다.",
+    };
+  }
+}
+
+export interface BulkEnrollResult {
+  success: boolean;
+  error?: string;
+  /** 이번 호출로 새로 편성된 학생 수 */
+  enrolledCount?: number;
+  /** 이미 재적 중이라 건너뛴 학생 수 ("이미 재적 M명 제외" 안내용) */
+  alreadyCount?: number;
+}
+
+/**
+ * 로스터 벌크 반 편성 — 선택 학생 여러 명을 한 반에 한 번에 ENROLLED.
+ * 정원 검사는 전체 거부 방식(일부만 편성되는 혼선 방지): 새로 들어갈 인원이
+ * 남은 자리를 넘으면 아무도 편성하지 않고 부족분을 알려준다.
+ * 이미 재적(ENROLLED) 중인 학생은 정원을 소모하지 않고 제외 집계만 한다.
+ */
+export async function enrollStudentsToClass(
+  classId: string,
+  studentIds: string[],
+): Promise<BulkEnrollResult> {
+  try {
+    const staff = await requireStaffAuth("DIRECTOR");
+
+    const ids = [...new Set(studentIds.filter((id) => typeof id === "string" && id))];
+    if (ids.length === 0) {
+      return { success: false, error: "선택된 학생이 없습니다." };
+    }
+
+    // 반·학생 모두 호출자 학원 소속인지 교차검증(타 학원 id 는 조용히 걸러짐).
+    const [cls, students, existing] = await Promise.all([
+      prisma.class.findFirst({
+        where: { id: classId, academyId: staff.academyId },
+        include: {
+          _count: { select: { enrollments: { where: { status: "ENROLLED" } } } },
+        },
+      }),
+      prisma.student.findMany({
+        where: { id: { in: ids }, academyId: staff.academyId },
+        select: { id: true },
+      }),
+      prisma.classEnrollment.findMany({
+        where: { classId, studentId: { in: ids }, status: "ENROLLED" },
+        select: { studentId: true },
+      }),
+    ]);
+    if (!cls) return { success: false, error: "반을 찾을 수 없습니다." };
+    if (students.length === 0) {
+      return { success: false, error: "학생을 찾을 수 없습니다." };
+    }
+
+    const alreadySet = new Set(existing.map((e) => e.studentId));
+    const toEnroll = students.map((s) => s.id).filter((id) => !alreadySet.has(id));
+    if (toEnroll.length === 0) {
+      return { success: false, error: "선택한 학생이 모두 이미 재적 중입니다." };
+    }
+
+    const remaining = cls.capacity - cls._count.enrollments;
+    if (toEnroll.length > remaining) {
+      return {
+        success: false,
+        error: `정원 초과: ${toEnroll.length - remaining}자리 부족 (정원 ${cls.capacity} · 재적 ${cls._count.enrollments})`,
+      };
+    }
+
+    // DROPPED/WAITLISTED 이력이 있는 학생은 upsert 로 재편성.
+    await prisma.$transaction(
+      toEnroll.map((studentId) =>
+        prisma.classEnrollment.upsert({
+          where: { classId_studentId: { classId, studentId } },
+          update: { status: "ENROLLED", droppedAt: null },
+          create: { classId, studentId, status: "ENROLLED" },
+        }),
+      ),
+    );
+
+    revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
+    return {
+      success: true,
+      enrolledCount: toEnroll.length,
+      alreadyCount: alreadySet.size,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "반 편성에 실패했습니다.",
     };
   }
 }
@@ -294,6 +387,7 @@ export async function removeStudent(
       data: { status: "DROPPED", droppedAt: new Date() },
     });
     revalidatePath("/director/tutor");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {

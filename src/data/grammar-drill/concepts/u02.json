@@ -1,0 +1,277 @@
+{
+  "unitId": "u02",
+  "concepts": [
+    {
+      "id": "u02-c1",
+      "unitId": "u02",
+      "order": 1,
+      "title": "진짜 주어 찾기 — 수식어 괄호치기",
+      "oneLiner": "주어와 동사 사이의 전치사구·관계사절·분사구는 괄호로 묶고 무시합니다.",
+      "algorithm": [
+        "문장 맨 앞으로 가서 주어 핵이 되는 명사를 찾습니다.",
+        "주어 핵 뒤에 붙은 전치사구·관계사절·분사구·동격절을 괄호로 묶습니다.",
+        "괄호 안의 명사는 아무리 동사와 가까워도 수 판단에서 완전히 무시합니다.",
+        "괄호 밖에 남은 주어 핵의 수에 동사를 일치시킵니다."
+      ],
+      "rules": [
+        {
+          "rule": "동사의 수는 동사 바로 앞 명사가 아니라 문장 앞의 주어 핵이 결정합니다.",
+          "examples": [
+            {
+              "en": "The **quality** of the new machines **determines** the final price.",
+              "ko": "새 기계들의 품질이 최종 가격을 결정합니다.",
+              "note": "of the new machines는 전치사구 수식어 — 주어 핵은 단수 quality"
+            },
+            {
+              "en": "The **decisions** made by the manager **were** announced this morning.",
+              "ko": "그 관리자가 내린 결정들은 오늘 아침에 발표되었습니다.",
+              "note": "made by the manager는 분사 수식어 — 주어 핵은 복수 decisions"
+            }
+          ]
+        },
+        {
+          "rule": "주어를 꾸미는 관계사절·동격 that절도 통째로 괄호에 넣고 건너뜁니다.",
+          "examples": [
+            {
+              "en": "The **theory** that explains these strange patterns **remains** popular among scientists.",
+              "ko": "이 이상한 패턴들을 설명하는 그 이론은 과학자들 사이에서 여전히 인기가 있습니다.",
+              "note": "that explains ... patterns는 관계사절 — 주어 핵은 단수 theory"
+            }
+          ]
+        },
+        {
+          "rule": "괄호를 다 치고 나서 '주어 핵 + 동사'만 남겨 읽어 보면 어울리는 수가 바로 보입니다.",
+          "examples": [
+            {
+              "en": "The **habits** of a successful writer **are** built through daily practice.",
+              "ko": "성공한 작가의 습관은 매일의 연습을 통해 만들어집니다.",
+              "note": "괄호 후 The habits are만 남음 → 복수 일치 (writer는 괄호 안)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "동사 바로 앞 명사에 끌리는 인접 함정",
+          "body": "출제자는 주어 핵과 동사 사이에 일부러 반대 수의 명사를 끼워 넣습니다. 동사 바로 앞의 명사는 대부분 괄호 안의 미끼이므로, 반드시 문장 앞으로 돌아가 주어 핵부터 확인해야 합니다.",
+          "example": {
+            "en": "The **cost** of the delayed repairs **rises** sharply every year.",
+            "ko": "미뤄진 수리들의 비용은 매년 가파르게 오릅니다.",
+            "note": "동사 앞 repairs(복수)는 미끼 — 주어 핵은 단수 cost"
+          }
+        },
+        {
+          "title": "수식어가 두 겹이면 거리가 더 멀어집니다",
+          "body": "관계사절 안에 전치사구가 또 들어가는 식으로 수식어가 겹치면 주어 핵과 동사 사이가 크게 벌어집니다. 겹수가 늘어도 원리는 같습니다 — 괄호를 전부 걷어내고 남는 핵의 수만 봅니다."
+        }
+      ],
+      "confusableWith": ["u02-c3", "u01-c4"]
+    },
+    {
+      "id": "u02-c2",
+      "unitId": "u02",
+      "order": 2,
+      "title": "단수 취급어",
+      "oneLiner": "each·every·-thing/-one/-body, 동명사구·명사절 주어는 단수입니다.",
+      "algorithm": [
+        "주어가 each·every로 시작하는지, everything·someone 같은 -thing/-one/-body형 대명사인지 확인합니다.",
+        "주어가 동명사구나 that절 같은 '덩어리 주어'인지 확인합니다.",
+        "해당하면 뒤에 아무리 긴 복수 명사가 붙어 있어도 동사를 단수로 고정합니다."
+      ],
+      "rules": [
+        {
+          "rule": "each·every가 이끄는 주어는 뒤에 오는 명사와 상관없이 단수 취급합니다.",
+          "examples": [
+            {
+              "en": "**Each** of the students **has** a different reason for joining the club.",
+              "ko": "그 학생들 각각은 동아리에 가입한 이유가 서로 다릅니다.",
+              "note": "of the students(복수)는 미끼 — 핵은 Each이므로 단수"
+            },
+            {
+              "en": "**Every** door and window in the building **was** locked before midnight.",
+              "ko": "그 건물의 모든 문과 창문은 자정 전에 잠겼습니다.",
+              "note": "every는 and로 두 명사를 이어도 단수 취급"
+            }
+          ]
+        },
+        {
+          "rule": "everything·something·anyone·nobody 같은 -thing/-one/-body형 대명사는 언제나 단수입니다.",
+          "examples": [
+            {
+              "en": "**Everything** about these old photographs **reminds** her of home.",
+              "ko": "이 오래된 사진들에 관한 모든 것이 그녀에게 고향을 떠올리게 합니다.",
+              "note": "photographs(복수)는 전치사구 안 — 주어는 단수 Everything"
+            }
+          ]
+        },
+        {
+          "rule": "동명사구·that절이 주어면 하나의 덩어리로 보아 단수 동사를 씁니다.",
+          "examples": [
+            {
+              "en": "**Reading** difficult books slowly **improves** both focus and memory.",
+              "ko": "어려운 책을 천천히 읽는 것은 집중력과 기억력을 모두 향상시킵니다.",
+              "note": "동명사구 주어 = 한 덩어리 → 단수 (books는 동명사의 목적어)"
+            },
+            {
+              "en": "**That** the planets move around the sun **is** now common knowledge.",
+              "ko": "행성들이 태양 주위를 돈다는 것은 이제 상식입니다.",
+              "note": "that절 주어 = 한 덩어리 → 단수 (planets는 절 안의 명사)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "동명사구 안의 복수 명사에 낚이는 함정",
+          "body": "동명사구 주어 안에는 복수 명사가 들어 있는 경우가 많아 그 명사에 끌려 복수 동사를 고르기 쉽습니다. 동사의 주인은 그 명사가 아니라 동명사구 전체이므로 동사는 단수입니다.",
+          "example": {
+            "en": "**Collecting** rare stamps from many countries **takes** years of patience.",
+            "ko": "여러 나라의 희귀한 우표를 모으는 것은 수년의 인내를 필요로 합니다.",
+            "note": "stamps·countries는 동명사구 내부 — 주어는 Collecting 덩어리 하나"
+          }
+        },
+        {
+          "title": "each of 뒤의 복수 명사",
+          "body": "each of 뒤에는 반드시 복수 명사가 오기 때문에 눈앞의 복수형에 끌리기 쉽습니다. 그러나 수를 결정하는 것은 of 앞의 each이므로 동사는 언제나 단수입니다."
+        }
+      ],
+      "confusableWith": ["u02-c1", "u02-c3"]
+    },
+    {
+      "id": "u02-c3",
+      "unitId": "u02",
+      "order": 3,
+      "title": "수량 표현의 수",
+      "oneLiner": "the number of는 단수, a number of는 복수, 부분 표현은 of 뒤 명사를 봅니다.",
+      "algorithm": [
+        "주어가 the number of, a number of, one of, percent of 같은 수량 표현으로 시작하는지 확인합니다.",
+        "the number of는 '수' 자체이므로 단수, a number of는 many의 뜻이므로 복수로 판정합니다.",
+        "one of + 복수 명사는 그중 '하나'이므로 단수 동사를 씁니다.",
+        "percent·most·half·some of 같은 부분 표현은 of 뒤 명사의 수를 그대로 따릅니다."
+      ],
+      "rules": [
+        {
+          "rule": "the number of + 복수 명사는 단수, a number of + 복수 명사는 복수입니다.",
+          "examples": [
+            {
+              "en": "**The number of** electric cars on the road **is** growing rapidly.",
+              "ko": "도로 위 전기차의 수는 빠르게 늘고 있습니다.",
+              "note": "the number of = '~의 수' 하나 → 단수"
+            },
+            {
+              "en": "**A number of** small errors **were** found in the final report.",
+              "ko": "최종 보고서에서 많은 사소한 오류가 발견되었습니다.",
+              "note": "a number of = many → 복수"
+            }
+          ]
+        },
+        {
+          "rule": "one of + 복수 명사의 핵은 one이므로 동사는 단수입니다.",
+          "examples": [
+            {
+              "en": "**One** of the oldest bridges in the city **needs** urgent repair.",
+              "ko": "그 도시에서 가장 오래된 다리들 중 하나는 긴급한 수리가 필요합니다.",
+              "note": "bridges(복수)는 미끼 — 핵은 단수 one"
+            }
+          ]
+        },
+        {
+          "rule": "부분 표현(percent·most·half·some·the rest of)은 of 뒤 명사의 수를 따릅니다.",
+          "examples": [
+            {
+              "en": "Nearly half of the **water** in the tank **was** already gone.",
+              "ko": "탱크 물의 거의 절반이 이미 사라져 있었습니다.",
+              "note": "of 뒤 water(불가산 단수) → 단수"
+            },
+            {
+              "en": "Most of the **passengers** on the early train **were** office workers.",
+              "ko": "이른 기차의 승객 대부분은 회사원이었습니다.",
+              "note": "of 뒤 passengers(복수) → 복수"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "the number of ↔ a number of 뒤바꿈",
+          "body": "둘 다 뒤에 복수 명사가 오기 때문에 겉모습이 거의 같습니다. the number of는 '~의 수'라는 단수 개념 하나를 가리키고, a number of는 many처럼 뒤 명사를 꾸미는 복수 수식이라는 의미 차이로 구분해야 합니다.",
+          "example": {
+            "en": "**The number of** applicants **has** doubled since last spring.",
+            "ko": "지원자 수는 지난봄 이후 두 배가 되었습니다.",
+            "note": "applicants(복수)에 끌리면 오답 — 두 배가 된 것은 '수' 하나"
+          }
+        },
+        {
+          "title": "부분 표현을 한쪽 공식으로 외우는 함정",
+          "body": "'percent는 단수'처럼 한 방향으로 암기하면 틀립니다. 부분 표현 자체에는 수가 없고, of 뒤 명사가 단수인지 복수인지에 따라 동사의 수가 매번 달라집니다."
+        }
+      ],
+      "confusableWith": ["u02-c1", "u02-c2"]
+    },
+    {
+      "id": "u02-c4",
+      "unitId": "u02",
+      "order": 4,
+      "title": "도치문의 수일치",
+      "oneLiner": "There·장소구·부정어 도치에서는 동사 뒤 진짜 주어와 일치시킵니다.",
+      "algorithm": [
+        "문장이 There, 장소·방향 부사구, 또는 부정어(Never·Rarely 등)로 시작하는지 확인합니다.",
+        "이 경우 주어는 동사 앞이 아니라 동사 뒤에 있다는 것을 전제로 읽습니다.",
+        "동사 뒤에서 진짜 주어(첫 명사구의 핵)를 찾아 그 수에 동사를 일치시킵니다."
+      ],
+      "rules": [
+        {
+          "rule": "There is/are 구문의 진짜 주어는 동사 뒤의 명사입니다.",
+          "examples": [
+            {
+              "en": "There **are** several **reasons** for the sudden change in policy.",
+              "ko": "정책의 갑작스러운 변화에는 몇 가지 이유가 있습니다.",
+              "note": "주어는 동사 뒤 reasons(복수) → are"
+            }
+          ]
+        },
+        {
+          "rule": "장소·방향 부사구가 문두에 오면 '부사구+동사+주어' 어순이 되므로 동사 뒤 주어에 일치시킵니다.",
+          "examples": [
+            {
+              "en": "On the top shelf **sits** a dusty **box** of old letters.",
+              "ko": "맨 위 선반에는 오래된 편지가 든 먼지 쌓인 상자 하나가 놓여 있습니다.",
+              "note": "주어는 동사 뒤 a box(단수) → sits (letters는 수식어 안)"
+            },
+            {
+              "en": "Among the trees **were** two small wooden **cabins** built decades ago.",
+              "ko": "나무들 사이에는 수십 년 전에 지어진 작은 나무 오두막 두 채가 있었습니다.",
+              "note": "trees(복수)는 부사구 안 — 주어는 복수 cabins"
+            }
+          ]
+        },
+        {
+          "rule": "부정어 도치에서도 조동사의 수는 그 뒤에 오는 주어가 결정합니다.",
+          "examples": [
+            {
+              "en": "Rarely **does** this quiet **town** attract so many curious visitors.",
+              "ko": "이 조용한 마을이 이렇게 많은 호기심 어린 방문객을 끌어들이는 일은 드뭅니다.",
+              "note": "주어는 조동사 뒤 town(단수) → does"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "문두 부사구 속 명사를 주어로 착각",
+          "body": "장소구 도치에서 문장 맨 앞에 보이는 명사는 전치사의 목적어이지 주어가 아닙니다. 동사를 기준점으로 삼아 그 뒤에 오는 명사를 찾아야 진짜 주어가 보입니다.",
+          "example": {
+            "en": "Behind the mountains **lies** a wide **valley** famous for its vineyards.",
+            "ko": "그 산들 뒤에는 포도밭으로 유명한 넓은 계곡이 자리하고 있습니다.",
+            "note": "mountains(복수)는 전치사구 안 — 주어는 단수 valley"
+          }
+        },
+        {
+          "title": "There를 주어로 착각",
+          "body": "There는 자리만 차지하는 유도부사일 뿐 주어가 아닙니다. 동사 뒤 첫 명사구의 핵으로 수를 판단하고, 그 명사에 수식어가 붙어 있으면 c1의 괄호치기를 그대로 적용합니다."
+        }
+      ],
+      "confusableWith": ["u02-c1", "u12-c1"]
+    }
+  ]
+}

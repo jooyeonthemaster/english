@@ -1,18 +1,22 @@
 // ============================================================================
 // 학생 시험 리포트 v3 — LLM 스테이지별 모델·파라미터 설정
 //
-// v3: 전 스테이지 기본 sonnet-5(ATLAS_PREMIUM_MODEL_ID). lite/승급 사다리 폐기.
-// ⚠️ E2(studentRead) flash 인하 금지 — 26-07-08 한영고 28문항 실사진 A/B 실측:
-// flash 판독 22/28(78.6%) vs sonnet 26/28(92.9%). flash 는 실존 마킹 3건을
-// "마킹 없음"으로 누락하고 오독 2건을 HIGH 확신으로 보고(소거 X표+동그라미 혼용
-// 필기에서 취약). S4(report)도 flash 인하 금지 — 같은 날 A/B 에서 근거 없는 함정
-// 서사 날조(선지 데이터 부재를 무시)·인용 밀도 절반 확인. 두 실측 모두 스크래치패드
-// s4-ab/·measure-v3-result 에 근거 보존.
+// 기본: examAnalysis(E1)=프리미엄(sonnet — 함정 why·정답키가 하류 전체의 원천),
+// report(S4)=스탠다드(flash) — 26-07-08 프롬프트 3회 강화 루프 후 결정론 6지표
+// 6/6 3연속(RICH 김지석: 인용 하한·선지 정합 9/9·구조통찰 30점 정확·합니다체) +
+// 희박 데이터(STATUS_ONLY 김주연) 재검에서 선지 단정 날조 0건·trapWhy 구조 가드
+// 작동 확인 후 유저 결정으로 전환(콜당 ≈$0.30→$0.016). sonnet 폴백은
+// EXAM_REPORT_REPORT_MODEL env 한 줄.
+// ⚠️ E2(studentRead)는 flash 인하 금지 — 실사진 판독 A/B: flash 22/28(78.6%)
+// vs sonnet 26/28(92.9%), 실존 마킹 3건 누락+오독 2건 HIGH 확신(소거 X표+동그라미
+// 혼용 필기 취약). 단 26-07-08 플로우 개편으로 E2 UI 는 폐기(라우트 은퇴 주석) —
+// 이 스테이지는 휴면. 실측 근거: 스크래치패드 s4-ab/(loop-*·sparse-flash-v2)·
+// measure-v3-result.
 // 스테이지는 examAnalysis(E1a/E1b/E1c) · studentRead(E2) · report(S4) 3개.
 // 모델은 env 오버라이드 우선(빈 문자열도 폴백해야 하므로 trim 후 truthy 검사).
 // ============================================================================
 
-import { ATLAS_PREMIUM_MODEL_ID } from "@/lib/atlas-ai";
+import { ATLAS_PREMIUM_MODEL_ID, ATLAS_STANDARD_MODEL_ID } from "@/lib/atlas-ai";
 
 export type ExamReportAiStage = "examAnalysis" | "studentRead" | "report";
 
@@ -35,7 +39,7 @@ const ANALYSIS_MODEL =
 const READ_MODEL =
   readEnvModel("EXAM_REPORT_READ_MODEL") ?? ATLAS_PREMIUM_MODEL_ID;
 const REPORT_MODEL =
-  readEnvModel("EXAM_REPORT_REPORT_MODEL") ?? ATLAS_PREMIUM_MODEL_ID;
+  readEnvModel("EXAM_REPORT_REPORT_MODEL") ?? ATLAS_STANDARD_MODEL_ID;
 
 const CONFIG_BY_STAGE: Record<ExamReportAiStage, ExamReportAiConfig> = {
   // E1a(examMap 추출)·E1b(문항 배치 분석, vision)·E1c(종합)를 공유. vision + 큰 출력 대비.

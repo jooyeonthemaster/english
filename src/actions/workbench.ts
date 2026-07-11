@@ -32,6 +32,8 @@ export {
 
 export { importExamPassages } from "./workbench/exam-passages";
 export type { ImportExamPassagesResult } from "./workbench/exam-passages";
+export { importKoreanExamPassages } from "./workbench/korean-exam-passages";
+export type { ImportKoreanExamPassagesResult } from "./workbench/korean-exam-passages";
 
 export {
   getSourceMaterialSummary,

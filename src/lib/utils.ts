@@ -77,8 +77,12 @@ export function datetimeLocalToIso(
 }
 
 // 상대시간("3시간 전")은 두 절대시각의 '차이'라 타임존과 무관하므로 그대로 둔다.
+// 단, 1분 미만의 과거는 date-fns 가 "1분 미만 전"(비문)을 내므로 "방금 전"으로 표기한다.
 export function formatRelativeTime(date: Date | string) {
-  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
+  const d = new Date(date);
+  const diffMs = Date.now() - d.getTime();
+  if (diffMs >= 0 && diffMs < 60_000) return "방금 전";
+  return formatDistanceToNow(d, { addSuffix: true, locale: ko });
 }
 
 export function formatMonth(date: Date | string) {

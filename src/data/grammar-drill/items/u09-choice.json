@@ -1,0 +1,822 @@
+{
+  "unitId": "u09",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u09-c1-ch-001",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "The glacier retreated slowly, {{blank}} deep valleys in the rock below.",
+      "options": ["carving", "carved"],
+      "answer": 0,
+      "translation": "그 빙하는 천천히 후퇴하면서 아래 암반에 깊은 계곡들을 깎아 냈습니다.",
+      "hints": [
+        "콤마 앞에 이미 본동사가 있는지 먼저 확인해 보십시오.",
+        "접속사가 없으면 한 문장에 본동사는 하나뿐입니다 — 두 번째 동사 자리는 분사로 압축해야 합니다."
+      ],
+      "explanation": "본동사 retreated가 이미 있고 접속사가 없으므로 빈칸은 두 번째 본동사 자리가 아니라 문미 분사구문 자리입니다. 의미상 주어는 주절 주어 The glacier이고 뒤에 목적어 deep valleys가 있으므로 능동 -ing인 carving이 옳습니다. carved를 쓰면 접속사 없이 동사가 두 개가 되거나 목적어를 거느린 수동 분사가 되어 어느 쪽으로도 틀립니다."
+    },
+    {
+      "id": "u09-c1-ch-002",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "{{blank}} the night sky, the astronomer noticed a faint new light.",
+      "options": ["She scanned", "Scanning"],
+      "answer": 1,
+      "translation": "밤하늘을 살피다가 그 천문학자는 희미한 새 빛 하나를 알아차렸습니다.",
+      "hints": [
+        "콤마 양쪽에 완전한 절이 몇 개인지 세어 보십시오.",
+        "접속사 없이 절 두 개를 콤마로만 이을 수 없습니다 — 한쪽을 분사구문으로 압축해야 합니다."
+      ],
+      "explanation": "She scanned를 넣으면 접속사 없이 '주어+동사' 절 두 개가 콤마로만 이어지는 비문이 됩니다. '접속사+주어+동사'를 분사 하나로 압축한 문두 분사구문 Scanning이 옳고, 생략된 의미상 주어는 주절 주어 the astronomer입니다."
+    },
+    {
+      "id": "u09-c1-ch-003",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["no-main-verb"],
+      "stem": "Working in silence, the jury {{blank}} its verdict after two days.",
+      "options": ["reaching", "reached"],
+      "answer": 1,
+      "translation": "침묵 속에서 심의한 끝에 배심원단은 이틀 만에 평결에 도달했습니다.",
+      "hints": [
+        "문두의 분사 덩어리를 걷어내고 주절에 본동사가 있는지 확인해 보십시오.",
+        "분사만으로는 문장이 완성되지 않습니다 — 주어 뒤에는 본동사가 반드시 하나 필요합니다."
+      ],
+      "explanation": "Working in silence는 문두 분사구문이므로 본동사가 아닙니다. 주어 the jury 뒤의 빈칸이 문장의 유일한 본동사 자리이므로 reached가 옳습니다. reaching을 넣으면 문장 전체에 본동사가 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u09-c1-ch-004",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["double-verb"],
+      "stem": "Prices rose sharply last month, {{blank}} many families to cut spending.",
+      "options": ["forcing", "forced"],
+      "answer": 0,
+      "translation": "지난달 물가가 가파르게 올라 많은 가정이 지출을 줄여야 했습니다.",
+      "hints": [
+        "콤마 앞 절에 본동사가 이미 있는지 확인해 보십시오.",
+        "본동사가 하나 있고 접속사가 없다면, 이어지는 동작은 분사구문으로 표현합니다."
+      ],
+      "explanation": "본동사 rose가 이미 있으므로 콤마 뒤는 결과를 덧붙이는 문미 분사구문 자리입니다. 의미상 주어 Prices가 목적어 many families를 이끄는 능동 관계이므로 forcing이 옳습니다. forced는 접속사 없는 두 번째 본동사가 되거나 목적어와 충돌하는 수동 분사가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c1-ch-005",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "{{blank}} the coastline from a small aircraft, the geologists mapped every visible fault line.",
+      "options": ["They surveyed", "Surveying"],
+      "answer": 1,
+      "translation": "소형 항공기에서 해안선을 조사하면서 그 지질학자들은 눈에 보이는 단층선을 모두 지도에 담았습니다.",
+      "hints": [
+        "콤마 양쪽이 접속사로 연결되어 있는지 살펴보십시오.",
+        "절 두 개를 접속사 없이 콤마로 이을 수 없습니다 — 부사절을 분사로 압축한 형태가 필요합니다."
+      ],
+      "explanation": "They surveyed를 넣으면 완전한 절 두 개가 접속사 없이 콤마로만 이어져 비문이 됩니다. 문두 분사구문 Surveying이 옳고, 생략된 의미상 주어는 주절 주어 the geologists로 자연스럽게 복원됩니다."
+    },
+    {
+      "id": "u09-c1-ch-006",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb"],
+      "stem": "The manuscript, discovered in a sealed jar near the ruins, {{blank}} scholars a rare view of daily trade.",
+      "options": ["offers", "offering"],
+      "answer": 0,
+      "translation": "유적 근처 봉인된 항아리에서 발견된 그 필사본은 학자들에게 일상 교역을 들여다보는 귀한 시야를 제공합니다.",
+      "hints": [
+        "콤마 사이 삽입된 수식 덩어리를 걷어내고 남는 구조를 확인해 보십시오.",
+        "수식어를 제외하고 나면 주어에 대응하는 본동사가 반드시 하나 있어야 합니다."
+      ],
+      "explanation": "discovered in a sealed jar near the ruins는 주어 The manuscript를 꾸미는 삽입 분사구이고, 문장에는 아직 본동사가 없습니다. 따라서 빈칸은 본동사 자리이며 offers가 옳습니다. offering을 넣으면 문장 전체에 동사가 하나도 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u09-c1-ch-007",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "The orchestra ended the concert with a quiet encore, {{blank}} the hall into complete stillness.",
+      "options": ["sent", "sending"],
+      "answer": 1,
+      "translation": "그 오케스트라는 조용한 앙코르로 연주회를 마무리하며 공연장을 완전한 정적에 잠기게 했습니다.",
+      "hints": [
+        "콤마 앞에 본동사가 이미 있는지, 콤마 뒤에 접속사가 있는지 확인해 보십시오.",
+        "접속사 없이 덧붙는 결과 표현은 본동사가 아니라 분사구문으로 씁니다."
+      ],
+      "explanation": "본동사 ended가 이미 있고 접속사가 없으므로 콤마 뒤는 문미 분사구문 자리입니다. 의미상 주어는 The orchestra이고 목적어 the hall을 이끄는 능동이므로 sending이 옳습니다. sent는 접속사 없는 두 번째 본동사가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c1-ch-008",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["double-verb"],
+      "stem": "The chemist, {{blank}} the failed experiment in her notebook, planned a second trial for the following week.",
+      "options": ["recording", "recorded"],
+      "answer": 0,
+      "translation": "그 화학자는 실패한 실험을 공책에 기록하면서 다음 주에 있을 두 번째 시도를 계획했습니다.",
+      "hints": [
+        "콤마 사이 덩어리가 본동사 자리인지 수식 자리인지 판별해 보십시오.",
+        "본동사 하나 원칙을 적용하면, 이미 본동사가 있는 문장의 삽입 덩어리는 분사여야 합니다."
+      ],
+      "explanation": "문장의 본동사는 콤마 뒤의 planned이므로 콤마 사이는 문중 삽입 분사구문 자리입니다. 의미상 주어 The chemist가 목적어 the failed experiment를 기록하는 능동 관계이므로 recording이 옳습니다. recorded를 넣으면 접속사 없이 동사가 두 개가 되거나 목적어를 거느린 수동 분사가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c1-ch-009",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "inserted-clause"],
+      "stem": "{{blank}} that the settlement patterns identified in earlier digs were misleading, the archaeologists reopened three sites along the northern ridge.",
+      "options": ["Suspecting", "They suspected"],
+      "answer": 0,
+      "translation": "이전 발굴에서 확인된 정주 유형이 오해를 부를 수 있다고 의심하여 그 고고학자들은 북쪽 능선을 따라 세 곳의 유적지를 다시 열었습니다.",
+      "hints": [
+        "that절 내부의 동사에 현혹되지 말고, 문장 전체가 몇 개의 절로 이루어지는지 세어 보십시오.",
+        "콤마 뒤에 완전한 주절이 이미 있다면, 콤마 앞 덩어리는 절이 아니라 분사구문이어야 합니다."
+      ],
+      "explanation": "콤마 뒤에 완전한 주절 the archaeologists reopened ...가 이미 있으므로 콤마 앞은 절이 아니라 문두 분사구문이어야 합니다. 따라서 Suspecting이 옳고, They suspected를 넣으면 접속사 없이 절 두 개가 이어지는 비문이 됩니다. that절과 그 안의 분사 수식 identified in earlier digs는 모두 Suspecting의 목적어 내부 구조일 뿐입니다."
+    },
+    {
+      "id": "u09-c1-ch-010",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "ed-ambiguity"],
+      "stem": "The proposal, drafted by a panel of independent economists and revised after months of public comment, {{blank}} a complete overhaul of the tax code.",
+      "options": ["recommending", "recommended"],
+      "answer": 1,
+      "translation": "독립적인 경제학자 패널이 초안을 잡고 수개월의 공개 의견 수렴 뒤에 수정된 그 제안서는 세법의 전면 개편을 권고했습니다.",
+      "hints": [
+        "콤마 사이에 병렬로 이어진 수식 덩어리를 전부 괄호로 묶어 보십시오.",
+        "수식어를 다 걷어낸 뒤 주어와 짝을 이루는 본동사가 남는지 확인합니다 — 분사만으로는 문장이 성립하지 않습니다."
+      ],
+      "explanation": "drafted ...와 revised ...는 and로 병렬된 분사 수식어로, 주어 The proposal을 꾸밀 뿐 본동사가 아닙니다. 수식어를 걷어내면 문장에 동사가 없으므로 빈칸이 본동사 자리이고 recommended가 옳습니다. recommending을 넣으면 문장 전체가 동사 없는 조각문이 됩니다."
+    },
+    {
+      "id": "u09-c1-ch-011",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb"],
+      "stem": "The committee released its final report on coastal erosion late on Friday, {{blank}} weeks of speculation about the fate of the harbor project.",
+      "options": ["ending", "ended"],
+      "answer": 0,
+      "translation": "위원회는 금요일 늦게 해안 침식에 관한 최종 보고서를 발표하여 항만 사업의 향방을 둘러싼 몇 주간의 추측을 끝냈습니다.",
+      "hints": [
+        "콤마 앞 절이 이미 완결되어 있는지 확인해 보십시오.",
+        "완결된 절 뒤에 접속사 없이 이어지는 동작은 결과를 나타내는 분사구문으로 표현합니다."
+      ],
+      "explanation": "본동사 released가 이미 있는 완결된 절 뒤에 접속사 없이 이어지므로 빈칸은 결과의 문미 분사구문 자리입니다. 의미상 주어 The committee가 목적어 weeks of speculation을 끝내는 능동 관계이므로 ending이 옳습니다. ended는 접속사 없는 두 번째 본동사가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c1-ch-012",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["double-verb", "inserted-clause"],
+      "stem": "The lighthouse keeper, {{blank}} every ship that entered the narrow strait, kept a detailed log for over forty years.",
+      "options": ["noted", "noting"],
+      "answer": 1,
+      "translation": "그 등대지기는 좁은 해협에 들어오는 배를 하나하나 기록해 두면서 사십 년 넘게 상세한 일지를 남겼습니다.",
+      "hints": [
+        "관계절을 괄호로 묶고, 문장의 진짜 본동사가 어디 있는지 찾아보십시오.",
+        "본동사가 이미 있다면 콤마 사이 삽입 덩어리는 분사구문이어야 합니다."
+      ],
+      "explanation": "문장의 본동사는 kept이고, that entered the narrow strait는 every ship을 꾸미는 관계절입니다. 콤마 사이는 문중 삽입 분사구문 자리이므로, 주절 주어 The lighthouse keeper가 목적어 every ship을 기록하는 능동 -ing인 noting이 옳습니다. noted를 넣으면 접속사 없이 본동사가 두 개가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c2-ch-001",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} in 1889, the iron tower still attracts millions of visitors.",
+      "options": ["Designing", "Designed"],
+      "answer": 1,
+      "translation": "1889년에 설계된 그 철탑은 여전히 수백만 명의 방문객을 끌어들입니다.",
+      "hints": [
+        "콤마 뒤 주절의 주어를 분사 앞에 복원해 보십시오.",
+        "복원한 주어가 동작을 직접 하면 -ing, 받으면 p.p.입니다."
+      ],
+      "explanation": "분사의 의미상 주어는 주절 주어 the iron tower입니다. 탑은 설계라는 동작을 받는 쪽이므로 Being이 생략된 수동 분사 Designed가 옳습니다. Designing은 탑이 스스로 설계한다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c2-ch-002",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["passive-with-object"],
+      "stem": "{{blank}} the scan results carefully, the doctor explained the treatment options.",
+      "options": ["Reviewing", "Reviewed"],
+      "answer": 0,
+      "translation": "촬영 결과를 꼼꼼히 검토하면서 그 의사는 치료 방안들을 설명했습니다.",
+      "hints": [
+        "분사 바로 뒤에 목적어가 있는지 확인해 보십시오.",
+        "분사 뒤에 목적어가 남아 있으면 능동의 강한 신호입니다."
+      ],
+      "explanation": "의미상 주어 the doctor가 결과를 검토하는 능동 관계이고, 분사 뒤에 목적어 the scan results가 있으므로 -ing인 Reviewing이 옳습니다. Reviewed를 쓰면 수동 분사가 목적어를 거느리는 모순이 생깁니다."
+    },
+    {
+      "id": "u09-c2-ch-003",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-participle"],
+      "stem": "{{blank}} at the station early, the inspector waited near the ticket gate.",
+      "options": ["Arriving", "Arrived"],
+      "answer": 0,
+      "translation": "역에 일찍 도착해서 그 검표원은 개찰구 근처에서 기다렸습니다.",
+      "hints": [
+        "이 동사가 목적어를 취하는 동사인지부터 확인해 보십시오.",
+        "목적어가 없다고 곧바로 수동으로 단정하지 마십시오 — 주어가 스스로 하는 동작인 자동사는 능동입니다."
+      ],
+      "explanation": "arrive는 목적어를 취하지 않는 자동사이므로, 목적어가 없어도 주어 the inspector가 직접 하는 능동 동작입니다. 따라서 Arriving이 옳습니다. '목적어가 없으면 p.p.'라는 암기에 기대어 Arrived를 고르면 자동사를 수동으로 만드는 오류가 됩니다."
+    },
+    {
+      "id": "u09-c2-ch-004",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle"],
+      "stem": "{{blank}} by the sudden noise, the pigeons scattered across the square.",
+      "options": ["Frightening", "Frightened"],
+      "answer": 1,
+      "translation": "갑작스러운 소리에 놀라 비둘기들이 광장 곳곳으로 흩어졌습니다.",
+      "hints": [
+        "주절 주어가 감정을 일으키는 쪽인지 느끼는 쪽인지 판단해 보십시오.",
+        "감정동사 분사는 감정을 느끼는 쪽이면 p.p., 일으키는 쪽이면 -ing입니다."
+      ],
+      "explanation": "감정동사 frighten의 분사구문에서 의미상 주어는 주절 주어 the pigeons입니다. 비둘기들은 놀람을 느끼는 쪽이므로 p.p.인 Frightened가 옳습니다. Frightening은 비둘기가 남을 놀라게 한다는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u09-c2-ch-005",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["dangling-subject"],
+      "stem": "The mountain observatory operates throughout the year, {{blank}} almost entirely by a single private foundation.",
+      "options": ["funded", "funding"],
+      "answer": 0,
+      "translation": "그 산악 관측소는 연중 운영되며, 재원은 거의 전부 한 민간 재단이 대고 있습니다.",
+      "hints": [
+        "콤마 뒤 분사의 의미상 주어를 주절에서 찾아 복원해 보십시오.",
+        "by 행위자 표현이 있다면 주어가 동작을 받는 쪽인지 의심해 보십시오."
+      ],
+      "explanation": "문미 분사구문의 의미상 주어는 주절 주어 The mountain observatory입니다. 관측소는 재단으로부터 재정 지원을 받는 쪽이고 by a single private foundation이라는 행위자 표현도 있으므로 수동 p.p.인 funded가 옳습니다. funding은 관측소가 스스로 돈을 댄다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c2-ch-006",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object"],
+      "stem": "The new bridge, {{blank}} two districts that were long separated by the river, opened to traffic yesterday.",
+      "options": ["connected", "connecting"],
+      "answer": 1,
+      "translation": "강으로 오랫동안 갈라져 있던 두 지구를 잇는 그 새 다리가 어제 개통되었습니다.",
+      "hints": [
+        "콤마 사이 분사 바로 뒤에 목적어가 있는지 확인해 보십시오.",
+        "분사 뒤 목적어는 능동의 신호입니다 — 수동 분사는 목적어를 거느릴 수 없습니다."
+      ],
+      "explanation": "문중 삽입 분사구문의 의미상 주어는 The new bridge이고, 분사 뒤에 목적어 two districts가 있습니다. 다리가 두 지구를 잇는 능동 관계이므로 connecting이 옳습니다. connected를 쓰면 수동 분사가 목적어를 거느리는 모순이 생깁니다."
+    },
+    {
+      "id": "u09-c2-ch-007",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle"],
+      "stem": "{{blank}} unusually early this year, the cherry trees confused both tourists and local farmers.",
+      "options": ["Blooming", "Bloomed"],
+      "answer": 0,
+      "translation": "올해 유난히 일찍 꽃을 피워서 그 벚나무들은 관광객과 지역 농민 모두를 어리둥절하게 했습니다.",
+      "hints": [
+        "이 동사가 목적어를 취할 수 있는 동사인지 먼저 확인해 보십시오.",
+        "목적어가 없어도 주어가 스스로 하는 동작이면 능동입니다."
+      ],
+      "explanation": "bloom은 '꽃이 피다'라는 자동사이므로 목적어가 없어도 주어 the cherry trees가 직접 하는 능동 동작입니다. 따라서 Blooming이 옳습니다. 목적어가 보이지 않는다는 이유로 Bloomed를 고르면 자동사를 수동 분사로 만드는 오류가 됩니다."
+    },
+    {
+      "id": "u09-c2-ch-008",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "passive-with-object"],
+      "stem": "The magician ended the show with an impossible escape, {{blank}} even the most skeptical viewers.",
+      "options": ["amazing", "amazed"],
+      "answer": 0,
+      "translation": "그 마술사는 불가능해 보이는 탈출로 공연을 끝맺으며 가장 회의적인 관객마저 놀라게 했습니다.",
+      "hints": [
+        "주절 주어가 감정을 느끼는 쪽인지 일으키는 쪽인지, 그리고 분사 뒤 목적어 유무를 함께 보십시오.",
+        "감정을 일으키는 쪽이면 -ing이고, 분사 뒤 목적어는 능동의 신호입니다."
+      ],
+      "explanation": "문미 분사구문의 의미상 주어 The magician은 관객의 놀라움을 일으키는 쪽이고, 분사 뒤에 목적어 even the most skeptical viewers가 있습니다. 두 근거 모두 능동 -ing를 가리키므로 amazing이 옳습니다. amazed는 마술사 자신이 놀랐다는 뜻이 되면서 목적어와도 충돌합니다."
+    },
+    {
+      "id": "u09-c2-ch-009",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject"],
+      "stem": "{{blank}} into six languages within a decade of its publication, the novel about a shipwrecked botanist shaped how readers imagined the tropics.",
+      "options": ["Translating", "Translated"],
+      "answer": 1,
+      "translation": "출간 십 년 만에 여섯 개 언어로 번역된, 조난당한 식물학자에 관한 그 소설은 독자들이 열대를 상상하는 방식을 바꾸어 놓았습니다.",
+      "hints": [
+        "주절의 주어 핵을 수식어와 분리해 찾아낸 뒤 분사 앞에 복원해 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 수동 분사가 필요합니다."
+      ],
+      "explanation": "주절 주어의 핵은 the novel이고 about a shipwrecked botanist는 수식어일 뿐입니다. 소설은 번역이라는 동작을 받는 쪽이므로 Being이 생략된 수동 분사 Translated가 옳습니다. Translating은 소설이 스스로 번역한다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c2-ch-010",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "inserted-clause"],
+      "stem": "The startup released a budgeting app last year, {{blank}} users who struggle with irregular income to plan several months ahead.",
+      "options": ["helping", "helped"],
+      "answer": 0,
+      "translation": "그 스타트업은 지난해 가계부 앱을 출시하여, 불규칙한 수입으로 어려움을 겪는 사용자들이 몇 달 앞을 계획하도록 도왔습니다.",
+      "hints": [
+        "분사 바로 뒤 명사와 그 명사를 꾸미는 관계절을 구분해 보십시오.",
+        "관계절은 앞 명사의 수식어일 뿐입니다 — 분사 뒤에 목적어가 있으면 능동의 신호입니다."
+      ],
+      "explanation": "문미 분사구문의 의미상 주어는 The startup이고, 분사 뒤의 users가 목적어이며 who struggle with irregular income은 users를 꾸미는 관계절입니다. 목적어를 이끄는 능동 관계이므로 helping이 옳습니다. helped는 접속사 없는 두 번째 본동사가 되거나 목적어를 거느린 수동 분사가 되어 틀립니다."
+    },
+    {
+      "id": "u09-c2-ch-011",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle"],
+      "stem": "{{blank}} at precisely the moment when trading volume peaked, the outage forced regulators to reconsider how much the market depends on one platform.",
+      "options": ["Occurring", "Occurred"],
+      "answer": 0,
+      "translation": "거래량이 정점에 달한 바로 그 순간에 발생하여, 그 시스템 장애는 시장이 단일 플랫폼에 얼마나 의존하는지를 규제 당국이 재고하게 만들었습니다.",
+      "hints": [
+        "이 동사가 수동태로 쓸 수 있는 동사인지부터 확인해 보십시오.",
+        "발생·출현을 나타내는 자동사는 목적어가 없어도 언제나 능동입니다."
+      ],
+      "explanation": "occur는 수동태가 불가능한 자동사이므로, 의미상 주어 the outage가 스스로 발생하는 능동 동작입니다. 따라서 Occurring이 옳습니다. 목적어가 없다는 이유로 Occurred를 고르면 자동사를 수동 분사로 만드는 오류가 됩니다. when trading volume peaked는 시간 수식일 뿐 판단에 영향을 주지 않습니다."
+    },
+    {
+      "id": "u09-c2-ch-012",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "dangling-subject"],
+      "stem": "The senior researchers nevertheless published the full data set, {{blank}} by findings that contradicted two decades of their own work.",
+      "options": ["disturbing", "disturbed"],
+      "answer": 1,
+      "translation": "자신들의 이십 년 연구와 모순되는 결과에 동요했음에도 그 선임 연구자들은 전체 데이터를 그대로 공개했습니다.",
+      "hints": [
+        "문미 분사의 의미상 주어를 주절에서 복원하고, 감정을 느끼는 쪽인지 일으키는 쪽인지 판단해 보십시오.",
+        "감정을 느끼는 쪽이면 p.p.이고, by 행위자 표현은 수동의 신호입니다."
+      ],
+      "explanation": "문미 분사구문의 의미상 주어는 주절 주어 The senior researchers입니다. 연구자들이 결과로 인해 동요를 느끼는 쪽이고 by findings라는 행위자 표현도 있으므로 p.p.인 disturbed가 옳습니다. disturbing은 연구자들이 남을 동요시킨다는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u09-c3-ch-001",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["participle-negation"],
+      "stem": "{{blank}} the local language, the traveler relied on gestures.",
+      "options": ["Not knowing", "Knowing not"],
+      "answer": 0,
+      "translation": "현지 언어를 알지 못해서 그 여행자는 몸짓에 의존했습니다.",
+      "hints": [
+        "분사구문을 부정할 때 부정어가 놓이는 위치를 떠올려 보십시오.",
+        "분사구문의 부정어는 분사 바로 앞에 두는 것이 원칙입니다."
+      ],
+      "explanation": "분사구문의 부정은 부정어 Not을 분사 바로 앞에 놓아 만듭니다. 따라서 Not knowing이 옳습니다. Knowing not처럼 부정어를 분사 뒤에 두는 어순은 허용되지 않습니다."
+    },
+    {
+      "id": "u09-c3-ch-002",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["conjunction-retained"],
+      "stem": "When {{blank}} about the merger, the spokesperson gave no comment.",
+      "options": ["asking", "asked"],
+      "answer": 1,
+      "translation": "합병에 관해 질문을 받았을 때 그 대변인은 아무 언급도 하지 않았습니다.",
+      "hints": [
+        "접속사 뒤에 '주어+be동사'가 생략되어 있다고 보고 주절 주어를 복원해 보십시오.",
+        "접속사가 남아 있어도 판단은 같습니다 — 복원한 주어가 동작을 받으면 수동 분사입니다."
+      ],
+      "explanation": "뜻을 분명히 하려고 접속사 When을 남긴 분사구문으로, 의미상 주어는 주절 주어 the spokesperson입니다. 대변인은 질문을 받는 쪽이므로 수동 p.p.인 asked가 옳습니다. asking은 대변인이 질문을 한다는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u09-c3-ch-003",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["conjunction-retained", "intransitive-participle"],
+      "stem": "While {{blank}} for the test results, the patients read quietly.",
+      "options": ["waited", "waiting"],
+      "answer": 1,
+      "translation": "검사 결과를 기다리는 동안 환자들은 조용히 책을 읽었습니다.",
+      "hints": [
+        "접속사 뒤에 주어와 be동사가 보이지 않는 이유를 생각해 보십시오.",
+        "접속사 잔류 분사구문에서는 '주어+be'가 생략된 것입니다 — 주절 주어를 복원해 능·수동만 판단합니다."
+      ],
+      "explanation": "접속사 While이 남은 분사구문으로, '주어+be동사'가 생략된 형태입니다. wait는 자동사이고 의미상 주어 the patients가 직접 기다리는 능동이므로 waiting이 옳습니다. waited를 넣으면 접속사 뒤에 주어 없는 정형동사가 오는 비문이 됩니다."
+    },
+    {
+      "id": "u09-c3-ch-004",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["perfect-participle", "passive-with-object"],
+      "stem": "{{blank}} the marathon, the runner finally allowed herself a long rest.",
+      "options": ["Having finished", "Finished"],
+      "answer": 0,
+      "translation": "마라톤을 완주한 뒤 그 주자는 마침내 긴 휴식을 자신에게 허락했습니다.",
+      "hints": [
+        "분사 뒤에 목적어가 있는지, 그리고 두 동작의 시간 순서를 확인해 보십시오.",
+        "앞선 시간의 능동 동작은 완료형 분사로 나타냅니다 — 수동 분사는 목적어를 거느릴 수 없습니다."
+      ],
+      "explanation": "완주가 휴식보다 앞선 시간이고, 분사 뒤에 목적어 the marathon이 있는 능동 관계이므로 완료 분사구문 Having finished가 옳습니다. Finished는 Being이 생략된 수동 분사인데 목적어를 거느릴 수 없으므로 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-005",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "stem": "If {{blank}} untreated, a minor infection of this kind can spread to surrounding tissue within days.",
+      "options": ["left", "leaving"],
+      "answer": 0,
+      "translation": "치료하지 않고 두면 이런 종류의 가벼운 감염은 며칠 안에 주변 조직으로 번질 수 있습니다.",
+      "hints": [
+        "접속사 뒤에 '주어+be동사'를 복원해 문장을 펼쳐 보십시오.",
+        "복원한 주어가 동작을 받는 쪽이면 수동 분사가 필요합니다."
+      ],
+      "explanation": "접속사 If가 남은 분사구문으로, If it is left untreated에서 '주어+be'가 생략된 형태입니다. 의미상 주어 a minor infection은 방치되는 쪽이므로 수동 p.p.인 left가 옳습니다. leaving은 감염이 스스로 무언가를 남긴다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-006",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["perfect-participle"],
+      "stem": "The factory now faces a full inspection, {{blank}} twice this year for minor safety violations.",
+      "options": ["having warned", "having been warned"],
+      "answer": 1,
+      "translation": "올해 경미한 안전 위반으로 두 차례 경고를 받은 터라 그 공장은 이제 전면 점검을 앞두고 있습니다.",
+      "hints": [
+        "경고를 한 쪽과 받은 쪽이 누구인지 주절 주어를 기준으로 판단해 보십시오.",
+        "앞선 시간의 일이 수동 관계라면 완료 수동 형태의 분사가 필요합니다."
+      ],
+      "explanation": "경고를 받은 일이 점검을 앞둔 현재보다 앞선 시간이므로 완료 분사구문 자리이고, 의미상 주어 The factory는 경고를 받는 쪽입니다. 따라서 완료 수동 having been warned가 옳습니다. having warned는 공장이 남에게 경고했다는 능동이 되는 데다 목적어도 없어 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-007",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["participle-negation", "perfect-participle"],
+      "stem": "{{blank}} the earlier chapters closely, many readers found the final twist confusing.",
+      "options": ["Having not read", "Not having read"],
+      "answer": 1,
+      "translation": "앞 장들을 꼼꼼히 읽지 않은 많은 독자는 마지막 반전을 혼란스럽게 느꼈습니다.",
+      "hints": [
+        "완료형 분사구문에서 부정어가 놓일 위치를 따져 보십시오.",
+        "부정어는 완료형을 포함한 분사 덩어리 전체의 맨 앞에 오는 것이 원칙입니다."
+      ],
+      "explanation": "완료 분사구문의 부정은 부정어 Not을 분사 덩어리 맨 앞에 두어 만듭니다. 따라서 Not having read가 옳습니다. Having not read처럼 부정어를 having 뒤에 끼워 넣는 어순은 허용되지 않습니다."
+    },
+    {
+      "id": "u09-c3-ch-008",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained"],
+      "stem": "The building is now considered a landmark, though {{blank}} by critics when it first opened.",
+      "options": ["dismissed", "dismissing"],
+      "answer": 0,
+      "translation": "그 건물은 처음 문을 열었을 때 비평가들에게 혹평을 받았지만 지금은 랜드마크로 여겨집니다.",
+      "hints": [
+        "접속사 뒤에 '주어+be동사'가 생략된 구조임을 확인하고 주절 주어를 복원해 보십시오.",
+        "by 행위자 표현이 있으면 복원한 주어가 동작을 받는 쪽인지 의심해 보십시오."
+      ],
+      "explanation": "접속사 though가 남은 분사구문으로, though it was dismissed에서 '주어+be'가 생략된 형태입니다. 의미상 주어 The building은 혹평을 받는 쪽이고 by critics라는 행위자 표현도 있으므로 수동 p.p.인 dismissed가 옳습니다. dismissing은 건물이 비평가를 무시한다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-009",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle", "passive-with-object"],
+      "stem": "{{blank}} most of its budget on a single failed campaign, the agency struggled to fund even routine projects the following year.",
+      "options": ["Having spent", "Having been spent"],
+      "answer": 0,
+      "translation": "예산 대부분을 실패한 단 한 번의 캠페인에 써 버린 탓에 그 기관은 이듬해 일상적인 사업조차 재원을 대기 어려웠습니다.",
+      "hints": [
+        "완료형 분사 뒤에 목적어가 있는지 확인해 보십시오.",
+        "완료형에서도 능·수동 판단은 같습니다 — 목적어를 거느리면 능동 형태여야 합니다."
+      ],
+      "explanation": "예산을 써 버린 일이 재정난보다 앞선 시간이므로 완료 분사구문 자리입니다. 분사 뒤에 목적어 most of its budget이 있고 의미상 주어 the agency가 돈을 쓰는 능동 관계이므로 Having spent가 옳습니다. 완료 수동 Having been spent는 목적어를 거느릴 수 없어 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-010",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained", "dangling-subject"],
+      "stem": "When {{blank}} to explain the sudden change in policy, the officials who had drafted it offered three conflicting answers.",
+      "options": ["pressing", "pressed"],
+      "answer": 1,
+      "translation": "정책의 갑작스러운 변경을 해명하라고 추궁받았을 때, 그 정책의 초안을 잡았던 관료들은 서로 어긋나는 세 가지 답을 내놓았습니다.",
+      "hints": [
+        "주절의 주어 핵을 관계절과 분리해 찾아낸 뒤 접속사 뒤에 복원해 보십시오.",
+        "접속사 잔류형에서도 복원한 주어가 동작을 받는 쪽이면 수동 분사입니다."
+      ],
+      "explanation": "접속사 When이 남은 분사구문으로, 의미상 주어는 주절 주어의 핵 the officials이고 who had drafted it은 수식 관계절일 뿐입니다. 관료들은 해명을 추궁받는 쪽이므로 수동 p.p.인 pressed가 옳습니다. pressing은 관료들이 남을 추궁한다는 능동이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u09-c3-ch-011",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle"],
+      "stem": "{{blank}} from the archive in the 1970s, the recordings resurfaced only when a collector donated his entire estate to the university.",
+      "options": ["Having removed", "Having been removed"],
+      "answer": 1,
+      "translation": "1970년대에 기록보관소에서 반출되었던 그 녹음들은 한 수집가가 전 재산을 대학에 기증하고 나서야 다시 모습을 드러냈습니다.",
+      "hints": [
+        "복원한 주어가 옮기는 쪽인지 옮겨지는 쪽인지, 그리고 두 사건의 시간 순서를 함께 보십시오.",
+        "앞선 시간의 수동 관계는 완료 수동 형태의 분사로 나타냅니다."
+      ],
+      "explanation": "반출이 재등장보다 앞선 시간이므로 완료 분사구문 자리이고, 의미상 주어 the recordings는 옮겨지는 쪽입니다. 따라서 완료 수동 Having been removed가 옳습니다. Having removed는 녹음이 스스로 무언가를 치웠다는 능동이 되는 데다 목적어도 없어 틀립니다."
+    },
+    {
+      "id": "u09-c3-ch-012",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained", "participle-negation"],
+      "stem": "If {{blank}} in a well-ventilated area, this widely used solvent releases fumes that can irritate the eyes and damage the lungs.",
+      "options": ["not handled", "not handling"],
+      "answer": 0,
+      "translation": "환기가 잘되는 곳에서 다루지 않으면 이 널리 쓰이는 용제는 눈을 자극하고 폐를 손상할 수 있는 증기를 내뿜습니다.",
+      "hints": [
+        "접속사와 부정어를 걷어내고, 주절 주어를 복원해 능·수동부터 판단해 보십시오.",
+        "접속사 잔류형의 부정도 부정어를 분사 앞에 두며, 주어가 동작을 받으면 수동 분사입니다."
+      ],
+      "explanation": "접속사 If와 부정어 not이 함께 남은 분사구문으로, If it is not handled ...에서 '주어+be'가 생략된 형태입니다. 의미상 주어 this solvent는 다루어지는 쪽이므로 수동 p.p.인 not handled가 옳습니다. not handling은 용제가 스스로 무언가를 다룬다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c4-ch-001",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["with-absolute"],
+      "stem": "She listened to the lecture with her arms {{blank}} tightly.",
+      "options": ["folded", "folding"],
+      "answer": 0,
+      "translation": "그녀는 팔짱을 단단히 낀 채 강의를 들었습니다.",
+      "hints": [
+        "with 뒤의 명사를 분사의 의미상 주어로 삼아 보십시오.",
+        "with+목적어+분사에서는 그 목적어가 동작을 하면 -ing, 받으면 p.p.입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 분사의 의미상 주어는 with 뒤의 her arms입니다. 팔은 접히는 쪽이므로 수동 p.p.인 folded가 옳습니다. 주절 주어 She를 기준으로 folding을 고르면 판단 기준을 잘못 잡은 것입니다."
+    },
+    {
+      "id": "u09-c4-ch-002",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["with-absolute"],
+      "stem": "He fell asleep with the radio still {{blank}} softly.",
+      "options": ["playing", "played"],
+      "answer": 0,
+      "translation": "그는 라디오가 여전히 나지막이 흘러나오는 채로 잠들었습니다.",
+      "hints": [
+        "with 뒤의 명사가 분사의 동작을 하는 쪽인지 받는 쪽인지 보십시오.",
+        "with 구문의 판단 기준은 주절 주어가 아니라 with 뒤의 목적어입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 the radio입니다. 라디오가 소리를 내며 돌아가는 능동 관계이므로 -ing인 playing이 옳습니다. played를 고르면 라디오가 연주되는 수동이 되어 '켜져 있다'는 문맥과 어긋납니다."
+    },
+    {
+      "id": "u09-c4-ch-003",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["retained-subject", "double-verb"],
+      "stem": "The weather {{blank}} unusually mild, the outdoor market stayed open late.",
+      "options": ["was", "being"],
+      "answer": 1,
+      "translation": "날씨가 유난히 온화해서 야외 시장은 늦게까지 문을 열었습니다.",
+      "hints": [
+        "콤마 양쪽을 잇는 접속사가 있는지 확인해 보십시오.",
+        "접속사 없이 절 두 개를 콤마로 이을 수 없습니다 — 주어를 남긴 채 동사를 분사로 바꾼 독립분사구문이 필요합니다."
+      ],
+      "explanation": "was를 넣으면 접속사 없이 완전한 절 두 개가 콤마로만 이어지는 비문이 됩니다. 분사구문의 주어 The weather가 주절 주어 the outdoor market과 달라 주어를 남긴 독립분사구문이므로 being이 옳습니다."
+    },
+    {
+      "id": "u09-c4-ch-004",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["impersonal-idiom"],
+      "stem": "{{blank}} from the worn pages, this dictionary has served its owner well.",
+      "options": ["Judged", "Judging"],
+      "answer": 1,
+      "translation": "닳은 책장으로 판단하건대 이 사전은 주인에게 요긴하게 쓰여 왔습니다.",
+      "hints": [
+        "이 표현의 논리적 주어가 주절 주어인지 말하는 사람인지 생각해 보십시오.",
+        "말하는 사람이 주어인 굳어진 비인칭 독립분사구문은 주절 주어와 달라도 허용됩니다."
+      ],
+      "explanation": "'~로 판단하건대'를 뜻하는 이 표현의 논리적 주어는 말하는 사람이며, 주절 주어와 달라도 허용되는 비인칭 독립분사구문(관용 표현)입니다. 따라서 능동 -ing인 Judging이 옳습니다. Judged를 쓰면 사전이 판단을 받는다는 수동이 되어 관용 표현이 성립하지 않습니다."
+    },
+    {
+      "id": "u09-c4-ch-005",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["with-absolute"],
+      "stem": "The trial resumed on Monday, with the key evidence still {{blank}} under seal by the court.",
+      "options": ["kept", "keeping"],
+      "answer": 0,
+      "translation": "재판은 월요일에 재개되었지만, 핵심 증거는 여전히 법원의 봉인 아래 보관된 상태였습니다.",
+      "hints": [
+        "with 뒤의 명사를 의미상 주어로 삼고, by 행위자 표현을 함께 보십시오.",
+        "with 구문의 목적어가 동작을 받는 쪽이면 p.p.를 고릅니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 the key evidence입니다. 증거는 법원에 의해 보관되는 쪽이고 by the court라는 행위자 표현도 있으므로 수동 p.p.인 kept가 옳습니다. keeping은 증거가 스스로 무언가를 보관한다는 능동이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c4-ch-006",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "stem": "The village fell silent at dusk, with only the mill wheel {{blank}} in the distance.",
+      "options": ["turned", "turning"],
+      "answer": 1,
+      "translation": "해질녘 마을은 고요해졌고, 멀리서 물레방아 바퀴만 돌아가고 있었습니다.",
+      "hints": [
+        "with 뒤의 명사가 분사 동작을 스스로 하는지 판단해 보십시오.",
+        "도는 동작처럼 스스로 일어나는 움직임이면 능동 -ing입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 the mill wheel입니다. 바퀴가 스스로 도는 능동 관계이므로 -ing인 turning이 옳습니다. turned를 고르면 완료된 수동 상태가 되어, 배경에서 계속 돌아가는 장면 묘사와 어긋납니다."
+    },
+    {
+      "id": "u09-c4-ch-007",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["retained-subject", "perfect-participle"],
+      "stem": "The funding {{blank}} secured, the research team began recruiting participants for the trial.",
+      "options": ["having been", "has been"],
+      "answer": 0,
+      "translation": "재원이 확보되자 연구팀은 임상시험 참가자 모집을 시작했습니다.",
+      "hints": [
+        "콤마 양쪽에 접속사 없이 절이 두 개가 되는지 확인해 보십시오.",
+        "주어가 서로 다른 두 덩어리를 콤마로 이으려면 앞쪽을 독립분사구문으로 바꿔야 합니다."
+      ],
+      "explanation": "has been을 넣으면 접속사 없이 완전한 절 두 개가 콤마로만 이어지는 비문이 됩니다. 분사구문의 주어 The funding이 주절 주어 the research team과 달라 주어를 남긴 독립분사구문이며, 확보가 모집 시작보다 앞선 시간의 수동의 일이므로 having been이 옳습니다."
+    },
+    {
+      "id": "u09-c4-ch-008",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "stem": "The speaker paused for a moment, with her final question still {{blank}} in the air.",
+      "options": ["hung", "hanging"],
+      "answer": 1,
+      "translation": "연사는 마지막 질문이 여전히 허공에 맴도는 채로 잠시 말을 멈추었습니다.",
+      "hints": [
+        "with 뒤의 명사가 그 동작을 스스로 하는지, 아니면 누군가에게 당하는지 판단해 보십시오.",
+        "목적어가 없어도 스스로 일어나는 동작이면 능동 -ing입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 her final question입니다. '허공에 맴돌다'의 hang은 자동사적 쓰임이라 질문이 스스로 걸려 있는 능동이므로 hanging이 옳습니다. hung을 고르면 질문이 누군가에 의해 걸린 수동이 되어 장면 묘사와 어긋납니다."
+    },
+    {
+      "id": "u09-c4-ch-009",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "dangling-subject"],
+      "stem": "The airline canceled dozens of flights over the weekend, with thousands of passengers {{blank}} at airports that lacked staff to rebook them.",
+      "options": ["stranding", "stranded"],
+      "answer": 1,
+      "translation": "그 항공사는 주말 동안 수십 편의 항공편을 취소했고, 수천 명의 승객이 재예약을 처리할 직원조차 없는 공항들에 발이 묶였습니다.",
+      "hints": [
+        "with 뒤 명사의 핵을 찾아 그 명사를 기준으로 능·수동을 판단해 보십시오.",
+        "주절 주어가 아니라 with 뒤 목적어가 동작을 받는 쪽이면 p.p.입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 thousands of passengers입니다. 승객들은 발이 묶이는 쪽이므로 수동 p.p.인 stranded가 옳습니다. 주절 주어 The airline에 끌려 stranding을 고르면 with 구문의 판단 기준을 놓친 것이며, 승객이 남을 고립시킨다는 뜻이 되어 틀립니다."
+    },
+    {
+      "id": "u09-c4-ch-010",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["retained-subject", "double-verb"],
+      "stem": "The final witness {{blank}} to testify, the judge had little choice but to suspend the hearing until the following month.",
+      "options": ["refusing", "refused"],
+      "answer": 0,
+      "translation": "마지막 증인이 증언을 거부하자 판사는 다음 달까지 심리를 중단할 수밖에 없었습니다.",
+      "hints": [
+        "콤마 앞 덩어리의 명사가 주절 주어와 같은지 확인하고, 접속사 유무를 세어 보십시오.",
+        "주어가 다른 절을 접속사 없이 이으려면 앞 절의 동사를 분사로 바꾼 독립분사구문이 필요합니다."
+      ],
+      "explanation": "refused를 본동사로 읽으면 접속사 없이 절 두 개가 콤마로만 이어지는 비문이 됩니다. 분사구문의 주어 The final witness가 주절 주어 the judge와 달라 주어를 남긴 독립분사구문이며, 증인이 거부라는 동작을 직접 하는 능동이므로 refusing이 옳습니다."
+    },
+    {
+      "id": "u09-c4-ch-011",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "intransitive-participle"],
+      "stem": "The city pushed ahead with the stadium project, with construction costs {{blank}} faster than any of the early estimates had predicted.",
+      "options": ["rising", "risen"],
+      "answer": 0,
+      "translation": "시는 경기장 사업을 밀어붙였지만, 공사비는 초기의 어떤 추산보다도 빠르게 치솟고 있었습니다.",
+      "hints": [
+        "with 뒤의 명사가 스스로 변하는 동작인지 확인해 보십시오.",
+        "오르내림처럼 스스로 일어나는 변화를 나타내는 자동사는 목적어가 없어도 능동입니다."
+      ],
+      "explanation": "with+목적어+분사 구문에서 의미상 주어는 construction costs입니다. rise는 자동사여서 비용이 스스로 오르는 능동이므로 rising이 옳습니다. 과거분사 risen을 고르면 자동사를 수동 분사로 만드는 오류가 됩니다. than 이하의 비교절은 판단에 영향을 주지 않는 수식일 뿐입니다."
+    },
+    {
+      "id": "u09-c4-ch-012",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["retained-subject", "impersonal-idiom"],
+      "stem": "All things {{blank}}, the committee's cautious recommendation seems the most defensible response to such incomplete and contradictory evidence.",
+      "options": ["considering", "considered"],
+      "answer": 1,
+      "translation": "모든 것을 고려하면, 위원회의 신중한 권고는 그토록 불완전하고 모순된 증거에 대한 가장 옹호할 만한 대응으로 보입니다.",
+      "hints": [
+        "분사 앞에 남아 있는 명사를 의미상 주어로 삼아 능·수동을 판단해 보십시오.",
+        "분사 앞의 명사가 동작을 받는 쪽이면 p.p.를 고릅니다 — 굳어진 관용 표현도 같은 원리로 설명됩니다."
+      ],
+      "explanation": "주어 All things를 분사 앞에 남긴 독립분사구문으로, '모든 것을 고려하면'이라는 굳어진 관용 표현입니다. all things는 고려되는 쪽이므로 수동 p.p.인 considered가 옳습니다. considering을 고르면 사물인 all things가 스스로 고려한다는 능동이 되어 틀립니다."
+    }
+  ]
+}

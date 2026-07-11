@@ -1,0 +1,279 @@
+{
+  "unitId": "u05",
+  "concepts": [
+    {
+      "id": "u05-c1",
+      "unitId": "u05",
+      "order": 1,
+      "title": "등위접속사 병렬 — 짝 찾기",
+      "oneLiner": "and/or/but을 보면 무엇과 무엇이 연결되는지 짝부터 찾습니다.",
+      "algorithm": [
+        "문장에서 and·or·but 같은 등위접속사를 찾아 표시합니다.",
+        "접속사 바로 뒤 항의 문법 형태(시제 동사·-ing·to부정사·명사 등)를 확인합니다.",
+        "문장 앞쪽에서 같은 역할을 하는 짝 후보를 찾습니다 — 접속사 바로 앞 단어가 아니라 역할이 같은 항입니다.",
+        "짝과 뒤 항을 나란히 놓고 문법 형태가 일치하는지 판단합니다."
+      ],
+      "rules": [
+        {
+          "rule": "등위접속사 and·or·but은 문법적으로 같은 형태끼리 연결합니다.",
+          "examples": [
+            {
+              "en": "The children sang songs, played games, and **shared** their snacks.",
+              "ko": "아이들은 노래를 부르고, 게임을 하고, 간식을 나누어 먹었습니다.",
+              "note": "과거동사 sang·played와 병렬 → 과거형 shared"
+            },
+            {
+              "en": "She likes hiking in the hills and **swimming** in the sea.",
+              "ko": "그녀는 언덕에서 하이킹하는 것과 바다에서 수영하는 것을 좋아합니다.",
+              "note": "동명사 hiking과 병렬 → 동명사 swimming"
+            }
+          ]
+        },
+        {
+          "rule": "접속사 뒤 항의 형태를 먼저 확정하고, 그와 짝이 되는 앞 항을 찾아 대조합니다.",
+          "examples": [
+            {
+              "en": "The scientist collected the samples and **recorded** the results in her notebook.",
+              "ko": "그 과학자는 표본을 수집하고 결과를 공책에 기록했습니다.",
+              "note": "and 뒤 recorded의 짝 = 본동사 collected (동사 병렬)"
+            }
+          ]
+        },
+        {
+          "rule": "짝은 접속사 바로 앞 단어가 아니라 역할이 같은 항입니다 — 사이에 낀 부사구는 건너뛰고 찾습니다.",
+          "examples": [
+            {
+              "en": "He opened the window quietly and, after a short pause, **called** her name.",
+              "ko": "그는 조용히 창문을 열고, 잠깐 멈춘 뒤에 그녀의 이름을 불렀습니다.",
+              "note": "삽입 부사구를 건너 본동사 opened와 병렬 → called"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "A and [부사구] B — 멀리 떨어진 짝",
+          "body": "and 뒤에 부사구나 삽입어가 끼면 진짜 짝이 접속사에서 멀어집니다. 접속사 바로 앞 단어를 짝으로 단정하지 말고, 뒤 항의 형태를 먼저 확정한 뒤 같은 역할을 하는 항을 문장 앞쪽에서 찾아야 합니다.",
+          "example": {
+            "en": "She studied the old maps for hours and finally **drew** her own.",
+            "ko": "그녀는 몇 시간 동안 낡은 지도들을 살펴보고 마침내 자신만의 지도를 그렸습니다.",
+            "note": "and 바로 앞 hours가 아니라 본동사 studied가 짝 → 과거형 drew"
+          }
+        },
+        {
+          "title": "긴 나열의 마지막 항",
+          "body": "A, B, and C처럼 세 항 이상이 나열되면 마지막 항에서 첫 항의 형태를 잊기 쉽습니다. 마지막 항일수록 첫 항으로 되돌아가 형태를 대조해야 합니다.",
+          "example": {
+            "en": "The course teaches planning a budget, saving regularly, and **investing** with care.",
+            "ko": "그 강좌는 예산을 세우는 것, 꾸준히 저축하는 것, 신중하게 투자하는 것을 가르칩니다.",
+            "note": "동명사 나열 planning·saving과 병렬 → investing"
+          }
+        }
+      ],
+      "confusableWith": ["u05-c2", "u05-c3", "u01-c3"]
+    },
+    {
+      "id": "u05-c2",
+      "unitId": "u05",
+      "order": 2,
+      "title": "상관접속사 병렬",
+      "oneLiner": "both A and B, not only A but also B — A와 B의 형태를 일치시킵니다.",
+      "algorithm": [
+        "both·not only·either·neither 같은 신호어를 찾습니다.",
+        "짝 접속사(and·but also·or·nor)의 위치를 확인해 A와 B의 경계를 긋습니다.",
+        "신호어 바로 뒤에서 A의 문법 형태를 확정합니다.",
+        "B가 A와 같은 형태인지 검사하고, 다르면 B를 A에 맞춥니다."
+      ],
+      "rules": [
+        {
+          "rule": "both A and B, either A or B, neither A nor B에서 A와 B는 같은 문법 형태여야 합니다.",
+          "examples": [
+            {
+              "en": "The program is both affordable and **effective** for small rural schools.",
+              "ko": "그 프로그램은 소규모 시골 학교들에 저렴하면서도 효과적입니다.",
+              "note": "형용사 affordable과 짝 → 형용사 effective"
+            },
+            {
+              "en": "You can either send an email or **leave** a short message.",
+              "ko": "이메일을 보내거나 짧은 메시지를 남기시면 됩니다.",
+              "note": "either 뒤 원형 send와 짝 → 원형 leave"
+            }
+          ]
+        },
+        {
+          "rule": "not only A but also B에서도 A가 시작되는 지점과 B가 시작되는 지점의 형태를 일치시킵니다.",
+          "examples": [
+            {
+              "en": "The report not only describes the problem but also **suggests** a practical solution.",
+              "ko": "그 보고서는 문제를 설명할 뿐 아니라 실용적인 해결책도 제시합니다.",
+              "note": "not only 뒤 동사 describes와 병렬 → suggests"
+            }
+          ]
+        },
+        {
+          "rule": "from A to B, between A and B 같은 전치사 짝에서도 A와 B는 같은 형태입니다.",
+          "examples": [
+            {
+              "en": "Her interests range from painting quiet landscapes to **collecting** old maps.",
+              "ko": "그녀의 관심사는 조용한 풍경을 그리는 것부터 오래된 지도를 수집하는 것까지 걸쳐 있습니다.",
+              "note": "from 뒤 동명사 painting과 짝 → 동명사 collecting"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "신호어 위치가 A의 시작점",
+          "body": "not only가 전치사구 앞에 있으면 전치사구끼리, 동사 앞에 있으면 동사끼리 병렬입니다. 신호어 바로 뒤에서 A의 형태를 확정하지 않으면 B를 무엇에 맞출지 알 수 없습니다.",
+          "example": {
+            "en": "The city invested not only in new roads but also in **cleaner parks**.",
+            "ko": "그 도시는 새 도로뿐 아니라 더 깨끗한 공원에도 투자했습니다.",
+            "note": "not only 뒤가 in+명사구 → but also 뒤도 in+명사구"
+          }
+        },
+        {
+          "title": "짝 접속사 자체가 어긋나는 함정",
+          "body": "both는 and와, either는 or와, neither는 nor와만 짝을 이룹니다. A와 B의 형태가 맞아도 접속사 짝이 어긋나면 틀린 문장입니다."
+        }
+      ],
+      "confusableWith": ["u05-c1", "u05-c4"]
+    },
+    {
+      "id": "u05-c3",
+      "unitId": "u05",
+      "order": 3,
+      "title": "조동사·to의 공유 병렬",
+      "oneLiner": "can pay or visit처럼 조동사·to가 뒤 항에 공유되는 병렬입니다.",
+      "algorithm": [
+        "and·or 뒤에 시제 없는 동사 원형이 보이면 바로 오류로 판정하지 말고 앞쪽을 살핍니다.",
+        "앞 항에 조동사(can·will·must·has 등)나 to가 있는지 확인합니다.",
+        "조동사·to의 힘이 뒤 항까지 미친다고 보고, 뒤 항이 앞 항과 같은 형태(원형·p.p. 등)인지 판단합니다.",
+        "공유할 조동사·to가 없다면 뒤 항은 시제를 갖춘 본동사여야 합니다."
+      ],
+      "rules": [
+        {
+          "rule": "조동사는 뒤 항에 공유됩니다 — can pay or visit처럼 or 뒤 항도 원형으로 씁니다.",
+          "examples": [
+            {
+              "en": "Members can borrow three books or **reserve** them online in advance.",
+              "ko": "회원은 책 세 권을 빌리거나 온라인으로 미리 예약할 수 있습니다.",
+              "note": "can 공유 → borrow와 병렬인 원형 reserve"
+            },
+            {
+              "en": "Visitors must sign the form and **wear** a badge at all times.",
+              "ko": "방문객은 양식에 서명하고 항상 배지를 착용해야 합니다.",
+              "note": "must 공유 → sign과 병렬인 원형 wear"
+            }
+          ]
+        },
+        {
+          "rule": "to부정사 병렬에서 두 번째 to는 생략할 수 있습니다 — to travel and (to) learn 둘 다 옳습니다.",
+          "examples": [
+            {
+              "en": "She hopes to travel abroad and **learn** three new languages.",
+              "ko": "그녀는 해외를 여행하고 세 가지 새로운 언어를 배우기를 희망합니다.",
+              "note": "to 공유 생략형 — to learn으로 써도 옳음"
+            }
+          ]
+        },
+        {
+          "rule": "have·be 같은 조동사 계열도 공유됩니다 — has grown and opened처럼 p.p.끼리 병렬입니다.",
+          "examples": [
+            {
+              "en": "The company has grown quickly and **opened** offices in five cities.",
+              "ko": "그 회사는 빠르게 성장했고 다섯 개 도시에 사무실을 열었습니다.",
+              "note": "has 공유 → grown과 병렬인 p.p. opened"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "두 번째 to의 생략은 옳은 표현",
+          "body": "to부정사 병렬의 두 번째 to는 생략할 수 있으므로, 밑줄이 원형에 그어져 있어도 앞의 to가 공유된다면 옳은 미끼입니다. 틀렸다고 단정하기 전에 공유 여부부터 확인해야 합니다."
+        },
+        {
+          "title": "홀로 선 원형이 무조건 오류는 아닙니다",
+          "body": "and 뒤에 시제 없는 원형이 보이면 성급하게 오류로 판단하기 쉽습니다. 앞 항의 조동사가 뒤 항까지 힘을 미치면 원형이 정답입니다. 반대로 공유할 조동사·to가 없는데 원형이 오면 그때가 진짜 오류입니다.",
+          "example": {
+            "en": "New employees will attend a workshop and **meet** their team leaders.",
+            "ko": "신입 사원들은 워크숍에 참석하고 팀장들을 만날 예정입니다.",
+            "note": "will 공유 → attend와 병렬인 원형 meet"
+          }
+        }
+      ],
+      "confusableWith": ["u05-c1", "u01-c3", "u11-c1"]
+    },
+    {
+      "id": "u05-c4",
+      "unitId": "u05",
+      "order": 4,
+      "title": "전치사+동명사 병렬",
+      "oneLiner": "less about recording and more about thinking형 병렬입니다.",
+      "algorithm": [
+        "병렬의 첫 항이 전치사(about·in·by·from 등)의 목적어인지 확인합니다.",
+        "전치사가 한 번만 나와 공유되는지, 항마다 반복되는지 확인합니다.",
+        "전치사 뒤 자리이므로 동사가 온다면 동명사(-ing)인지 검사합니다.",
+        "than·as 비교 병렬이면 멀리 떨어진 앞 항을 찾아 양쪽 형태를 일치시킵니다."
+      ],
+      "rules": [
+        {
+          "rule": "전치사가 공유되는 병렬에서는 전치사 뒤 항이 모두 동명사나 명사여야 합니다.",
+          "examples": [
+            {
+              "en": "Science is less about memorizing answers and more about **asking** better questions.",
+              "ko": "과학은 답을 암기하는 것이라기보다 더 나은 질문을 던지는 것에 가깝습니다.",
+              "note": "about 뒤 동명사 memorizing과 짝 → 동명사 asking"
+            },
+            {
+              "en": "He is interested in painting portraits and **carving** small wooden figures.",
+              "ko": "그는 초상화를 그리는 것과 작은 목각 인형을 조각하는 것에 관심이 있습니다.",
+              "note": "in 공유 → painting과 병렬인 동명사 carving"
+            }
+          ]
+        },
+        {
+          "rule": "전치사가 반복되면 각 항이 독립적으로 그 전치사의 목적어입니다 — 반복형과 공유형 둘 다 옳습니다.",
+          "examples": [
+            {
+              "en": "The lecture focused on saving water and on **reducing** food waste.",
+              "ko": "그 강의는 물을 아끼는 것과 음식물 쓰레기를 줄이는 것에 초점을 맞추었습니다.",
+              "note": "on 반복형 — 각 항이 동명사로 on의 목적어"
+            }
+          ]
+        },
+        {
+          "rule": "than·as 비교 병렬에서는 비교되는 양쪽 항의 형태를 일치시킵니다.",
+          "examples": [
+            {
+              "en": "Fixing the old chair yourself is cheaper than **buying** a new one.",
+              "ko": "낡은 의자를 직접 고치는 것이 새것을 사는 것보다 저렴합니다.",
+              "note": "동명사구 주어 Fixing과 비교 → 동명사 buying"
+            },
+            {
+              "en": "Walking to school is as healthy as **riding** a bike.",
+              "ko": "학교까지 걷는 것은 자전거를 타는 것만큼 건강에 좋습니다.",
+              "note": "as ~ as 양쪽 형태 일치 — Walking과 riding"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "멀어진 전치사를 놓치는 함정",
+          "body": "첫 항이 길어지면 병렬 지점에서 앞의 전치사가 보이지 않아 to부정사나 원형을 고르기 쉽습니다. 첫 항이 전치사의 목적어인 동명사라면 and 뒤 항도 같은 전치사에 걸리는 동명사여야 합니다.",
+          "example": {
+            "en": "She succeeded by planning each step and **checking** her progress every night.",
+            "ko": "그녀는 각 단계를 계획하고 매일 밤 진행 상황을 점검함으로써 성공했습니다.",
+            "note": "by 공유 → planning과 병렬인 동명사 checking"
+          }
+        },
+        {
+          "title": "비교 병렬 — than 뒤만 보면 안 됩니다",
+          "body": "than·as 뒤 항의 비교 대상은 대개 문장 첫머리의 동명사구나 to부정사구입니다. 접속사에서 멀리 떨어진 앞 항을 찾아 양쪽의 형태를 일치시켜야 합니다."
+        }
+      ],
+      "confusableWith": ["u05-c3", "u11-c1", "u12-c3"]
+    }
+  ]
+}

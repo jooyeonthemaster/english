@@ -277,17 +277,11 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
   const routeMatches = useCallback((href: string, path: string) => {
     if (href === basePath) return path === basePath;
-    // 튜터 운영 홈(/tutor)은 학생·클래스·기기·원비 허브다. 하위 /tutor/programs,
-    // /tutor/distributions, /tutor/monitor 는 별도 nav 항목이므로 자손까지
-    // active 로 번지지 않게 정확히 일치(+ 학생 상세 /students/* 는 허브 소속)로 본다.
-    const tutorHubHref = `${basePath}/tutor`;
-    if (href === tutorHubHref) {
-      return (
-        path === tutorHubHref ||
-        path === `${basePath}/students` ||
-        path.startsWith(`${basePath}/students/`)
-      );
-    }
+    // 26-07-11 IA 재편: 구 튜터 허브(/tutor)의 /students/* 흡수 특례를 제거했다.
+    // "학생 관리"(href=/students)가 기본 prefix 매칭으로 /students/* 를 정확히
+    // 흡수하고, /tutor 자체는 /director/students 로 redirect 된다.
+    // /workbench/exam-report* 는 학생 관리 children(내신 시험 분석·리포트 관리)
+    // 매칭 → NavItem childActive 로 상위 "학생 관리"까지 활성된다.
     const passageBankHref = `${basePath}/workbench/passages`;
     const passageImportHref = `${passageBankHref}/import`;
     if (

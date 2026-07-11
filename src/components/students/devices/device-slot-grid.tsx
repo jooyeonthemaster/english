@@ -29,9 +29,9 @@ function DeviceCard({
   const expiringSoon = expiresWithinThreeDays(device.expiresAt);
 
   return (
-    <div className="rounded-xl border border-[#E5E8EB] bg-white p-4 transition hover:border-blue-200">
+    <div className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-blue-200">
       <div className="flex items-start justify-between">
-        <div className="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-[#3182F6]">
+        <div className="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
           <Icon className="size-5" />
         </div>
         {isMostRecent && (
@@ -40,29 +40,29 @@ function DeviceCard({
           </span>
         )}
       </div>
-      <p className="mt-3 text-sm font-bold text-[#191F28]">{ua.label}</p>
-      <dl className="mt-2 space-y-1 text-xs font-medium text-[#8B95A1]">
+      <p className="mt-3 text-sm font-bold text-slate-900">{ua.label}</p>
+      <dl className="mt-2 space-y-1 text-xs font-medium text-slate-400">
         <div className="flex justify-between">
           <dt>최근 접속</dt>
-          <dd className="text-[#4E5968]">{formatRelativeTime(device.lastSeenAt)}</dd>
+          <dd className="text-slate-600">{formatRelativeTime(device.lastSeenAt)}</dd>
         </div>
         <div className="flex justify-between">
           <dt>IP</dt>
-          <dd className="font-mono text-[#4E5968]">{maskIp(device.ip)}</dd>
+          <dd className="font-mono text-slate-600">{maskIp(device.ip)}</dd>
         </div>
         <div className="flex justify-between">
           <dt>첫 등록</dt>
-          <dd className="text-[#4E5968]">{formatDate(device.issuedAt)}</dd>
+          <dd className="text-slate-600">{formatDate(device.issuedAt)}</dd>
         </div>
       </dl>
       {expiringSoon && (
-        <p className="mt-2 text-[11px] font-medium text-[#AEB5BC]">곧 만료돼요</p>
+        <p className="mt-2 text-[11px] font-medium text-slate-400">곧 만료됩니다</p>
       )}
       {isDirector && (
         <Button
           onClick={onRevoke}
           variant="outline"
-          className="mt-3 h-8 w-full rounded-lg border-[#E5E8EB] text-xs font-bold text-[#4E5968] transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+          className="mt-3 h-8 w-full rounded-lg border-slate-200 text-xs font-bold text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
         >
           <LogOut className="size-3.5" />
           기기 해제
@@ -74,10 +74,10 @@ function DeviceCard({
 
 function EmptyDeviceSlot() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E5E8EB] bg-[#F7F8FA] px-4 py-8 text-center">
-      <PlusCircle className="size-6 text-[#C4CAD0]" />
-      <p className="mt-2 text-sm font-bold text-[#8B95A1]">빈 기기 슬롯</p>
-      <p className="mt-0.5 text-xs font-medium text-[#B0B8C1]">학생이 로그인하면 자동 등록돼요</p>
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+      <PlusCircle className="size-6 text-slate-300" />
+      <p className="mt-2 text-sm font-bold text-slate-400">빈 기기 슬롯</p>
+      <p className="mt-0.5 text-xs font-medium text-slate-300">학생이 로그인하면 자동 등록됩니다</p>
     </div>
   );
 }
@@ -100,8 +100,8 @@ export function DeviceSlotGrid({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-[#191F28]">등록 기기</span>
-          <span className="rounded-full bg-[#F2F4F6] px-2 py-0.5 text-[11px] font-bold tabular-nums text-[#4E5968]">
+          <span className="text-sm font-bold text-slate-900">등록 기기</span>
+          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold tabular-nums text-slate-600">
             {used} / {DEVICE_LIMIT}
           </span>
         </div>
@@ -109,7 +109,7 @@ export function DeviceSlotGrid({
           {Array.from({ length: DEVICE_LIMIT }).map((_, i) => (
             <span
               key={i}
-              className={cn("size-2 rounded-full", i < used ? "bg-[#3182F6]" : "bg-[#E5E8EB]")}
+              className={cn("size-2 rounded-full", i < used ? "bg-blue-600" : "bg-slate-200")}
             />
           ))}
         </div>
@@ -119,8 +119,8 @@ export function DeviceSlotGrid({
         <div className="flex items-start gap-2 rounded-lg bg-blue-50 px-3 py-2.5 text-xs font-medium text-blue-700">
           <LogOut className="mt-0.5 size-4 shrink-0" />
           <p>
-            기기 {DEVICE_LIMIT}대가 모두 등록됐어요. 새 기기에서는 로그인이 차단됩니다. 학생이
-            기기를 바꾸려면 아래에서 해제하세요.
+            기기 {DEVICE_LIMIT}대가 모두 등록되었습니다. 새 기기에서는 로그인이 차단됩니다.
+            학생이 기기를 바꾸려면 아래에서 해제해 주세요.
           </p>
         </div>
       )}
@@ -141,8 +141,8 @@ export function DeviceSlotGrid({
       </div>
 
       {used === 0 && (
-        <p className="text-center text-xs font-medium text-[#8B95A1]">
-          아직 로그인한 기기가 없어요. 학생이 코드로 로그인하면 여기에 표시돼요.
+        <p className="text-center text-xs font-medium text-slate-400">
+          아직 로그인한 기기가 없습니다. 학생이 코드로 로그인하면 여기에 표시됩니다.
         </p>
       )}
     </div>

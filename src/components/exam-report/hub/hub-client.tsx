@@ -215,9 +215,9 @@ export function HubClient() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
             <WorkflowPageTitle
               icon={FileBarChart}
-              title="학생 시험 리포트"
+              title="내신 시험 분석"
               beta
-              description="시험지 사진을 올리면 AI가 문항을 직접 분석하고, 학생별 성적 상담 리포트를 만들어 드립니다."
+              description="학교 내신 시험지를 분석해 출제 경향과 정답을 확인하고 학생 리포트를 만듭니다."
             />
             {formCollapsed ? (
               <button

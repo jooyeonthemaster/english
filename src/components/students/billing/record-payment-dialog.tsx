@@ -60,11 +60,11 @@ export function RecordPaymentDialog({
     if (!invoice) return;
     const amt = Number(amount);
     if (!Number.isFinite(amt) || amt < 1) {
-      toast.error("금액을 올바르게 입력하세요.");
+      toast.error("금액을 올바르게 입력해 주세요.");
       return;
     }
     if (amt > outstanding) {
-      toast.error(`잔액(${formatCurrency(outstanding)})보다 클 수 없어요.`);
+      toast.error(`잔액(${formatCurrency(outstanding)})보다 클 수 없습니다.`);
       return;
     }
     startTransition(async () => {
@@ -75,11 +75,11 @@ export function RecordPaymentDialog({
         memo: memo || undefined,
       });
       if (result.success) {
-        toast.success(amt >= outstanding ? "완납 처리했어요." : "부분 납부를 기록했어요.");
+        toast.success(amt >= outstanding ? "완납 처리했습니다." : "부분 납부를 기록했습니다.");
         onOpenChange(false);
         onDone();
       } else {
-        toast.error(result.error || "처리에 실패했어요.");
+        toast.error(result.error || "처리에 실패했습니다.");
       }
     });
   }
@@ -88,15 +88,15 @@ export function RecordPaymentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-xl sm:max-w-[420px]">
         <DialogHeader>
-          <DialogTitle className="text-lg font-black text-[#191F28]">납부 처리</DialogTitle>
-          <DialogDescription className="text-sm font-medium text-[#8B95A1]">
+          <DialogTitle className="text-lg font-bold text-slate-900">납부 처리</DialogTitle>
+          <DialogDescription className="text-[12.5px] font-medium text-slate-400">
             {invoice?.title} · 잔액 {formatCurrency(outstanding)}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
-            <Label className="text-xs font-bold text-[#6B7684]">결제수단</Label>
+            <Label className="text-xs font-semibold text-slate-500">결제수단</Label>
             <div className="mt-1.5 grid grid-cols-3 gap-2">
               {METHODS.map((m) => (
                 <button
@@ -104,10 +104,10 @@ export function RecordPaymentDialog({
                   type="button"
                   onClick={() => setMethod(m.value)}
                   className={cn(
-                    "flex h-10 items-center justify-center rounded-lg border text-sm font-bold transition",
+                    "flex h-10 items-center justify-center rounded-lg border text-[13px] font-semibold transition-colors",
                     method === m.value
-                      ? "border-[#3182F6] bg-[#E8F3FF] text-[#3182F6]"
-                      : "border-[#E5E8EB] text-[#4E5968] hover:bg-[#F7F8FA]",
+                      ? "border-blue-600 bg-blue-50 text-blue-700"
+                      : "border-slate-200 text-slate-600 hover:bg-slate-50",
                   )}
                 >
                   {m.label}
@@ -118,7 +118,7 @@ export function RecordPaymentDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">납부 금액</Label>
+              <Label className="text-xs font-semibold text-slate-500">납부 금액</Label>
               <Input
                 type="number"
                 value={amount}
@@ -129,7 +129,7 @@ export function RecordPaymentDialog({
               />
             </div>
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">납부일</Label>
+              <Label className="text-xs font-semibold text-slate-500">납부일</Label>
               <Input
                 type="date"
                 value={paidAt}
@@ -140,7 +140,7 @@ export function RecordPaymentDialog({
           </div>
 
           <div>
-            <Label className="text-xs font-bold text-[#6B7684]">메모 (선택)</Label>
+            <Label className="text-xs font-semibold text-slate-500">메모 (선택)</Label>
             <Input
               value={memo}
               onChange={(e) => setMemo(e.target.value)}
@@ -153,14 +153,14 @@ export function RecordPaymentDialog({
         <div className="flex justify-end gap-2 pt-2">
           <Button
             variant="outline"
-            className="h-10 rounded-lg border-[#E5E8EB] font-bold text-[#4E5968]"
+            className="h-10 rounded-lg border-slate-200 font-semibold text-slate-600 hover:bg-slate-50"
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
             취소
           </Button>
           <Button
-            className="h-10 rounded-lg bg-blue-600 font-bold text-white hover:bg-blue-700"
+            className="h-10 rounded-lg bg-blue-600 font-semibold text-white hover:bg-blue-700"
             onClick={submit}
             disabled={isPending}
           >

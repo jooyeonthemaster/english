@@ -547,6 +547,8 @@ export interface A4PaperPageProps {
   instructions: string;
   studentNameLabel: string;
   academyLogoDataUrl: string | null;
+  // 공유 QR 자기등록(E4) — enrollEnabled 시 첫 페이지(pageIndex===0) 헤더에만 인쇄.
+  examEnrollQrDataUrl?: string | null;
   template: PaperTemplate;
   columns: 1 | 2;
   density: Density;
@@ -599,6 +601,7 @@ export function A4PaperPage({
   instructions,
   studentNameLabel,
   academyLogoDataUrl,
+  examEnrollQrDataUrl,
   template,
   columns,
   density,
@@ -703,6 +706,7 @@ export function A4PaperPage({
             schoolName={schoolName}
             className={className}
             examDate={examDate}
+            examEnrollQrDataUrl={examEnrollQrDataUrl}
             onHeaderChange={onHeaderChange}
             readOnly={readOnly}
           />

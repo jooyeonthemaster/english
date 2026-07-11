@@ -31,8 +31,6 @@ export const MAX_PAGES = 12;
 export const ACCEPT = "image/png,image/jpeg,image/webp,application/pdf";
 
 type SourceKind = "IMAGE" | "PDF";
-/** 이 시험지가 학생이 푼 답안지인지, 채점 전 깨끗한 원본인지. */
-export type PaperKind = "student" | "clean";
 export type Phase = "idle" | "ingesting" | "uploading" | "attaching" | "error";
 
 /** 고아 DRAFT 이어서 등록 — 보드 카드에서 주입된다. */
@@ -76,8 +74,6 @@ export function useIntakeUpload({
 }) {
   const [slots, setSlots] = useState<UploadSlot[]>([]);
   const [sourceKind, setSourceKind] = useState<SourceKind | null>(null);
-  const [paperKind, setPaperKind] = useState<PaperKind>("student");
-  const [studentName, setStudentName] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [progress, setProgress] = useState<{ uploaded: number; total: number }>({
     uploaded: 0,
@@ -95,7 +91,11 @@ export function useIntakeUpload({
   // 저장되지 않고 유실됐다. handleStart 가 스냅샷과 비교해 수정된 경우에만
   // updateExamMeta 로 실제 반영한다(미수정이면 호출 생략).
   const metaRef = useRef(meta);
-  metaRef.current = meta;
+  // 렌더 중 ref 쓰기 금지(react-hooks/refs) — 매 커밋 후 동기화. 아래
+  // [resumeDraft] effect 보다 먼저 선언돼 같은 커밋에서 항상 최신값이 읽힌다.
+  useEffect(() => {
+    metaRef.current = meta;
+  });
   const resumeBaselineRef = useRef<ExamMetaValue | null>(null);
   useEffect(() => {
     draftIdRef.current = resumeDraft ? resumeDraft.id : null;
@@ -106,7 +106,9 @@ export function useIntakeUpload({
 
   // 언마운트 시 살아있는 objectURL 정리.
   const slotsRef = useRef<UploadSlot[]>([]);
-  slotsRef.current = slots;
+  useEffect(() => {
+    slotsRef.current = slots;
+  }, [slots]);
   useEffect(() => {
     return () => {
       for (const s of slotsRef.current) {
@@ -243,7 +245,7 @@ export function useIntakeUpload({
     if (!resumeDraft) draftIdRef.current = null;
   }, [resumeDraft]);
 
-  // 성공 후 패널 초기화 — 슬롯/이름/진행/draft. 메타 리셋은 허브(onStarted) 몫.
+  // 성공 후 패널 초기화 — 슬롯/진행/draft. 메타 리셋은 허브(onStarted) 몫.
   const resetAfterStart = useCallback(() => {
     setSlots((prev) => {
       for (const s of prev) {
@@ -257,7 +259,6 @@ export function useIntakeUpload({
     });
     setSourceKind(null);
     setSelectedSlotId(null);
-    setStudentName("");
     setPhase("idle");
     setProgress({ uploaded: 0, total: 0 });
     setErrorMsg(null);
@@ -273,12 +274,9 @@ export function useIntakeUpload({
       toast.error("시험지 페이지를 추가해 주세요.");
       return;
     }
-    const firstStudentName =
-      paperKind === "student" ? studentName.trim() : "";
-    if (paperKind === "student" && !firstStudentName) {
-      toast.error("학생 이름을 입력해 주세요.");
-      return;
-    }
+    // (플로우 개편) 학생 동시 등록 제거 — 인테이크는 빈 시험지 분석 단일 경로.
+    // 학생은 분석 완료 후 보드 카드의 "학생 추가"에서 등록한다. 서버 액션
+    // (attachExamSources)의 firstStudentName 파라미터는 옵셔널로 유지(하위호환).
 
     setErrorMsg(null);
     setPhase("uploading");
@@ -344,10 +342,7 @@ export function useIntakeUpload({
       });
 
       setPhase("attaching");
-      const attached = await attachExamSources(id, {
-        pages,
-        firstStudentName: firstStudentName || undefined,
-      });
+      const attached = await attachExamSources(id, { pages });
       if (!attached.ok) {
         console.error("[exam-report] 사진 첨부 실패:", attached.error);
         setErrorMsg("시험지 사진을 등록하지 못했어요. 잠시 후 다시 시도해 주세요.");
@@ -363,20 +358,17 @@ export function useIntakeUpload({
         "분석이 시작되었습니다. 아래 목록에서 진행 상황을 확인하세요.",
       );
       resetAfterStart();
-      onStarted(id, { hasStudent: Boolean(firstStudentName) });
+      // hasStudent 는 항상 false — 시그니처는 허브(hub-client) 호환을 위해 유지.
+      onStarted(id, { hasStudent: false });
     } catch (err) {
       console.error("[exam-report] 등록 요청 오류:", err);
       setErrorMsg("시험지 사진을 등록하지 못했어요. 잠시 후 다시 시도해 주세요.");
       setPhase("error");
     }
-  }, [meta, slots, sourceKind, paperKind, studentName, onStarted, resetAfterStart]);
+  }, [meta, slots, sourceKind, onStarted, resetAfterStart]);
 
   return {
     slots,
-    paperKind,
-    setPaperKind,
-    studentName,
-    setStudentName,
     phase,
     progress,
     errorMsg,

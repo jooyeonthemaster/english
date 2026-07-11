@@ -62,17 +62,17 @@ export function StudentCodeRow({
     const ok = await copyText(code);
     if (ok) {
       setCopied(true);
-      toast.success("학생 코드를 복사했어요.");
+      toast.success("학생 코드를 복사했습니다.");
       setTimeout(() => setCopied(false), 1500);
     } else {
-      toast.error("복사하지 못했어요. 코드를 직접 선택해 복사해 주세요.");
+      toast.error("복사하지 못했습니다. 코드를 직접 선택해 복사해 주세요.");
     }
   }
 
   return (
-    <div className="rounded-xl border border-[#E5E8EB] bg-[#F7F8FA] p-4">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <div className="flex items-center justify-between gap-3">
-        <span className="select-all font-mono text-lg font-black tracking-[0.25em] text-[#191F28]">
+        <span className="select-all font-mono text-lg font-black tracking-[0.25em] text-slate-900">
           {show ? code : maskCode(code)}
         </span>
         <div className="flex items-center gap-1">
@@ -80,7 +80,7 @@ export function StudentCodeRow({
             type="button"
             onClick={() => setShow((v) => !v)}
             aria-label={show ? "코드 가리기" : "코드 표시"}
-            className="flex size-9 items-center justify-center rounded-lg border border-[#E5E8EB] bg-white text-[#4E5968] transition hover:bg-[#F2F4F6]"
+            className="flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100"
           >
             {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
@@ -88,7 +88,7 @@ export function StudentCodeRow({
             type="button"
             onClick={copy}
             aria-label="코드 복사"
-            className="flex size-9 items-center justify-center rounded-lg border border-[#E5E8EB] bg-white text-[#4E5968] transition hover:bg-[#F2F4F6]"
+            className="flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100"
           >
             {copied ? <Check className="size-4 text-emerald-600" /> : <Copy className="size-4" />}
           </button>
@@ -96,7 +96,7 @@ export function StudentCodeRow({
             <Button
               onClick={onReissueClick}
               variant="ghost"
-              className="h-9 gap-1.5 rounded-lg px-3 text-xs font-bold text-[#3182F6] hover:bg-blue-50"
+              className="h-9 gap-1.5 rounded-lg px-3 text-xs font-bold text-blue-600 hover:bg-blue-50"
             >
               <RotateCw className="size-3.5" />
               재발급
@@ -104,8 +104,8 @@ export function StudentCodeRow({
           )}
         </div>
       </div>
-      <p className="mt-2 text-xs font-medium text-[#8B95A1]">
-        학생이 앱에서 학원코드와 함께 입력하는 로그인 코드예요.
+      <p className="mt-2 text-xs font-medium text-slate-400">
+        학생이 앱에서 학원코드와 함께 입력하는 로그인 코드입니다.
       </p>
     </div>
   );

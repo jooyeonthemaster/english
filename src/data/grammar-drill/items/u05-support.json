@@ -1,0 +1,1214 @@
+{
+  "unitId": "u05",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u05-c1-ox-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "The firm hired engineers trained in robotics and [[u:offered]] them flexible contracts.",
+      "isCorrect": true,
+      "translation": "그 회사는 로봇공학 훈련을 받은 엔지니어들을 고용하고 그들에게 유연한 계약을 제안했습니다.",
+      "hints": [
+        "and 바로 앞의 단어가 진짜 짝인지, 아니면 명사를 꾸미는 수식어인지 확인해 보십시오.",
+        "뒤 항이 시제를 갖춘 동사라면 짝은 문장 앞쪽의 본동사입니다 — 분사 수식어는 건너뜁니다."
+      ],
+      "explanation": "and 바로 앞의 trained는 engineers를 꾸미는 과거분사 수식어일 뿐 병렬의 짝이 아닙니다. 밑줄 offered의 진짜 짝은 본동사 hired이고, 과거동사끼리 형태가 일치하므로 어법상 옳습니다. 뒤에 목적어 them이 있다는 점도 offered가 본동사임을 뒷받침합니다."
+    },
+    {
+      "id": "u05-c1-ox-002",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["coord-pair"],
+      "sentence": "Every weekend he repairs bicycles, mows lawns, and [[u:washing]] cars for his neighbors.",
+      "isCorrect": false,
+      "correction": "washes",
+      "translation": "주말마다 그는 자전거를 수리하고, 잔디를 깎고, 이웃들의 차를 세차해 줍니다.",
+      "hints": [
+        "A, B, and C로 나열된 세 항이 각각 어떤 문법 형태인지 차례로 확인해 보십시오.",
+        "긴 나열의 마지막 항일수록 첫 항으로 되돌아가 형태를 대조해야 합니다."
+      ],
+      "explanation": "repairs, mows와 나열되는 세 번째 항이므로 시제를 갖춘 현재동사가 필요합니다. Every weekend가 반복되는 습관을 나타내고 주어가 3인칭 단수이므로 washes가 옳습니다. 동명사 washing은 본동사 나열에 낄 수 없습니다."
+    },
+    {
+      "id": "u05-c1-ox-003",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "The documentary follows farmers adapting to drought and [[u:asks]] what their choices mean for the rest of us.",
+      "isCorrect": true,
+      "translation": "그 다큐멘터리는 가뭄에 적응해 가는 농부들을 따라가며, 그들의 선택이 우리 모두에게 무엇을 의미하는지 묻습니다.",
+      "hints": [
+        "접속사 바로 앞의 -ing가 짝인지, 그 -ing가 앞의 명사를 꾸미는 수식어인지 살펴보십시오.",
+        "뒤 항의 형태를 먼저 확정하고, 같은 역할을 하는 항을 문장 앞쪽에서 찾아 대조합니다."
+      ],
+      "explanation": "adapting to drought는 farmers를 꾸미는 현재분사 수식어이므로 병렬의 짝이 아닙니다. 밑줄 asks의 진짜 짝은 본동사 follows이고, 3인칭 단수 현재형끼리 형태가 일치하므로 옳습니다. 바로 앞의 -ing에 끌려 asking으로 고치면 문장의 두 번째 본동사가 사라집니다."
+    },
+    {
+      "id": "u05-c1-ox-004",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["coord-pair"],
+      "sentence": "The tour guide collects the tickets, counts the group, and [[u:leading]] everyone to the north gate.",
+      "isCorrect": false,
+      "correction": "leads",
+      "translation": "그 관광 가이드는 표를 걷고, 인원을 세고, 모두를 북문으로 인솔합니다.",
+      "hints": [
+        "세 항이 나열되어 있습니다 — 첫 항과 둘째 항의 형태를 먼저 확인해 보십시오.",
+        "마지막 항도 앞의 항들과 같은 시제 동사여야 나열이 성립합니다."
+      ],
+      "explanation": "collects, counts와 나열되는 마지막 항이므로 시제를 갖춘 동사가 와야 합니다. 주어 The tour guide가 3인칭 단수이므로 leads가 옳습니다. 분사 leading은 혼자서 본동사 자리를 채울 수 없습니다."
+    },
+    {
+      "id": "u05-c1-ox-005",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "She studied the negotiation transcripts for weeks and, in a brief final memo, [[u:recommended]] abandoning the merger.",
+      "isCorrect": true,
+      "translation": "그녀는 몇 주 동안 협상 기록을 검토했고, 짧은 최종 메모에서 합병을 포기할 것을 권고했습니다.",
+      "hints": [
+        "and 뒤에 콤마로 끼어든 구간을 괄호로 묶고 그다음 단어를 보십시오.",
+        "삽입된 부사구를 건너뛰면 문장 앞쪽에서 같은 역할을 하는 짝이 보입니다."
+      ],
+      "explanation": "and 뒤의 in a brief final memo는 삽입된 부사구이므로 괄호로 묶고 건너뜁니다. 밑줄 recommended의 짝은 본동사 studied이고, 과거동사끼리 병렬되므로 어법상 옳습니다. 접속사 바로 앞의 weeks를 짝으로 착각하면 안 됩니다."
+    },
+    {
+      "id": "u05-c1-ox-006",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "Over the summer the students surveyed the wetland, catalogued its bird species, and [[u:presenting]] their findings to the city council.",
+      "isCorrect": false,
+      "correction": "presented",
+      "translation": "여름 동안 학생들은 습지를 조사하고, 그곳의 조류 종을 목록화하고, 조사 결과를 시의회에 발표했습니다.",
+      "hints": [
+        "세 항이 나열된 문장입니다 — 첫 항의 형태를 확정한 뒤 마지막 항과 대조해 보십시오.",
+        "문장 첫머리의 시간 표현이 나열된 동사들의 시제를 함께 고정합니다."
+      ],
+      "explanation": "surveyed, catalogued와 나열되는 마지막 항이므로 과거동사가 필요합니다. Over the summer가 과거의 일임을 고정하므로 presented가 옳습니다. 긴 나열의 마지막 항에서 첫 항의 형태를 잊게 만드는 전형적인 함정입니다."
+    },
+    {
+      "id": "u05-c1-ox-007",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "Behind the counter she found an old ledger and, beneath its torn cover, [[u:discovered]] a letter from 1912.",
+      "isCorrect": true,
+      "translation": "계산대 뒤에서 그녀는 낡은 장부를 발견했고, 찢어진 표지 아래에서 1912년에 쓰인 편지 한 통을 찾아냈습니다.",
+      "hints": [
+        "and 뒤에 끼어든 전치사구를 괄호로 묶고, 밑줄의 짝을 문장 앞쪽에서 찾아보십시오.",
+        "짝은 접속사 바로 앞 단어가 아니라 역할이 같은 항입니다 — 삽입 어구는 건너뜁니다."
+      ],
+      "explanation": "and 뒤의 beneath its torn cover는 삽입된 전치사구입니다. 이를 건너뛰면 밑줄 discovered의 짝은 본동사 found이고, 과거동사끼리 병렬되므로 어법상 옳습니다. 삽입 어구 때문에 밑줄이 접속사에서 멀어 보여도 짝의 형태만 대조하면 됩니다."
+    },
+    {
+      "id": "u05-c1-ox-008",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["coord-pair"],
+      "sentence": "The proposal streamlines the permit process, shortens the appeal window, and [[u:eliminating]] two redundant review boards.",
+      "isCorrect": false,
+      "correction": "eliminates",
+      "translation": "그 제안은 허가 절차를 간소화하고, 이의 제기 기간을 단축하며, 중복된 심의 위원회 두 곳을 없앱니다.",
+      "hints": [
+        "나열된 첫 항과 둘째 항이 어떤 형태의 동사인지 먼저 확인해 보십시오.",
+        "마지막 항도 같은 주어를 받는 같은 시제의 동사여야 나열이 완성됩니다."
+      ],
+      "explanation": "streamlines, shortens와 나열되는 세 번째 항이므로 시제를 갖춘 동사가 필요합니다. 주어 The proposal이 3인칭 단수이므로 eliminates가 옳습니다. 분사 eliminating은 앞의 두 본동사와 병렬될 수 없습니다."
+    },
+    {
+      "id": "u05-c1-wf-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["coord-pair", "past-marker"],
+      "stem": "Last night the children washed the dishes and {{blank}} the kitchen floor before bed.",
+      "given": "sweep",
+      "acceptedAnswers": ["swept"],
+      "translation": "어젯밤 아이들은 설거지를 하고 자기 전에 부엌 바닥을 쓸었습니다.",
+      "hints": [
+        "and가 무엇과 무엇을 연결하는지 짝을 먼저 찾아보십시오.",
+        "문장 첫머리의 시간 표현이 나열된 두 동사의 시제를 함께 고정합니다."
+      ],
+      "explanation": "and의 짝은 본동사 washed이므로 빈칸에도 같은 형태의 과거동사가 와야 합니다. Last night이 과거 시점을 고정하므로 sweep의 과거형 swept가 정답입니다."
+    },
+    {
+      "id": "u05-c1-wf-002",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["coord-pair"],
+      "stem": "Every morning he feeds the chickens and {{blank}} fresh eggs for the market.",
+      "given": "collect",
+      "acceptedAnswers": ["collects"],
+      "translation": "매일 아침 그는 닭들에게 모이를 주고 시장에 내다 팔 신선한 달걀을 모읍니다.",
+      "hints": [
+        "and 앞에서 짝이 되는 동사의 형태를 확인해 보십시오.",
+        "반복되는 습관을 나타내는 시간 표현과 주어의 인칭·수가 동사의 형태를 결정합니다."
+      ],
+      "explanation": "and의 짝은 본동사 feeds이므로 빈칸에도 현재시제 동사가 필요합니다. Every morning이 습관을 나타내고 주어 he가 3인칭 단수이므로 collects가 정답입니다."
+    },
+    {
+      "id": "u05-c1-wf-003",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "past-marker"],
+      "stem": "The designer sketched a dozen logos yesterday but {{blank}} all of them by evening.",
+      "given": "reject",
+      "acceptedAnswers": ["rejected"],
+      "translation": "그 디자이너는 어제 열두 개의 로고 시안을 그렸지만 저녁 무렵에는 그것들을 전부 폐기했습니다.",
+      "hints": [
+        "but도 and와 같은 등위접속사입니다 — 무엇과 무엇을 연결하는지 짝을 찾아보십시오.",
+        "yesterday가 문장 전체의 시제를 고정하므로 짝과 같은 시제로 맞춥니다."
+      ],
+      "explanation": "등위접속사 but의 짝은 본동사 sketched입니다. yesterday가 과거 시점을 고정하므로 빈칸에는 과거형 rejected가 와야 병렬이 성립합니다."
+    },
+    {
+      "id": "u05-c1-wf-004",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "gerund-verb"],
+      "stem": "Her hobbies include baking sourdough bread and {{blank}} rare houseplants on the balcony.",
+      "given": "grow",
+      "acceptedAnswers": ["growing"],
+      "translation": "그녀의 취미에는 사워도우 빵을 굽는 것과 발코니에서 희귀한 실내 식물을 기르는 것이 포함됩니다.",
+      "hints": [
+        "and 앞에서 짝이 되는 항이 어떤 형태인지 확인해 보십시오.",
+        "동사의 목적어로 나열되는 항들은 첫 항과 같은 형태를 유지해야 합니다."
+      ],
+      "explanation": "and의 짝은 include의 목적어인 동명사 baking입니다. 나열되는 두 번째 목적어도 같은 형태여야 하므로 동명사 growing이 정답입니다. include는 to부정사를 목적어로 취하지 않습니다."
+    },
+    {
+      "id": "u05-c1-wf-005",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel", "past-marker"],
+      "stem": "In 2019 the team mapped the cave system, measured its deepest chambers, and, despite the seasonal flooding, {{blank}} the full survey on schedule.",
+      "given": "finish",
+      "acceptedAnswers": ["finished"],
+      "translation": "2019년에 그 팀은 동굴계를 지도로 만들고, 가장 깊은 공동들을 측량했으며, 계절성 침수에도 불구하고 예정대로 전체 조사를 마쳤습니다.",
+      "hints": [
+        "and 뒤에 콤마로 끼어든 어구를 괄호로 묶고, 나열의 첫 항으로 되돌아가 보십시오.",
+        "문장 첫머리의 연도 표현이 나열된 동사들의 시제를 함께 고정합니다."
+      ],
+      "explanation": "despite the seasonal flooding은 삽입된 전치사구이므로 건너뜁니다. 빈칸은 mapped, measured와 나열되는 세 번째 본동사 자리이고, In 2019가 과거를 고정하므로 finished가 정답입니다."
+    },
+    {
+      "id": "u05-c1-wf-006",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "Applications that arrive after the deadline or {{blank}} the required documents will not be reviewed.",
+      "given": "lack",
+      "acceptedAnswers": ["lack"],
+      "translation": "마감 이후에 도착하거나 필수 서류가 빠진 지원서는 심사되지 않습니다.",
+      "hints": [
+        "or가 관계절 안에 있습니다 — 짝이 되는 동사를 관계절 안에서 찾아보십시오.",
+        "관계절 동사의 수는 선행사의 수가 결정합니다."
+      ],
+      "explanation": "or의 짝은 관계절 안의 동사 arrive이므로 빈칸도 관계절의 시제 동사여야 합니다. 선행사 Applications가 복수이므로 복수 현재형인 lack이 정답입니다. 문장 뒤쪽의 will not be reviewed는 주절의 동사이므로 짝이 아닙니다."
+    },
+    {
+      "id": "u05-c1-wc-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "past-marker"],
+      "sentence": "Yesterday the interns sorted the mail, labeled every folder, and [[u:updating]] the archive list.",
+      "wrong": "updating",
+      "acceptedAnswers": ["updated"],
+      "translation": "어제 인턴들은 우편물을 분류하고, 모든 폴더에 라벨을 붙이고, 보관 목록을 갱신했습니다.",
+      "hints": [
+        "세 항이 나열된 문장입니다 — 첫 항과 둘째 항의 형태를 먼저 확인해 보십시오.",
+        "문장 첫머리의 시간 표현이 나열된 동사 전체의 시제를 고정합니다."
+      ],
+      "explanation": "sorted, labeled와 나열되는 세 번째 항이므로 과거동사가 와야 합니다. Yesterday가 과거 시점을 고정하므로 updated로 고칩니다. 분사 updating은 본동사 나열에 낄 수 없습니다."
+    },
+    {
+      "id": "u05-c1-wc-002",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "past-marker"],
+      "sentence": "During the fire drill last Friday, the staff closed the vents, checked every extinguisher, and [[u:securing]] the chemical cabinets.",
+      "wrong": "securing",
+      "acceptedAnswers": ["secured"],
+      "translation": "지난 금요일 소방 훈련 동안 직원들은 환기구를 닫고, 모든 소화기를 점검하고, 약품 보관장을 단단히 잠갔습니다.",
+      "hints": [
+        "나열의 첫 항으로 되돌아가 세 항의 형태를 나란히 대조해 보십시오.",
+        "지난 시점을 나타내는 표현이 있으면 나열된 동사들은 모두 그 시제를 따릅니다."
+      ],
+      "explanation": "closed, checked와 나열되는 마지막 항이므로 과거동사 secured로 고쳐야 합니다. last Friday가 과거 시점을 고정하므로 다른 시제는 올 수 없습니다. 긴 나열의 마지막 항에서 형태가 무너지는 전형적인 오류입니다."
+    },
+    {
+      "id": "u05-c1-wc-003",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel", "past-marker"],
+      "sentence": "Over the winter of 2018, the archaeologist studied the shattered pottery and, after two failed attempts, [[u:reconstructing]] the vase's original pattern.",
+      "wrong": "reconstructing",
+      "acceptedAnswers": ["reconstructed"],
+      "translation": "2018년 겨울 동안 그 고고학자는 산산이 부서진 도자기를 연구했고, 두 번의 실패 끝에 그 화병의 원래 문양을 복원했습니다.",
+      "hints": [
+        "and 뒤에 콤마로 끼어든 어구를 괄호로 묶고 밑줄의 짝을 앞쪽에서 찾아보십시오.",
+        "삽입 어구를 건너뛰면 짝이 되는 본동사의 시제가 보입니다."
+      ],
+      "explanation": "after two failed attempts는 삽입된 부사구이므로 건너뜁니다. 밑줄의 짝은 본동사 studied이고, Over the winter of 2018이 과거를 고정하므로 과거형 reconstructed로 고칩니다. 접속사에서 멀어진 짝을 놓치면 분사를 그대로 두게 됩니다."
+    },
+    {
+      "id": "u05-c1-wc-004",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "sentence": "For her thesis, she spent two years interviewing retired welders, [[u:track]] down their union records, and comparing their health histories.",
+      "wrong": "track",
+      "acceptedAnswers": ["tracking"],
+      "translation": "논문을 위해 그녀는 2년 동안 은퇴한 용접공들을 인터뷰하고, 그들의 노조 기록을 추적하고, 그들의 건강 이력을 비교했습니다.",
+      "hints": [
+        "나열된 세 항 가운데 첫 항과 마지막 항의 형태를 먼저 확인해 보십시오.",
+        "spend+시간 뒤에 이어지는 항들은 모두 같은 -ing 형태로 나열됩니다."
+      ],
+      "explanation": "spent two years 뒤에는 interviewing, comparing처럼 -ing 형태가 나열되고 있습니다. 가운데 항도 같은 형태여야 하므로 tracking으로 고칩니다. 앞뒤 항이 모두 -ing이므로 원형은 나열에 낄 수 없습니다."
+    },
+    {
+      "id": "u05-c2-ox-001",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "sentence": "The route is not only short but also [[u:safely]] for cyclists at night.",
+      "isCorrect": false,
+      "correction": "safe",
+      "translation": "그 경로는 짧을 뿐 아니라 밤에 자전거를 타는 사람들에게 안전합니다.",
+      "hints": [
+        "신호어 not only 바로 뒤에서 A의 품사를 먼저 확정해 보십시오.",
+        "but also 뒤의 B는 A와 같은 품사여야 합니다."
+      ],
+      "explanation": "not only 뒤의 A는 be동사의 보어인 형용사 short입니다. but also 뒤의 B도 보어 자리의 형용사여야 하므로 부사 safely가 아니라 형용사 safe가 옳습니다. 상관접속사는 같은 문법 형태끼리만 연결합니다."
+    },
+    {
+      "id": "u05-c2-ox-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "sentence": "The venue is not only affordable but also [[u:close]] to two subway lines.",
+      "isCorrect": true,
+      "translation": "그 행사장은 가격이 알맞을 뿐 아니라 두 개의 지하철 노선과도 가깝습니다.",
+      "hints": [
+        "신호어 not only 바로 뒤에서 A의 품사를 확정해 보십시오.",
+        "밑줄 단어가 두 가지 품사로 쓰일 수 있는 단어는 아닌지 확인합니다."
+      ],
+      "explanation": "not only 뒤의 A가 형용사 affordable이므로 but also 뒤의 B도 형용사여야 합니다. 밑줄 close는 여기서 '가까운'이라는 형용사이므로 형태가 일치해 어법상 옳습니다. '닫다'라는 동사로 착각해 틀렸다고 판단하면 안 됩니다."
+    },
+    {
+      "id": "u05-c2-ox-003",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "sentence": "The program is designed both to train new referees and [[u:certifying]] experienced ones.",
+      "isCorrect": false,
+      "correction": "to certify",
+      "translation": "그 프로그램은 신임 심판을 양성하는 것과 경력 심판에게 자격을 부여하는 것 둘 다를 위해 설계되었습니다.",
+      "hints": [
+        "신호어 both 바로 뒤에서 A가 어떤 형태로 시작하는지 확인해 보십시오.",
+        "and 뒤의 B는 A가 시작된 지점과 같은 형태로 시작해야 합니다."
+      ],
+      "explanation": "both 바로 뒤의 A가 to부정사구 to train new referees이므로 and 뒤의 B도 to부정사여야 합니다. 따라서 certifying이 아니라 to certify가 옳습니다. 신호어의 위치가 A의 시작점을 표시한다는 것을 기억해야 합니다."
+    },
+    {
+      "id": "u05-c2-ox-004",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["correlative", "shared-aux"],
+      "sentence": "Guests can either charge the meal to their room or [[u:pay]] at the front desk.",
+      "isCorrect": true,
+      "translation": "투숙객은 식사 요금을 객실로 달아 두거나 프런트에서 지불할 수 있습니다.",
+      "hints": [
+        "신호어 either 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "앞의 조동사가 or 뒤 항까지 힘을 미치는지 확인합니다."
+      ],
+      "explanation": "either 뒤의 A는 조동사 can에 걸리는 원형 charge입니다. or 뒤의 B도 can이 공유되는 원형이어야 하므로 pay는 어법상 옳습니다. 시제가 없는 원형이라고 해서 성급하게 오류로 판정하면 안 됩니다."
+    },
+    {
+      "id": "u05-c2-ox-005",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["correlative"],
+      "sentence": "The biography portrays the senator as neither fully sincere nor [[u:complete]] cynical.",
+      "isCorrect": false,
+      "correction": "completely",
+      "translation": "그 전기는 그 상원의원을 온전히 진실하지도, 완전히 냉소적이지도 않은 인물로 그립니다.",
+      "hints": [
+        "neither 뒤의 A가 어떤 구조(꾸미는 말+꾸며지는 말)인지 뜯어 보십시오.",
+        "nor 뒤의 B도 A와 같은 구조여야 하고, 형용사를 꾸미는 말의 품사를 확인합니다."
+      ],
+      "explanation": "neither 뒤의 A는 '부사+형용사' 구조인 fully sincere입니다. nor 뒤의 B도 같은 구조여야 하므로 형용사 cynical을 꾸미는 부사 completely가 와야 합니다. 형용사 complete는 다른 형용사를 꾸밀 수 없습니다."
+    },
+    {
+      "id": "u05-c2-ox-006",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["correlative"],
+      "sentence": "Either the council approves the budget this week, or the festival [[u:moves]] to a cheaper venue.",
+      "isCorrect": true,
+      "translation": "이번 주에 시의회가 예산을 승인하거나, 아니면 축제가 더 저렴한 장소로 옮겨 갑니다.",
+      "hints": [
+        "이 문장에서 either와 or가 연결하는 단위가 단어인지, 절 전체인지 확인해 보십시오.",
+        "절과 절이 연결될 때는 각 절이 자기 주어에 맞는 동사를 갖추면 됩니다."
+      ],
+      "explanation": "이 문장의 either ... or는 절과 절을 연결하고 있습니다. 두 번째 절의 주어 the festival이 3인칭 단수이므로 moves는 어법상 옳습니다. 상관접속사가 항상 단어끼리만 연결한다고 생각하면 옳은 문장을 틀렸다고 판정하게 됩니다."
+    },
+    {
+      "id": "u05-c2-ox-007",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["correlative", "prep-gerund"],
+      "sentence": "The startup survived not by cutting salaries but by [[u:persuading]] its staff to accept shares.",
+      "isCorrect": true,
+      "translation": "그 스타트업은 급여를 삭감해서가 아니라 직원들이 지분을 받아들이도록 설득함으로써 살아남았습니다.",
+      "hints": [
+        "not 뒤에서 A가 어떤 형태로 시작하는지 확인해 보십시오.",
+        "but 뒤의 B도 A와 같은 '전치사+동사 변형' 구조를 그대로 반복해야 합니다."
+      ],
+      "explanation": "not 뒤의 A는 '전치사 by+동명사' 구조인 by cutting salaries입니다. but 뒤의 B도 같은 구조이므로 by 뒤의 동명사 persuading은 어법상 옳습니다. 본동사 survived에 맞춘 시제 동사를 기대하고 틀렸다고 판정하면 안 됩니다."
+    },
+    {
+      "id": "u05-c2-ox-008",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["correlative", "prep-gerund"],
+      "sentence": "Success in the archive room depends not only on patience but also on [[u:organize]] thousands of fragile files.",
+      "isCorrect": false,
+      "correction": "organizing",
+      "translation": "기록 보관실에서의 성공은 인내심뿐 아니라 수천 개의 손상되기 쉬운 파일을 정리하는 일에도 달려 있습니다.",
+      "hints": [
+        "밑줄 바로 앞의 단어가 무엇인지, 그 뒤에는 어떤 형태가 올 수 있는지 확인해 보십시오.",
+        "전치사 뒤 자리에 동사가 온다면 동명사 형태여야 합니다."
+      ],
+      "explanation": "not only 뒤의 A는 '전치사 on+명사' 구조이고, but also 뒤의 B도 on이 반복된 전치사구입니다. 전치사 뒤 자리에 동사가 오려면 동명사여야 하므로 organizing으로 고쳐야 합니다. 동사 원형은 전치사의 목적어가 될 수 없습니다."
+    },
+    {
+      "id": "u05-c2-wf-001",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["correlative", "shared-aux"],
+      "stem": "Guests may either swim in the heated pool or {{blank}} along the cliff path before breakfast.",
+      "given": "walk",
+      "acceptedAnswers": ["walk"],
+      "translation": "투숙객은 아침 식사 전에 온수 수영장에서 수영하거나 절벽 산책로를 따라 걸을 수 있습니다.",
+      "hints": [
+        "신호어 either 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "앞의 조동사가 or 뒤 항까지 공유된다는 점을 기억합니다."
+      ],
+      "explanation": "either 뒤의 A는 조동사 may에 걸리는 원형 swim입니다. or 뒤의 B도 may가 공유되는 자리이므로 원형 walk가 정답입니다. 상관접속사의 A와 B는 같은 형태여야 합니다."
+    },
+    {
+      "id": "u05-c2-wf-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["correlative"],
+      "stem": "Every winter the inn not only heats its greenhouse but also {{blank}} free skating lessons on the pond.",
+      "given": "offer",
+      "acceptedAnswers": ["offers"],
+      "translation": "겨울마다 그 여관은 온실에 난방을 할 뿐 아니라 연못에서 무료 스케이트 강습도 제공합니다.",
+      "hints": [
+        "신호어 not only 바로 뒤에 어떤 형태의 동사가 있는지 확인해 보십시오.",
+        "but also 뒤의 B는 A와 같은 시제·수의 동사여야 합니다."
+      ],
+      "explanation": "not only 뒤의 A가 3인칭 단수 현재형 heats이므로 but also 뒤의 B도 같은 형태여야 합니다. 주어 the inn이 단수이고 Every winter가 반복되는 일임을 나타내므로 offers가 정답입니다."
+    },
+    {
+      "id": "u05-c2-wf-003",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["correlative", "past-marker"],
+      "stem": "Last spring the museum both restored its marble fountain and {{blank}} a small sculpture garden to the public.",
+      "given": "open",
+      "acceptedAnswers": ["opened"],
+      "translation": "지난봄 그 박물관은 대리석 분수를 복원했을 뿐 아니라 작은 조각 정원도 대중에게 개방했습니다.",
+      "hints": [
+        "신호어 both 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "문장 첫머리의 시간 표현이 A와 B의 시제를 함께 고정합니다."
+      ],
+      "explanation": "both 뒤의 A가 과거동사 restored이므로 and 뒤의 B도 과거동사여야 합니다. Last spring이 과거 시점을 고정하므로 opened가 정답입니다."
+    },
+    {
+      "id": "u05-c2-wf-004",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["correlative", "prep-gerund"],
+      "stem": "The new fabric is prized not only for resisting stains but also for {{blank}} its shape after many washes.",
+      "given": "keep",
+      "acceptedAnswers": ["keeping"],
+      "translation": "그 새 직물은 얼룩에 강할 뿐 아니라 여러 번 세탁한 후에도 형태를 유지한다는 점에서 높이 평가받습니다.",
+      "hints": [
+        "not only 뒤의 A가 어떤 구조로 시작하는지 확인해 보십시오.",
+        "빈칸 바로 앞 단어의 품사가 빈칸에 올 수 있는 형태를 결정합니다."
+      ],
+      "explanation": "not only 뒤의 A는 '전치사 for+동명사' 구조인 for resisting stains입니다. but also 뒤에도 for가 반복되었으므로 그 목적어는 동명사 keeping이어야 합니다. 전치사 뒤에는 동사 원형이 올 수 없습니다."
+    },
+    {
+      "id": "u05-c2-wf-005",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["correlative", "distant-parallel", "past-marker"],
+      "stem": "Neither the sudden frosts of early spring nor the long summer drought {{blank}} the growers from replanting the terraced slopes last year.",
+      "given": "discourage",
+      "acceptedAnswers": ["discouraged"],
+      "translation": "이른 봄의 갑작스러운 서리도, 긴 여름 가뭄도 지난해 재배 농가들이 계단식 비탈에 다시 작물을 심는 것을 단념시키지 못했습니다.",
+      "hints": [
+        "neither A nor B 전체가 이 문장의 주어입니다 — 빈칸이 문장의 본동사 자리임을 확인해 보십시오.",
+        "문장 끝의 시간 표현이 본동사의 시제를 고정합니다."
+      ],
+      "explanation": "neither A nor B가 긴 주어를 이루고 빈칸이 문장의 유일한 본동사 자리입니다. last year가 과거 시점을 고정하므로 과거형 discouraged가 정답입니다. 주어가 길어도 본동사의 시제 판단은 시간 표현으로 확정합니다."
+    },
+    {
+      "id": "u05-c2-wf-006",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["correlative", "distant-parallel"],
+      "stem": "Critics agreed that the documentary not only captures the miners' fading dialect but also {{blank}} their quiet humor in every scene.",
+      "given": "preserve",
+      "acceptedAnswers": ["preserves"],
+      "translation": "비평가들은 그 다큐멘터리가 광부들의 사라져 가는 사투리를 담아낼 뿐 아니라 장면마다 그들의 잔잔한 유머까지 보존한다는 데 동의했습니다.",
+      "hints": [
+        "신호어 not only 바로 뒤의 동사 형태를 확정해 보십시오.",
+        "that절 안의 주어가 단수인지 복수인지도 함께 확인합니다."
+      ],
+      "explanation": "not only 뒤의 A가 3인칭 단수 현재형 captures이므로 but also 뒤의 B도 같은 형태여야 합니다. that절의 주어 the documentary가 단수이므로 preserves가 정답입니다. 주절의 과거동사 agreed에 끌려 시제를 바꾸면 안 됩니다."
+    },
+    {
+      "id": "u05-c2-wc-001",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "sentence": "The lecture hall is both spacious and [[u:convenience]] for evening seminars.",
+      "wrong": "convenience",
+      "acceptedAnswers": ["convenient"],
+      "translation": "그 강의실은 저녁 세미나를 열기에 넓고 편리합니다.",
+      "hints": [
+        "신호어 both 바로 뒤에서 A의 품사를 확정해 보십시오.",
+        "and 뒤의 B는 A와 같은 품사여야 합니다 — 밑줄 단어의 품사를 확인합니다."
+      ],
+      "explanation": "both 뒤의 A는 보어 자리의 형용사 spacious입니다. and 뒤의 B도 형용사여야 하므로 명사 convenience를 형용사 convenient로 고칩니다. 상관접속사 병렬에서는 품사까지 일치해야 합니다."
+    },
+    {
+      "id": "u05-c2-wc-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["correlative", "shared-aux"],
+      "sentence": "You can either leave your bike at the rack or [[u:bringing]] it into the rear courtyard.",
+      "wrong": "bringing",
+      "acceptedAnswers": ["bring"],
+      "translation": "자전거를 거치대에 두거나 뒤뜰로 가지고 들어오셔도 됩니다.",
+      "hints": [
+        "신호어 either 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "앞의 조동사가 or 뒤 항까지 공유되므로 B의 형태도 그에 맞춥니다."
+      ],
+      "explanation": "either 뒤의 A는 조동사 can에 걸리는 원형 leave입니다. or 뒤의 B도 can이 공유되는 원형이어야 하므로 bringing을 bring으로 고칩니다. 동명사는 조동사 뒤 자리에 올 수 없습니다."
+    },
+    {
+      "id": "u05-c2-wc-003",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["correlative", "prep-gerund"],
+      "sentence": "The initiative aims at not only lowering heating bills but also [[u:reduce]] the district's carbon footprint.",
+      "wrong": "reduce",
+      "acceptedAnswers": ["reducing"],
+      "translation": "그 계획은 난방비를 낮추는 것뿐 아니라 그 지역의 탄소 발자국을 줄이는 것도 목표로 합니다.",
+      "hints": [
+        "not only 앞의 전치사가 A와 B 모두에 걸린다는 점을 확인해 보십시오.",
+        "전치사의 목적어 자리에 동사가 온다면 어떤 형태여야 하는지 생각합니다."
+      ],
+      "explanation": "전치사 at이 not only A but also B 전체에 걸리고, A는 동명사 lowering입니다. B도 at의 목적어이므로 동명사 reducing으로 고칩니다. 전치사 뒤에는 동사 원형이 올 수 없습니다."
+    },
+    {
+      "id": "u05-c2-wc-004",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["correlative", "shared-aux", "distant-parallel"],
+      "sentence": "The panel could neither verify the data behind the graphs nor [[u:tracing]] the original survey files.",
+      "wrong": "tracing",
+      "acceptedAnswers": ["trace"],
+      "translation": "그 위원단은 그래프의 근거 데이터를 검증할 수도, 원본 설문 파일을 추적할 수도 없었습니다.",
+      "hints": [
+        "신호어 neither 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "앞의 조동사가 nor 뒤 항까지 공유되므로 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "neither 뒤의 A는 조동사 could에 걸리는 원형 verify입니다. nor 뒤의 B도 could가 공유되는 원형이어야 하므로 tracing을 trace로 고칩니다. A가 길어 짝이 멀어 보여도 신호어 바로 뒤의 형태가 기준입니다."
+    },
+    {
+      "id": "u05-c3-ox-001",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "Members can renew their passes online or [[u:visit]] the branch office before Friday.",
+      "isCorrect": true,
+      "translation": "회원들은 온라인으로 이용권을 갱신하거나 금요일 전에 지점 사무실을 방문하면 됩니다.",
+      "hints": [
+        "시제 없는 원형이 보이면 바로 오류로 판정하지 말고 문장 앞쪽을 살펴보십시오.",
+        "앞 항에 조동사가 있다면 그 힘이 or 뒤 항까지 미칩니다."
+      ],
+      "explanation": "앞 항의 조동사 can이 or 뒤 항까지 공유됩니다. 따라서 renew와 병렬인 원형 visit은 어법상 옳습니다. 홀로 선 원형처럼 보여도 공유되는 조동사가 있으면 정상적인 병렬입니다."
+    },
+    {
+      "id": "u05-c3-ox-002",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "Guests must sign the visitor log and [[u:showing]] a photo ID at the gate.",
+      "isCorrect": false,
+      "correction": "show",
+      "translation": "방문객은 출입구에서 방문자 명부에 서명하고 사진이 있는 신분증을 제시해야 합니다.",
+      "hints": [
+        "and 앞의 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "조동사가 공유되면 뒤 항도 앞 항과 같은 형태여야 합니다."
+      ],
+      "explanation": "앞 항의 sign은 조동사 must에 걸리는 원형입니다. and 뒤 항도 must가 공유되는 자리이므로 원형 show가 와야 합니다. 동명사 showing은 조동사의 힘을 받을 수 없습니다."
+    },
+    {
+      "id": "u05-c3-ox-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "The startup will hire two designers and [[u:trains]] them in-house for a year.",
+      "isCorrect": false,
+      "correction": "train",
+      "translation": "그 스타트업은 디자이너 두 명을 채용해 1년간 사내에서 교육할 예정입니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "조동사가 공유되는 자리에는 시제를 갖춘 동사가 올 수 없습니다."
+      ],
+      "explanation": "앞 항의 hire는 조동사 will에 걸리는 원형입니다. and 뒤 항도 will이 공유되므로 원형 train이 와야 합니다. 3인칭 단수 현재형 trains는 조동사 뒤 자리에 올 수 없는 형태입니다."
+    },
+    {
+      "id": "u05-c3-ox-004",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "The volunteers were briefed on safety and [[u:assigned]] to separate stations.",
+      "isCorrect": true,
+      "translation": "자원봉사자들은 안전 교육을 받고 서로 다른 구역에 배치되었습니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사 계열(be·have)에 걸려 있는지 확인해 보십시오.",
+        "be동사가 공유되면 뒤 항도 앞 항과 같은 p.p. 형태로 병렬됩니다."
+      ],
+      "explanation": "앞 항의 briefed는 were에 걸리는 과거분사입니다. were가 and 뒤 항까지 공유되므로 briefed와 병렬인 과거분사 assigned는 어법상 옳습니다. 홀로 선 과거동사처럼 보여도 were assigned라는 수동태의 일부입니다."
+    },
+    {
+      "id": "u05-c3-ox-005",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "sentence": "The committee will review the two drafts and, if time allows, [[u:vote]] on the final wording this afternoon.",
+      "isCorrect": true,
+      "translation": "위원회는 두 개의 초안을 검토하고, 시간이 허락하면 오늘 오후에 최종 문안에 대해 표결할 것입니다.",
+      "hints": [
+        "and 뒤에 끼어든 조건절을 괄호로 묶고 그다음 단어를 보십시오.",
+        "앞 항의 조동사가 삽입 어구를 건너 뒤 항까지 힘을 미치는지 확인합니다."
+      ],
+      "explanation": "and 뒤의 if time allows는 삽입된 조건절이므로 건너뜁니다. 밑줄 vote는 조동사 will이 공유되는 원형으로, review와 병렬이므로 어법상 옳습니다. 삽입절 때문에 조동사와 멀어져 시제 없는 동사처럼 보이는 것이 함정입니다."
+    },
+    {
+      "id": "u05-c3-ox-006",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "since-perfect"],
+      "sentence": "The interns have reorganized the archive and [[u:scan]] every photograph since March.",
+      "isCorrect": false,
+      "correction": "scanned",
+      "translation": "인턴들은 3월 이후 기록 보관소를 재정비하고 모든 사진을 스캔해 왔습니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사 계열에 걸려 있는지 확인해 보십시오.",
+        "have가 공유되는 자리라면 뒤 항은 어떤 형태여야 하는지 생각합니다."
+      ],
+      "explanation": "앞 항의 reorganized는 have에 걸리는 과거분사입니다. and 뒤 항도 have가 공유되므로 과거분사 scanned가 와야 합니다. since March가 현재완료와 호응한다는 점도 원형 scan이 설 자리가 없음을 보여 줍니다."
+    },
+    {
+      "id": "u05-c3-ox-007",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "She hopes to finish the fieldwork by June and [[u:publish]] the results next winter.",
+      "isCorrect": true,
+      "translation": "그녀는 6월까지 현장 연구를 마치고 내년 겨울에 결과를 발표하기를 희망합니다.",
+      "hints": [
+        "and 앞 항이 무엇에 걸려 있는 형태인지 확인해 보십시오.",
+        "to부정사 병렬에서 두 번째 항의 to를 생략할 수 있는지 떠올려 봅니다."
+      ],
+      "explanation": "앞 항의 to finish에서 to가 and 뒤 항까지 공유됩니다. to부정사 병렬의 두 번째 to는 생략할 수 있으므로 원형 publish는 어법상 옳습니다. to publish로 써도 옳지만, 생략형 역시 정상적인 병렬입니다."
+    },
+    {
+      "id": "u05-c3-ox-008",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "sentence": "Applicants should describe their goals briefly and, where relevant, [[u:listing]] prior awards.",
+      "isCorrect": false,
+      "correction": "list",
+      "translation": "지원자는 목표를 간략히 기술하고, 해당되는 경우 이전 수상 경력을 나열해야 합니다.",
+      "hints": [
+        "and 뒤에 끼어든 어구를 괄호로 묶고, 앞 항이 걸려 있는 조동사를 찾아보십시오.",
+        "조동사가 공유되는 자리에 -ing 형태가 올 수 있는지 판단합니다."
+      ],
+      "explanation": "where relevant는 삽입 어구이므로 건너뜁니다. 앞 항의 describe는 조동사 should에 걸리는 원형이고, and 뒤 항도 should가 공유되므로 원형 list로 고쳐야 합니다. 동명사 listing은 조동사의 힘을 받을 수 없습니다."
+    },
+    {
+      "id": "u05-c3-wf-001",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["shared-aux"],
+      "stem": "Visitors must wear a helmet and {{blank}} to the marked path at all times.",
+      "given": "stick",
+      "acceptedAnswers": ["stick"],
+      "translation": "방문객은 항상 헬멧을 쓰고 표시된 경로를 벗어나지 말아야 합니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "조동사의 힘이 뒤 항까지 미치면 뒤 항도 앞 항과 같은 형태가 됩니다."
+      ],
+      "explanation": "앞 항의 wear는 조동사 must에 걸리는 원형입니다. and 뒤 항도 must가 공유되므로 원형 stick이 정답입니다. 조동사 공유 병렬에서는 시제를 새로 붙이지 않습니다."
+    },
+    {
+      "id": "u05-c3-wf-002",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["shared-aux"],
+      "stem": "You can pay the parking fee online or {{blank}} the cashier on the second floor.",
+      "given": "visit",
+      "acceptedAnswers": ["visit"],
+      "translation": "주차 요금은 온라인으로 내거나 2층의 계산 창구를 방문해 낼 수 있습니다.",
+      "hints": [
+        "or 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "공유되는 조동사가 있으면 뒤 항은 원형으로 병렬됩니다."
+      ],
+      "explanation": "앞 항의 pay는 조동사 can에 걸리는 원형입니다. or 뒤 항도 can이 공유되므로 원형 visit이 정답입니다. 시제를 붙인 형태는 조동사 뒤 자리에 올 수 없습니다."
+    },
+    {
+      "id": "u05-c3-wf-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "since-perfect"],
+      "stem": "The clinic has treated hundreds of patients and {{blank}} its records fully digital since 2021.",
+      "given": "make",
+      "acceptedAnswers": ["made"],
+      "translation": "그 병원은 2021년 이후 수백 명의 환자를 진료했고 진료 기록을 완전히 디지털로 전환해 왔습니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사 계열(have·be)에 걸려 있는지 확인해 보십시오.",
+        "문장 끝의 시간 표현이 어떤 시제와 호응하는지도 함께 봅니다."
+      ],
+      "explanation": "앞 항의 treated는 has에 걸리는 과거분사이고, and 뒤 항도 has가 공유됩니다. 따라서 과거분사 made가 정답입니다. since 2021이 현재완료와 호응하므로 다른 시제 형태는 올 수 없습니다."
+    },
+    {
+      "id": "u05-c3-wf-004",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["shared-aux"],
+      "stem": "New drivers will complete a night course and {{blank}} a supervised road test next month.",
+      "given": "take",
+      "acceptedAnswers": ["take"],
+      "translation": "초보 운전자들은 다음 달에 야간 과정을 이수하고 감독관 입회하에 도로 주행 시험을 치를 것입니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "문장 끝의 시간 표현이 두 항이 같은 조동사를 공유함을 뒷받침합니다."
+      ],
+      "explanation": "앞 항의 complete는 조동사 will에 걸리는 원형입니다. and 뒤 항도 will이 공유되므로 원형 take가 정답입니다. next month가 미래를 나타내므로 과거형이나 3인칭 단수형은 올 수 없습니다."
+    },
+    {
+      "id": "u05-c3-wf-005",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel", "since-perfect"],
+      "stem": "The foundation has funded rural libraries and, just as generously, {{blank}} thousands of scholarships to first-generation students since 2015.",
+      "given": "award",
+      "acceptedAnswers": ["awarded"],
+      "translation": "그 재단은 2015년 이후 농촌 도서관들을 지원했고, 그에 못지않게 아낌없이 1세대 대학생들에게 수천 건의 장학금을 수여해 왔습니다.",
+      "hints": [
+        "and 뒤에 끼어든 부사구를 괄호로 묶고, 앞 항이 걸려 있는 조동사 계열을 찾아보십시오.",
+        "문장 끝의 시간 표현이 어떤 시제와 호응하는지 확인합니다."
+      ],
+      "explanation": "just as generously는 삽입된 부사구이므로 건너뜁니다. 앞 항의 funded는 has에 걸리는 과거분사이고, 빈칸도 has가 공유되는 자리이므로 과거분사 awarded가 정답입니다. since 2015가 현재완료와 호응한다는 점이 결정적 단서입니다."
+    },
+    {
+      "id": "u05-c3-wf-006",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "stem": "Residents should report any gas leak immediately and, if the smell grows stronger, {{blank}} the building without waiting for instructions.",
+      "given": "leave",
+      "acceptedAnswers": ["leave"],
+      "translation": "주민들은 가스 누출을 즉시 신고하고, 냄새가 심해지면 지시를 기다리지 말고 건물을 떠나야 합니다.",
+      "hints": [
+        "and 뒤에 끼어든 조건절을 괄호로 묶고 빈칸의 짝을 앞쪽에서 찾아보십시오.",
+        "앞 항의 조동사가 삽입절을 건너 빈칸까지 힘을 미칩니다."
+      ],
+      "explanation": "if the smell grows stronger는 삽입된 조건절이므로 건너뜁니다. 빈칸의 짝은 조동사 should에 걸리는 원형 report이고, should가 공유되므로 원형 leave가 정답입니다. 삽입절의 grows에 끌려 형태를 바꾸면 안 됩니다."
+    },
+    {
+      "id": "u05-c3-wc-001",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "Members can borrow up to three films or [[u:reserves]] new titles online.",
+      "wrong": "reserves",
+      "acceptedAnswers": ["reserve"],
+      "translation": "회원들은 영화를 최대 세 편까지 빌리거나 신작을 온라인으로 예약할 수 있습니다.",
+      "hints": [
+        "or 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "조동사가 공유되는 자리에는 시제와 수를 표시한 동사가 올 수 없습니다."
+      ],
+      "explanation": "앞 항의 borrow는 조동사 can에 걸리는 원형입니다. or 뒤 항도 can이 공유되므로 reserves를 원형 reserve로 고칩니다. 조동사 뒤 자리에는 3인칭 단수형이 올 수 없습니다."
+    },
+    {
+      "id": "u05-c3-wc-002",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "since-perfect"],
+      "sentence": "The bakery has doubled its ovens and [[u:hire]] three pastry chefs since last spring.",
+      "wrong": "hire",
+      "acceptedAnswers": ["hired"],
+      "translation": "그 빵집은 지난봄 이후 오븐 수를 두 배로 늘리고 제빵사 세 명을 채용했습니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사 계열에 걸려 있는지 확인해 보십시오.",
+        "문장 끝의 시간 표현이 어떤 시제와 호응하는지 함께 판단합니다."
+      ],
+      "explanation": "앞 항의 doubled는 has에 걸리는 과거분사이고, and 뒤 항도 has가 공유됩니다. 따라서 원형 hire를 과거분사 hired로 고칩니다. since last spring이 현재완료와 호응하므로 원형은 설 자리가 없습니다."
+    },
+    {
+      "id": "u05-c3-wc-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "sentence": "Passengers should stow their bags securely and, once the seatbelt sign is off, [[u:moving]] about the cabin only when necessary.",
+      "wrong": "moving",
+      "acceptedAnswers": ["move"],
+      "translation": "승객들은 가방을 단단히 수납하고, 안전벨트 표시등이 꺼진 뒤에는 꼭 필요할 때만 기내를 이동해야 합니다.",
+      "hints": [
+        "and 뒤에 끼어든 절을 괄호로 묶고, 앞 항이 걸려 있는 조동사를 찾아보십시오.",
+        "조동사가 공유되는 자리에 -ing 형태가 올 수 있는지 판단합니다."
+      ],
+      "explanation": "once the seatbelt sign is off는 삽입된 부사절이므로 건너뜁니다. 앞 항의 stow는 조동사 should에 걸리는 원형이고, 밑줄 자리도 should가 공유되므로 moving을 원형 move로 고칩니다. 삽입절에 가려 조동사 공유를 놓치면 안 됩니다."
+    },
+    {
+      "id": "u05-c3-wc-004",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "sentence": "By next year the province will widen the coastal road and [[u:builds]] three new ferry docks.",
+      "wrong": "builds",
+      "acceptedAnswers": ["build"],
+      "translation": "내년까지 그 주는 해안 도로를 확장하고 새 여객선 선착장 세 곳을 지을 것입니다.",
+      "hints": [
+        "and 앞 항이 어떤 조동사에 걸려 있는지 확인해 보십시오.",
+        "문장 첫머리의 시간 표현이 두 항이 같은 조동사를 공유함을 알려 줍니다."
+      ],
+      "explanation": "앞 항의 widen은 조동사 will에 걸리는 원형입니다. and 뒤 항도 will이 공유되므로 builds를 원형 build로 고칩니다. By next year가 미래를 나타내므로 현재형은 문맥과도 맞지 않습니다."
+    },
+    {
+      "id": "u05-c4-ox-001",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "sentence": "The committee is torn between preserving the old curriculum and [[u:adopt]] a project-based model.",
+      "isCorrect": false,
+      "correction": "adopting",
+      "translation": "위원회는 기존 교육과정을 지키는 것과 프로젝트 기반 모형을 도입하는 것 사이에서 고심하고 있습니다.",
+      "hints": [
+        "between A and B에서 A가 어떤 형태인지 먼저 확인해 보십시오.",
+        "전치사의 목적어 자리에 동사가 온다면 어떤 형태여야 하는지 생각합니다."
+      ],
+      "explanation": "between의 첫 목적어 A가 동명사 preserving이므로 and 뒤의 B도 동명사여야 합니다. 따라서 원형 adopt가 아니라 adopting이 옳습니다. between A and B는 짝을 반드시 요구하므로 B가 전치사의 목적어라는 사실을 벗어날 수 없습니다."
+    },
+    {
+      "id": "u05-c4-ox-002",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "sentence": "The therapy works by slowing the heart rate and [[u:calming]] the racing thoughts that follow.",
+      "isCorrect": true,
+      "translation": "그 치료법은 심박수를 늦추고 뒤따르는 요동치는 생각들을 가라앉힘으로써 효과를 냅니다.",
+      "hints": [
+        "and 앞 항이 어떤 전치사의 목적어인지 확인해 보십시오.",
+        "전치사가 한 번만 나와 공유되면 뒤 항도 같은 전치사에 걸립니다."
+      ],
+      "explanation": "앞 항의 slowing은 전치사 by의 목적어인 동명사입니다. by가 and 뒤 항까지 공유되므로 동명사 calming은 어법상 옳습니다. 본동사 works에 맞춘 시제 동사를 기대하고 틀렸다고 판정하면 안 됩니다."
+    },
+    {
+      "id": "u05-c4-ox-003",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["comparison-parallel", "distant-parallel"],
+      "sentence": "Repairing the old bridge proved cheaper than [[u:building]] a new crossing downstream.",
+      "isCorrect": true,
+      "translation": "낡은 다리를 보수하는 것이 하류에 새 다리를 놓는 것보다 저렴한 것으로 드러났습니다.",
+      "hints": [
+        "than 뒤 항과 비교되는 짝을 문장 첫머리에서 찾아보십시오.",
+        "비교 병렬에서는 비교되는 양쪽 항의 형태를 일치시킵니다."
+      ],
+      "explanation": "than 뒤 항의 비교 대상은 문장 첫머리의 동명사구 주어 Repairing the old bridge입니다. 비교 병렬에서는 양쪽 형태를 일치시키므로 동명사 building은 어법상 옳습니다. than 뒤만 보고 to부정사를 기대하면 안 됩니다."
+    },
+    {
+      "id": "u05-c4-ox-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "sentence": "He unwinds by tending his balcony garden and [[u:listen]] to old radio dramas.",
+      "isCorrect": false,
+      "correction": "listening",
+      "translation": "그는 발코니 정원을 가꾸고 옛 라디오 드라마를 들으며 긴장을 풉니다.",
+      "hints": [
+        "and 앞 항이 어떤 전치사의 목적어인지 확인해 보십시오.",
+        "공유되는 전치사 뒤 자리에 동사 원형이 올 수 있는지 판단합니다."
+      ],
+      "explanation": "앞 항의 tending은 전치사 by의 목적어인 동명사입니다. by가 and 뒤 항까지 공유되므로 원형 listen이 아니라 동명사 listening이 와야 합니다. 전치사의 목적어 자리에 동사 원형은 올 수 없습니다."
+    },
+    {
+      "id": "u05-c4-ox-005",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "sentence": "He grew confident by rehearsing before small crowds first and only later [[u:facing]] the festival's main stage.",
+      "isCorrect": true,
+      "translation": "그는 먼저 소규모 관중 앞에서 예행연습을 하고 나중에야 축제의 주 무대에 서는 방식으로 자신감을 길렀습니다.",
+      "hints": [
+        "and 뒤에 끼어든 부사들을 건너뛰고, 앞 항이 걸려 있는 전치사를 찾아보십시오.",
+        "전치사가 공유되면 멀리 떨어진 뒤 항도 같은 형태의 동명사여야 합니다."
+      ],
+      "explanation": "and 뒤의 only later는 삽입된 부사이므로 건너뜁니다. 밑줄 facing은 전치사 by가 공유되어 rehearsing과 병렬되는 동명사이므로 어법상 옳습니다. 부사가 끼어 전치사에서 멀어져도 병렬 관계는 유지됩니다."
+    },
+    {
+      "id": "u05-c4-ox-006",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["as-as", "comparison-parallel"],
+      "sentence": "For beginners, watching skilled potters is not as useful as [[u:practice]] the wedging of clay daily.",
+      "isCorrect": false,
+      "correction": "practicing",
+      "translation": "초보자에게는 숙련된 도공을 지켜보는 것이 매일 점토 반죽을 연습하는 것만큼 유익하지 않습니다.",
+      "hints": [
+        "as ~ as 뒤 항과 비교되는 짝을 문장 앞쪽에서 찾아보십시오.",
+        "비교되는 양쪽 항은 같은 문법 형태여야 합니다."
+      ],
+      "explanation": "as ~ as 비교의 짝은 문장 앞쪽의 동명사구 주어 watching skilled potters입니다. 양쪽 형태를 일치시켜야 하므로 동명사 practicing으로 고쳐야 합니다. 뒤에 목적어가 이어지므로 명사 practice로 볼 수도 없습니다."
+    },
+    {
+      "id": "u05-c4-ox-007",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "sentence": "The manual warns against overtightening the valves and [[u:to force]] the rusted joints.",
+      "isCorrect": false,
+      "correction": "forcing",
+      "translation": "그 설명서는 밸브를 과도하게 조이는 것과 녹슨 이음매를 억지로 움직이는 것을 경고합니다.",
+      "hints": [
+        "and 앞 항이 어떤 전치사의 목적어인지 확인해 보십시오.",
+        "공유되는 전치사 뒤에 to부정사가 올 수 있는지 판단합니다."
+      ],
+      "explanation": "앞 항의 overtightening은 전치사 against의 목적어인 동명사입니다. against가 and 뒤 항까지 공유되므로 to force가 아니라 동명사 forcing이 와야 합니다. 전치사의 목적어 자리에 to부정사는 올 수 없습니다."
+    },
+    {
+      "id": "u05-c4-ox-008",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "sentence": "The report attributes the recovery to replanting the mangroves and, just as importantly, [[u:compensating]] the displaced fishing crews.",
+      "isCorrect": true,
+      "translation": "그 보고서는 회복의 공을 맹그로브 숲을 다시 심은 것과, 그에 못지않게 중요하게는, 터전을 잃은 어선 선원들에게 보상한 것으로 돌립니다.",
+      "hints": [
+        "and 뒤에 콤마로 끼어든 어구를 괄호로 묶고, 앞 항이 걸려 있는 전치사를 찾아보십시오.",
+        "전치사가 공유되면 삽입 어구 너머의 항도 동명사로 병렬됩니다."
+      ],
+      "explanation": "attribute A to B 구문에서 전치사 to의 목적어 replanting이 첫 항입니다. to가 and 뒤 항까지 공유되고 just as importantly는 삽입 어구이므로, 동명사 compensating은 replanting과 병렬로 어법상 옳습니다. 삽입 어구 때문에 전치사와 멀어 보여도 짝은 그대로입니다."
+    },
+    {
+      "id": "u05-c4-wf-001",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["prep-gerund"],
+      "stem": "By recycling old lumber and {{blank}} local stone, the builders cut their costs in half.",
+      "given": "use",
+      "acceptedAnswers": ["using"],
+      "translation": "낡은 목재를 재활용하고 지역의 돌을 사용함으로써 건축업자들은 비용을 절반으로 줄였습니다.",
+      "hints": [
+        "문장 첫머리의 전치사가 and 뒤 항까지 걸리는지 확인해 보십시오.",
+        "전치사의 목적어 자리에 동사가 온다면 어떤 형태여야 하는지 생각합니다."
+      ],
+      "explanation": "문장 첫머리의 전치사 By가 and 뒤 항까지 공유됩니다. 첫 목적어가 동명사 recycling이므로 빈칸도 동명사 using이 정답입니다. 전치사구 안에는 시제 동사가 올 수 없습니다."
+    },
+    {
+      "id": "u05-c4-wf-002",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["prep-gerund"],
+      "stem": "Instead of widening the highway and {{blank}} more parking, the city invested in trams.",
+      "given": "add",
+      "acceptedAnswers": ["adding"],
+      "translation": "고속도로를 넓히고 주차 공간을 늘리는 대신, 그 도시는 트램에 투자했습니다.",
+      "hints": [
+        "문장 첫머리의 전치사 표현이 and 뒤 항까지 걸리는지 확인해 보십시오.",
+        "첫 항의 형태를 확정하면 빈칸의 형태도 그대로 따라갑니다."
+      ],
+      "explanation": "Instead of의 목적어인 동명사 widening이 첫 항입니다. and 뒤의 빈칸도 같은 전치사에 걸리므로 동명사 adding이 정답입니다. 전치사의 목적어 자리에 원형은 올 수 없습니다."
+    },
+    {
+      "id": "u05-c4-wf-003",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "stem": "Farmers here alternate between flooding the paddies in June and {{blank}} them out completely in winter.",
+      "given": "dry",
+      "acceptedAnswers": ["drying"],
+      "translation": "이곳 농부들은 6월에 논에 물을 대는 것과 겨울에 논을 완전히 말리는 것을 번갈아 합니다.",
+      "hints": [
+        "between A and B에서 A의 형태를 먼저 확정해 보십시오.",
+        "between은 반드시 짝을 요구하므로 B도 같은 전치사의 목적어입니다."
+      ],
+      "explanation": "between의 첫 목적어 A가 동명사 flooding이므로 and 뒤의 B도 동명사여야 합니다. 따라서 drying이 정답입니다. between A and B는 두 항이 반드시 짝을 이루는 구조입니다."
+    },
+    {
+      "id": "u05-c4-wf-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["comparison-parallel", "distant-parallel"],
+      "stem": "For most students, reviewing notes nightly is far more effective than {{blank}} them all the night before the exam.",
+      "given": "cram",
+      "acceptedAnswers": ["cramming"],
+      "translation": "대부분의 학생들에게는 매일 밤 필기를 복습하는 것이 시험 전날 밤 한꺼번에 몰아서 보는 것보다 훨씬 효과적입니다.",
+      "hints": [
+        "than 뒤 항과 비교되는 짝을 문장 앞쪽에서 찾아보십시오.",
+        "비교되는 양쪽 항은 같은 문법 형태여야 합니다."
+      ],
+      "explanation": "than 뒤 항의 비교 대상은 동명사구 주어 reviewing notes nightly입니다. 비교 병렬에서는 양쪽 형태를 일치시키므로 동명사 cramming이 정답입니다. than 바로 앞의 effective가 아니라 문장 첫머리의 항이 짝입니다."
+    },
+    {
+      "id": "u05-c4-wf-005",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["as-as", "comparison-parallel"],
+      "stem": "In the long run, learning to ask precise questions may matter as much as {{blank}} the right answers.",
+      "given": "find",
+      "acceptedAnswers": ["finding"],
+      "translation": "장기적으로는 정확한 질문을 던지는 법을 배우는 것이 정답을 찾는 것만큼 중요할 수 있습니다.",
+      "hints": [
+        "as much as 뒤 항과 비교되는 짝을 문장 앞쪽에서 찾아보십시오.",
+        "짝이 되는 항의 첫 단어 형태에 빈칸의 형태를 맞춥니다."
+      ],
+      "explanation": "as much as 비교의 짝은 동명사구 주어 learning to ask precise questions입니다. 양쪽 형태를 일치시켜야 하므로 동명사 finding이 정답입니다. 짝 안의 to ask에 끌려 to부정사를 쓰면 병렬이 무너집니다."
+    },
+    {
+      "id": "u05-c4-wf-006",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "stem": "By pairing novice climbers with patient mentors and, whenever the weather allowed, {{blank}} them onto real rock faces, the school built lasting confidence.",
+      "given": "send",
+      "acceptedAnswers": ["sending"],
+      "translation": "초보 등반가들을 인내심 있는 멘토와 짝지어 주고, 날씨가 허락할 때마다 실제 암벽에 내보냄으로써, 그 학교는 오래가는 자신감을 길러 주었습니다.",
+      "hints": [
+        "and 뒤에 끼어든 절을 괄호로 묶고, 문장 첫머리의 전치사를 찾아보십시오.",
+        "전치사가 공유되면 삽입절 너머의 빈칸도 같은 형태의 동명사가 됩니다."
+      ],
+      "explanation": "whenever the weather allowed는 삽입된 부사절이므로 건너뜁니다. 빈칸은 문장 첫머리의 전치사 By에 걸리는 두 번째 목적어 자리이고, 첫 항이 동명사 pairing이므로 sending이 정답입니다. 삽입절의 allowed에 끌려 시제 동사를 쓰면 안 됩니다."
+    },
+    {
+      "id": "u05-c4-wc-001",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "sentence": "By removing every clock and [[u:hide]] all the mirrors, the retreat frees guests from constant self-monitoring.",
+      "wrong": "hide",
+      "acceptedAnswers": ["hiding"],
+      "translation": "모든 시계를 치우고 모든 거울을 가림으로써, 그 휴양 시설은 손님들을 끊임없는 자기 감시에서 벗어나게 해 줍니다.",
+      "hints": [
+        "문장 첫머리의 전치사가 and 뒤 항까지 걸리는지 확인해 보십시오.",
+        "전치사의 목적어 자리에 동사가 온다면 어떤 형태여야 하는지 생각합니다."
+      ],
+      "explanation": "문장 첫머리의 전치사 By가 and 뒤 항까지 공유되고, 첫 목적어는 동명사 removing입니다. 따라서 원형 hide를 동명사 hiding으로 고칩니다. 전치사구 안에는 시제 없는 원형이 설 자리가 없습니다."
+    },
+    {
+      "id": "u05-c4-wc-002",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "sentence": "The documentary shifts between mourning the lost farmland and [[u:celebrate]] the wetland that replaced it.",
+      "wrong": "celebrate",
+      "acceptedAnswers": ["celebrating"],
+      "translation": "그 다큐멘터리는 사라진 농지를 애도하는 것과 그 자리를 대신한 습지를 예찬하는 것 사이를 오갑니다.",
+      "hints": [
+        "between A and B에서 A의 형태를 먼저 확정해 보십시오.",
+        "between은 두 항의 짝을 반드시 요구하므로 B도 같은 전치사의 목적어입니다."
+      ],
+      "explanation": "between의 첫 목적어 A가 동명사 mourning이므로 and 뒤의 B도 동명사여야 합니다. 따라서 원형 celebrate를 celebrating으로 고칩니다. between A and B 구조에서 B가 빠지면 문장이 성립하지 않으므로 B는 반드시 전치사의 목적어 형태를 지켜야 합니다."
+    },
+    {
+      "id": "u05-c4-wc-003",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "sentence": "Instead of chasing rare species across three continents and, as earlier naturalists did, [[u:ship]] specimens home in crates, she photographed each habitat untouched.",
+      "wrong": "ship",
+      "acceptedAnswers": ["shipping"],
+      "translation": "세 대륙을 누비며 희귀종을 뒤쫓고 예전 박물학자들이 그랬듯 표본을 상자에 담아 본국으로 보내는 대신, 그녀는 각 서식지를 손대지 않은 채 사진으로 기록했습니다.",
+      "hints": [
+        "and 뒤에 끼어든 절을 괄호로 묶고, 문장 첫머리의 전치사 표현을 찾아보십시오.",
+        "전치사가 공유되면 삽입절 너머의 항도 첫 항과 같은 형태여야 합니다."
+      ],
+      "explanation": "as earlier naturalists did는 삽입된 절이므로 건너뜁니다. 밑줄은 Instead of에 걸리는 두 번째 목적어 자리이고, 첫 항이 동명사 chasing이므로 shipping으로 고칩니다. 삽입절의 did에 끌려 시제 동사를 쓰면 병렬이 무너집니다."
+    },
+    {
+      "id": "u05-c4-wc-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["comparison-parallel", "distant-parallel"],
+      "sentence": "For the veteran editor, cutting a beloved scene proved harder than [[u:trim]] a hundred clumsy sentences.",
+      "wrong": "trim",
+      "acceptedAnswers": ["trimming"],
+      "translation": "노련한 편집자에게는 아끼는 장면 하나를 잘라 내는 일이 어색한 문장 백 개를 다듬는 일보다 어려운 것으로 드러났습니다.",
+      "hints": [
+        "than 뒤 항과 비교되는 짝을 문장 앞쪽에서 찾아보십시오.",
+        "비교 병렬에서는 비교되는 양쪽 항의 형태를 일치시킵니다."
+      ],
+      "explanation": "than 뒤 항의 비교 대상은 동명사구 주어 cutting a beloved scene입니다. 비교 병렬에서는 양쪽 형태를 일치시키므로 원형 trim을 동명사 trimming으로 고칩니다. than 바로 앞의 harder가 아니라 문장 첫머리의 항이 짝입니다."
+    }
+  ]
+}

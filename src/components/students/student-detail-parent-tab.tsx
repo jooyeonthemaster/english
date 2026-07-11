@@ -17,9 +17,9 @@ export function StudentDetailParentTab({
 }: StudentDetailParentTabProps) {
   if (student.parentLinks.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-8">
-          <p className="text-sm text-[#8B95A1] text-center">
+      <Card className="gap-0 rounded-lg border-slate-200 py-0 shadow-sm">
+        <CardContent className="py-10">
+          <p className="text-center text-[13px] text-slate-400">
             등록된 학부모 정보가 없습니다.
           </p>
         </CardContent>
@@ -28,51 +28,54 @@ export function StudentDetailParentTab({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid gap-4 sm:grid-cols-2">
       {student.parentLinks.map((pl: any) => (
-        <Card key={pl.parent.id}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-[#191F28] flex items-center gap-2">
-              <Users className="size-4 text-indigo-500" />
+        <Card
+          key={pl.parent.id}
+          className="gap-0 rounded-lg border-slate-200 py-0 shadow-sm"
+        >
+          <CardHeader className="border-b border-slate-100 px-4 py-3">
+            <CardTitle className="flex items-center gap-2 text-[13px] font-bold text-slate-900">
+              <Users className="size-4 text-blue-600" aria-hidden />
               {getRelationLabel(pl.parent.relation)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <dl className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-[#8B95A1]">이름</dt>
-                <dd className="font-medium text-[#191F28]">{pl.parent.name}</dd>
+          <CardContent className="p-4">
+            <dl className="space-y-3 text-[13px]">
+              <div className="flex justify-between gap-3">
+                <dt className="text-slate-400">이름</dt>
+                <dd className="font-medium text-slate-900">{pl.parent.name}</dd>
               </div>
-              <div className="flex justify-between">
-                <dt className="text-[#8B95A1] flex items-center gap-1">
-                  <Phone className="size-3.5" /> 전화번호
+              <div className="flex justify-between gap-3">
+                <dt className="flex items-center gap-1 text-slate-400">
+                  <Phone className="size-3.5" aria-hidden /> 전화번호
                 </dt>
-                <dd className="font-medium text-[#191F28]">
+                <dd className="font-medium tabular-nums text-slate-900">
                   {pl.parent.phone}
                 </dd>
               </div>
               {pl.parent.email && (
-                <div className="flex justify-between">
-                  <dt className="text-[#8B95A1] flex items-center gap-1">
-                    <Mail className="size-3.5" /> 이메일
+                <div className="flex justify-between gap-3">
+                  <dt className="flex items-center gap-1 text-slate-400">
+                    <Mail className="size-3.5" aria-hidden /> 이메일
                   </dt>
-                  <dd className="font-medium text-[#191F28]">
+                  <dd className="min-w-0 truncate font-medium text-slate-900">
                     {pl.parent.email}
                   </dd>
                 </div>
               )}
               {pl.parent.emergencyContact && (
-                <div className="flex justify-between">
-                  <dt className="text-[#8B95A1]">긴급연락처</dt>
-                  <dd className="font-medium text-[#191F28]">
+                <div className="flex justify-between gap-3">
+                  <dt className="text-slate-400">긴급연락처</dt>
+                  <dd className="font-medium tabular-nums text-slate-900">
                     {pl.parent.emergencyContact}
                   </dd>
                 </div>
               )}
               {pl.parent.memo && (
-                <div className="pt-2 border-t border-[#F2F4F6]">
-                  <dt className="text-[#8B95A1] mb-1">메모</dt>
-                  <dd className="text-[#4E5968] whitespace-pre-wrap">
+                <div className="border-t border-slate-100 pt-2">
+                  <dt className="mb-1 text-slate-400">메모</dt>
+                  <dd className="whitespace-pre-wrap leading-relaxed text-slate-600">
                     {pl.parent.memo}
                   </dd>
                 </div>

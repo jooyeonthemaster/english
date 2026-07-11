@@ -7,15 +7,15 @@
 // 이 파일은 생성 페이지들(text-input-board/generate-upload-panel)과 동일한
 // 좌 작업대 + 폭조절 핸들 + 우 레일(헤더/본문/CTA 3분할) 체인만 그린다.
 // 흐름: 드롭존(이미지 다중/PDF 1개) → 페이지 작업대(썸네일 레일+큰 미리보기)
-// → 우 레일(시험 메타 폼 + "이 시험지는?" 라디오) → [등록하고 분석 시작].
+// → 우 레일(시험 메타 폼 + 학생 추가 안내) → [등록하고 분석 시작].
 // v4: 리다이렉트 없음 — 허브 하단 "분석 현황 보드"가 낙관 카드+진행률을 그린다.
+// v5(플로우 개편): 학생 동시 등록 모드 폐기 — 빈 시험지 분석 단일 경로.
+// 학생은 분석 완료 후 보드 카드의 "학생 추가"에서 이어진다.
 // ============================================================================
 
 import { useRef, useState } from "react";
-import { Layers, Loader2, UserRound, X } from "lucide-react";
+import { Layers, Loader2, UserRoundPlus, X } from "lucide-react";
 import { MAX_PDF_BYTES } from "@/lib/extraction/constants";
-import { Input } from "@/components/ui/input";
-import { OptionRadioCard } from "@/components/workbench/shared/option-radio-card";
 import { ExamMetaForm, type ExamMetaValue } from "./exam-meta-form";
 import {
   ACCEPT,
@@ -44,7 +44,8 @@ interface IntakeUploadPanelProps {
   onCancelResume: () => void;
   /**
    * 등록+분석 시작 성공 콜백 — 허브가 보드 낙관 행 프리펜드·메타 리셋·
-   * 작업 큐 갱신을 담당한다. hasStudent 는 낙관 행 학생 수 표기용.
+   * 작업 큐 갱신을 담당한다. hasStudent 는 낙관 행 학생 수 표기용
+   * (플로우 개편 후 항상 false — 시그니처는 허브 호환을 위해 유지).
    */
   onStarted: (analysisId: string, info: { hasStudent: boolean }) => void;
 }
@@ -58,10 +59,6 @@ export function IntakeUploadPanel({
 }: IntakeUploadPanelProps) {
   const {
     slots,
-    paperKind,
-    setPaperKind,
-    studentName,
-    setStudentName,
     phase,
     progress,
     errorMsg,
@@ -192,42 +189,24 @@ export function IntakeUploadPanel({
                   <ExamMetaForm value={meta} onChange={onMetaChange} disabled={busy} />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs font-medium text-slate-500">
-                    이 시험지는?
+                {/* 다음 행동 안내 — 학생 동시 등록 폐기(플로우 개편). 인테이크는
+                    시험지 분석만 하고(학생 필기 유무 무관 — 인쇄 문항 기준 분석),
+                    학생은 분석 완료 카드의 "학생 추가"로. */}
+                <div className="flex items-start gap-2.5 rounded-lg border border-slate-200 bg-white p-3">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                    <UserRoundPlus className="size-4" aria-hidden="true" />
                   </span>
-                  <div
-                    role="radiogroup"
-                    aria-label="시험지 종류 선택"
-                    className="grid grid-cols-1 gap-2 sm:grid-cols-2"
-                  >
-                    <OptionRadioCard
-                      checked={paperKind === "student"}
-                      disabled={busy}
-                      title="학생 답안지"
-                      description="학생이 풀고 채점된 시험지 — 학생을 함께 등록해 판독까지 진행합니다."
-                      onSelect={() => setPaperKind("student")}
-                    />
-                    <OptionRadioCard
-                      checked={paperKind === "clean"}
-                      disabled={busy}
-                      title="깨끗한 원본"
-                      description="채점 전 시험지 — 문항 분석만 진행하고 학생은 나중에 추가합니다."
-                      onSelect={() => setPaperKind("clean")}
-                    />
+                  <div className="min-w-0 text-xs leading-relaxed text-slate-500">
+                    <p className="text-[12.5px] font-bold text-slate-700">
+                      학생은 분석이 끝난 뒤 추가해요
+                    </p>
+                    <p className="mt-0.5">
+                      분석이 완료되면 아래 분석 현황 카드의{" "}
+                      <span className="font-semibold text-blue-700">학생 추가</span>
+                      로 바로 이어져요. 답안은 학생에게 입력 링크를 보내 받거나,
+                      선생님이 직접 기입할 수 있습니다.
+                    </p>
                   </div>
-                  {paperKind === "student" && (
-                    <div className="relative mt-1">
-                      <UserRound className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                      <Input
-                        value={studentName}
-                        onChange={(e) => setStudentName(e.target.value)}
-                        placeholder="학생 이름 (예) 김민준"
-                        disabled={busy}
-                        className="bg-white pl-9"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             )}

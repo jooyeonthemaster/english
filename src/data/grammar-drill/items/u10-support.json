@@ -1,0 +1,1214 @@
+{
+  "unitId": "u10",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u10-c1-ox-001",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["linking-verb"],
+      "sentence": "Her voice sounded [[u:strange]] over the crackling radio line.",
+      "isCorrect": true,
+      "translation": "지글거리는 무전 회선 너머로 그녀의 목소리는 이상하게 들렸습니다.",
+      "hints": [
+        "밑줄 바로 앞의 동사 sound가 어떤 종류의 동사인지 먼저 확인하십시오.",
+        "연결동사 뒤는 주어의 상태를 설명하는 보어 자리입니다 — '~하게'라는 번역에 속지 마십시오."
+      ],
+      "explanation": "sound는 look·seem·feel과 같은 연결동사이므로 뒤에는 주어 Her voice의 상태를 설명하는 형용사 보어가 옵니다. '이상하게 들렸다'로 번역된다고 해서 부사 strangely를 쓰면 틀립니다. 따라서 형용사 strange는 어법상 옳습니다."
+    },
+    {
+      "id": "u10-c1-ox-002",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["verb-modifier"],
+      "sentence": "The infection spread [[u:rapid]] through the crowded hospital ward.",
+      "isCorrect": false,
+      "correction": "rapidly",
+      "translation": "감염은 붐비는 병동 전체로 빠르게 퍼졌습니다.",
+      "hints": [
+        "밑줄 친 단어가 꾸미는 대상이 명사인지 동사인지 찾아보십시오.",
+        "동사를 꾸미는 자리에는 형용사가 설 수 없습니다."
+      ],
+      "explanation": "밑줄이 꾸미는 대상은 동사 spread(퍼졌다)입니다. 동사를 꾸미는 자리에는 부사가 와야 하므로 rapid를 rapidly로 고쳐야 합니다. 형용사 rapid는 명사를 꾸미거나 보어 자리에만 쓸 수 있습니다."
+    },
+    {
+      "id": "u10-c1-ox-003",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["linking-verb"],
+      "sentence": "Despite the panic in the market, the fund's managers stayed [[u:calm]] and sold nothing.",
+      "isCorrect": true,
+      "translation": "시장의 공황에도 불구하고 그 펀드의 운용역들은 침착함을 유지하며 아무것도 팔지 않았습니다.",
+      "hints": [
+        "stay가 여기서 어떤 역할의 동사로 쓰였는지 확인하십시오.",
+        "연결동사 뒤 보어 자리에는 주어의 상태를 설명하는 말이 옵니다 — 번역이 아니라 자리로 판단하십시오."
+      ],
+      "explanation": "stay는 be·remain·keep과 같은 연결동사로, 뒤에는 주어 the fund's managers의 상태를 설명하는 형용사 보어가 옵니다. '침착하게 유지했다'라는 번역 때문에 부사 calmly를 떠올리기 쉽지만, 보어 자리이므로 형용사 calm이 옳습니다."
+    },
+    {
+      "id": "u10-c1-ox-004",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["object-complement"],
+      "sentence": "The constant drilling noise made studying in the dormitory [[u:impossibly]].",
+      "isCorrect": false,
+      "correction": "impossible",
+      "translation": "끊임없는 드릴 소음은 기숙사에서 공부하는 것을 불가능하게 만들었습니다.",
+      "hints": [
+        "make의 목적어가 어디까지인지 괄호로 묶어 보십시오.",
+        "목적어 뒤에 남는 자리가 목적어의 상태를 설명한다면 그 자리는 목적격보어 자리입니다."
+      ],
+      "explanation": "make의 목적어는 동명사구 studying in the dormitory이고, 밑줄은 그 목적어의 상태를 설명하는 목적격보어 자리입니다. 목적격보어 자리에는 형용사가 와야 하므로 impossibly를 impossible로 고칩니다."
+    },
+    {
+      "id": "u10-c1-ox-005",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["object-complement"],
+      "sentence": "The committee found the timetable drafted by the interns surprisingly [[u:realistic]].",
+      "isCorrect": true,
+      "translation": "위원회는 인턴들이 작성한 일정표가 놀라울 만큼 현실적이라고 판단했습니다.",
+      "hints": [
+        "found의 목적어가 어디까지인지 먼저 괄호로 묶어 보십시오.",
+        "긴 목적어 끝에 남는 자리가 목적어의 상태를 설명하면 그 자리는 형용사 자리입니다."
+      ],
+      "explanation": "found의 목적어는 the timetable drafted by the interns까지이고, 밑줄은 그 목적어의 상태를 설명하는 목적격보어입니다. 목적격보어 자리이므로 형용사 realistic이 옳고, 앞의 surprisingly는 이 형용사를 꾸미는 부사입니다. 부사 realistically로 바꾸면 보어가 사라져 틀린 문장이 됩니다."
+    },
+    {
+      "id": "u10-c1-ox-006",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["verb-modifier"],
+      "sentence": "The observatory's instruments, calibrated only last month, recorded the eclipse [[u:precise]].",
+      "isCorrect": false,
+      "correction": "precisely",
+      "translation": "지난달에 막 보정된 그 천문대의 관측 장비들은 일식을 정밀하게 기록했습니다.",
+      "hints": [
+        "삽입된 분사구를 걷어내고 밑줄이 꾸미는 대상을 찾아보십시오.",
+        "목적어가 이미 완결된 뒤에 오는 수식어는 동사를 꾸밉니다 — 그 자리는 형용사 자리가 아닙니다."
+      ],
+      "explanation": "recorded the eclipse에서 목적어 the eclipse가 이미 완결되었으므로, 밑줄은 동사 recorded를 꾸미는 자리입니다. 동사를 꾸미는 자리에는 부사가 와야 하므로 precise를 precisely로 고쳐야 합니다. 삽입구 calibrated only last month에 흔들리지 말고 동사-목적어 구조부터 확인해야 합니다."
+    },
+    {
+      "id": "u10-c1-ox-007",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["linking-verb"],
+      "sentence": "Even after two rounds of editing, several passages of the manuscript remained [[u:awkward]] to read aloud.",
+      "isCorrect": true,
+      "translation": "두 차례의 편집을 거친 뒤에도 원고의 여러 대목은 소리 내어 읽기에 여전히 어색했습니다.",
+      "hints": [
+        "remain이 여기서 어떤 종류의 동사인지 확인하십시오.",
+        "연결동사 뒤 보어 자리에는 주어의 상태를 설명하는 말이 옵니다 — 뒤에 to부정사가 이어져도 자리는 변하지 않습니다."
+      ],
+      "explanation": "remain은 연결동사이므로 뒤에는 주어 several passages의 상태를 설명하는 형용사 보어가 옵니다. '어색하게 남아 있었다'라는 번역과 뒤따르는 to read aloud 때문에 부사 awkwardly를 떠올리기 쉽지만, 보어 자리이므로 형용사 awkward가 옳습니다."
+    },
+    {
+      "id": "u10-c1-ox-008",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["object-complement"],
+      "sentence": "The council found the plan to widen the coastal road environmentally [[u:harmfully]].",
+      "isCorrect": false,
+      "correction": "harmful",
+      "translation": "의회는 해안 도로를 확장하려는 그 계획이 환경에 해롭다고 판단했습니다.",
+      "hints": [
+        "found의 목적어가 어디까지인지 괄호로 묶고 남는 자리의 역할을 확인하십시오.",
+        "목적어의 상태를 설명하는 목적격보어 자리에는 부사가 설 수 없습니다."
+      ],
+      "explanation": "found의 목적어는 the plan to widen the coastal road이고, 밑줄은 그 목적어의 상태를 설명하는 목적격보어 자리입니다. 따라서 부사 harmfully가 아니라 형용사 harmful을 써야 하며, 앞의 environmentally는 이 형용사를 꾸미는 부사로 그대로 둡니다."
+    },
+    {
+      "id": "u10-c1-wf-001",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["linking-verb"],
+      "stem": "The manager seemed {{blank}} about the sudden schedule change.",
+      "given": "anxious",
+      "acceptedAnswers": ["anxious"],
+      "translation": "매니저는 갑작스러운 일정 변경에 대해 불안해 보였습니다.",
+      "hints": [
+        "seem이 어떤 종류의 동사인지 확인하십시오.",
+        "연결동사 뒤 보어 자리에는 주어의 상태를 설명하는 품사가 옵니다."
+      ],
+      "explanation": "seem은 연결동사이므로 뒤에는 주어 The manager의 상태를 설명하는 형용사 보어가 옵니다. '불안해 보였다'로 번역된다고 부사 anxiously로 바꾸면 틀립니다. 따라서 주어진 형용사 anxious를 그대로 씁니다."
+    },
+    {
+      "id": "u10-c1-wf-002",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["verb-modifier"],
+      "stem": "The archivist handled the fragile letters {{blank}}.",
+      "given": "careful",
+      "acceptedAnswers": ["carefully"],
+      "translation": "그 기록관리사는 손상되기 쉬운 편지들을 조심스럽게 다루었습니다.",
+      "hints": [
+        "빈칸이 꾸미는 대상이 명사인지 동사인지 찾아보십시오.",
+        "동사를 꾸미는 자리에는 형용사가 아니라 부사가 옵니다."
+      ],
+      "explanation": "빈칸은 동사 handled(다루었다)를 꾸미는 자리입니다. 동사를 꾸미는 자리에는 부사가 와야 하므로 careful을 carefully로 바꿔 씁니다. 목적어 the fragile letters가 이미 완결되어 있으므로 보어 자리가 아닙니다."
+    },
+    {
+      "id": "u10-c1-wf-003",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["object-complement"],
+      "stem": "The thick stone walls of the monastery kept the wine cellar {{blank}} even at the height of summer.",
+      "given": "cool",
+      "acceptedAnswers": ["cool"],
+      "translation": "그 수도원의 두꺼운 돌벽은 한여름에도 포도주 저장고를 서늘하게 유지해 주었습니다.",
+      "hints": [
+        "keep 뒤의 목적어를 괄호로 묶고 빈칸의 역할을 확인하십시오.",
+        "목적어의 상태를 설명하는 자리는 목적격보어 자리입니다."
+      ],
+      "explanation": "keep+목적어 뒤의 빈칸은 목적어 the wine cellar의 상태를 설명하는 목적격보어 자리입니다. 목적격보어 자리에는 형용사가 오므로 주어진 cool을 그대로 씁니다. '서늘하게'라는 번역에 이끌려 부사 coolly로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u10-c1-wf-004",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["adjective-modifier"],
+      "stem": "The committee found the budget proposal {{blank}} convincing.",
+      "given": "surprising",
+      "acceptedAnswers": ["surprisingly"],
+      "translation": "위원회는 그 예산안이 놀라울 만큼 설득력 있다고 판단했습니다.",
+      "hints": [
+        "빈칸 바로 뒤의 단어가 어떤 품사인지 확인하십시오.",
+        "형용사를 꾸미는 자리에는 부사가 옵니다 — 보어는 이미 따로 있습니다."
+      ],
+      "explanation": "이 문장의 목적격보어는 형용사 convincing이고, 빈칸은 그 형용사를 꾸미는 자리입니다. 형용사를 꾸미는 자리에는 부사가 와야 하므로 surprising을 surprisingly로 바꿔 씁니다."
+    },
+    {
+      "id": "u10-c1-wf-005",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["it-complement", "object-complement"],
+      "stem": "The digitized archive made it {{blank}} for historians to trace the ownership of looted artworks.",
+      "given": "possible",
+      "acceptedAnswers": ["possible"],
+      "translation": "디지털화된 기록물 덕분에 역사가들이 약탈 예술품의 소유 이력을 추적하는 것이 가능해졌습니다.",
+      "hints": [
+        "made 뒤의 it이 무엇을 대신하는 가짜 목적어인지 확인하십시오.",
+        "가목적어 it의 상태를 설명하는 자리는 보어 자리입니다."
+      ],
+      "explanation": "it은 뒤의 to trace 이하를 대신하는 가목적어이고, 빈칸은 그 가목적어의 상태를 설명하는 목적격보어 자리입니다. 보어 자리이므로 형용사 possible을 그대로 씁니다. 부사 possibly를 쓰면 보어가 사라져 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u10-c1-wf-006",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["linking-verb", "intervening-clause"],
+      "stem": "The debate over the water rights, which had stayed polite for years, suddenly became {{blank}}.",
+      "given": "hostile",
+      "acceptedAnswers": ["hostile"],
+      "translation": "여러 해 동안 정중하게 유지되던 수리권 논쟁이 갑자기 험악해졌습니다.",
+      "hints": [
+        "삽입된 관계절을 걷어내고 빈칸 앞의 동사를 확인하십시오.",
+        "연결동사 뒤 보어 자리에는 주어의 상태를 설명하는 품사가 옵니다 — 앞의 부사에 흔들리지 마십시오."
+      ],
+      "explanation": "관계절 which had stayed polite for years를 걷어내면 The debate became ___ 구조가 남습니다. become은 연결동사이므로 빈칸은 주어의 상태를 설명하는 형용사 보어 자리이고, 주어진 hostile을 그대로 씁니다. 바로 앞의 부사 suddenly는 동사를 꾸밀 뿐 보어 자리를 부사 자리로 바꾸지 않습니다."
+    },
+    {
+      "id": "u10-c1-wc-001",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["linking-verb"],
+      "sentence": "After the renovation, the library remained fully [[u:accessibly]] to wheelchair users.",
+      "wrong": "accessibly",
+      "acceptedAnswers": ["accessible"],
+      "translation": "개보수 후에도 그 도서관은 휠체어 이용자들이 온전히 접근할 수 있는 상태로 유지되었습니다.",
+      "hints": [
+        "remain이 어떤 종류의 동사인지 확인하십시오.",
+        "연결동사 뒤 보어 자리에는 부사가 설 수 없습니다."
+      ],
+      "explanation": "remain은 연결동사이므로 뒤에는 주어 the library의 상태를 설명하는 형용사 보어가 와야 합니다. 부사 accessibly는 보어 자리에 설 수 없으므로 형용사 accessible로 고칩니다. 앞의 fully는 이 형용사를 꾸미는 부사로 그대로 둡니다."
+    },
+    {
+      "id": "u10-c1-wc-002",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["verb-modifier"],
+      "sentence": "The volcano erupted so [[u:sudden]] that the villagers had no time to gather their belongings.",
+      "wrong": "sudden",
+      "acceptedAnswers": ["suddenly"],
+      "translation": "화산이 너무나 갑작스럽게 분출해서 마을 사람들은 짐을 챙길 시간이 없었습니다.",
+      "hints": [
+        "밑줄이 꾸미는 대상이 무엇인지 찾아보십시오.",
+        "동사를 꾸미는 자리에는 형용사가 아니라 부사가 옵니다."
+      ],
+      "explanation": "밑줄은 동사 erupted(분출했다)를 꾸미는 자리이므로 부사가 와야 합니다. 형용사 sudden을 부사 suddenly로 고쳐 so suddenly that 구조를 만듭니다. erupt는 보어를 취하는 연결동사가 아닙니다."
+    },
+    {
+      "id": "u10-c1-wc-003",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["object-complement", "coord-pair"],
+      "sentence": "The reviewers found the author's reply to their criticism detailed but oddly [[u:defensively]].",
+      "wrong": "defensively",
+      "acceptedAnswers": ["defensive"],
+      "translation": "심사위원들은 저자의 반박문이 상세하지만 이상하리만큼 방어적이라고 판단했습니다.",
+      "hints": [
+        "found의 목적어를 괄호로 묶고, 밑줄이 무엇과 병렬로 묶여 있는지 확인하십시오.",
+        "목적격보어 자리의 병렬은 같은 품사끼리 이어져야 합니다."
+      ],
+      "explanation": "found의 목적어는 the author's reply to their criticism이고, 그 뒤의 detailed but ___ 은 목적어의 상태를 설명하는 목적격보어의 병렬입니다. 형용사 detailed와 짝을 이루어야 하므로 부사 defensively를 형용사 defensive로 고칩니다. oddly는 이 형용사를 꾸미는 부사로 그대로 둡니다."
+    },
+    {
+      "id": "u10-c1-wc-004",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["it-complement", "adjective-modifier"],
+      "sentence": "Advances in refrigeration made it [[u:economical]] feasible to ship fresh produce across oceans.",
+      "wrong": "economical",
+      "acceptedAnswers": ["economically"],
+      "translation": "냉장 기술의 발전은 신선 농산물을 대양 너머로 운송하는 일을 경제적으로 실현 가능하게 만들었습니다.",
+      "hints": [
+        "이 문장에서 가목적어 it의 보어가 어느 단어인지 먼저 확정하십시오.",
+        "보어인 형용사를 꾸미는 자리에는 부사가 옵니다."
+      ],
+      "explanation": "가목적어 it의 목적격보어는 형용사 feasible이고, 밑줄은 그 형용사를 꾸미는 자리입니다. 형용사를 꾸미는 자리에는 부사가 와야 하므로 economical을 economically로 고칩니다. 보어 자리가 이미 feasible로 채워져 있다는 점을 놓치면 형용사를 그대로 두는 실수를 하게 됩니다."
+    },
+    {
+      "id": "u10-c2-ox-001",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "The villagers worked [[u:hard]] for two summers to rebuild the flooded school.",
+      "isCorrect": true,
+      "translation": "마을 사람들은 물에 잠긴 학교를 다시 짓기 위해 두 해 여름 동안 열심히 일했습니다.",
+      "hints": [
+        "-ly가 없다고 해서 부사가 아니라고 단정하지 마십시오.",
+        "-ly가 붙은 형태는 '거의 ~않다'라는 전혀 다른 뜻의 준부정어가 됩니다."
+      ],
+      "explanation": "hard는 '열심히'라는 뜻의 부사로 동사 worked를 꾸미고 있으므로 옳습니다. hardly로 바꾸면 '거의 일하지 않았다'는 뜻이 되어 학교를 다시 지었다는 문맥과 정반대가 됩니다. 형태가 다르면 뜻도 달라지는 짝임을 기억해야 합니다."
+    },
+    {
+      "id": "u10-c2-ox-002",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "[[u:Near]] half of the exhibits in the new wing were on loan from private collectors.",
+      "isCorrect": false,
+      "correction": "Nearly",
+      "translation": "새 전시관 전시품의 거의 절반이 개인 소장가들에게서 대여한 것이었습니다.",
+      "hints": [
+        "밑줄이 비율 표현 앞에서 어떤 뜻을 나타내야 하는지 확인하십시오.",
+        "'가까운·가까이'와 '거의'는 형태가 다른 별개의 단어입니다."
+      ],
+      "explanation": "half of라는 비율 표현 앞에서 '거의'라는 뜻이 필요하므로 nearly를 써야 합니다. near는 '가까운·가까이'라는 뜻이어서 비율 앞에 쓸 수 없습니다. Near를 Nearly로 고칩니다."
+    },
+    {
+      "id": "u10-c2-ox-003",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "The falcon circled [[u:high]] above the harbor before diving.",
+      "isCorrect": true,
+      "translation": "그 매는 하강하기 전에 항구 위로 높이 선회했습니다.",
+      "hints": [
+        "밑줄이 나타내는 것이 물리적 높이인지, '매우'라는 정도인지 구분하십시오.",
+        "-ly가 붙은 형태는 정도의 뜻으로만 쓰입니다."
+      ],
+      "explanation": "물리적 높이를 나타낼 때는 high를 그대로 부사로 씁니다. highly는 '매우·크게'라는 정도의 뜻으로만 쓰이므로 이 자리에 올 수 없습니다. 따라서 high는 어법상 옳습니다."
+    },
+    {
+      "id": "u10-c2-ox-004",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "The retired judge was [[u:high]] regarded for her fairness in complex cases.",
+      "isCorrect": false,
+      "correction": "highly",
+      "translation": "그 은퇴한 판사는 복잡한 사건에서 보여 준 공정함으로 매우 높이 평가받았습니다.",
+      "hints": [
+        "밑줄이 물리적 높이를 나타내는지, 평가의 정도를 나타내는지 확인하십시오.",
+        "정도의 뜻으로 형용사·분사를 꾸밀 때는 -ly형을 씁니다."
+      ],
+      "explanation": "여기서 필요한 뜻은 물리적 높이가 아니라 '매우·크게'라는 정도이며, 과거분사 regarded를 꾸미고 있습니다. 정도의 뜻일 때는 highly를 쓰므로 high를 highly로 고칩니다. highly regarded는 '높이 평가받는'이라는 뜻의 결합입니다."
+    },
+    {
+      "id": "u10-c2-ox-005",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ly-adjective", "linking-verb"],
+      "sentence": "Restoring the flood-damaged archives proved [[u:costly]] for the university, whose research budget had already been cut.",
+      "isCorrect": true,
+      "translation": "수해를 입은 기록물을 복원하는 일은 그 대학에 큰 비용이 드는 일로 드러났는데, 대학의 연구 예산은 이미 삭감된 상태였습니다.",
+      "hints": [
+        "-ly로 끝난다고 해서 곧바로 부사라고 단정하지 마십시오.",
+        "-ly를 뗀 나머지가 명사라면 그 단어는 형용사이고, 보어 자리에 설 수 있습니다."
+      ],
+      "explanation": "costly는 명사 cost에 -ly가 붙은 형용사이며, 여기서는 주어 Restoring the flood-damaged archives의 상태를 설명하는 보어로 쓰였습니다. -ly만 보고 부사로 오해해 틀렸다고 판단하면 안 됩니다. 따라서 costly는 어법상 옳습니다."
+    },
+    {
+      "id": "u10-c2-ox-006",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "Because the fog rolled in without warning, the ferry pilots could [[u:hard]] make out the harbor lights.",
+      "isCorrect": false,
+      "correction": "hardly",
+      "translation": "안개가 예고 없이 밀려들었기 때문에 여객선 조타수들은 항구의 불빛을 거의 알아볼 수 없었습니다.",
+      "hints": [
+        "문맥상 '열심히'와 '거의 ~않다' 중 어느 뜻이 필요한지 따져 보십시오.",
+        "조동사와 동사원형 사이에 오는 준부정어의 형태를 떠올려 보십시오."
+      ],
+      "explanation": "안개 때문에 불빛을 '거의 알아볼 수 없었다'는 문맥이므로 준부정어 hardly가 필요합니다. hard는 '열심히'라는 뜻이어서 문맥과 맞지 않습니다. hard를 hardly로 고쳐 could hardly make out 구조를 만듭니다."
+    },
+    {
+      "id": "u10-c2-ox-007",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["ly-adjective"],
+      "sentence": "The forum closed with a [[u:lively]] exchange between the two economists over tariff policy.",
+      "isCorrect": true,
+      "translation": "그 포럼은 관세 정책을 둘러싼 두 경제학자의 활기찬 공방으로 마무리되었습니다.",
+      "hints": [
+        "밑줄 친 단어가 꾸미는 대상이 무엇인지 확인하십시오.",
+        "-ly를 뗀 나머지가 명사인 단어는 형용사이므로 명사를 꾸밀 수 있습니다."
+      ],
+      "explanation": "lively는 명사 life에 -ly가 붙은 형용사로, 여기서는 명사 exchange를 꾸미고 있습니다. '부사는 명사를 꾸밀 수 없다'는 원칙에 비추어 틀렸다고 판단하기 쉽지만, lively 자체가 형용사이므로 옳습니다."
+    },
+    {
+      "id": "u10-c2-ox-008",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "Interest in the observatory's public lectures has grown noticeably [[u:late]], according to the booking records.",
+      "isCorrect": false,
+      "correction": "lately",
+      "translation": "예약 기록에 따르면 최근에 그 천문대 대중 강연에 대한 관심이 눈에 띄게 커졌습니다.",
+      "hints": [
+        "문맥상 '늦게'와 '최근에' 중 어느 뜻이 필요한지 따져 보십시오.",
+        "현재완료와 자주 어울리는 쪽은 -ly가 붙은 형태입니다."
+      ],
+      "explanation": "has grown이라는 현재완료와 함께 '최근에'라는 뜻이 필요한 자리이므로 lately를 써야 합니다. late는 '늦게'라는 시간의 뜻이어서 문맥이 성립하지 않습니다. late를 lately로 고칩니다."
+    },
+    {
+      "id": "u10-c2-wf-001",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["confusable-adverb"],
+      "stem": "She pushed the heavy door {{blank}}, but it would not move.",
+      "given": "hard",
+      "acceptedAnswers": ["hard"],
+      "translation": "그녀는 그 무거운 문을 힘껏 밀었지만 문은 움직이지 않았습니다.",
+      "hints": [
+        "문맥상 '힘껏·열심히'라는 뜻이 필요한지, '거의 ~않다'라는 뜻이 필요한지 판단하십시오.",
+        "-ly를 붙이면 뜻이 정반대 계열로 바뀌는 짝임을 기억하십시오."
+      ],
+      "explanation": "'힘껏 밀었다'는 뜻이 필요하므로 부사 hard를 그대로 씁니다. -ly를 붙인 hardly는 '거의 ~않다'라는 준부정어가 되어, 문을 밀었다는 문맥과 어긋납니다."
+    },
+    {
+      "id": "u10-c2-wf-002",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["confusable-adverb"],
+      "stem": "The shipment arrived three days {{blank}} because of the port strike.",
+      "given": "late",
+      "acceptedAnswers": ["late"],
+      "translation": "항만 파업 때문에 그 화물은 사흘 늦게 도착했습니다.",
+      "hints": [
+        "문맥상 '늦게'와 '최근에' 중 어느 뜻이 필요한지 확인하십시오.",
+        "-ly가 붙으면 시간의 '늦음'이 아니라 '최근'이라는 전혀 다른 뜻이 됩니다."
+      ],
+      "explanation": "three days와 함께 '사흘 늦게 도착했다'는 시간의 뜻이 필요하므로 late를 그대로 씁니다. lately는 '최근에'라는 뜻이어서 구체적인 지연 기간과 함께 쓸 수 없습니다."
+    },
+    {
+      "id": "u10-c2-wf-003",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "stem": "The professor is {{blank}} respected in the field of marine biology.",
+      "given": "high",
+      "acceptedAnswers": ["highly"],
+      "translation": "그 교수는 해양생물학 분야에서 매우 높이 평가받고 있습니다.",
+      "hints": [
+        "빈칸이 물리적 높이를 나타내는지, 평가의 정도를 나타내는지 구분하십시오.",
+        "정도의 뜻으로 분사를 꾸밀 때 쓰는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "respected를 꾸며 '매우 높이 평가받는'이라는 정도의 뜻을 나타내는 자리이므로 high에 -ly를 붙인 highly를 씁니다. high는 물리적 높이를 나타낼 때만 부사로 그대로 씁니다."
+    },
+    {
+      "id": "u10-c2-wf-004",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "stem": "{{blank}} every seat in the lecture hall was taken by the time she began.",
+      "given": "near",
+      "acceptedAnswers": ["Nearly", "nearly"],
+      "translation": "그녀가 강연을 시작할 무렵에는 강의실의 거의 모든 좌석이 차 있었습니다.",
+      "hints": [
+        "'가까이'와 '거의' 중 어느 뜻이 필요한 자리인지 판단하십시오.",
+        "수량·비율 표현 앞에서 '거의'라는 뜻을 나타내는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "every seat 앞에서 '거의 모든'이라는 정도의 뜻이 필요하므로 near에 -ly를 붙인 nearly를 씁니다. near는 '가까운·가까이'라는 뜻이어서 수량 표현 앞에 쓸 수 없습니다."
+    },
+    {
+      "id": "u10-c2-wf-005",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "stem": "Although the witness stood only a few meters from the scene, she could {{blank}} describe what she had seen.",
+      "given": "hard",
+      "acceptedAnswers": ["hardly"],
+      "translation": "목격자는 현장에서 겨우 몇 미터 떨어져 서 있었는데도 자신이 본 것을 거의 설명하지 못했습니다.",
+      "hints": [
+        "Although가 이끄는 양보의 문맥이 빈칸의 뜻을 어느 쪽으로 미는지 따져 보십시오.",
+        "조동사와 동사원형 사이에서 문장을 부정으로 만드는 준부정어를 떠올려 보십시오."
+      ],
+      "explanation": "가까이 서 있었는데도 설명을 거의 하지 못했다는 양보의 문맥이므로 '거의 ~않다'라는 준부정어 hardly가 필요합니다. hard(열심히)를 그대로 쓰면 Although의 대조가 무너집니다."
+    },
+    {
+      "id": "u10-c2-wf-006",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "stem": "Funding for the marine institute has grown uncertain {{blank}}, as two major sponsors have withdrawn.",
+      "given": "late",
+      "acceptedAnswers": ["lately"],
+      "translation": "두 곳의 주요 후원사가 손을 떼면서 최근에 그 해양 연구소의 재정이 불안정해졌습니다.",
+      "hints": [
+        "has grown이라는 시제가 빈칸의 뜻과 어떻게 호응하는지 확인하십시오.",
+        "현재완료와 어울려 '요즘·최근'이라는 뜻을 나타내는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "현재완료 has grown과 함께 '최근에'라는 뜻이 필요하므로 late에 -ly를 붙인 lately를 씁니다. late를 그대로 쓰면 '늦게 불안정해졌다'는 어색한 뜻이 되어 문맥이 성립하지 않습니다."
+    },
+    {
+      "id": "u10-c2-wc-001",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "The safety inspector was [[u:high]] critical of the building's aging wiring.",
+      "wrong": "high",
+      "acceptedAnswers": ["highly"],
+      "translation": "안전 점검관은 그 건물의 노후 배선에 대해 매우 비판적이었습니다.",
+      "hints": [
+        "밑줄이 꾸미는 단어가 무엇인지 확인하십시오.",
+        "형용사를 꾸며 정도를 나타낼 때 쓰는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "밑줄은 형용사 critical을 꾸며 '매우'라는 정도를 나타내는 자리입니다. 물리적 높이가 아니라 정도의 뜻이므로 high를 highly로 고칩니다."
+    },
+    {
+      "id": "u10-c2-wc-002",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "The refugees could [[u:hard]] carry their remaining belongings across the swollen river.",
+      "wrong": "hard",
+      "acceptedAnswers": ["hardly"],
+      "translation": "난민들은 불어난 강 너머로 남은 짐을 거의 옮길 수 없었습니다.",
+      "hints": [
+        "문맥상 '열심히'와 '거의 ~않다' 중 어느 뜻이 필요한지 판단하십시오.",
+        "조동사와 동사원형 사이에 오는 준부정어의 형태를 떠올려 보십시오."
+      ],
+      "explanation": "불어난 강 때문에 짐을 '거의 옮길 수 없었다'는 문맥이므로 준부정어 hardly가 필요합니다. hard는 '열심히'라는 뜻이어서 이 자리에 맞지 않습니다. hard를 hardly로 고칩니다."
+    },
+    {
+      "id": "u10-c2-wc-003",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "[[u:Near]] eighty percent of the participants in the sleep study reported clear improvement within a month.",
+      "wrong": "Near",
+      "acceptedAnswers": ["Nearly", "nearly"],
+      "translation": "그 수면 연구 참가자의 거의 80퍼센트가 한 달 안에 뚜렷한 개선을 보고했습니다.",
+      "hints": [
+        "밑줄이 비율 표현 앞에서 어떤 뜻을 나타내야 하는지 확인하십시오.",
+        "수치·비율 앞에서 '거의'라는 뜻을 나타내는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "eighty percent라는 비율 앞에서 '거의'라는 뜻이 필요한 자리입니다. near는 '가까운·가까이'라는 뜻이므로 Nearly로 고쳐야 합니다. 수치·비율 앞의 '거의'는 언제나 nearly입니다."
+    },
+    {
+      "id": "u10-c2-wc-004",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb"],
+      "sentence": "Demand for housing along the new rail line has risen sharply [[u:late]], pushing rents to record levels.",
+      "wrong": "late",
+      "acceptedAnswers": ["lately"],
+      "translation": "최근에 신설 철로 주변의 주택 수요가 가파르게 상승하면서 임대료가 사상 최고 수준으로 치솟았습니다.",
+      "hints": [
+        "has risen이라는 시제와 밑줄의 뜻이 호응하는지 확인하십시오.",
+        "현재완료와 어울려 '최근에'라는 뜻을 나타내는 형태를 떠올려 보십시오."
+      ],
+      "explanation": "현재완료 has risen과 함께 '최근에'라는 뜻이 필요하므로 lately를 써야 합니다. late는 '늦게'라는 시간의 뜻이어서 문맥이 성립하지 않습니다. late를 lately로 고칩니다."
+    },
+    {
+      "id": "u10-c3-ox-001",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["uncountable-pronoun", "it-they"],
+      "sentence": "The movers stacked the furniture in the hallway and covered [[u:it]] with cotton sheets.",
+      "isCorrect": true,
+      "translation": "이삿짐 인부들은 가구를 복도에 쌓아 두고 면포로 덮었습니다.",
+      "hints": [
+        "밑줄 친 대명사가 가리키는 명사를 앞에서 정확히 찾아보십시오.",
+        "여러 개처럼 보여도 불가산 단수로 취급하는 명사들이 있습니다."
+      ],
+      "explanation": "밑줄이 가리키는 명사는 furniture입니다. furniture는 여러 점의 가구를 뜻해도 불가산 단수 명사이므로 단수 대명사 it으로 받는 것이 옳습니다. 복수로 보인다고 them으로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u10-c3-ox-002",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["it-they"],
+      "sentence": "The florist watered the roses at dawn and sold [[u:it]] by noon.",
+      "isCorrect": false,
+      "correction": "them",
+      "translation": "그 꽃집 주인은 새벽에 장미에 물을 주고 정오 무렵에는 다 팔았습니다.",
+      "hints": [
+        "밑줄 친 대명사가 가리키는 명사를 앞 문맥에서 찾아 그 수를 확인하십시오.",
+        "대명사는 가까운 명사가 아니라 실제로 가리키는 명사의 수를 따릅니다."
+      ],
+      "explanation": "밑줄이 가리키는 명사는 복수 명사 the roses입니다. 복수 명사를 받을 때는 복수 대명사를 써야 하므로 it을 them으로 고칩니다."
+    },
+    {
+      "id": "u10-c3-ox-003",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["that-those"],
+      "sentence": "The habits of a seasoned traveler differ sharply from [[u:those]] of a first-time tourist.",
+      "isCorrect": true,
+      "translation": "노련한 여행자의 습관은 처음 여행하는 관광객의 습관과 뚜렷이 다릅니다.",
+      "hints": [
+        "밑줄이 대신하는 명사가 무엇인지 문장 앞쪽에서 찾아보십시오.",
+        "비교 구문의 대명사는 바로 앞 명사가 아니라 비교 대상 명사의 수를 따릅니다."
+      ],
+      "explanation": "밑줄은 앞의 복수 명사 The habits를 대신하므로 복수형 those가 옳습니다. 바로 앞의 단수 명사 a seasoned traveler나 a first-time tourist에 끌려 that으로 바꾸면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-ox-004",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["that-those"],
+      "sentence": "The salary of a nurse in the capital is higher than [[u:those]] of a nurse in rural areas.",
+      "isCorrect": false,
+      "correction": "that",
+      "translation": "수도에서 일하는 간호사의 급여는 지방 간호사의 급여보다 높습니다.",
+      "hints": [
+        "비교되는 명사가 무엇인지 문장 앞쪽에서 찾아 그 수를 확인하십시오.",
+        "복수처럼 보이는 주변 명사가 아니라 실제 비교 대상의 수가 기준입니다."
+      ],
+      "explanation": "비교되는 명사는 단수 명사 The salary입니다. 단수 명사를 대신할 때는 that을 쓰므로 those를 that으로 고칩니다. areas 같은 주변의 복수 명사에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-ox-005",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["uncountable-pronoun"],
+      "sentence": "The evidence gathered from the three crash sites was so fragmentary that the investigators could draw few conclusions from [[u:it]].",
+      "isCorrect": true,
+      "translation": "세 곳의 사고 현장에서 수집된 증거는 너무 단편적이어서 조사관들은 그로부터 결론을 거의 이끌어 내지 못했습니다.",
+      "hints": [
+        "밑줄 친 대명사가 가리키는 명사를 문장 맨 앞에서 찾아보십시오.",
+        "여러 곳에서 모은 자료라도 불가산 명사는 단수로 받습니다."
+      ],
+      "explanation": "밑줄이 가리키는 명사는 문장 맨 앞의 The evidence입니다. evidence는 불가산 단수 명사이므로 it으로 받는 것이 옳습니다. the three crash sites라는 복수 표현에 끌려 them으로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u10-c3-ox-006",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["that-those"],
+      "sentence": "The paintings of the gallery's founder attract far more visitors than [[u:that]] of any living artist on display.",
+      "isCorrect": false,
+      "correction": "those",
+      "translation": "그 미술관 설립자의 그림들은 현재 전시 중인 어떤 생존 작가의 그림들보다 훨씬 많은 관람객을 끌어모읍니다.",
+      "hints": [
+        "비교되는 명사를 문장 맨 앞에서 찾아 그 수를 확인하십시오.",
+        "밑줄 주변의 단수 명사들이 아니라 비교 대상 명사의 수가 기준입니다."
+      ],
+      "explanation": "비교되는 명사는 복수 명사 The paintings입니다. 복수 명사를 대신할 때는 those를 쓰므로 that을 those로 고칩니다. founder·artist 같은 주변의 단수 명사에 끌려 that을 고르면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-ox-007",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["it-vs-one"],
+      "sentence": "The bakery's signature loaf sells out by early morning, so regular customers reserve [[u:one]] a day in advance.",
+      "isCorrect": true,
+      "translation": "그 빵집의 대표 빵은 이른 아침이면 다 팔리기 때문에 단골손님들은 하루 전에 미리 한 덩이를 예약합니다.",
+      "hints": [
+        "손님들이 예약하는 것이 정해진 바로 그 빵 한 덩이인지, 같은 종류의 불특정한 하나인지 따져 보십시오.",
+        "정해진 바로 그것과 같은 종류의 하나는 서로 다른 대명사로 받습니다."
+      ],
+      "explanation": "손님들이 예약하는 것은 앞에 나온 특정한 빵 덩이 자체가 아니라 같은 종류의 불특정한 한 덩이입니다. 같은 종류의 하나(a+명사)를 받을 때는 one을 쓰므로 옳습니다. 정해진 바로 그것을 가리킬 때만 it을 씁니다."
+    },
+    {
+      "id": "u10-c3-ox-008",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["it-vs-one"],
+      "sentence": "The museum acquired a rare medieval map at auction last year but has not yet displayed [[u:one]] to the public.",
+      "isCorrect": false,
+      "correction": "it",
+      "translation": "그 박물관은 지난해 경매에서 희귀한 중세 지도를 입수했지만 아직 그것을 대중에게 공개하지 않았습니다.",
+      "hints": [
+        "전시 대상이 앞에 나온 바로 그 물건인지, 같은 종류의 다른 하나인지 따져 보십시오.",
+        "정해진 바로 그것을 가리킬 때 쓰는 대명사를 떠올려 보십시오."
+      ],
+      "explanation": "전시하지 않은 것은 지난해 입수한 바로 그 지도이므로 정해진 대상을 가리키는 it을 써야 합니다. one은 같은 종류의 불특정한 하나를 가리키므로 문맥에 맞지 않습니다. one을 it으로 고칩니다."
+    },
+    {
+      "id": "u10-c3-wf-001",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["it-they"],
+      "stem": "The keys were not where I had left {{blank}} the night before.",
+      "given": "it",
+      "acceptedAnswers": ["them"],
+      "translation": "열쇠들은 제가 전날 밤에 두었던 자리에 없었습니다.",
+      "hints": [
+        "빈칸의 대명사가 가리키는 명사를 문장 앞에서 찾아보십시오.",
+        "가리키는 명사가 복수이면 대명사도 복수형을 씁니다."
+      ],
+      "explanation": "빈칸이 가리키는 명사는 복수 명사 The keys입니다. 복수 명사를 목적어 자리에서 받을 때는 them을 쓰므로, 주어진 it을 them으로 바꿔 씁니다."
+    },
+    {
+      "id": "u10-c3-wf-002",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["it-they"],
+      "stem": "The editor read the report twice because {{blank}} contained several statistical errors.",
+      "given": "they",
+      "acceptedAnswers": ["it"],
+      "translation": "그 보고서에 여러 통계 오류가 있었기 때문에 편집자는 보고서를 두 번 읽었습니다.",
+      "hints": [
+        "빈칸이 가리키는 명사가 무엇인지 앞 문맥에서 찾아보십시오.",
+        "가리키는 명사가 단수이면 대명사도 단수형을 씁니다."
+      ],
+      "explanation": "통계 오류를 담고 있는 것은 단수 명사 the report입니다. 단수 명사를 주어 자리에서 받을 때는 it을 쓰므로, 주어진 they를 it으로 바꿔 씁니다."
+    },
+    {
+      "id": "u10-c3-wf-003",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["that-those"],
+      "stem": "The traffic laws of the capital are stricter than {{blank}} of the surrounding towns.",
+      "given": "that",
+      "acceptedAnswers": ["those"],
+      "translation": "수도의 교통 법규는 인근 소도시들의 교통 법규보다 더 엄격합니다.",
+      "hints": [
+        "빈칸이 대신하는 비교 대상 명사를 문장 앞쪽에서 찾아보십시오.",
+        "비교 구문의 대명사는 대신하는 명사의 수를 그대로 따릅니다."
+      ],
+      "explanation": "빈칸은 복수 명사 The traffic laws를 대신하는 자리입니다. 복수 명사를 대신할 때는 those를 쓰므로 that을 those로 바꿔 씁니다. 바로 앞의 the capital이 단수라는 데 끌리면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-wf-004",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["uncountable-pronoun", "it-they"],
+      "stem": "The laboratory replaced its outdated equipment and donated {{blank}} to a technical school.",
+      "given": "they",
+      "acceptedAnswers": ["it"],
+      "translation": "그 연구소는 낡은 장비를 교체하고 그것을 기술학교에 기증했습니다.",
+      "hints": [
+        "빈칸이 가리키는 명사가 가산 명사인지 불가산 명사인지 확인하십시오.",
+        "불가산 명사는 여러 점을 뜻해도 단수 대명사로 받습니다."
+      ],
+      "explanation": "빈칸이 가리키는 equipment는 불가산 단수 명사입니다. 여러 점의 장비를 뜻해도 단수 취급하므로 목적어 자리에는 it을 씁니다. 주어진 they를 복수 목적격 them으로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u10-c3-wf-005",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["that-those"],
+      "stem": "The average temperature of the deep ocean layers changes far more slowly than {{blank}} of the surface waters.",
+      "given": "those",
+      "acceptedAnswers": ["that"],
+      "translation": "심해층의 평균 수온은 표층수의 평균 수온보다 훨씬 느리게 변합니다.",
+      "hints": [
+        "빈칸이 대신하는 비교 대상 명사를 문장 맨 앞에서 찾아보십시오.",
+        "빈칸 주변의 복수 명사가 아니라 비교 대상 명사의 수가 기준입니다."
+      ],
+      "explanation": "빈칸이 대신하는 명사는 단수 명사 The average temperature입니다. 단수 명사를 대신할 때는 that을 쓰므로 those를 that으로 바꿔 씁니다. layers·waters 같은 주변의 복수 명사에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-wf-006",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["it-vs-one"],
+      "stem": "The museum's original catalog was destroyed in the fire, so the curators compiled a new {{blank}} from surviving photographs.",
+      "given": "it",
+      "acceptedAnswers": ["one"],
+      "translation": "박물관의 원본 도록이 화재로 소실되어 학예사들은 남아 있는 사진들로 새 도록을 한 권 엮었습니다.",
+      "hints": [
+        "a new 뒤의 빈칸이 정해진 바로 그것을 가리키는지, 같은 종류의 다른 하나를 가리키는지 따져 보십시오.",
+        "관사 a와 함께 쓸 수 있는 대명사를 떠올려 보십시오."
+      ],
+      "explanation": "새로 엮은 것은 소실된 바로 그 도록이 아니라 같은 종류의 새 도록 하나입니다. 같은 종류의 불특정한 하나는 one으로 받으며, a new one처럼 관사·형용사와 함께 쓸 수 있습니다. it은 정해진 바로 그것만 가리키므로 이 자리에 올 수 없습니다."
+    },
+    {
+      "id": "u10-c3-wc-001",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["it-they"],
+      "sentence": "The baker finally replaced his aging oven because [[u:they]] no longer heated evenly.",
+      "wrong": "they",
+      "acceptedAnswers": ["it"],
+      "translation": "낡은 오븐이 더 이상 고르게 가열되지 않았기 때문에 그 제빵사는 마침내 오븐을 교체했습니다.",
+      "hints": [
+        "밑줄 친 대명사가 가리키는 명사를 앞 문맥에서 찾아보십시오.",
+        "가리키는 명사가 단수이면 대명사도 단수형이어야 합니다."
+      ],
+      "explanation": "고르게 가열되지 않은 것은 단수 명사 his aging oven입니다. 단수 명사를 주어 자리에서 받을 때는 it을 쓰므로 they를 it으로 고칩니다."
+    },
+    {
+      "id": "u10-c3-wc-002",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["that-those"],
+      "sentence": "The lungs of a bird are far more efficient at absorbing oxygen than [[u:that]] of a mammal.",
+      "wrong": "that",
+      "acceptedAnswers": ["those"],
+      "translation": "조류의 폐는 포유류의 폐보다 산소를 흡수하는 데 훨씬 더 효율적입니다.",
+      "hints": [
+        "비교되는 명사를 문장 맨 앞에서 찾아 그 수를 확인하십시오.",
+        "바로 앞의 단수 명사가 아니라 실제 비교 대상 명사의 수가 기준입니다."
+      ],
+      "explanation": "비교되는 명사는 복수 명사 The lungs입니다. 복수 명사를 대신할 때는 those를 쓰므로 that을 those로 고칩니다. a bird·a mammal 같은 단수 명사에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u10-c3-wc-003",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["uncountable-pronoun", "it-they"],
+      "sentence": "The clinic upgraded its diagnostic equipment last spring and has relied on [[u:them]] heavily ever since.",
+      "wrong": "them",
+      "acceptedAnswers": ["it"],
+      "translation": "그 병원은 지난봄에 진단 장비를 개선했고 그 이후로 그 장비에 크게 의존해 왔습니다.",
+      "hints": [
+        "밑줄 친 대명사가 가리키는 명사가 가산 명사인지 불가산 명사인지 확인하십시오.",
+        "여러 점을 뜻해도 불가산 명사는 단수 대명사로 받습니다."
+      ],
+      "explanation": "밑줄이 가리키는 equipment는 불가산 단수 명사입니다. 여러 대의 장비를 뜻해도 단수로 취급하므로 them을 it으로 고칩니다."
+    },
+    {
+      "id": "u10-c3-wc-004",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["that-those"],
+      "sentence": "The style of these early sketches differs sharply from [[u:those]] of the artist's later murals.",
+      "wrong": "those",
+      "acceptedAnswers": ["that"],
+      "translation": "이 초기 스케치들의 화풍은 그 화가의 후기 벽화들의 화풍과 뚜렷이 다릅니다.",
+      "hints": [
+        "비교되는 명사를 문장 맨 앞에서 찾아 그 수를 확인하십시오.",
+        "주변의 복수 명사가 아니라 실제 비교 대상 명사의 수가 기준입니다."
+      ],
+      "explanation": "비교되는 명사는 단수 명사 The style입니다. 단수 명사를 대신할 때는 that을 쓰므로 those를 that으로 고칩니다. sketches·murals 같은 복수 명사에 끌려 those를 고르면 안 됩니다."
+    },
+    {
+      "id": "u10-c4-ox-001",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "sentence": "The volunteers were embarrassed when the mayor praised [[u:them]] on live television.",
+      "isCorrect": true,
+      "translation": "자원봉사자들은 시장이 생방송에서 자신들을 칭찬하자 쑥스러워했습니다.",
+      "hints": [
+        "밑줄 친 대명사가 속한 절의 주어가 누구인지 먼저 찾아보십시오.",
+        "재귀 판단의 기준은 문장 전체의 주어가 아니라 밑줄이 속한 절의 주어입니다."
+      ],
+      "explanation": "밑줄이 속한 절의 주어는 the mayor이고, 밑줄은 the volunteers를 가리키므로 서로 다른 대상입니다. 주어와 목적어가 다른 대상이면 일반 목적격 them을 쓰는 것이 옳습니다. 문장 맨 앞의 The volunteers와 같다는 이유로 themselves로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u10-c4-ox-002",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["reflexive", "infinitive-subject"],
+      "sentence": "The old lighthouse keeper grew enough food to support [[u:him]] through each winter.",
+      "isCorrect": false,
+      "correction": "himself",
+      "translation": "그 늙은 등대지기는 매년 겨울을 버틸 수 있을 만큼의 식량을 길러 스스로를 부양했습니다.",
+      "hints": [
+        "to support의 의미상 주어와 밑줄이 가리키는 대상을 비교해 보십시오.",
+        "가리키는 대상이 주어와 같으면 재귀대명사를 씁니다."
+      ],
+      "explanation": "to support의 의미상 주어는 문장의 주어 The old lighthouse keeper이고, 부양받는 대상도 등대지기 자신입니다. 주어와 목적어가 같은 대상이므로 him을 재귀대명사 himself로 고쳐야 합니다. 문장 안에 him이 가리킬 다른 남성 명사도 없습니다."
+    },
+    {
+      "id": "u10-c4-ox-003",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["emphatic-reflexive"],
+      "sentence": "The pianist [[u:herself]] admitted that the final recording had been heavily edited.",
+      "isCorrect": true,
+      "translation": "그 피아니스트는 최종 녹음이 많이 편집되었다는 사실을 직접 인정했습니다.",
+      "hints": [
+        "밑줄을 빼고 읽어도 문장이 성립하는지 확인해 보십시오.",
+        "주어를 강조할 때 재귀대명사를 주어 바로 뒤에 덧붙일 수 있습니다."
+      ],
+      "explanation": "이 재귀대명사는 주어 The pianist를 강조하는 용법으로, 빼도 완전한 문장이 성립합니다. 주어 바로 뒤에 재귀대명사가 오는 것이 어색해 보여도 강조 용법으로 옳습니다."
+    },
+    {
+      "id": "u10-c4-ox-004",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "sentence": "The young athletes prided [[u:them]] on never missing a single training session.",
+      "isCorrect": false,
+      "correction": "themselves",
+      "translation": "그 어린 선수들은 훈련을 단 한 번도 빠지지 않았다는 사실에 자부심을 가졌습니다.",
+      "hints": [
+        "pride라는 동사가 목적어로 어떤 대상을 요구하는지 확인하십시오.",
+        "주어와 목적어가 같은 대상이면 재귀대명사를 씁니다."
+      ],
+      "explanation": "pride oneself on은 '~에 자부심을 갖다'라는 뜻으로, 목적어가 항상 주어 자신을 가리키는 구문입니다. 주어 The young athletes와 목적어가 같은 대상이므로 them을 themselves로 고칩니다."
+    },
+    {
+      "id": "u10-c4-ox-005",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["reflexive"],
+      "sentence": "The directors were confident that the merger would benefit [[u:them]] more than the shareholders.",
+      "isCorrect": true,
+      "translation": "이사들은 그 합병이 주주들보다 자신들에게 더 이득이 되리라고 확신했습니다.",
+      "hints": [
+        "밑줄이 속한 that절의 주어가 무엇인지 찾아보십시오.",
+        "밑줄이 속한 절의 주어와 가리키는 대상이 다르면 일반 목적격을 씁니다."
+      ],
+      "explanation": "밑줄이 속한 that절의 주어는 the merger이고, 밑줄은 the directors를 가리키므로 절 안에서 주어와 목적어가 다른 대상입니다. 따라서 일반 목적격 them이 옳습니다. 문장 전체의 주어 The directors와 같은 대상이라는 이유로 themselves를 쓰면 틀립니다."
+    },
+    {
+      "id": "u10-c4-ox-006",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["reflexive", "infinitive-subject"],
+      "sentence": "The castaways built a shelter of driftwood to protect [[u:them]] from the freezing night wind.",
+      "isCorrect": false,
+      "correction": "themselves",
+      "translation": "조난자들은 살을 에는 밤바람으로부터 스스로를 지키기 위해 유목으로 은신처를 지었습니다.",
+      "hints": [
+        "to protect의 의미상 주어가 누구인지 확인하십시오.",
+        "의미상 주어와 목적어가 같은 대상이면 재귀대명사를 씁니다."
+      ],
+      "explanation": "to protect의 의미상 주어는 문장의 주어 The castaways이고, 보호받는 대상도 조난자들 자신입니다. 주어와 목적어가 같은 대상이므로 them을 themselves로 고칩니다. 문장 안에 them이 가리킬 다른 복수 명사가 없다는 점도 단서가 됩니다."
+    },
+    {
+      "id": "u10-c4-ox-007",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["reflexive"],
+      "sentence": "The negotiators knew that the final decision did not rest with [[u:them]] but with the parliament.",
+      "isCorrect": true,
+      "translation": "협상가들은 최종 결정권이 자신들이 아니라 의회에 있다는 것을 알고 있었습니다.",
+      "hints": [
+        "밑줄이 속한 that절의 주어가 무엇인지 찾아보십시오.",
+        "절의 주어와 대명사가 가리키는 대상이 다르면 일반 목적격을 씁니다."
+      ],
+      "explanation": "밑줄이 속한 that절의 주어는 the final decision이고, 밑줄은 The negotiators를 가리킵니다. 절 안에서 주어와 다른 대상이므로 일반 목적격 them이 옳습니다. 문장 첫머리의 주어와 같다는 이유만으로 재귀대명사를 고르면 안 됩니다."
+    },
+    {
+      "id": "u10-c4-ox-008",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["reflexive"],
+      "sentence": "The two research teams, though working oceans apart, found [[u:itself]] drawn to the same conclusion.",
+      "isCorrect": false,
+      "correction": "themselves",
+      "translation": "그 두 연구팀은 대양을 사이에 두고 떨어져 연구했음에도 같은 결론에 이끌리고 있음을 깨달았습니다.",
+      "hints": [
+        "밑줄 친 재귀대명사의 수·인칭이 주어와 맞는지 확인하십시오.",
+        "재귀대명사는 주어의 수에 맞는 형태를 써야 합니다."
+      ],
+      "explanation": "found의 목적어가 주어 The two research teams 자신을 가리키므로 재귀대명사 자리는 맞습니다. 그러나 주어가 복수이므로 단수형 itself가 아니라 복수형 themselves를 써야 합니다. 삽입구 though working oceans apart에 가려 주어의 수를 놓치기 쉽습니다."
+    },
+    {
+      "id": "u10-c4-wf-001",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["reflexive"],
+      "stem": "The chef burned {{blank}} while testing the new oven.",
+      "given": "he",
+      "acceptedAnswers": ["himself"],
+      "translation": "그 요리사는 새 오븐을 시험하다가 데었습니다.",
+      "hints": [
+        "burned의 주어와 목적어가 같은 대상인지 확인하십시오.",
+        "주어와 목적어가 같은 대상이면 -self형을 씁니다."
+      ],
+      "explanation": "덴 사람은 주어 The chef 자신입니다. 주어와 목적어가 같은 대상이므로 재귀대명사 himself를 씁니다. 일반 목적격 him은 다른 사람을 가리킬 때만 씁니다."
+    },
+    {
+      "id": "u10-c4-wf-002",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["reflexive"],
+      "stem": "Young children often talk to {{blank}} while playing alone.",
+      "given": "they",
+      "acceptedAnswers": ["themselves"],
+      "translation": "어린아이들은 혼자 놀면서 흔히 혼잣말을 합니다.",
+      "hints": [
+        "말을 거는 대상이 주어 자신인지 다른 사람인지 확인하십시오.",
+        "주어와 같은 대상을 가리키면 -selves형을 씁니다."
+      ],
+      "explanation": "혼자 놀며 말을 거는 대상은 주어 Young children 자신입니다. 주어와 같은 대상이므로 재귀대명사 themselves를 씁니다. talk to themselves는 '혼잣말하다'라는 뜻이 됩니다."
+    },
+    {
+      "id": "u10-c4-wf-003",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "stem": "Without new flood barriers, the city cannot protect {{blank}} from rising tides.",
+      "given": "it",
+      "acceptedAnswers": ["itself"],
+      "translation": "새 방벽이 없다면 그 도시는 상승하는 조수로부터 스스로를 지킬 수 없습니다.",
+      "hints": [
+        "protect의 주어와 목적어가 같은 대상인지 확인하십시오.",
+        "주어와 같은 대상이면 주어의 수·인칭에 맞는 -self형을 씁니다."
+      ],
+      "explanation": "보호받는 대상은 주어 the city 자신입니다. 주어와 목적어가 같은 대상이므로 재귀대명사를 쓰되, 주어가 단수 사물이므로 itself를 씁니다."
+    },
+    {
+      "id": "u10-c4-wf-004",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "stem": "When the hikers lost the trail, a park ranger guided {{blank}} back to the campsite.",
+      "given": "they",
+      "acceptedAnswers": ["them"],
+      "translation": "등산객들이 길을 잃었을 때 공원 관리인이 그들을 야영지까지 데려다주었습니다.",
+      "hints": [
+        "guided가 속한 절의 주어가 누구인지 찾아보십시오.",
+        "절의 주어와 대명사가 가리키는 대상이 다르면 일반 목적격을 씁니다."
+      ],
+      "explanation": "guided가 속한 절의 주어는 a park ranger이고, 안내받는 대상은 the hikers로 서로 다른 대상입니다. 따라서 재귀대명사가 아니라 일반 목적격 them을 씁니다."
+    },
+    {
+      "id": "u10-c4-wf-005",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["reflexive", "infinitive-subject"],
+      "stem": "The counselor encouraged the students to forgive {{blank}} for the failed experiment rather than give up research.",
+      "given": "they",
+      "acceptedAnswers": ["themselves"],
+      "translation": "상담사는 학생들에게 연구를 포기하기보다 실패한 실험에 대해 스스로를 용서하라고 격려했습니다.",
+      "hints": [
+        "to forgive의 의미상 주어가 문장의 주어인지 목적어인지 확인하십시오.",
+        "의미상 주어와 용서의 대상이 같은 대상이면 -selves형을 씁니다."
+      ],
+      "explanation": "encourage+목적어+to부정사 구문에서 to forgive의 의미상 주어는 목적어 the students입니다. 용서하는 사람과 용서받는 대상이 모두 학생들 자신이므로 재귀대명사 themselves를 씁니다. 문장 전체의 주어 The counselor가 아니라 의미상 주어를 기준으로 판단해야 합니다."
+    },
+    {
+      "id": "u10-c4-wf-006",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["reflexive"],
+      "stem": "The founders were delighted when the press described {{blank}} as pioneers of clean energy.",
+      "given": "they",
+      "acceptedAnswers": ["them"],
+      "translation": "창업자들은 언론이 자신들을 청정에너지의 개척자라고 표현하자 기뻐했습니다.",
+      "hints": [
+        "described가 속한 절의 주어가 무엇인지 찾아보십시오.",
+        "절의 주어와 가리키는 대상이 다르면 일반 목적격을 씁니다."
+      ],
+      "explanation": "described가 속한 절의 주어는 the press이고, 묘사되는 대상은 The founders로 서로 다른 대상입니다. 따라서 일반 목적격 them을 씁니다. 문장 맨 앞의 주어와 같은 대상이라는 이유로 재귀대명사를 쓰면 틀립니다."
+    },
+    {
+      "id": "u10-c4-wc-001",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "sentence": "The stranded hikers wrapped [[u:them]] in emergency blankets to survive the freezing night.",
+      "wrong": "them",
+      "acceptedAnswers": ["themselves"],
+      "translation": "고립된 등산객들은 혹한의 밤을 버티기 위해 비상 담요로 몸을 감쌌습니다.",
+      "hints": [
+        "wrapped의 주어와 목적어가 같은 대상인지 확인하십시오.",
+        "주어와 목적어가 같은 대상이면 재귀대명사를 씁니다."
+      ],
+      "explanation": "담요로 감싼 대상은 주어 The stranded hikers 자신입니다. 주어와 목적어가 같은 대상이므로 them을 themselves로 고칩니다."
+    },
+    {
+      "id": "u10-c4-wc-002",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["reflexive"],
+      "sentence": "Before walking into the interview, the young applicant reminded [[u:him]] to speak slowly and smile.",
+      "wrong": "him",
+      "acceptedAnswers": ["himself"],
+      "translation": "면접장에 들어가기 전에 그 젊은 지원자는 천천히 말하고 미소를 지어야 한다고 스스로에게 되뇌었습니다.",
+      "hints": [
+        "reminded의 주어와 목적어가 같은 대상인지 확인하십시오.",
+        "주어 자신에게 하는 행동이면 재귀대명사를 씁니다."
+      ],
+      "explanation": "다짐을 받는 대상은 주어 the young applicant 자신입니다. 주어와 목적어가 같은 대상이므로 him을 himself로 고칩니다. 문장 안에 him이 가리킬 다른 남성 명사가 없습니다."
+    },
+    {
+      "id": "u10-c4-wc-003",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["reflexive"],
+      "sentence": "The delegates, exhausted after weeks of deadlock over the treaty's wording, finally allowed [[u:themself]] a brief celebration.",
+      "wrong": "themself",
+      "acceptedAnswers": ["themselves"],
+      "translation": "조약 문안을 둘러싼 몇 주간의 교착으로 지친 대표단은 마침내 스스로에게 짧은 자축을 허락했습니다.",
+      "hints": [
+        "재귀대명사의 형태가 주어의 수와 맞는지 확인하십시오.",
+        "복수 주어에 맞는 재귀대명사의 표준 형태를 떠올려 보십시오."
+      ],
+      "explanation": "allowed의 목적어가 주어 The delegates 자신이므로 재귀대명사 자리는 맞습니다. 그러나 주어가 복수이므로 표준 복수형 themselves를 써야 하며, themself는 이 자리에 맞지 않습니다. 긴 삽입구에 가려 주어의 수를 놓치지 않아야 합니다."
+    },
+    {
+      "id": "u10-c4-wc-004",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["reflexive", "infinitive-subject"],
+      "sentence": "The seminar trained the young researchers to present [[u:them]] confidently in front of international audiences.",
+      "wrong": "them",
+      "acceptedAnswers": ["themselves"],
+      "translation": "그 세미나는 젊은 연구자들이 국제 청중 앞에서 자신을 자신 있게 소개하도록 훈련시켰습니다.",
+      "hints": [
+        "to present의 의미상 주어가 문장의 주어인지 목적어인지 확인하십시오.",
+        "의미상 주어와 가리키는 대상이 같으면 재귀대명사를 씁니다."
+      ],
+      "explanation": "train+목적어+to부정사 구문에서 to present의 의미상 주어는 목적어 the young researchers입니다. 소개하는 사람과 소개되는 대상이 모두 연구자들 자신이므로 them을 themselves로 고칩니다. 재귀 판단은 문장 전체의 주어가 아니라 의미상 주어를 기준으로 합니다."
+    }
+  ]
+}

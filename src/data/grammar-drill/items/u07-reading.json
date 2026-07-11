@@ -1,0 +1,482 @@
+{
+  "unitId": "u07",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u07-c1-mu-001",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where"],
+      "text": "Marine biologists returned to the reef [[1:where]] they had tagged the sharks the previous summer. The narrow channel [[2:which]] the tides rise and fall twice a day [[3:makes]] safe diving nearly impossible.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "where",
+      "rationales": [
+        "선행사 the reef 뒤 절 they had tagged the sharks가 목적어까지 갖춘 완전한 절이므로 관계부사 where가 옳습니다.",
+        "the tides rise and fall은 목적어가 필요 없는 완전한 절이므로 장소 선행사를 받는 관계부사 where가 필요하며, 관계대명사 which는 틀립니다.",
+        "주어의 핵은 단수 The narrow channel이고 뒤따르는 관계절은 삽입 수식어이므로 단수 동사 makes가 옳습니다."
+      ],
+      "hints": [
+        "관계사 뒤의 절을 따로 떼어, 주어와 목적어가 모두 들어 있는지 세어 보십시오.",
+        "성분이 다 갖추어진 완전한 절 앞에는 관계대명사가 아니라 관계부사가 옵니다."
+      ],
+      "explanation": "두 번째 밑줄의 뒤 절 the tides rise and fall twice a day는 자동사로 이루어져 목적어가 필요 없는 완전한 절입니다. 완전한 절 앞에는 관계대명사 which가 올 수 없고, 장소 선행사 the narrow channel을 받는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. 첫 밑줄은 선행사 뒤 절이 목적어까지 갖춘 완전한 절이라 where가 옳고, 셋째 밑줄은 관계절을 걷어낸 단수 주어에 일치한 동사입니다."
+    },
+    {
+      "id": "u07-c2-mu-002",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["relative-adverb"],
+      "text": "Volcanologists still study the day [[1:which]] a sudden eruption buried the harbor town in ash. The layers [[2:preserved]] under the debris [[3:reveal]] how quickly the residents fled.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "when",
+      "rationales": [
+        "선행사 the day 뒤 절 a sudden eruption buried the harbor town가 주어와 목적어를 갖춘 완전한 절이므로, 시간 선행사를 받는 관계부사 when이 필요하며 관계대명사 which는 틀립니다.",
+        "층은 잔해 아래에 보존되는 대상이므로 과거분사 preserved가 옳습니다.",
+        "주어의 핵은 복수 The layers이고 preserved under the debris는 수식어이므로 복수 동사 reveal이 옳습니다."
+      ],
+      "hints": [
+        "선행사가 시간을 뜻하더라도, 관계사 뒤 절이 완전한지부터 확인하십시오.",
+        "완전한 절이 뒤따를 때에는 선행사의 종류에 맞는 관계부사를 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절 a sudden eruption buried the harbor town in ash는 주어와 목적어를 모두 갖춘 완전한 절입니다. 완전한 절 앞에는 관계대명사 which가 올 수 없으며, 시간 선행사 the day에는 관계부사 when이 와야 하므로 which를 when으로 고쳐야 합니다. 둘째 밑줄은 보존되는 대상을 꾸미는 과거분사, 셋째 밑줄은 수식어를 걷어낸 복수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c3-mu-003",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["prep-rel"],
+      "text": "Every green leaf carries out the process [[1:by that]] plants convert sunlight into stored energy. This reaction, [[2:known]] as photosynthesis, [[3:supports]] nearly all life on Earth.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "by which",
+      "rationales": [
+        "관계사 구문에서 전치사 바로 뒤에는 that을 쓸 수 없고 which만 올 수 있으므로 by that을 by which로 고쳐야 합니다.",
+        "이 반응이 광합성이라 불리는 대상이므로 과거분사 known이 옳습니다.",
+        "주어의 핵은 단수 This reaction이고 known as photosynthesis는 삽입 수식어이므로 단수 동사 supports가 옳습니다."
+      ],
+      "hints": [
+        "밑줄이 '전치사+관계사' 형태라면 전치사 뒤에 온 관계사가 무엇인지 확인하십시오.",
+        "관계사절에서 전치사 바로 뒤 자리에는 that을 쓸 수 없습니다."
+      ],
+      "explanation": "첫 번째 밑줄은 '전치사+관계사' 자리입니다. 관계사절에서 전치사 바로 뒤에는 관계대명사 that을 쓸 수 없고 which만 올 수 있으므로 by that을 by which로 고쳐야 합니다. 뒤 절 plants convert sunlight into stored energy가 완전하다는 점도 전치사+관계대명사 자리임을 뒷받침합니다. 둘째 밑줄은 광합성이라 불리는 대상을 꾸미는 과거분사, 셋째 밑줄은 삽입 수식어를 걷어낸 단수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c4-mu-004",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where"],
+      "text": "Tourists crowd the palace [[1:where]] the last emperor built for his mother. Guides [[2:explain]] that the gardens [[3:designed]] by court artisans once covered the entire hillside.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "which",
+      "rationales": [
+        "타동사 built의 목적어 자리가 비어 있어 뒤 절이 불완전하므로, 장소 선행사라도 관계대명사 which를 써야 하며 관계부사 where는 틀립니다.",
+        "주어가 복수 Guides이므로 복수 동사 explain이 옳습니다.",
+        "정원은 궁정 장인들에 의해 설계되는 대상이므로 과거분사 designed가 옳습니다."
+      ],
+      "hints": [
+        "선행사가 장소라고 곧바로 판단하지 말고, 관계사 뒤 절에서 목적어가 빠졌는지 확인하십시오.",
+        "목적어가 빠진 불완전한 절 앞에는 장소 선행사라도 관계대명사를 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절 the last emperor built for his mother에서 타동사 built의 목적어가 비어 있으므로 불완전한 절입니다. 선행사 the palace가 장소라는 이유로 where를 고르면 함정에 빠지며, 목적어가 결손된 불완전한 절 앞에는 관계대명사 which가 와야 하므로 where를 which로 고쳐야 합니다. 둘째 밑줄은 복수 주어에 일치한 동사, 셋째 밑줄은 설계되는 대상을 꾸미는 과거분사로 옳습니다."
+    },
+    {
+      "id": "u07-c1-mu-005",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "prep-rel"],
+      "text": "The observatory [[1:in which]] the astronomers had worked for decades [[2:was]] finally scheduled for demolition. Planners proposed a smaller station [[3:which]] a handful of researchers could scan the night sky remotely.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "where",
+      "rationales": [
+        "the astronomers had worked는 목적어가 필요 없는 완전한 절이고 전치사 in을 절 끝으로 되돌리면 worked in the observatory로 복원되므로 in which가 옳습니다.",
+        "주어의 핵은 단수 The observatory이고 in which절은 삽입 수식어이므로 단수 동사 was가 옳습니다.",
+        "a handful of researchers could scan the night sky는 목적어까지 갖춘 완전한 절이므로 장소 선행사를 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다."
+      ],
+      "hints": [
+        "관계사마다 뒤 절을 따로 읽어, 주어와 목적어가 다 있는지 하나씩 확인하십시오.",
+        "완전한 절 앞에는 관계부사나 '전치사+관계대명사'가 오고, 관계대명사 하나만으로는 설 수 없습니다."
+      ],
+      "explanation": "세 번째 밑줄의 뒤 절 a handful of researchers could scan the night sky remotely는 scan의 목적어 the night sky까지 갖춘 완전한 절입니다. 완전한 절 앞에는 관계대명사 which가 올 수 없고 장소 선행사 a smaller station을 받는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. 첫 밑줄은 in which가 낯설어 보이지만 전치사를 절 끝으로 되돌리면 worked in the observatory로 복원되는 옳은 표현이고, 둘째 밑줄은 삽입 관계절을 걷어낸 단수 주어에 일치한 동사입니다."
+    },
+    {
+      "id": "u07-c2-mu-006",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["relative-adverb"],
+      "text": "Economists have long debated the reason [[1:where]] some banking panics spread across borders while others stay local. The models [[2:built]] to predict such crises [[3:remain]] strikingly unreliable.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "why",
+      "rationales": [
+        "선행사 the reason 뒤 절 some banking panics spread across borders가 완전하므로, 이유 선행사를 받는 관계부사 why가 필요하며 관계부사 where는 틀립니다.",
+        "모형은 위기를 예측하기 위해 만들어진 대상이므로 과거분사 built가 옳습니다.",
+        "주어의 핵은 복수 The models이고 built to predict such crises는 수식어이므로 복수 동사 remain이 옳습니다."
+      ],
+      "hints": [
+        "선행사가 무엇을 뜻하는지 확인하고, 관계사 뒤 절이 완전한지도 함께 살피십시오.",
+        "완전한 절이 뒤따르면 선행사의 종류에 맞는 관계부사를 골라야 하며, 이유를 뜻하는 명사는 특정 관계부사를 요구합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절 some banking panics spread across borders는 자동사로 완결된 완전한 절이므로 관계부사가 필요합니다. 다만 선행사가 이유를 뜻하는 the reason이므로 장소의 where가 아니라 why를 써야 하며, where를 why로 고쳐야 합니다. 둘째 밑줄은 만들어지는 대상을 꾸미는 과거분사, 셋째 밑줄은 수식어를 걷어낸 복수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c3-mu-007",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["prep-rel"],
+      "text": "Geologists measure the rate [[1:which]] mountain ranges rise over millions of years. The clues [[2:preserved]] in ancient rock layers [[3:reveal]] forces buried deep beneath our feet.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "at which",
+      "rationales": [
+        "mountain ranges rise는 목적어가 필요 없는 완전한 절이고 선행사 the rate는 전치사 at과 짝을 이루므로, 관계대명사 which 하나가 아니라 at which를 써야 합니다.",
+        "단서는 고대 암석층에 보존되는 대상이므로 과거분사 preserved가 옳습니다.",
+        "주어의 핵은 복수 The clues이고 preserved in ancient rock layers는 수식어이므로 복수 동사 reveal이 옳습니다."
+      ],
+      "hints": [
+        "관계사 뒤 절이 완전한데 선행사가 장소가 아니라면, 어떤 전치사와 짝을 이루는지 떠올려 보십시오.",
+        "완전한 절 앞의 관계대명사는 홀로 설 수 없고 알맞은 전치사를 앞세워야 합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절 mountain ranges rise over millions of years는 자동사로 이루어진 완전한 절이므로 관계대명사 which가 홀로 올 수 없습니다. 선행사 the rate는 rise at the rate처럼 전치사 at과 짝을 이루므로 which를 at which로 고쳐야 합니다. 둘째 밑줄은 보존되는 대상을 꾸미는 과거분사, 셋째 밑줄은 수식어를 걷어낸 복수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c4-mu-008",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "abstract-antecedent"],
+      "text": "Negotiators eventually reached a stage [[1:where]] no further compromise seemed possible. They moved to a quiet hall [[2:which]] the final terms [[3:were signed]] before dawn.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "where",
+      "rationales": [
+        "선행사 a stage는 추상 명사이지만 뒤 절 no further compromise seemed possible이 완전하므로 관계부사 where가 옳습니다.",
+        "the final terms were signed는 성분을 다 갖춘 완전한 절이므로 장소 선행사 a quiet hall을 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다.",
+        "최종 합의안은 서명되는 대상이므로 수동태 were signed가 옳습니다."
+      ],
+      "hints": [
+        "관계사 뒤 절마다 주어와 목적어가 완비되었는지 따로 확인하십시오.",
+        "완전한 절 앞에서는 선행사가 추상 명사든 장소 명사든 관계대명사를 쓸 수 없습니다."
+      ],
+      "explanation": "두 번째 밑줄의 뒤 절 the final terms were signed before dawn은 수동태로 이루어진 완전한 절이므로 관계대명사 which가 올 수 없습니다. 장소 선행사 a quiet hall을 받는 관계부사 where로 고쳐야 합니다. 첫 밑줄은 추상 선행사 a stage 뒤에 완전한 절이 와서 where가 틀려 보이지만 옳은 표현이고, 셋째 밑줄은 서명되는 대상의 수동태로 옳습니다."
+    },
+    {
+      "id": "u07-c1-mu-009",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where"],
+      "text": "The manor house [[1:where]] the family had restored after the great fire now serves as a museum. The furnishings [[2:donated]] by local collectors [[3:fill]] every room.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "which",
+      "rationales": [
+        "타동사 restored의 목적어가 비어 있어 뒤 절이 불완전하므로 관계대명사 which가 필요하며 관계부사 where는 틀립니다.",
+        "가구는 지역 수집가들에 의해 기증되는 대상이므로 과거분사 donated가 옳습니다.",
+        "주어의 핵은 복수 The furnishings이고 donated by local collectors는 수식어이므로 복수 동사 fill이 옳습니다."
+      ],
+      "hints": [
+        "관계사 뒤 절에서 타동사의 목적어가 제자리에 있는지 확인하십시오.",
+        "목적어가 빠진 불완전한 절 앞에는 관계부사가 아니라 관계대명사가 옵니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절 the family had restored after the great fire에서 타동사 restored의 목적어가 비어 있으므로 불완전한 절입니다. 불완전한 절 앞에는 관계부사 where가 올 수 없고 관계대명사 which가 와야 하므로 where를 which로 고쳐야 합니다. 선행사가 the manor house라는 장소여도 판단 기준은 절의 완전성입니다. 둘째 밑줄은 기증되는 대상을 꾸미는 과거분사, 셋째 밑줄은 수식어를 걷어낸 복수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c2-mu-010",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["relative-adverb", "intransitive-passive"],
+      "text": "Historians point to the decade [[1:where]] cheap steel and a flood of migrant labor together transformed the open prairie into farmland. The speed [[2:at which]] new towns [[3:appeared]] astonished the surveyors [[4:sent]] to map them.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "when",
+      "rationales": [
+        "선행사 the decade는 시간을 뜻하고 뒤 절 cheap steel and a flood of migrant labor together transformed the open prairie into farmland이 완전하므로, 관계부사 when이 필요하며 where는 틀립니다.",
+        "new towns appeared는 목적어가 필요 없는 완전한 절이고 전치사를 되돌리면 towns appeared at the speed로 복원되므로 at which가 옳습니다.",
+        "appear는 목적어를 갖지 않는 자동사여서 수동태로 쓸 수 없으므로 능동 appeared가 옳습니다.",
+        "측량사들은 지도를 그리도록 파견되는 대상이므로 과거분사 sent가 옳습니다."
+      ],
+      "hints": [
+        "각 관계사와 밑줄 뒤 절을 따로 떼어, 선행사의 뜻과 절의 완전성을 함께 확인하십시오.",
+        "완전한 절이 뒤따르면 선행사가 시간이면 시간의 관계부사를, 장소이면 장소의 관계부사를 골라야 합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 뒤 절은 transformed the open prairie into farmland로 목적어까지 갖춘 완전한 절이고 선행사 the decade가 시간을 뜻하므로 where가 아니라 when을 써야 합니다. 둘째 밑줄의 at which는 towns appeared at the speed로 복원되는 옳은 표현이라 낯설어도 정답이 아니며, 셋째 밑줄은 자동사 appear를 수동으로 바꾸고 싶어지는 자리이지만 능동이 옳고, 넷째 밑줄은 파견되는 대상을 꾸미는 과거분사입니다."
+    },
+    {
+      "id": "u07-c3-mu-011",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["prep-rel", "relative-gap"],
+      "text": "The ledgers [[1:on which]] the merchant had recorded every transaction survived the fire. Investigators finally decoded the shorthand [[2:with which]] the clerks had devised over many years, and the coded notes [[3:hidden]] inside a single ledger [[4:were]] enough to convict the whole ring.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "which",
+      "rationales": [
+        "the merchant had recorded every transaction은 목적어까지 갖춘 완전한 절이고 전치사를 되돌리면 recorded every transaction on the ledgers로 복원되므로 on which가 옳습니다.",
+        "타동사 devised의 목적어가 비어 있어 관계사가 그 목적어를 대신해야 하므로 전치사 없이 관계대명사 which를 써야 하며, with which는 틀립니다.",
+        "암호화된 기록은 장부 안에 숨겨진 대상이므로 과거분사 hidden이 옳습니다.",
+        "주어의 핵은 복수 the coded notes이고 hidden inside a single ledger는 수식어이므로 복수 동사 were가 옳습니다."
+      ],
+      "hints": [
+        "'전치사+관계사' 밑줄은 전치사를 절 끝으로 되돌려 원래 문장을 복원해 보십시오.",
+        "관계사가 뒤 절의 빠진 목적어를 대신해야 한다면 전치사를 앞세울 수 없습니다."
+      ],
+      "explanation": "두 번째 밑줄의 뒤 절 the clerks had devised over many years에서 타동사 devised의 목적어가 비어 있습니다. 관계사가 그 목적어(=the shorthand)를 대신해야 하므로 전치사 없이 관계대명사 which만 써야 하며, with which를 which로 고쳐야 합니다. 첫 밑줄은 recorded every transaction on the ledgers로 복원되어 목적어가 이미 있는 완전한 절이므로 on which가 옳고, 셋째 밑줄은 숨겨진 대상의 과거분사, 넷째 밑줄은 단수 명사 a single ledger에 끌리지 않고 복수 주어 notes에 일치시킨 동사입니다."
+    },
+    {
+      "id": "u07-c4-mu-012",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["which-vs-where", "abstract-antecedent"],
+      "text": "Ecologists warn that we have reached a point [[1:where]] the loss of a single pollinator can unravel an entire food web. The terraced orchards [[2:which]] migrant workers had labored for generations now stand as the habitats [[3:collapsing]] fastest, and the wild bees [[4:taken]] for granted by earlier surveys [[5:are]] vanishing almost unnoticed.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "where",
+      "rationales": [
+        "선행사 a point는 추상 명사이지만 뒤 절 the loss of a single pollinator can unravel an entire food web이 완전하므로 관계부사 where가 옳습니다.",
+        "labor는 목적어를 갖지 않는 자동사여서 뒤 절 migrant workers had labored for generations이 완전하므로, 장소 선행사를 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다.",
+        "서식지가 스스로 무너지고 있는 것이므로 능동의 현재분사 collapsing이 옳습니다.",
+        "야생벌은 이전 조사에서 당연하게 여겨지던 대상이므로 과거분사 taken이 옳습니다.",
+        "주어의 핵은 복수 the wild bees이고 taken for granted by earlier surveys는 수식어이므로 복수 동사 are가 옳습니다."
+      ],
+      "hints": [
+        "관계사 뒤 동사가 목적어를 필요로 하는지, 아니면 자동사여서 절이 이미 완전한지 확인하십시오.",
+        "자동사로 끝나 완전해진 절 앞에는 관계대명사가 아니라 관계부사가 옵니다."
+      ],
+      "explanation": "두 번째 밑줄의 뒤 절 migrant workers had labored for generations에서 labor는 목적어를 갖지 않는 자동사이므로 절이 완전합니다. 완전한 절 앞에는 관계대명사 which가 올 수 없고 장소 선행사 the terraced orchards를 받는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. 첫 밑줄은 추상 선행사 a point 뒤에 완전한 절이 온 옳은 where이고, 셋째 밑줄은 스스로 무너지는 자동사의 현재분사, 넷째 밑줄은 여겨지던 대상의 과거분사, 다섯째 밑줄은 수식어를 걷어낸 복수 주어에 일치한 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c1-ps-001",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Far below the surface lies the midnight zone, a layer [[1:where]] daylight never falls. Just above it sits a shallower layer [[2:which]] a trace of blue light still filters down at noon, and the two regions shelter very different life. In the darkness, many animals make their own glow through reactions [[3:packed]] into special cells. The light serves varied ends: some fish use it to lure prey, while others flash signals [[4:meant]] to warn off a predator. What still puzzles biologists [[5:is]] how species so distantly related each evolved the same trick, arriving separately at a light that pierces the deep.",
+      "answer": 2,
+      "correction": "where",
+      "rationales": [
+        "선행사 a layer 뒤 절 daylight never falls가 자동사로 완결된 완전한 절이므로 관계부사 where가 옳습니다.",
+        "a trace of blue light still filters down은 목적어가 필요 없는 완전한 절이므로 장소 선행사를 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다.",
+        "반응은 특수한 세포 안에 채워진 대상이므로 과거분사 packed가 옳습니다.",
+        "신호는 포식자를 쫓도록 의도된 대상이므로 과거분사 meant가 옳습니다.",
+        "What이 이끄는 명사절이 주어이므로 가까운 복수 명사 biologists에 끌리지 않고 단수 동사 is가 옳습니다."
+      ],
+      "underlineUnits": ["u07", "u07", "u04", "u04", "u02"],
+      "gist": "빛이 닿지 않는 심해에서 여러 생물이 각자 독립적으로 발광 능력을 진화시켰다는 점을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 관계사마다 뒤 절을 따로 떼어 주어와 목적어가 다 있는지 세어 보십시오.",
+        "성분이 완전한 절 앞에는 관계대명사가 올 수 없고 관계부사나 전치사+관계대명사가 옵니다."
+      ],
+      "explanation": "②의 뒤 절 a trace of blue light still filters down at noon은 자동사 filter로 완결된 완전한 절입니다. 완전한 절 앞에는 관계대명사 which가 올 수 없고, 장소를 뜻하는 선행사 a shallower layer를 받는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. ①은 같은 원리로 완전한 절 앞에 온 옳은 where이고, ⑤는 가까운 복수 명사 biologists 때문에 are로 바꾸고 싶어지지만 What 명사절 주어는 단수 취급하므로 is가 옳습니다."
+    },
+    {
+      "id": "u07-c2-ps-002",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["relative-adverb", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Psychologists once assumed that shocking public events burn themselves into memory with perfect accuracy. People vividly recall the morning [[1:when]] they first heard alarming news, and the confidence [[2:attached]] to such memories feels total. Yet careful studies tell a different story. The certainty [[3:reported]] by witnesses interviewed years apart did not match their earliest accounts at all. In truth, the emotion of a moment [[4:which]] a memory forms can harden belief without improving accuracy. What such findings reveal [[5:is]] that vividness and truth are far weaker partners than common sense suggests.",
+      "answer": 4,
+      "correction": "when",
+      "rationales": [
+        "선행사 the morning 뒤 절 they first heard alarming news가 완전하므로 시간 선행사를 받는 관계부사 when이 옳습니다.",
+        "확신은 그러한 기억에 결부되는 대상이므로 과거분사 attached가 옳습니다.",
+        "확신은 시차를 두고 면담한 목격자들에 의해 보고되는 대상이므로 과거분사 reported가 옳습니다.",
+        "a memory forms는 목적어가 필요 없는 완전한 절이고 선행사 a moment가 시간을 뜻하므로 관계부사 when이 필요하며 관계대명사 which는 틀립니다.",
+        "What이 이끄는 명사절이 주어이므로 단수 동사 is가 옳습니다."
+      ],
+      "underlineUnits": ["u07", "u04", "u04", "u07", "u02"],
+      "gist": "충격적 사건의 기억은 생생하지만 정확하지는 않으며, 감정이 정확도가 아니라 확신만 키운다는 연구를 소개하는 글입니다.",
+      "hints": [
+        "관계사 뒤 절이 완전한지 먼저 확인하고, 그다음 선행사가 시간·장소·이유 중 무엇인지 보십시오.",
+        "완전한 절이 뒤따르면 선행사의 종류에 맞는 관계부사를 골라야 하며, 관계대명사는 쓸 수 없습니다."
+      ],
+      "explanation": "④의 뒤 절 a memory forms는 자동사로 완결된 완전한 절이므로 관계대명사 which가 올 수 없습니다. 선행사 a moment가 시간을 뜻하므로 관계부사 when으로 고쳐야 합니다. ①은 같은 원리로 시간 선행사 the morning 뒤 완전한 절을 이끄는 옳은 when이고, ⑤는 가까운 복수 명사에 끌리지 않고 What 명사절 주어에 일치시킨 단수 동사입니다."
+    },
+    {
+      "id": "u07-c3-ps-003",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Sociologists describe certain streets as urban commons, places [[1:governed]] by unwritten rules that strangers absorb without noticing. A crowded sidewalk becomes a stage [[2:on which]] countless small courtesies are performed each day: people yield, nod, and step aside without a word. The ease [[3:which]] such coordination happens conceals how much practice it demands. Children raised in dense neighborhoods learn these habits early, and newcomers [[4:puzzled]] by them at first soon adapt. When planners replace lively blocks with blank plazas, the invisible school of the sidewalk quietly disappears. What a good street teaches [[5:is]] a kind of trust that no official program can supply.",
+      "answer": 3,
+      "correction": "with which",
+      "rationales": [
+        "장소는 불문율에 의해 규율되는 대상이므로 과거분사 governed가 옳습니다.",
+        "countless small courtesies are performed each day는 완전한 절이고 전치사를 되돌리면 performed on the stage로 복원되므로 on which가 옳습니다.",
+        "such coordination happens는 목적어가 필요 없는 완전한 절이고 선행사 The ease는 전치사 with와 짝을 이루므로, 관계대명사 which 하나가 아니라 with which를 써야 합니다.",
+        "새로 온 사람들은 규칙에 어리둥절해지는 쪽이므로 과거분사 puzzled가 옳습니다.",
+        "What이 이끄는 명사절이 주어이므로 단수 동사 is가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u07", "u07", "u04", "u02"],
+      "gist": "번화한 거리가 낯선 사람들 사이의 암묵적 예절과 신뢰를 가르치는 도시의 공유 공간임을 설명하는 글입니다.",
+      "hints": [
+        "관계사 뒤 절이 완전한데 선행사가 장소가 아니라면, 그 선행사가 어떤 전치사와 어울리는지 떠올려 보십시오.",
+        "완전한 절 앞의 관계대명사는 홀로 설 수 없으며 알맞은 전치사를 앞세워야 합니다."
+      ],
+      "explanation": "③의 뒤 절 such coordination happens는 자동사로 완결된 완전한 절이므로 관계대명사 which가 홀로 올 수 없습니다. 선행사 The ease는 with the ease처럼 전치사 with와 짝을 이루므로 which를 with which로 고쳐야 합니다. ②는 같은 전치사+관계대명사 자리이지만 performed on the stage로 복원되는 옳은 표현이라 낯설어도 정답이 아니며, ⑤는 What 명사절 주어에 일치시킨 단수 동사로 옳습니다."
+    },
+    {
+      "id": "u07-c4-ps-004",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "For centuries travelers told of a desert city [[1:that]] had grown rich on the caravan trade and then vanished. Historians long dismissed the tales as legend, until aerial surveys revealed street plans [[2:buried]] beneath the sand. Excavation uncovered warehouses, temples, and a market square [[3:where]] merchants from three continents once bargained. The goods [[4:traded]] there tell a surprising story: spices, glass, and ideas moved together along the same routes. Scholars now study the ruined quarter [[5:which]] the wealthiest families had built their walled compounds, hoping to learn how so remote a settlement sustained such reach before the wells finally failed.",
+      "answer": 5,
+      "correction": "where",
+      "rationales": [
+        "뒤 절 had grown rich에 주어 자리가 비어 있으므로 관계대명사 that이 옳습니다.",
+        "거리 배치는 모래 아래 묻힌 대상이므로 과거분사 buried가 옳습니다.",
+        "merchants from three continents once bargained는 목적어가 필요 없는 완전한 절이므로 장소 선행사를 받는 관계부사 where가 옳습니다.",
+        "그곳에서 거래된 물품이므로 과거분사 traded가 옳습니다.",
+        "the wealthiest families had built their walled compounds는 목적어까지 갖춘 완전한 절이므로 장소 선행사를 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다."
+      ],
+      "underlineUnits": ["u06", "u04", "u07", "u04", "u07"],
+      "gist": "사막 대상 무역으로 번성했다가 사라진 고대 도시를 발굴로 재발견하는 과정을 다루는 글입니다.",
+      "hints": [
+        "선행사가 장소라는 이유로 성급히 판단하지 말고, 관계사 뒤 절에 빠진 성분이 있는지 확인하십시오.",
+        "목적어까지 갖춘 완전한 절 앞에는 장소 선행사라도 관계대명사를 쓸 수 없습니다."
+      ],
+      "explanation": "⑤의 뒤 절 the wealthiest families had built their walled compounds는 built의 목적어 their walled compounds까지 갖춘 완전한 절입니다. 선행사 the ruined quarter가 장소라는 이유로 which를 그대로 두면 함정에 빠지며, 완전한 절 앞에는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. ③은 같은 장소 선행사이지만 뒤 절이 완전해 where가 옳은 대조 사례이고, ①은 주어가 빠진 불완전한 절을 이끄는 옳은 관계대명사입니다."
+    },
+    {
+      "id": "u07-c1-ps-005",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["which-vs-where", "clause-subject", "ed-ambiguity"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "For four years a master and his assistants labored inside the chapel [[1:which]] the pope had ordered every wall covered with scenes from scripture. The figures [[2:crowded]] into the lowest band were finished last, once the fresh plaster had begun to set. Conservators today, [[3:armed]] with infrared cameras, can trace the underdrawing the artist sketched before any color was laid. What their scans repeatedly reveal [[4:is]] that the luminous flesh tones depended on thin glazes built up with enormous patience. Even the pigments [[5:dismissed]] for centuries as cheap fillers now prove to scatter light in subtle, deliberate ways.",
+      "answer": 1,
+      "correction": "where",
+      "rationales": [
+        "the pope had ordered every wall covered with scenes from scripture는 성분을 다 갖춘 완전한 절이므로 장소 선행사 the chapel을 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다.",
+        "인물들은 가장 아래 띠 안으로 밀집되게 배치된 대상이므로 과거분사 crowded가 옳습니다.",
+        "보존 전문가들은 적외선 카메라로 무장한 상태이므로 과거분사 armed가 옳습니다.",
+        "What이 이끄는 명사절이 주어이므로 가까운 복수 명사 scans에 끌리지 않고 단수 동사 is가 옳습니다.",
+        "안료는 값싼 충전재로 치부되던 대상이고 이 문장의 본동사는 prove이므로 수식하는 과거분사 dismissed가 옳습니다."
+      ],
+      "underlineUnits": ["u07", "u04", "u04", "u02", "u04"],
+      "gist": "적외선 촬영으로 프레스코의 밑그림과 안료의 광학적 역할을 밝혀내는 복원 연구를 소개하는 글입니다.",
+      "hints": [
+        "관계사 뒤 절을 독립된 문장으로 읽어, 주어와 목적어가 모두 있는지 확인하십시오.",
+        "성분이 완전한 절 앞에서는 장소 선행사라도 관계대명사를 쓸 수 없습니다."
+      ],
+      "explanation": "①의 뒤 절 the pope had ordered every wall covered with scenes from scripture는 주어와 목적어를 모두 갖춘 완전한 절입니다. 완전한 절 앞에는 관계대명사 which가 올 수 없고, 장소 선행사 the chapel을 받는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. ⑤는 dismissed를 본동사로 착각하기 쉽지만 이 문장의 본동사는 prove이므로 pigments를 꾸미는 과거분사이고, ④는 가까운 복수 명사 scans에 끌리지 않고 What 명사절 주어에 일치시킨 단수 동사입니다."
+    },
+    {
+      "id": "u07-c2-ps-006",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["relative-adverb", "abstract-antecedent"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "When engineers straightened a meandering river a century ago, they created the very flooding [[1:that]] they had hoped to prevent. Fast, narrow channels sent storm water downstream in a single violent surge. Ecologists now understand the reason [[2:why]] a curving river behaves so differently: its bends slow the flow and let water soak into the floodplain. That is the reason [[3:where]] many countries have begun to undo the old engineering, reconnecting rivers with the marshes [[4:drained]] long ago for farmland. Restoration reaches a point [[5:where]] the returning wetlands store carbon, filter pollutants, and shelter wildlife at once, quietly repaying the towns that once feared the water they now welcome.",
+      "answer": 3,
+      "correction": "why",
+      "rationales": [
+        "hoped to prevent 뒤에 목적어 자리가 비어 있어 불완전한 절이므로 관계대명사 that이 옳습니다.",
+        "a curving river behaves so differently는 완전한 절이고 선행사가 the reason이므로 관계부사 why가 옳습니다.",
+        "선행사 the reason 뒤 절 many countries have begun to undo the old engineering이 완전하므로 이유의 관계부사 why가 필요하며 관계부사 where는 틀립니다.",
+        "습지는 오래전 농지를 위해 배수된 대상이므로 과거분사 drained가 옳습니다.",
+        "선행사 a point는 추상 명사이지만 뒤 절 the returning wetlands store carbon 등이 완전하므로 관계부사 where가 옳습니다."
+      ],
+      "underlineUnits": ["u06", "u07", "u07", "u04", "u07"],
+      "gist": "직선화했던 강을 다시 굽이치게 복원하면 홍수를 줄이고 습지의 여러 기능을 되살릴 수 있다는 글입니다.",
+      "hints": [
+        "관계사 뒤 절이 완전한지 확인한 뒤, 선행사가 장소·시간·이유 중 무엇을 뜻하는지 보십시오.",
+        "완전한 절 뒤라도 선행사가 이유를 뜻하면 장소의 관계부사를 쓸 수 없습니다."
+      ],
+      "explanation": "③의 선행사는 the reason이고 뒤 절 many countries have begun to undo the old engineering은 완전한 절이므로 이유를 나타내는 관계부사 why가 와야 합니다. 따라서 where를 why로 고쳐야 합니다. ②는 같은 the reason 선행사에 why가 옳게 쓰인 대조 사례이고, ⑤는 추상 선행사 a point 뒤에 완전한 절이 와서 where가 옳은 미끼입니다."
+    },
+    {
+      "id": "u07-c3-ps-007",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["prep-rel", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Money matters only when it moves. Economists track a figure called velocity, the number of times a single dollar changes hands before it rests. In boom years, when confidence [[1:runs]] high, spending speeds up and one bill finances many purchases. Analysts even speak of the pace [[2:which]] money races through the market, a pace that swings sharply with the public mood. During a downturn, households hoard whatever they earn, and the rate of circulation [[3:collapses]]. Central banks watch the figure closely, for it shapes the tools [[4:with which]] they try to steer growth. Still, velocity resists control; it mirrors a confidence [[5:that]] no interest rate can command by decree.",
+      "answer": 2,
+      "correction": "at which",
+      "rationales": [
+        "주어가 단수 confidence이므로 단수 동사 runs가 옳습니다.",
+        "money races through the market는 목적어가 필요 없는 완전한 절이고 선행사 the pace는 전치사 at과 짝을 이루므로, 관계대명사 which 하나가 아니라 at which를 써야 합니다.",
+        "주어의 핵은 단수 the rate이고 of circulation은 수식어이므로 단수 동사 collapses가 옳습니다.",
+        "they try to steer growth는 완전한 절이고 전치사를 되돌리면 steer growth with the tools로 복원되므로 with which가 옳습니다.",
+        "command 뒤에 목적어 자리가 비어 있어 불완전한 절이므로 관계대명사 that이 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u07", "u02", "u07", "u06"],
+      "gist": "화폐 유통 속도가 대중의 신뢰에 따라 크게 달라져 통제하기 어렵다는 점을 설명하는 글입니다.",
+      "hints": [
+        "관계사 뒤 절이 완전한데 선행사가 장소가 아니라면, 그 명사가 어떤 전치사와 어울리는지 떠올려 보십시오.",
+        "완전한 절 앞의 관계대명사는 홀로 설 수 없고 알맞은 전치사를 앞세워야 합니다."
+      ],
+      "explanation": "②의 뒤 절 money races through the market는 자동사 race로 완결된 완전한 절이므로 관계대명사 which가 홀로 올 수 없습니다. 선행사 the pace는 at the pace처럼 전치사 at과 짝을 이루므로 which를 at which로 고쳐야 합니다. ④는 같은 전치사+관계대명사 자리이지만 steer growth with the tools로 복원되는 옳은 표현이라 낯설어도 정답이 아니며, ⑤는 목적어가 빠진 불완전한 절을 이끄는 옳은 관계대명사입니다."
+    },
+    {
+      "id": "u07-c4-ps-008",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["which-vs-where", "abstract-antecedent", "clause-subject"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "A modern data center hums inside a windowless hall [[1:where]] thousands of servers run every hour of the day. Because the machines throw off enormous heat, engineers have reached a point [[2:where]] cooling now costs more than computing itself. Some firms move their servers to cold northern regions, while others sink sealed capsules into the sea. The most ambitious designs recycle the waste heat [[3:pumped]] out of the racks, warming nearby homes through pipes buried underground. Yet a single warehouse [[4:which]] a company packs tens of thousands of processors still strains the local grid, drawing as much electricity as a small town. What these hidden buildings consume [[5:is]] a cost most users never notice when a photo uploads in an instant.",
+      "answer": 4,
+      "correction": "where",
+      "rationales": [
+        "thousands of servers run every hour of the day는 목적어가 필요 없는 완전한 절이므로 장소 선행사 a windowless hall을 받는 관계부사 where가 옳습니다.",
+        "선행사 a point는 추상 명사이지만 뒤 절 cooling now costs more than computing itself가 완전하므로 관계부사 where가 옳습니다.",
+        "폐열은 랙 밖으로 뿜어져 나오는 대상이므로 과거분사 pumped가 옳습니다.",
+        "a company packs tens of thousands of processors는 목적어까지 갖춘 완전한 절이므로 장소 선행사 a single warehouse를 받는 관계부사 where가 필요하며 관계대명사 which는 틀립니다.",
+        "What이 이끄는 명사절이 주어이므로 단수 동사 is가 옳습니다."
+      ],
+      "underlineUnits": ["u07", "u07", "u04", "u07", "u02"],
+      "gist": "데이터 센터가 소비하는 막대한 전력과 냉각 비용이라는, 사용자가 보지 못하는 숨은 대가를 다루는 글입니다.",
+      "hints": [
+        "선행사가 장소라도 성급히 판단하지 말고, 관계사 뒤 절에 빠진 성분이 있는지 세어 보십시오.",
+        "목적어까지 갖춘 완전한 절 앞에는 장소 선행사라도 관계대명사를 쓸 수 없습니다."
+      ],
+      "explanation": "④의 뒤 절 a company packs tens of thousands of processors는 packs의 목적어까지 갖춘 완전한 절입니다. 선행사 a single warehouse가 장소라는 이유로 which를 그대로 두면 함정에 빠지며, 완전한 절 앞에는 관계부사 where가 와야 하므로 which를 where로 고쳐야 합니다. ①과 ②는 각각 구체적 장소와 추상 명사 선행사 뒤에 완전한 절이 와서 where가 옳게 쓰인 대조 사례이고, ⑤는 What 명사절 주어에 일치시킨 단수 동사입니다."
+    }
+  ]
+}

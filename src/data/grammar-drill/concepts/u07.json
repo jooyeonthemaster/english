@@ -1,0 +1,338 @@
+{
+  "unitId": "u07",
+  "concepts": [
+    {
+      "id": "u07-c1",
+      "unitId": "u07",
+      "order": 1,
+      "title": "절의 완전성 판단법",
+      "oneLiner": "주어·목적어가 빠졌으면 불완전 → 관계대명사, 다 있으면 완전 → 관계부사입니다.",
+      "algorithm": [
+        "관계사 뒤의 절만 따로 떼어 하나의 독립된 문장처럼 읽습니다.",
+        "그 절에 주어가 있는지, 타동사·전치사의 목적어가 있는지 차례로 확인합니다.",
+        "주어나 목적어가 빠져 있으면 불완전한 절이므로 관계대명사(who/which/that)를 씁니다.",
+        "성분이 모두 갖추어져 있으면 완전한 절이므로 관계부사(where/when/why/how)나 전치사+관계대명사를 씁니다."
+      ],
+      "rules": [
+        {
+          "rule": "관계대명사 뒤에는 주어나 목적어가 빠진 불완전한 절이 옵니다.",
+          "examples": [
+            {
+              "en": "The museum **which** the city built last year attracts thousands of visitors.",
+              "ko": "그 도시가 작년에 지은 그 박물관은 수천 명의 방문객을 끌어들입니다.",
+              "note": "built의 목적어 자리가 비어 있음 → 불완전 → 관계대명사 which"
+            },
+            {
+              "en": "Scientists praised the theory **that** explained the strange signals.",
+              "ko": "과학자들은 그 이상한 신호들을 설명한 그 이론을 칭찬했습니다.",
+              "note": "explained의 주어 자리가 비어 있음 → 불완전 → 관계대명사 that"
+            }
+          ]
+        },
+        {
+          "rule": "관계부사 뒤에는 성분이 모두 갖추어진 완전한 절이 옵니다.",
+          "examples": [
+            {
+              "en": "The lab **where** the research team works has strict safety rules.",
+              "ko": "그 연구팀이 일하는 실험실은 엄격한 안전 규칙을 가지고 있습니다.",
+              "note": "works는 자동사라 목적어가 필요 없음 → 완전 → 관계부사 where"
+            },
+            {
+              "en": "Everyone remembers the day **when** the old bridge finally opened.",
+              "ko": "모두가 그 오래된 다리가 마침내 개통된 날을 기억합니다.",
+              "note": "the old bridge opened로 주어·동사 완비 → 완전 → when"
+            }
+          ]
+        },
+        {
+          "rule": "선행사가 아니라 절의 완전성으로 판단합니다 — 같은 선행사라도 뒤 절에 따라 관계사가 달라집니다.",
+          "examples": [
+            {
+              "en": "This is the city **where** the festival takes place every spring.",
+              "ko": "이곳은 매년 봄 그 축제가 열리는 도시입니다.",
+              "note": "the festival takes place — 완전 → where"
+            },
+            {
+              "en": "This is the city **which** millions of tourists visit every spring.",
+              "ko": "이곳은 매년 봄 수백만 명의 관광객이 방문하는 도시입니다.",
+              "note": "visit의 목적어 자리가 비어 있음 → 불완전 → which"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "'장소니까 where'로 찍으면 틀립니다",
+          "body": "선행사가 place·city·house 같은 장소 명사라는 이유만으로 where를 고르면 함정에 빠집니다. where는 뒤 절이 완전할 때만 옳고, 뒤 절에 목적어가 빠져 있으면 장소 선행사라도 which를 써야 합니다.",
+          "example": {
+            "en": "They toured the factory **which** the company opened in 2019.",
+            "ko": "그들은 그 회사가 2019년에 연 공장을 견학했습니다.",
+            "note": "opened의 목적어가 비어 있음 → 장소 선행사여도 which"
+          }
+        },
+        {
+          "title": "수식어를 걷어내고 골격만 봅니다",
+          "body": "뒤 절이 길어지고 전치사구·부사가 붙으면 목적어가 있는 것처럼 보이거나, 반대로 결손이 눈에 안 들어옵니다. 전치사구와 부사를 괄호로 묶고 '주어+동사(+목적어)' 골격만 남긴 뒤 결손을 확인합니다.",
+          "example": {
+            "en": "The park **where** children play safely after school is closing soon.",
+            "ko": "아이들이 방과 후에 안전하게 노는 그 공원이 곧 문을 닫습니다.",
+            "note": "safely after school은 수식어 → children play만 남음 → 완전 → where"
+          }
+        }
+      ],
+      "confusableWith": ["u06-c2", "u06-c4", "u07-c4"]
+    },
+    {
+      "id": "u07-c2",
+      "unitId": "u07",
+      "order": 2,
+      "title": "관계부사 4종과 선행사",
+      "oneLiner": "where/when/why/how — 선행사가 아니라 뒤 절의 완전성이 기준입니다.",
+      "algorithm": [
+        "뒤 절이 완전한지 먼저 확인합니다 — 불완전하면 관계부사는 후보에서 제외합니다.",
+        "완전하다면 선행사의 종류를 봅니다: 장소 → where, 시간 → when, 이유(the reason) → why입니다.",
+        "방법은 the way 또는 how 하나만 씁니다 — the way how로 겹쳐 쓰지 않습니다.",
+        "선행사가 시간·이유 명사라도 뒤 절에 결손이 있으면 관계대명사로 돌아갑니다."
+      ],
+      "rules": [
+        {
+          "rule": "where는 장소, when은 시간의 선행사를 받아 완전한 절을 이끕니다.",
+          "examples": [
+            {
+              "en": "We visited the town **where** the famous writer spent his childhood.",
+              "ko": "우리는 그 유명한 작가가 어린 시절을 보낸 마을을 방문했습니다.",
+              "note": "the writer spent his childhood — 성분 완비 → where"
+            },
+            {
+              "en": "Winter is the season **when** many animals slow down to save energy.",
+              "ko": "겨울은 많은 동물들이 에너지를 아끼려고 활동을 늦추는 계절입니다.",
+              "note": "many animals slow down — 완전한 절 → when"
+            }
+          ]
+        },
+        {
+          "rule": "이유는 the reason 뒤 why, 방법은 how로 나타내되 the way how는 함께 쓰지 못합니다.",
+          "examples": [
+            {
+              "en": "No one knows the reason **why** the ancient city was abandoned.",
+              "ko": "아무도 그 고대 도시가 버려진 이유를 알지 못합니다.",
+              "note": "the city was abandoned — 완전 → why"
+            },
+            {
+              "en": "The book describes **how** early sailors crossed the ocean without maps.",
+              "ko": "그 책은 초기 항해자들이 지도 없이 바다를 건넌 방법을 설명합니다.",
+              "note": "the way how로 겹쳐 쓰지 않고 how만 씀"
+            }
+          ]
+        },
+        {
+          "rule": "where의 선행사는 물리적 장소에 한정되지 않습니다 — situation·case·point 같은 추상 명사도 받습니다.",
+          "examples": [
+            {
+              "en": "We reached a point **where** further discussion seemed useless.",
+              "ko": "우리는 더 이상의 논의가 무의미해 보이는 지점에 도달했습니다.",
+              "note": "추상 선행사 a point + 완전한 절 → where가 옳음"
+            }
+          ]
+        },
+        {
+          "rule": "관계부사 선택의 최종 기준도 절의 완전성입니다 — 선행사만 보고 결정하지 않습니다.",
+          "examples": [
+            {
+              "en": "He never forgot the day **that** changed his whole life.",
+              "ko": "그는 자신의 인생 전체를 바꾼 그 날을 결코 잊지 않았습니다.",
+              "note": "changed의 주어 자리가 비어 있음 → 시간 선행사여도 관계대명사"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "the way how는 존재하지 않습니다",
+          "body": "the way how they solved it처럼 겹쳐 쓰면 틀립니다. the way they solved it 또는 how they solved it 중 하나만 남깁니다. 밑줄에 the way how형이 보이면 즉시 오류로 판정합니다.",
+          "example": {
+            "en": "Researchers studied **the way** children learn new words at home.",
+            "ko": "연구자들은 아이들이 집에서 새 단어를 배우는 방식을 연구했습니다.",
+            "note": "the way 뒤에는 how 없이 바로 완전한 절이 옴"
+          }
+        },
+        {
+          "title": "시간·이유 명사라도 뒤 절이 불완전하면 관계대명사입니다",
+          "body": "선행사가 day·reason이라는 이유만으로 when·why를 고르면 안 됩니다. 뒤 절에서 주어나 목적어가 빠져 있으면 which/that이 옳습니다. 완전성 확인이 항상 먼저입니다.",
+          "example": {
+            "en": "She treasured the day **that** her family spent together by the sea.",
+            "ko": "그녀는 가족이 바닷가에서 함께 보낸 그 날을 소중히 여겼습니다.",
+            "note": "spent의 목적어가 비어 있음 → 불완전 → that"
+          }
+        }
+      ],
+      "confusableWith": ["u07-c1", "u07-c3", "u07-c4"]
+    },
+    {
+      "id": "u07-c3",
+      "unitId": "u07",
+      "order": 3,
+      "title": "전치사 + 관계대명사",
+      "oneLiner": "in which·for which는 관계부사와 같은 자리(완전한 절 앞)에 섭니다.",
+      "algorithm": [
+        "밑줄이 in which·for which·by which형이면 뒤 절이 완전한지부터 확인합니다.",
+        "전치사를 관계사절 끝으로 되돌려 원래 문장을 복원합니다 — They live in the house → the house in which they live.",
+        "복원했을 때 '동사+전치사' 짝이 자연스럽게 성립하면 옳고, 전치사가 갈 자리가 없으면 틀린 것입니다.",
+        "뒤 절이 불완전한데 전치사+관계대명사가 쓰였다면 어법상 틀린 자리로 판정합니다."
+      ],
+      "rules": [
+        {
+          "rule": "전치사+관계대명사는 완전한 절을 이끕니다 — 관계부사와 같은 자리입니다.",
+          "examples": [
+            {
+              "en": "The house **in which** the family lives was built a century ago.",
+              "ko": "그 가족이 사는 집은 한 세기 전에 지어졌습니다.",
+              "note": "lives 뒤 성분 완비(전치사 in은 앞으로 이동) → in which는 where 자리"
+            },
+            {
+              "en": "The speed **at which** glaciers melt worries climate scientists.",
+              "ko": "빙하가 녹는 속도는 기후 과학자들을 걱정시킵니다.",
+              "note": "glaciers melt — 완전한 절 → at which"
+            }
+          ]
+        },
+        {
+          "rule": "전치사는 아무 것이나 쓰지 못합니다 — 절 끝으로 되돌렸을 때 성립하는 짝이어야 합니다.",
+          "examples": [
+            {
+              "en": "The tools **with which** early humans hunted are displayed in the museum.",
+              "ko": "초기 인류가 사냥에 사용한 도구들이 그 박물관에 전시되어 있습니다.",
+              "note": "hunted with the tools로 복원됨 → with which"
+            }
+          ]
+        },
+        {
+          "rule": "전치사 바로 뒤에는 that을 쓸 수 없습니다 — 관계사 구문에서 전치사 뒤 자리는 which만 가능합니다.",
+          "examples": [
+            {
+              "en": "The process **by which** plants turn sunlight into food is called photosynthesis.",
+              "ko": "식물이 햇빛을 양분으로 바꾸는 과정은 광합성이라고 불립니다.",
+              "note": "by that은 불가 → 전치사 뒤는 which"
+            }
+          ]
+        },
+        {
+          "rule": "뒤 절이 불완전하면 전치사 없이 관계대명사만 씁니다.",
+          "examples": [
+            {
+              "en": "The plan **which** the committee approved will start next month.",
+              "ko": "위원회가 승인한 그 계획은 다음 달에 시작됩니다.",
+              "note": "approved의 목적어가 비어 있음 → 전치사 없이 which"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "완전한 절 앞의 in which는 낯설어 보여도 옳습니다",
+          "body": "in which·for which는 겉모습이 어려워 보여서 틀렸다고 의심하기 쉽습니다. 그러나 뒤 절이 완전하고 복원한 전치사 짝이 성립하면 옳은 표현입니다 — 시험에서 '옳은 밑줄' 미끼로 자주 나옵니다. 반대로 뒤 절에 목적어가 빠져 있는데 전치사+관계대명사가 쓰였다면 틀린 것입니다.",
+          "example": {
+            "en": "The office **in which** she worked for a decade closed last month.",
+            "ko": "그녀가 십 년간 일했던 사무실이 지난달 문을 닫았습니다.",
+            "note": "she worked (in the office)로 복원됨 — 완전 → 옳은 표현"
+          }
+        },
+        {
+          "title": "전치사와 관계부사를 겹쳐 쓰지 않습니다",
+          "body": "in which는 where와 같은 값이므로 in where처럼 전치사를 또 붙이면 틀립니다. 전치사를 살리면 which, 전치사를 없애면 where — 둘 중 한 가지 형태만 씁니다.",
+          "example": {
+            "en": "This is the town **where** the composer was born.",
+            "ko": "이곳은 그 작곡가가 태어난 마을입니다.",
+            "note": "in where는 불가 — in which 또는 where만 가능"
+          }
+        }
+      ],
+      "confusableWith": ["u07-c1", "u07-c2", "u06-c4"]
+    },
+    {
+      "id": "u07-c4",
+      "unitId": "u07",
+      "order": 4,
+      "title": "함정 — 장소 선행사에 낚이지 않기",
+      "oneLiner": "선행사가 장소여도 뒤 절이 불완전하면 which — 추상 선행사+where 함정을 경계합니다.",
+      "algorithm": [
+        "선행사가 장소·시간 명사라도 결론을 내리지 말고, 관계사 뒤 절부터 읽습니다.",
+        "뒤 절의 주어·목적어 결손을 확인합니다 — 빠져 있으면 which/that, 완비면 where/when입니다.",
+        "선행사가 point·case·situation·stage 같은 추상 명사라도 뒤 절이 완전하면 where가 옳습니다.",
+        "'장소 = where, 추상 = which' 같은 의미 암기는 버립니다 — 기준은 오직 절의 완전성입니다."
+      ],
+      "rules": [
+        {
+          "rule": "장소 선행사라도 뒤 절이 불완전하면 which/that을 씁니다.",
+          "examples": [
+            {
+              "en": "The stadium **which** the city renovated last year hosts weekly matches.",
+              "ko": "그 도시가 작년에 보수한 경기장은 매주 경기를 개최합니다.",
+              "note": "renovated의 목적어가 비어 있음 → 장소 선행사여도 which"
+            },
+            {
+              "en": "They finally found the island **that** the old map described.",
+              "ko": "그들은 마침내 그 낡은 지도가 묘사한 섬을 찾아냈습니다.",
+              "note": "described의 목적어 결손 → that"
+            }
+          ]
+        },
+        {
+          "rule": "추상 선행사라도 뒤 절이 완전하면 where가 옳습니다 — 낯설어도 정답입니다.",
+          "examples": [
+            {
+              "en": "We are now at a stage **where** small errors can ruin the whole project.",
+              "ko": "우리는 이제 작은 오류가 프로젝트 전체를 망칠 수 있는 단계에 있습니다.",
+              "note": "small errors can ruin the project — 완전 → 추상 선행사 stage + where"
+            },
+            {
+              "en": "Consider a case **where** two witnesses remember the same event differently.",
+              "ko": "두 목격자가 같은 사건을 다르게 기억하는 경우를 생각해 보십시오.",
+              "note": "two witnesses remember the event — 완전 → where"
+            }
+          ]
+        },
+        {
+          "rule": "live·stay 같은 자동사의 절은 목적어가 없어도 완전한 절입니다 — where나 in which가 옳습니다.",
+          "examples": [
+            {
+              "en": "The valley **where** the tribe has lived for centuries floods every summer.",
+              "ko": "그 부족이 수 세기 동안 살아온 계곡은 여름마다 물에 잠깁니다.",
+              "note": "live는 자동사 → 목적어 없어도 완전 → where"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "'장소니까 where' 반사 반응이 최대 함정입니다",
+          "body": "출제자는 house·city·factory 같은 장소 선행사를 보여 주고 뒤 절에 목적어 결손을 심어 둡니다. 선행사의 의미로 찍는 순간 오답이 됩니다. 반드시 뒤 절의 성분부터 셉니다.",
+          "example": {
+            "en": "He revisited the house **which** his grandfather built by hand.",
+            "ko": "그는 할아버지가 손수 지은 그 집을 다시 찾았습니다.",
+            "note": "built의 목적어가 비어 있음 → 집(장소)이어도 which"
+          }
+        },
+        {
+          "title": "추상 명사 + where를 오답으로 착각하지 않습니다",
+          "body": "situation·point·case는 눈에 보이는 장소가 아니라서 where가 틀렸다고 판단하기 쉽습니다. 그러나 뒤 절이 완전하면 where가 옳습니다 — '옳지만 틀려 보이는' 밑줄 미끼로 자주 출제됩니다.",
+          "example": {
+            "en": "There are situations **where** silence says more than words.",
+            "ko": "침묵이 말보다 더 많은 것을 전하는 상황들이 있습니다.",
+            "note": "silence says more — 완전 → 추상 선행사여도 where는 옳음"
+          }
+        },
+        {
+          "title": "함정은 양방향입니다 — 완전한 절 앞의 which도 오류입니다",
+          "body": "뒤 절이 완전한데 which가 쓰였다면 where나 전치사+관계대명사로 고쳐야 합니다. 완전성 판단은 where를 의심할 때뿐 아니라 which를 의심할 때도 똑같이 적용합니다.",
+          "example": {
+            "en": "This is the room **where** the committee meets every Monday.",
+            "ko": "이곳은 위원회가 매주 월요일 모이는 방입니다.",
+            "note": "the committee meets — 완전 → 이 자리에 which를 쓰면 오류"
+          }
+        }
+      ],
+      "confusableWith": ["u07-c1", "u07-c2", "u06-c1"]
+    }
+  ]
+}

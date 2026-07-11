@@ -4,9 +4,11 @@
 // 학생 시험 리포트 v3 — 정오표(verdict) 상태 훅
 //
 // 로컬 불변 응답 상태 + 디바운스 1.5s 서버 저장(version CAS 직렬화) + 정오 토글
-// 핸들러 + E2 답안 판독(POST /read) 통합 + 점수 확정 + 리포트 생성(5cr).
+// 핸들러 + 점수 확정 + 리포트 생성(5cr).
 // UI(테이블·다이얼로그·JSX)는 read-step/verdict-board/report-step 이 담당한다.
 // 저장 락은 try/finally 로 반드시 해제한다(v2 runSave 교훈).
+// 플로우 개편(26-07-08): E2 답안 판독(runRead) UI 배선 폐기 — 호출처 0.
+// runRead 본체는 롤백 안전을 위해 데드코드로 유지한다(/read 라우트와 함께 은퇴).
 // ============================================================================
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -394,7 +396,9 @@ export function useVerdictState({ analysis, student, onStudentChange }: VerdictS
     [mutate],
   );
 
-  // ── E2 답안 판독 ──────────────────────────────────────────────────────────
+  // ── E2 답안 판독 (은퇴 — 26-07-08 플로우 개편) ────────────────────────────
+  // 사진 판독 경로가 UI 에서 폐기되어 호출처가 없다. /read 라우트 은퇴와 짝을
+  // 이루는 데드코드 — 롤백 안전을 위해 본체는 삭제하지 않는다.
   const runRead = useCallback(async (): Promise<boolean> => {
     if (reading) return false;
     setReading(true);

@@ -1,8 +1,9 @@
 "use client";
 
-import { Check, Maximize2, AlertTriangle } from "lucide-react";
+import { Check, Maximize2, AlertTriangle, ImageIcon } from "lucide-react";
 
 import type { ExamPassage } from "@/lib/exam-passages/types";
+import type { ExamPassageWebtoonAssetSummary } from "@/lib/exam-passages/webtoon-assets";
 import {
   examShortLabel,
   qLabel,
@@ -17,6 +18,8 @@ interface ExamPassageCardProps {
   selected: boolean;
   onToggle: (id: string) => void;
   onPreview: (passage: ExamPassage) => void;
+  webtoonAssets?: ExamPassageWebtoonAssetSummary[];
+  onPreviewWebtoon?: (passage: ExamPassage) => void;
 }
 
 /**
@@ -28,9 +31,12 @@ export function ExamPassageCard({
   selected,
   onToggle,
   onPreview,
+  webtoonAssets = [],
+  onPreviewWebtoon,
 }: ExamPassageCardProps) {
   const reconstructed = isReconstructed(passage.reconstructionKind);
   const lowConfidence = passage.confidence === "low";
+  const webtoonCount = webtoonAssets.length;
 
   // 문제번호/회차/유형 뱃지 — 데스크톱 메타 행과 모바일 컴팩트 행에서 공용.
   const badges = (
@@ -122,18 +128,34 @@ export function ExamPassageCard({
             {passage.text}
           </p>
         </div>
-        <button
-          type="button"
-          aria-label="상세 보기"
-          title="상세 보기"
-          onClick={(e) => {
-            e.stopPropagation();
-            onPreview(passage);
-          }}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
-        >
-          <Maximize2 className="size-3.5" />
-        </button>
+        <div className="flex shrink-0 items-center gap-1">
+          {webtoonCount > 0 && onPreviewWebtoon ? (
+            <button
+              type="button"
+              aria-label="웹툰 보기"
+              title="웹툰 보기"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPreviewWebtoon(passage);
+              }}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 shadow-sm transition hover:border-blue-300 hover:bg-blue-100"
+            >
+              <ImageIcon className="size-3.5" />
+            </button>
+          ) : null}
+          <button
+            type="button"
+            aria-label="상세 보기"
+            title="상세 보기"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview(passage);
+            }}
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+          >
+            <Maximize2 className="size-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* ── 데스크톱 레이아웃 ── */}
@@ -149,7 +171,22 @@ export function ExamPassageCard({
       </p>
 
       {/* 푸터 — 상세 보기(아이콘) */}
-      <div className="mt-0.5 flex items-center justify-end max-lg:hidden">
+      <div className="mt-0.5 flex items-center justify-end gap-1.5 max-lg:hidden">
+        {webtoonCount > 0 && onPreviewWebtoon ? (
+          <button
+            type="button"
+            aria-label="웹툰 보기"
+            title="웹툰 보기"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreviewWebtoon(passage);
+            }}
+            className="inline-flex h-7 items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2 text-[11px] font-bold text-blue-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-100"
+          >
+            <ImageIcon className="size-3.5" />
+            웹툰 {webtoonCount}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-label="상세 보기"

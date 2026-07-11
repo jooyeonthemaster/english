@@ -1,0 +1,478 @@
+{
+  "unitId": "u10",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u10-c1-mu-001",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["adjective-adverb", "linking-verb", "it-they"],
+      "text": "The ancient manuscript looked [[1:fragile]], so the archivist stored [[2:it]] in a sealed glass case. Even so, the faint ink had faded [[3:considerable]] over the centuries.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "considerably",
+      "rationales": [
+        "look은 연결동사이므로 뒤에 주어 The ancient manuscript의 상태를 설명하는 형용사 fragile이 옳습니다.",
+        "it은 앞의 단수 명사 The ancient manuscript를 가리키므로 단수 대명사 it이 옳습니다.",
+        "faded는 동사이고 그 동사가 얼마나 진행되었는지를 꾸미는 자리이므로 형용사 considerable이 아니라 부사 considerably로 고쳐야 합니다."
+      ],
+      "hints": [
+        "밑줄 친 단어가 무엇을 꾸미거나 설명하는지 명사인지 동사인지 하나씩 짚어 보십시오.",
+        "동사의 정도를 꾸미는 자리에는 형용사가 아니라 부사가 들어갑니다."
+      ],
+      "explanation": "세 번째 밑줄 considerable은 동사 had faded가 얼마나 진행되었는지를 꾸미는 자리입니다. 동사를 수식하는 것은 부사이므로 considerably로 고쳐야 합니다. 첫 밑줄은 연결동사 look 뒤에서 주어의 상태를 설명하는 형용사 보어이고, 둘째 밑줄은 단수 명사를 받는 대명사로 모두 옳습니다."
+    },
+    {
+      "id": "u10-c3-mu-002",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["it-they", "relative-gap"],
+      "text": "The museum restored several damaged frescoes last winter and displayed [[1:it]] in the main hall. Visitors [[2:who]] arrived early admired the vivid colors that the experts had [[3:recovered]].",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "them",
+      "rationales": [
+        "displayed의 목적어는 앞의 복수 명사 several damaged frescoes이므로 단수 it이 아니라 복수 them으로 고쳐야 합니다.",
+        "선행사 Visitors가 사람이고 뒤 절에서 주어가 빠졌으므로 주격 관계대명사 who가 옳습니다.",
+        "관계절에서 recovered의 목적어는 선행사 the vivid colors로 빠져나간 자리이므로 목적어가 없어도 능동 recovered가 옳습니다."
+      ],
+      "hints": [
+        "대명사 밑줄을 만나면 그 대명사가 앞의 어떤 명사를 대신하는지 먼저 찾아 표시해 보십시오.",
+        "대명사의 수는 바로 앞의 명사가 아니라 실제로 가리키는 명사의 수를 따릅니다."
+      ],
+      "explanation": "첫 번째 밑줄 it은 앞 절의 several damaged frescoes를 대신하는데, 이 명사는 복수이므로 복수 대명사 them으로 고쳐야 합니다. 둘째 밑줄은 사람 선행사 뒤 주어가 빠진 주격 관계대명사 who, 셋째 밑줄은 목적어가 선행사로 빠진 관계절의 능동 recovered로 모두 옳습니다."
+    },
+    {
+      "id": "u10-c4-mu-003",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["reflexive", "relative-gap", "linking-verb"],
+      "text": "Emperor penguins protect [[1:them]] from the cold by huddling in dense groups. The heat that the huddle [[2:traps]] keeps every bird [[3:warm]] through the long polar night.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "themselves",
+      "rationales": [
+        "protect의 주어 Emperor penguins와 목적어가 같은 대상이므로 목적격 them이 아니라 재귀대명사 themselves로 고쳐야 합니다.",
+        "관계절에서 traps의 목적어는 선행사 The heat로 빠져나간 자리이므로 목적어가 없어도 능동 traps가 옳습니다.",
+        "keep과 목적어 every bird 뒤의 목적격보어 자리이므로 상태를 설명하는 형용사 warm이 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 대명사가 속한 절의 주어를 찾아, 그 대명사가 가리키는 대상과 같은지 비교해 보십시오.",
+        "한 절 안에서 주어와 목적어가 같은 대상을 가리키면 목적격이 아니라 재귀대명사를 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄에서 protect의 목적어는 주어 Emperor penguins와 같은 대상이므로 재귀대명사 themselves로 고쳐야 합니다. 둘째 밑줄은 목적어가 선행사로 빠진 관계절의 능동 traps, 셋째 밑줄은 keep의 목적격보어 자리에 온 형용사 warm으로 모두 옳습니다."
+    },
+    {
+      "id": "u10-c2-mu-004",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["confusable-adverb", "it-they"],
+      "text": "After the long drought, the reservoir stood [[1:nearly]] empty, and engineers monitored [[2:it]] around the clock. Officials warned that the remaining supply would [[3:hard]] last until spring.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "hardly",
+      "rationales": [
+        "nearly는 '거의'라는 뜻으로 형용사 empty를 꾸며 '거의 빈'이라는 의미를 만들므로 옳습니다.",
+        "it은 앞의 단수 명사 the reservoir를 가리키므로 단수 대명사 it이 옳습니다.",
+        "문맥상 공급이 봄까지 '거의 버티지 못한다'는 준부정의 뜻이 필요하므로 '열심히'를 뜻하는 hard가 아니라 hardly로 고쳐야 합니다."
+      ],
+      "hints": [
+        "밑줄 친 부사를 문맥의 뜻에 넣어 문장 전체가 자연스럽게 해석되는지 확인해 보십시오.",
+        "형태가 비슷한 부사라도 뜻이 전혀 다를 수 있으니, '열심히'와 '거의 ~않다'를 구별해야 합니다."
+      ],
+      "explanation": "세 번째 밑줄은 물이 부족해 공급이 봄까지 '거의 버티지 못한다'는 준부정의 뜻이 필요한 자리입니다. '열심히'를 뜻하는 hard로는 문맥이 통하지 않으므로 '거의 ~않다'를 뜻하는 hardly로 고쳐야 합니다. 첫 밑줄의 nearly는 형용사 empty를 꾸미는 '거의', 둘째 밑줄의 it은 단수 명사를 받는 대명사로 옳습니다."
+    },
+    {
+      "id": "u10-c1-mu-005",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["linking-verb", "no-main-verb"],
+      "text": "The evidence gathered from three independent laboratories [[1:remained]] remarkably consistent throughout the trial. To the reviewers who examined it, the central claim seemed [[2:convincingly]], and the journal [[3:published]] the paper without delay.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "convincing",
+      "rationales": [
+        "gathered from three independent laboratories는 The evidence를 꾸미는 분사구이고 이 문장의 본동사는 remained이므로 옳습니다.",
+        "seem은 연결동사이므로 뒤에 주어 the central claim의 상태를 설명하는 형용사 convincing이 와야 하며, 부사 convincingly는 틀립니다.",
+        "주어 the journal이 논문을 게재하는 주체이고 뒤에 목적어 the paper가 있으므로 능동 published가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 단어가 동사를 꾸미는지, 아니면 주어의 상태를 설명하는지 자리를 먼저 확인해 보십시오.",
+        "seem처럼 상태를 설명하는 연결동사 뒤에는 부사가 아니라 형용사가 옵니다."
+      ],
+      "explanation": "두 번째 밑줄에서 seem은 연결동사이므로 뒤에는 주어 the central claim의 상태를 설명하는 형용사 convincing이 와야 합니다. 부사 convincingly는 이 자리에 올 수 없습니다. 첫 밑줄은 분사구의 수식을 걷어낸 본동사 remained, 셋째 밑줄은 목적어를 거느린 능동 published로 옳습니다."
+    },
+    {
+      "id": "u10-c3-mu-006",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["that-those", "it-they"],
+      "text": "The wingbeats of a hummingbird are far more rapid than [[1:that]] of a sparrow, a difference that fascinates biologists. Researchers [[2:studying]] the tiny birds have filmed [[3:them]] with high-speed cameras.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "those",
+      "rationales": [
+        "비교 대상은 앞의 복수 명사 The wingbeats이므로 단수 that이 아니라 복수 those로 고쳐야 합니다.",
+        "Researchers가 새를 연구하는 능동 관계이므로 명사를 뒤에서 꾸미는 현재분사 studying이 옳습니다.",
+        "them은 앞의 복수 명사 the tiny birds를 가리키므로 복수 대명사 them이 옳습니다."
+      ],
+      "hints": [
+        "비교 구문에서 밑줄 친 대명사가 대신하는 명사가 무엇인지 문장 앞쪽에서 찾아 보십시오.",
+        "비교 구문에서 반복을 피하는 대명사는 바로 뒤의 명사가 아니라 비교의 대상이 되는 앞쪽 명사의 수를 따릅니다."
+      ],
+      "explanation": "첫 번째 밑줄의 that은 비교 대상인 The wingbeats를 대신하는데, 이 명사가 복수이므로 those로 고쳐야 합니다. 바로 뒤의 단수 a sparrow에 끌리면 안 됩니다. 둘째 밑줄은 Researchers와 능동 관계인 현재분사, 셋째 밑줄은 복수 명사 the tiny birds를 받는 them으로 옳습니다."
+    },
+    {
+      "id": "u10-c4-mu-007",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["reflexive", "to-verb"],
+      "text": "The old diving manual advises new divers to pace [[1:them]] carefully during the first descent. Beginners [[2:who]] ignore the warning often exhaust their air supply before they [[3:realize]] the danger.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "themselves",
+      "rationales": [
+        "to pace의 의미상 주어는 advise의 목적어 new divers이고 그 목적어도 같은 대상이므로 목적격 them이 아니라 재귀대명사 themselves로 고쳐야 합니다.",
+        "선행사 Beginners가 사람이고 뒤 절에서 주어가 빠졌으므로 주격 관계대명사 who가 옳습니다.",
+        "접속사 before가 이끄는 절에서 they가 위험을 인식하는 주체이고 뒤에 목적어 the danger가 있으므로 능동 realize가 옳습니다."
+      ],
+      "hints": [
+        "advise A to부정사 구문에서 to부정사의 행동을 실제로 하는 주체가 누구인지 짚어 보십시오.",
+        "to부정사의 의미상 주어와 그 목적어가 같은 대상이면 재귀대명사를 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄에서 to pace의 의미상 주어는 문장의 주어 The old diving manual이 아니라 advise의 목적어 new divers이며, pace의 목적어도 같은 대상이므로 재귀대명사 themselves로 고쳐야 합니다. 둘째 밑줄은 사람 선행사 뒤 주격 관계대명사 who, 셋째 밑줄은 before절에서 목적어를 거느린 능동 realize로 옳습니다."
+    },
+    {
+      "id": "u10-c2-mu-008",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb", "relative-gap"],
+      "text": "Because the surgeon had trained [[1:hard]] for two decades, the younger doctors [[2:who]] joined the hospital valued her judgment [[3:high]] in every difficult case.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "highly",
+      "rationales": [
+        "hard는 '열심히'라는 뜻의 부사로 동사 trained를 꾸미므로 옳습니다. 형태가 비슷한 준부정어와 혼동하면 안 됩니다.",
+        "선행사 the younger doctors가 사람이고 뒤 절에서 주어가 빠졌으므로 주격 관계대명사 who가 옳습니다.",
+        "판단을 '높이·크게 평가했다'는 정도의 뜻이 필요하므로 물리적 높이를 뜻하는 high가 아니라 '매우·크게'를 뜻하는 highly로 고쳐야 합니다."
+      ],
+      "hints": [
+        "밑줄 친 부사가 물리적인 높이를 나타내는지, 아니면 정도가 크다는 뜻을 나타내는지 문맥으로 판단해 보십시오.",
+        "물리적인 높이를 나타낼 때와 '매우·크게'라는 정도를 나타낼 때는 형태가 다른 부사를 씁니다."
+      ],
+      "explanation": "세 번째 밑줄은 판단을 '높이·크게 평가했다'는 정도의 뜻이 필요한 자리이므로, 물리적 높이를 뜻하는 high가 아니라 '매우·크게'를 뜻하는 highly로 고쳐야 합니다. 첫 밑줄의 hard는 '열심히'라는 뜻의 부사, 둘째 밑줄은 사람 선행사 뒤의 주격 관계대명사 who로 옳습니다."
+    },
+    {
+      "id": "u10-c1-mu-009",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["adjective-adverb", "relative-gap"],
+      "text": "Volcanic soil is [[1:remarkable]] fertile, which is why farmers [[2:have cultivated]] the steep slopes for generations despite the danger that eruptions [[3:pose]].",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "remarkably",
+      "rationales": [
+        "밑줄 자리는 형용사 fertile을 꾸미는 자리이므로 형용사 remarkable이 아니라 부사 remarkably로 고쳐야 합니다.",
+        "farmers가 경작하는 주체이고 뒤에 목적어 the steep slopes가 있으므로 능동 현재완료 have cultivated가 옳습니다.",
+        "관계절에서 pose의 목적어는 선행사 the danger로 빠져나간 자리이므로 목적어가 없어도 능동 pose가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 단어가 바로 뒤의 형용사를 꾸미는지, 아니면 다른 명사를 설명하는지 살펴보십시오.",
+        "형용사의 정도를 꾸미는 자리에는 또 다른 형용사가 아니라 부사가 들어갑니다."
+      ],
+      "explanation": "첫 번째 밑줄은 형용사 fertile을 수식하여 '놀랄 만큼 비옥한'이라는 뜻을 만드는 자리입니다. 형용사를 꾸미는 것은 부사이므로 remarkably로 고쳐야 합니다. 둘째 밑줄은 목적어를 거느린 능동 현재완료, 셋째 밑줄은 목적어가 선행사로 빠진 관계절의 능동으로 옳습니다."
+    },
+    {
+      "id": "u10-c3-mu-010",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["it-they", "relative-gap", "no-main-verb"],
+      "text": "The expedition gathered extensive equipment for the deep-sea survey, most of which the crew had tested for months, and stored [[1:them]] in reinforced crates. The submersible, [[2:designed]] to withstand crushing pressure, carried instruments [[3:that]] no earlier mission had dared to deploy.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "it",
+      "rationales": [
+        "equipment는 여러 개처럼 보여도 불가산 단수 명사이므로 복수 them이 아니라 단수 it으로 고쳐야 합니다.",
+        "The submersible은 설계되는 대상이므로 명사를 뒤에서 꾸미는 과거분사 designed가 옳습니다.",
+        "선행사 instruments가 있고 deploy의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다."
+      ],
+      "hints": [
+        "대명사가 가리키는 명사를 찾은 뒤, 그 명사가 셀 수 있는 것인지 셀 수 없는 것인지까지 확인해 보십시오.",
+        "여러 개를 뜻하는 것처럼 보여도 셀 수 없는 명사는 단수로 받아야 합니다."
+      ],
+      "explanation": "첫 번째 밑줄 them이 가리키는 equipment는 여러 장비를 뜻하는 것처럼 보이지만 불가산 단수 명사이므로 단수 대명사 it으로 고쳐야 합니다. 둘째 밑줄은 The submersible과 수동 관계인 과거분사 designed, 셋째 밑줄은 deploy의 목적어가 빠진 관계절을 이끄는 관계대명사 that으로 모두 옳습니다."
+    },
+    {
+      "id": "u10-c1-mu-011",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["linking-verb", "intervening-clause"],
+      "text": "Historians have long considered the printing press, whose influence [[1:spread]] across Europe within a few decades, [[2:responsible]] for the rise of mass literacy. Yet recent studies suggest that the link between new technology and social change is far less [[3:straightforwardly]] than earlier accounts had assumed.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "straightforward",
+      "rationales": [
+        "관계절에서 주어 whose influence에 이어지는 본동사 자리이므로 과거형 spread가 옳습니다.",
+        "consider와 목적어 the printing press 뒤의 목적격보어 자리이므로 형용사 responsible이 옳습니다. 목적어와 보어 사이에 관계절이 끼어 멀어졌을 뿐입니다.",
+        "be동사 is 뒤의 보어 자리이므로 주어 the link의 상태를 설명하는 형용사 straightforward가 와야 하며, 부사 straightforwardly는 틀립니다."
+      ],
+      "hints": [
+        "동사 consider의 목적격보어 자리와 be동사 뒤의 보어 자리에 각각 무엇이 오는지, 중간에 낀 절을 걷어내고 확인해 보십시오.",
+        "주어나 목적어의 상태를 설명하는 보어 자리에는 부사가 아니라 형용사가 들어갑니다."
+      ],
+      "explanation": "세 번째 밑줄은 be동사 is 뒤의 보어 자리로, less가 앞에 붙어도 주어 the link의 상태를 설명하는 형용사 straightforward가 와야 합니다. 부사 straightforwardly는 이 자리에 올 수 없습니다. 첫 밑줄은 관계절의 본동사 spread, 둘째 밑줄은 목적어와 관계절 때문에 멀어졌을 뿐 consider의 목적격보어인 형용사 responsible로 옳습니다."
+    },
+    {
+      "id": "u10-c4-mu-012",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["reflexive", "inserted-clause", "linking-verb"],
+      "text": "When the review board finally honored the volunteers for the daring rescue, the exhausted crew could hardly believe that the officials were describing [[1:themselves]], ordinary workers, as national heroes. The citation, [[2:written]] weeks later, praised the teamwork that had kept every member [[3:alive]] through the storm.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "them",
+      "rationales": [
+        "describing이 속한 절의 주어는 the officials이고 밑줄이 가리키는 대상은 the crew, 곧 ordinary workers로 서로 다르므로, 재귀대명사 themselves가 아니라 목적격 them으로 고쳐야 합니다.",
+        "The citation은 작성되는 대상이므로 명사를 뒤에서 꾸미는 과거분사 written이 옳습니다.",
+        "keep과 목적어 every member 뒤의 목적격보어 자리이므로 상태를 설명하는 형용사 alive가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 대명사가 속한 절의 주어를 찾은 뒤, 그 대명사가 가리키는 대상과 같은지 비교해 보십시오.",
+        "재귀대명사는 밑줄이 속한 바로 그 절의 주어와 같은 대상일 때만 쓰고, 다른 대상이면 목적격을 씁니다."
+      ],
+      "explanation": "첫 번째 밑줄이 속한 절의 주어는 the officials이지만 밑줄이 가리키는 대상은 the crew, 곧 ordinary workers이므로 두 대상이 다릅니다. 따라서 재귀대명사 themselves가 아니라 목적격 them으로 고쳐야 합니다. 둘째 밑줄은 The citation과 수동 관계인 과거분사 written, 셋째 밑줄은 keep의 목적격보어 자리에 온 형용사 alive로 모두 옳습니다."
+    },
+    {
+      "id": "u10-c3-ps-001",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["it-they", "that-those", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The atmosphere of Venus differs sharply from [[1:that]] of Earth, though the two worlds are often called sister planets because of their similar size. Its dense shroud of carbon dioxide traps heat so effectively that the surface [[2:remains]] hot enough to melt lead. The Soviet Union sent several probes to the surface during the 1970s, but the crushing pressure destroyed [[3:it]] within a few hours. Scientists [[4:studying]] these extreme conditions argue that the runaway greenhouse effect on Venus resembles, in principle, the warming [[5:observed]] on Earth today. Comparing the two atmospheres, they suggest, may teach us how fragile the balance of any planet can truly be.",
+      "answer": 3,
+      "correction": "them",
+      "rationales": [
+        "differs from 뒤의 that은 비교 대상인 The atmosphere를 대신하는데, 이 명사가 단수이므로 단수 that이 옳습니다.",
+        "주어의 핵은 단수 명사 the surface이므로 단수 동사 remains가 옳습니다.",
+        "several probes는 복수 명사이므로 이를 받는 대명사는 단수 it이 아니라 복수 them으로 고쳐야 합니다.",
+        "이 절의 본동사는 뒤의 argue이고 studying은 Scientists를 꾸미는 현재분사이므로 옳습니다.",
+        "the warming이 관측되는 대상이므로 명사를 뒤에서 꾸미는 과거분사 observed가 옳습니다."
+      ],
+      "underlineUnits": ["u10", "u02", "u10", "u01", "u04"],
+      "hints": [
+        "밑줄 친 대명사마다 그것이 앞의 어떤 명사를 대신하는지 찾아 표시해 보십시오.",
+        "대명사의 수는 바로 가까운 명사가 아니라 실제로 가리키는 명사의 수를 따릅니다."
+      ],
+      "explanation": "③ it이 가리키는 대상은 앞 문장의 several probes로 복수 명사이므로, 단수 it이 아니라 복수 them으로 고쳐야 합니다. ④ studying은 본동사처럼 보이지만 실제 본동사는 argue이고 Scientists를 꾸미는 현재분사이므로 옳은 미끼 밑줄이라는 점에 주의합니다.",
+      "gist": "금성의 극단적인 대기 환경과 그것이 지구 기후 연구에 주는 시사점을 다룹니다."
+    },
+    {
+      "id": "u10-c1-ps-002",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["linking-verb", "intervening-pp", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Psychologists have shown that first impressions [[1:form]] remarkably fast, often within a tenth of a second. In one experiment, participants glanced at a stranger's photograph for a single moment, and to most viewers the face immediately looked [[2:trustworthily]]. Their snap judgments proved surprisingly stable over the following weeks, regardless of what they were later told. What makes these impressions so powerful is that the brain treats [[3:them]] as reliable even when later evidence [[4:contradicts]] the first view. Researchers caution, however, that assessments [[5:formed]] on such thin information frequently mislead us in situations where fairness matters most.",
+      "answer": 2,
+      "correction": "trustworthy",
+      "rationales": [
+        "주어 first impressions가 복수이므로 that절의 동사는 복수형 form이 옳습니다.",
+        "look은 연결동사이므로 뒤에 주어 the face의 상태를 설명하는 형용사 trustworthy가 와야 하며, 부사 trustworthily는 틀립니다.",
+        "them은 앞의 복수 명사 these impressions를 가리키므로 복수 대명사 them이 옳습니다.",
+        "evidence는 여러 개처럼 보여도 불가산 단수 명사이므로 단수 동사 contradicts가 옳습니다.",
+        "assessments가 형성되는 대상이므로 명사를 뒤에서 꾸미는 과거분사 formed가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u10", "u10", "u02", "u04"],
+      "hints": [
+        "밑줄 친 단어가 동사를 꾸미는지, 아니면 주어나 목적어의 상태를 설명하는지 자리를 먼저 확인해 보십시오.",
+        "look처럼 상태를 설명하는 연결동사 뒤에는 부사가 아니라 형용사가 옵니다."
+      ],
+      "explanation": "② 동사 look은 '~하게 보이다'로 번역되지만 연결동사이므로 뒤에는 주어 the face의 상태를 설명하는 형용사 trustworthy가 와야 합니다. 부사 trustworthily는 이 자리에 올 수 없습니다. ④ evidence는 복수처럼 보여도 불가산 단수 명사여서 단수 동사 contradicts가 옳은 미끼 밑줄이라는 점에 주의합니다.",
+      "gist": "첫인상이 순식간에 형성되어 오래 지속되는 심리 현상과 그 위험을 다룹니다."
+    },
+    {
+      "id": "u10-c4-ps-003",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["reflexive", "it-they", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "When the city council voted to close a beloved public library, longtime patrons refused to accept the decision quietly. Volunteers [[1:who]] had relied on the building for decades quickly organized a campaign to reverse it. They gathered thousands of signatures and delivered [[2:them]] to the council in person. A retired teacher who led the effort [[3:reminded]] the group that ordinary citizens can shape public policy when they act together. Facing such determined pressure, the council members eventually found [[4:them]] agreeing to reverse their own earlier vote, an outcome that [[5:surprised]] even the organizers.",
+      "answer": 4,
+      "correction": "themselves",
+      "rationales": [
+        "선행사 Volunteers가 사람이고 뒤 절에서 주어가 빠졌으므로 주격 관계대명사 who가 옳습니다.",
+        "them은 앞의 복수 명사 signatures를 가리키므로 복수 대명사 them이 옳습니다.",
+        "who led the effort는 삽입된 관계절이고 이 문장의 본동사는 reminded이므로 옳습니다.",
+        "found가 속한 절의 주어 the council members와 목적어가 같은 대상이므로 목적격 them이 아니라 재귀대명사 themselves로 고쳐야 합니다.",
+        "관계절에서 주어 that이 가리키는 an outcome이 조직가들을 놀라게 하는 주체이므로 능동의 과거형 surprised가 옳습니다."
+      ],
+      "underlineUnits": ["u07", "u10", "u01", "u10", "u04"],
+      "hints": [
+        "밑줄 친 대명사가 속한 절의 주어가 누구인지 찾은 뒤, 그 대명사가 가리키는 대상과 같은지 비교해 보십시오.",
+        "한 절 안에서 주어와 목적어가 같은 대상이면 목적격이 아니라 재귀대명사를 씁니다."
+      ],
+      "explanation": "④ found가 속한 절의 주어는 the council members이고 목적어도 같은 대상, 곧 스스로 표결을 뒤집는 데 동의하는 위원들이므로 목적격 them이 아니라 재귀대명사 themselves로 고쳐야 합니다. ③ reminded는 삽입 관계절 who led the effort에 가려 본동사가 없어 보이지만 실제 본동사이므로 옳은 미끼 밑줄이라는 점에 주의합니다.",
+      "gist": "도서관 폐쇄에 맞서 조직적으로 대응해 결정을 뒤집은 시민들의 사례를 다룹니다."
+    },
+    {
+      "id": "u10-c2-ps-004",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["confusable-adverb", "no-main-verb", "conj-that", "prep-rel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "By the early nineteenth century, the once-mighty trading city had declined so far that visitors could [[1:hard]] recognize its celebrated harbor. Merchants whose families had grown wealthy there [[2:abandoned]] the crumbling warehouses one after another. Historians long assumed that a single war had ruined the port, but recent studies suggest [[3:that]] a slow shift in trade routes mattered far more. The rivers [[4:on which]] cargo had once traveled silted up, and newer ports nearer the coast captured the business. What remained was a quiet town whose grand ruins still [[5:hint]] at a prosperity that vanished centuries ago.",
+      "answer": 1,
+      "correction": "hardly",
+      "rationales": [
+        "문맥상 방문객이 항구를 '거의 알아보지 못했다'는 준부정의 뜻이 필요하므로 '열심히·세게'를 뜻하는 hard가 아니라 hardly로 고쳐야 합니다.",
+        "whose families had grown wealthy there는 삽입된 관계절이고 이 문장의 본동사는 abandoned이므로 옳습니다.",
+        "suggest 뒤에 성분이 모두 갖춰진 완전한 절이 이어지므로 명사절을 이끄는 접속사 that이 옳습니다.",
+        "관계절 cargo had once traveled가 완전하고 '강 위로 이동하다'라는 뜻이므로 전치사와 관계대명사가 결합한 on which가 옳습니다.",
+        "관계절의 주어가 복수 명사 grand ruins이므로 복수 동사 hint가 옳습니다."
+      ],
+      "underlineUnits": ["u10", "u01", "u06", "u07", "u02"],
+      "hints": [
+        "밑줄 친 부사를 문맥의 뜻에 넣어 문장 전체가 자연스럽게 해석되는지 확인해 보십시오.",
+        "'열심히·세게'라는 뜻과 '거의 ~않다'라는 준부정의 뜻은 형태가 다른 부사로 구별해야 합니다."
+      ],
+      "explanation": "① 도시가 쇠락해 방문객이 항구를 '거의 알아보지 못했다'는 준부정의 뜻이 필요한 자리이므로, '열심히·세게'를 뜻하는 hard가 아니라 hardly로 고쳐야 합니다. ③ suggest 뒤 절은 성분이 완전하므로 what이 아니라 접속사 that이 옳은 미끼 밑줄이라는 점에 주의합니다.",
+      "gist": "무역로 변화로 서서히 쇠락한 옛 무역 도시의 역사를 재조명합니다."
+    },
+    {
+      "id": "u10-c1-ps-005",
+      "unitId": "u10",
+      "conceptId": "u10-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["linking-verb", "relative-gap", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "For centuries, critics dismissed the sketches an artist made before a major painting as mere preparation, unworthy of serious study. Recent exhibitions, however, have made these preliminary drawings [[1:central]] to how we understand creativity. Curators who arrange them beside the finished works argue that the rough lines reveal decisions [[2:that]] the polished surface hides. A hesitant curve, [[3:erased]] and redrawn a dozen times, can tell us more about an artist's mind than the confident final stroke ever could. Viewers [[4:standing]] before such sketches often report feeling unexpectedly close to the creative struggle. What once seemed [[5:carelessly]] now appears, to many, the very heart of art.",
+      "answer": 5,
+      "correction": "careless",
+      "rationales": [
+        "make와 목적어 these preliminary drawings 뒤의 목적격보어 자리이므로 형용사 central이 옳습니다.",
+        "관계절에서 hides의 목적어가 선행사 decisions로 빠져나간 불완전한 절이므로 관계대명사 that이 옳습니다.",
+        "A hesitant curve가 지워지는 대상이므로 명사를 꾸미는 과거분사 erased가 옳습니다.",
+        "이 문장의 본동사는 report이고 standing은 Viewers를 꾸미는 현재분사이므로 옳습니다.",
+        "seem은 연결동사이므로 뒤에 주어 What의 상태를 설명하는 형용사 careless가 와야 하며, 부사 carelessly는 틀립니다."
+      ],
+      "underlineUnits": ["u10", "u06", "u04", "u01", "u10"],
+      "hints": [
+        "밑줄 친 단어가 동사를 꾸미는지, 아니면 주어의 상태를 설명하는지 자리를 먼저 확인해 보십시오.",
+        "seem이나 appear처럼 상태를 설명하는 연결동사 뒤에는 부사가 아니라 형용사가 옵니다."
+      ],
+      "explanation": "⑤ seem은 '~해 보이다'로 번역되지만 연결동사이므로 뒤에는 주어 What의 상태를 설명하는 형용사 careless가 와야 합니다. 부사 carelessly는 이 자리에 올 수 없습니다. ② the polished surface hides는 완전해 보이지만 hides의 목적어가 선행사 decisions로 빠진 불완전한 절이어서 관계대명사 that이 옳은 미끼 밑줄입니다.",
+      "gist": "완성작을 위한 습작 스케치를 예술의 본질로 재평가하는 최근 미술계의 시각을 소개합니다."
+    },
+    {
+      "id": "u10-c3-ps-006",
+      "unitId": "u10",
+      "conceptId": "u10-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["that-those", "intervening-pp", "distant-parallel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Wetlands cover only a small fraction of the Earth's surface, yet their importance to the climate [[1:is]] enormous. Gram for gram, the carbon deposits buried beneath a healthy marsh can far exceed [[2:that]] found in tropical rainforests, which are often praised as the planet's lungs. When such ecosystems [[3:are drained]] for farmland, the carbon stored for thousands of years escapes into the air within decades. Researchers who study the problem argue that protecting existing marshes is far cheaper than [[4:restoring]] damaged ones. Many governments, [[5:persuaded]] by this evidence, have begun to treat coastal wetlands as essential natural infrastructure.",
+      "answer": 2,
+      "correction": "those",
+      "rationales": [
+        "주어의 핵은 단수 명사 their importance이고 to the climate는 전치사구 수식어이므로 단수 동사 is가 옳습니다.",
+        "비교 대상은 앞의 복수 명사 the carbon deposits이므로 단수 that이 아니라 복수 those로 고쳐야 합니다.",
+        "such ecosystems는 배수되는 대상이므로 수동태 are drained가 옳습니다.",
+        "than을 사이에 둔 비교에서 앞의 동명사 protecting과 형태를 맞춰야 하므로 동명사 restoring이 옳습니다.",
+        "Many governments가 설득되는 대상이므로 명사를 꾸미는 과거분사 persuaded가 옳고, 이 문장의 본동사는 뒤의 have begun입니다."
+      ],
+      "underlineUnits": ["u02", "u10", "u03", "u05", "u04"],
+      "hints": [
+        "비교 구문에서 밑줄 친 대명사가 대신하는 명사를 문장 앞쪽에서 찾아 그 수를 확인해 보십시오.",
+        "비교 구문에서 반복을 피하는 대명사는 바로 뒤의 명사가 아니라 비교의 대상이 되는 앞쪽 명사의 수를 따릅니다."
+      ],
+      "explanation": "② 비교 대상은 앞의 복수 명사 the carbon deposits이므로 단수 that이 아니라 복수 those로 고쳐야 합니다. 바로 뒤의 tropical rainforests에 끌리면 안 됩니다. ⑤ persuaded는 앞에 be동사가 없어 틀려 보이지만 Many governments를 꾸미는 과거분사이고 본동사는 have begun이므로 옳은 미끼 밑줄입니다.",
+      "gist": "숲보다 뛰어난 습지의 탄소 저장 능력과 습지 보호의 중요성을 다룹니다."
+    },
+    {
+      "id": "u10-c4-ps-007",
+      "unitId": "u10",
+      "conceptId": "u10-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["reflexive", "emotion-participle", "intervening-clause", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Economists once assumed that investors behave rationally, weighing every risk before acting. Decades of research, however, have shown that people routinely deceive [[1:themselves]] about the quality of their own judgment. A trader who has just booked a large profit, [[2:convinced]] of his own genius, tends to take bigger risks the very next day. Firms that reward such boldness [[3:find]] their traders growing more reckless until a sudden reversal forces a reckoning. Ironically, when the market finally turns, it punishes [[4:themselves]] hardest of all, striking the confident analysts [[5:who]] had promised that the old rules no longer applied.",
+      "answer": 4,
+      "correction": "them",
+      "rationales": [
+        "people가 스스로를 속이는 것으로 주어와 목적어가 같은 대상이므로 재귀대명사 themselves가 옳습니다.",
+        "A trader가 확신하게 된 대상이므로 명사를 꾸미는 과거분사 convinced가 옳습니다.",
+        "관계절 that reward such boldness를 걷어낸 주어의 핵은 복수 명사 Firms이고 이 문장의 본동사이므로 복수형 find가 옳습니다.",
+        "punishes가 속한 절의 주어는 it, 곧 the market이고 밑줄이 가리키는 대상은 the analysts로 서로 다르므로, 재귀대명사 themselves가 아니라 목적격 them으로 고쳐야 합니다.",
+        "선행사 the confident analysts가 사람이고 뒤 절에서 주어가 빠졌으므로 주격 관계대명사 who가 옳습니다."
+      ],
+      "underlineUnits": ["u10", "u04", "u02", "u10", "u07"],
+      "hints": [
+        "밑줄 친 대명사가 속한 절의 주어가 무엇인지 먼저 찾고, 그 주어와 대명사가 가리키는 대상이 같은지 비교해 보십시오.",
+        "재귀대명사는 밑줄이 속한 바로 그 절의 주어와 같은 대상일 때만 쓰고, 다른 대상이면 목적격을 씁니다."
+      ],
+      "explanation": "④ punishes가 속한 절의 주어는 it, 곧 the market이지만 밑줄이 가리키는 대상은 the analysts로 서로 다릅니다. 따라서 재귀대명사 themselves가 아니라 목적격 them으로 고쳐야 합니다. ① 같은 재귀대명사라도 people deceive themselves는 주어와 목적어가 같아 옳으므로, 두 자리를 대조해 판단해야 합니다.",
+      "gist": "호황기에 자만하다 시장 반전에 크게 무너지는 투자자 심리를 경제학적으로 짚습니다."
+    },
+    {
+      "id": "u10-c2-ps-008",
+      "unitId": "u10",
+      "conceptId": "u10-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["confusable-adverb", "comma-which", "no-main-verb"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Early machine translation systems, which relied on rigid grammatical rules, [[1:performed]] so poorly that professionals rarely trusted the output. Real progress arrived only after fixed rules [[2:were replaced]] by statistical models trained on vast collections of human text. These systems have improved so dramatically [[3:late]] that professional translators around the world now depend on them every day. Yet even the finest programs still stumble over humor and cultural nuance, [[4:which]] no dataset fully captures. Engineers who once dismissed such obstacles now concede that language may be the subtlest problem [[5:they]] have ever tackled.",
+      "answer": 3,
+      "correction": "lately",
+      "rationales": [
+        "which relied on rigid grammatical rules는 삽입된 관계절이고 이 문장의 본동사는 performed이므로 옳습니다.",
+        "fixed rules는 교체되는 대상이므로 수동태 were replaced가 옳습니다.",
+        "현재완료와 어울려 '최근에'라는 뜻이 필요한 자리이므로 '늦게'를 뜻하는 late가 아니라 lately로 고쳐야 합니다.",
+        "앞 내용인 humor and cultural nuance를 받으면서 captures의 목적어가 빠진 불완전한 절을 이끌므로 콤마 뒤 계속적 용법의 which가 옳습니다.",
+        "the subtlest problem을 선행사로 하는 접촉 관계절의 주어이고 Engineers를 가리키므로 복수 대명사 they가 옳습니다."
+      ],
+      "underlineUnits": ["u01", "u03", "u10", "u06", "u10"],
+      "hints": [
+        "밑줄 친 부사를 문맥의 뜻에 넣어 문장 전체가 자연스럽게 해석되는지 확인해 보십시오.",
+        "'늦게'라는 시간의 뜻과 '최근에'라는 뜻은 형태가 다른 부사로 구별하며, 후자는 완료 시제와 자주 어울립니다."
+      ],
+      "explanation": "③ 현재완료 have improved와 어울려 '최근에 극적으로 향상되었다'는 뜻이 필요한 자리이므로, '늦게'를 뜻하는 late가 아니라 '최근에'를 뜻하는 lately로 고쳐야 합니다. ④ no dataset fully captures는 완전해 보이지만 captures의 목적어가 빠진 불완전한 절이어서, 앞 내용을 받는 계속적 용법의 which가 옳은 미끼 밑줄입니다.",
+      "gist": "규칙 기반에서 통계와 신경망으로 발전한 기계 번역 기술의 역사를 정리합니다."
+    }
+  ]
+}

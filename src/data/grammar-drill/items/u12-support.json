@@ -1,0 +1,1214 @@
+{
+  "unitId": "u12",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u12-c1-ox-001",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Hardly [[u:had]] the concert begun when the stage lights failed across the entire hall.",
+      "isCorrect": true,
+      "translation": "콘서트가 시작되자마자 홀 전체의 무대 조명이 나갔습니다.",
+      "hints": [
+        "문장이 어떤 부사로 시작하는지, 그리고 밑줄 친 동사와 주어의 순서를 확인해 보십시오.",
+        "부정·제한의 부사가 문두에 오면 주어와 조동사의 자리가 서로 바뀝니다."
+      ],
+      "explanation": "부정의 부사 Hardly가 문두에 왔으므로 조동사 had가 주어 the concert 앞으로 나온 도치 어순이 옳습니다. the concert had begun의 평서 어순으로 되돌리면 오히려 틀립니다. 의문문처럼 보인다고 X를 고르면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c1-ox-002",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["so-neither"],
+      "sentence": "The pilot could not see the runway through the fog, and [[u:neither could]] the copilot.",
+      "isCorrect": true,
+      "translation": "조종사는 안개 때문에 활주로를 볼 수 없었고, 부조종사도 마찬가지로 볼 수 없었습니다.",
+      "hints": [
+        "앞 절이 긍정문인지 부정문인지부터 확인해 보십시오.",
+        "앞 문장에 대한 동의 표현은 앞 절의 긍정·부정에 따라 방향이 달라집니다."
+      ],
+      "explanation": "앞 절이 could not see의 부정문이므로 '부조종사도 못 보았다'는 동의는 neither+조동사+주어로 표현합니다. neither could the copilot의 도치 어순까지 올바릅니다. 부정문 뒤이므로 so를 쓰면 틀립니다."
+    },
+    {
+      "id": "u12-c1-ox-003",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Not until the results [[u:had been replicated]] in three separate laboratories did the journal publish the study.",
+      "isCorrect": true,
+      "translation": "그 결과가 세 곳의 서로 다른 실험실에서 재현되고 나서야 그 학술지는 그 연구를 게재했습니다.",
+      "hints": [
+        "밑줄이 Not until절의 안에 있는지, 주절에 있는지 위치부터 확인해 보십시오.",
+        "Not until이 문두에 올 때 도치가 일어나는 곳은 뒤따르는 주절입니다."
+      ],
+      "explanation": "Not until절의 내부(the results had been replicated)는 정상 어순을 유지하는 것이 옳고, 도치는 주절의 did the journal publish에서 이미 일어났습니다. 밑줄 부분까지 도치하면 오히려 비문이 됩니다. 재현이 게재보다 앞선 시점이므로 과거완료 수동도 자연스럽습니다."
+    },
+    {
+      "id": "u12-c1-ox-004",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Seldom did the emperor [[u:consult]] his court astronomers before declaring a distant war.",
+      "isCorrect": true,
+      "translation": "그 황제가 먼 곳의 전쟁을 선포하기 전에 궁정 천문학자들과 상의하는 일은 드물었습니다.",
+      "hints": [
+        "문두의 부사가 만든 도치에서 시제 표시를 어느 단어가 맡고 있는지 확인해 보십시오.",
+        "도치를 위해 세운 조동사가 시제를 가져가면 본동사에는 시제를 겹쳐 표시하지 않습니다."
+      ],
+      "explanation": "Seldom 문두 도치에서 did가 이미 과거 시제를 가져갔으므로 본동사는 원형 consult가 옳습니다. 과거 이야기라는 이유로 과거형을 기대하면 시제를 이중으로 표시하는 오류를 옳다고 착각하게 됩니다."
+    },
+    {
+      "id": "u12-c1-ox-005",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Never before [[u:the city had]] hosted so many foreign delegations in a single week.",
+      "isCorrect": false,
+      "correction": "had the city",
+      "translation": "그 도시가 단 한 주에 그렇게 많은 외국 사절단을 맞이한 적은 그전까지 없었습니다.",
+      "hints": [
+        "문장 맨 앞의 Never before를 보고, 바로 뒤 두세 단어의 순서를 확인해 보십시오.",
+        "부정의 부사가 문두에 서면 주어보다 조동사가 먼저 나와야 합니다."
+      ],
+      "explanation": "부정어 Never before가 문두에 왔으므로 조동사와 주어가 자리를 바꾼 had the city hosted 어순이어야 합니다. 밑줄처럼 주어 the city가 조동사보다 앞에 남아 있으면 도치가 일어나지 않아 틀립니다."
+    },
+    {
+      "id": "u12-c1-ox-006",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["so-neither"],
+      "sentence": "My colleagues have never measured such deep permafrost, and [[u:so have]] I.",
+      "isCorrect": false,
+      "correction": "neither have",
+      "translation": "제 동료들은 그렇게 깊은 영구동토층을 측정해 본 적이 없고, 저도 마찬가지로 없습니다.",
+      "hints": [
+        "앞 절에 never 같은 부정 표현이 있는지 확인해 보십시오.",
+        "앞 절이 부정이면 동의 표현의 방향도 부정 쪽 단어로 맞추어야 합니다."
+      ],
+      "explanation": "앞 절이 have never measured의 부정문이므로 '나도 측정한 적이 없다'는 동의는 neither have I로 써야 합니다. 긍정 동의에 쓰는 so를 부정문 뒤에 두면 방향이 어긋나 틀립니다."
+    },
+    {
+      "id": "u12-c1-ox-007",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Rarely did the senate [[u:approved]] a maritime treaty without months of heated debate.",
+      "isCorrect": false,
+      "correction": "approve",
+      "translation": "그 원로원이 몇 달의 격론 없이 해상 조약을 승인하는 일은 드물었습니다.",
+      "hints": [
+        "문두 Rarely가 세운 조동사가 무엇을 이미 표시하고 있는지 확인해 보십시오.",
+        "도치의 조동사가 시제를 맡으면 본동사는 시제 없는 형태로 남아야 합니다."
+      ],
+      "explanation": "Rarely 문두 도치에서 did가 과거 시제를 이미 표시했으므로 본동사는 원형이어야 합니다. 밑줄의 approved는 did와 과거 표시를 겹쳐 쓴 것이라 틀리고, approve로 고쳐야 합니다."
+    },
+    {
+      "id": "u12-c1-ox-008",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Only after the collapsed bridge was fully inspected [[u:the workers returned]] to the construction site.",
+      "isCorrect": false,
+      "correction": "did the workers return",
+      "translation": "무너진 다리가 완전히 점검되고 나서야 인부들은 공사 현장으로 돌아갔습니다.",
+      "hints": [
+        "문두의 Only after가 이끄는 부분이 끝나는 지점과 주절이 시작되는 지점을 나누어 보십시오.",
+        "Only+부사구가 문두에 오면 주절은 조동사가 주어보다 먼저 나오는 어순이 됩니다."
+      ],
+      "explanation": "Only after가 이끄는 부사절이 문두에 왔으므로 주절에서는 조동사+주어 도치가 일어나야 합니다. 일반동사 returned의 문장이므로 did를 세우고 본동사는 원형으로 남긴 did the workers return이 바른 어순입니다. 평서 어순 그대로 두면 틀립니다."
+    },
+    {
+      "id": "u12-c1-wf-001",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["negative-inversion"],
+      "stem": "Rarely {{blank}} the desert lily bloom more than once a decade in today's warming climate.",
+      "given": "do",
+      "acceptedAnswers": ["does"],
+      "translation": "오늘날의 온난해진 기후에서 그 사막 백합이 십 년에 한 번 넘게 피는 일은 드뭅니다.",
+      "hints": [
+        "문두의 Rarely가 어순에 어떤 변화를 일으키는지 떠올려 보십시오.",
+        "일반동사 문장의 도치에서는 시제와 주어의 수를 대신 표시할 조동사를 주어 앞에 세웁니다."
+      ],
+      "explanation": "부정의 부사 Rarely가 문두에 왔으므로 조동사+주어 도치가 필요합니다. in today's warming climate가 현재의 일반적 사실임을 보여 주고 주어 the desert lily가 단수이므로 does가 유일한 답입니다. 본동사 bloom은 원형으로 남습니다."
+    },
+    {
+      "id": "u12-c1-wf-002",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["so-neither"],
+      "stem": "The first probe failed to reach orbit, and so {{blank}} the second one.",
+      "given": "do",
+      "acceptedAnswers": ["did"],
+      "translation": "첫 번째 탐사선은 궤도 진입에 실패했고, 두 번째 탐사선도 마찬가지였습니다.",
+      "hints": [
+        "앞 절의 동사가 일반동사인지, 시제가 무엇인지 확인해 보십시오.",
+        "so 뒤의 동의 표현은 앞 절 동사의 종류와 시제를 그대로 이어받은 조동사로 만듭니다."
+      ],
+      "explanation": "앞 절의 동사 failed는 일반동사 과거형이므로 이를 대신하는 조동사는 과거형 did입니다. so did the second one은 '두 번째 것도 그랬다'는 긍정 동의의 도치 표현입니다. 앞 절이 형태상 긍정문이므로 so가 서 있는 것도 옳습니다."
+    },
+    {
+      "id": "u12-c1-wf-003",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "stem": "Not until 1969 {{blank}} humans set foot on another world.",
+      "given": "do",
+      "acceptedAnswers": ["did"],
+      "translation": "1969년이 되어서야 인류는 다른 세계에 발을 디뎠습니다.",
+      "hints": [
+        "Not until+시점이 문두에 왔을 때 주절의 어순이 어떻게 되는지 떠올려 보십시오.",
+        "일반동사 문장의 도치에서는 시제를 짊어질 조동사를 주어 앞에 세우고 본동사는 원형으로 둡니다."
+      ],
+      "explanation": "Not until 1969가 문두에 왔으므로 주절은 조동사+주어 도치가 됩니다. 1969라는 명백한 과거 시점이 있으므로 과거형 did가 유일한 답이고, 본동사 set은 원형으로 남습니다."
+    },
+    {
+      "id": "u12-c1-wf-004",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "stem": "Hardly {{blank}} the orchestra begun the overture when the power failed throughout the theater.",
+      "given": "have",
+      "acceptedAnswers": ["had"],
+      "translation": "오케스트라가 서곡을 시작하자마자 극장 전체에 정전이 일어났습니다.",
+      "hints": [
+        "빈칸 뒤의 begun이 어떤 형태인지, when 뒤의 시제가 무엇인지 확인해 보십시오.",
+        "Hardly ~ when 구문에서 먼저 일어난 일은 나중 일보다 한 시제 앞선 완료형으로 표시합니다."
+      ],
+      "explanation": "Hardly가 문두에 와서 조동사+주어 도치가 일어난 자리입니다. 뒤의 begun은 과거분사이고 when절이 과거(failed)이므로, 그보다 앞선 시점을 나타내는 과거완료의 had가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c1-wf-005",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "stem": "Only after the glacier collapsed in 1912 {{blank}} geologists begin to map the hidden valley beneath it.",
+      "given": "do",
+      "acceptedAnswers": ["did"],
+      "translation": "1912년에 그 빙하가 무너지고 나서야 지질학자들은 그 아래 숨어 있던 계곡의 지도를 그리기 시작했습니다.",
+      "hints": [
+        "Only가 이끄는 덩어리가 어디까지인지 표시하고, 그 뒤가 주절임을 확인해 보십시오.",
+        "Only+부사절이 문두에 오면 주절에서 조동사가 주어보다 먼저 나오고, 본동사는 원형으로 남습니다."
+      ],
+      "explanation": "Only after ~ in 1912의 부사절이 문두에 왔으므로 주절 geologists begin은 도치되어야 합니다. begin이 원형으로 남아 있고 1912라는 과거 시점이 있으므로 과거형 did가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c1-wf-006",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["so-neither"],
+      "stem": "The senior divers had never entered the flooded cave network, and neither {{blank}} the volunteers who arrived that evening.",
+      "given": "have",
+      "acceptedAnswers": ["had"],
+      "translation": "선임 잠수부들은 물에 잠긴 동굴망에 들어가 본 적이 없었고, 그날 저녁에 도착한 자원봉사자들도 마찬가지였습니다.",
+      "hints": [
+        "neither 뒤의 조동사는 앞 절의 어떤 동사를 이어받는지 확인해 보십시오.",
+        "동의 표현의 조동사는 앞 절 동사의 종류와 시제를 그대로 물려받습니다."
+      ],
+      "explanation": "앞 절의 동사가 had never entered의 과거완료이므로 neither 뒤에도 같은 조동사 had를 세워 neither had the volunteers로 씁니다. 부정문 뒤의 동의라서 neither가 서고, 그 뒤는 조동사+주어의 도치 어순입니다."
+    },
+    {
+      "id": "u12-c1-wc-001",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Seldom did the villagers [[u:complained]] about the harsh mountain winters.",
+      "wrong": "complained",
+      "acceptedAnswers": ["complain"],
+      "translation": "마을 사람들이 혹독한 산악 지대의 겨울에 대해 불평하는 일은 드물었습니다.",
+      "hints": [
+        "문두 Seldom이 세운 did가 무엇을 이미 표시하고 있는지 확인해 보십시오.",
+        "도치의 조동사가 시제를 가져가면 본동사에는 시제를 겹쳐 쓸 수 없습니다."
+      ],
+      "explanation": "Seldom 문두 도치에서 did가 과거 시제를 이미 표시했으므로 본동사는 원형이어야 합니다. complained는 과거 표시를 겹쳐 쓴 것이므로 complain으로 고칩니다."
+    },
+    {
+      "id": "u12-c1-wc-002",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["so-neither"],
+      "sentence": "The frogs could not survive the long drought, and [[u:so could]] the fish in the same pond.",
+      "wrong": "so could",
+      "acceptedAnswers": ["neither could"],
+      "translation": "개구리들은 긴 가뭄을 견뎌 내지 못했고, 같은 연못의 물고기들도 마찬가지였습니다.",
+      "hints": [
+        "앞 절에 not이 있는지부터 확인해 보십시오.",
+        "부정문에 대한 동의는 긍정 동의와 다른 단어로 시작해야 합니다."
+      ],
+      "explanation": "앞 절이 could not survive의 부정문이므로 '물고기도 못 견뎠다'는 동의는 부정 동의여야 합니다. 긍정 동의의 so를 부정 동의의 neither로 바꾸어 neither could the fish로 써야 옳습니다."
+    },
+    {
+      "id": "u12-c1-wc-003",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Not until 1911 [[u:the physicists confirmed]] the existence of the atomic nucleus.",
+      "wrong": "the physicists confirmed",
+      "acceptedAnswers": ["did the physicists confirm"],
+      "translation": "1911년이 되어서야 물리학자들은 원자핵의 존재를 확인했습니다.",
+      "hints": [
+        "문두의 Not until 1911이 주절 어순에 어떤 요구를 하는지 떠올려 보십시오.",
+        "일반동사 문장에서 도치가 일어나면 시제를 맡을 조동사를 주어 앞에 세우고 본동사는 원형으로 남깁니다."
+      ],
+      "explanation": "Not until+시점이 문두에 왔으므로 주절은 조동사+주어 도치가 되어야 합니다. 일반동사 confirmed의 문장이므로 과거의 조동사 did를 주어 앞에 세우고 본동사를 원형으로 되돌린 did the physicists confirm이 바른 형태입니다."
+    },
+    {
+      "id": "u12-c1-wc-004",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "sentence": "Only when the tide retreats [[u:visitors can reach]] the island monastery on foot.",
+      "wrong": "visitors can reach",
+      "acceptedAnswers": ["can visitors reach"],
+      "translation": "조수가 물러날 때에만 방문객들은 걸어서 그 섬 수도원에 닿을 수 있습니다.",
+      "hints": [
+        "문두의 Only when절이 끝난 뒤에 오는 주절의 어순을 확인해 보십시오.",
+        "Only+부사절이 문두에 서면 주절에서는 조동사가 주어보다 먼저 나와야 합니다."
+      ],
+      "explanation": "Only when이 이끄는 부사절이 문두에 왔으므로 주절은 도치되어야 합니다. 조동사 can을 주어 visitors 앞으로 옮긴 can visitors reach가 바른 어순입니다. 평서 어순을 그대로 두면 Only 도치를 놓친 것입니다."
+    },
+    {
+      "id": "u12-c2-ox-001",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "sentence": "[[u:Were]] the vaccine cheaper to produce, rural clinics across the region would stock it widely.",
+      "isCorrect": true,
+      "translation": "그 백신이 더 저렴하게 생산될 수 있다면 그 지역 전역의 시골 진료소들이 널리 비축할 것입니다.",
+      "hints": [
+        "문두의 동사가 의문문을 만드는지, 뒤에 콤마와 주절이 이어지는지 확인해 보십시오.",
+        "if가 생략되면 특정 동사가 주어 앞으로 나오는 도치가 일어납니다."
+      ],
+      "explanation": "If the vaccine were cheaper에서 if가 생략되고 Were가 주어 앞으로 나온 가정법 도치 구문입니다. 주절의 would stock과 짝을 이루는 가정법 과거이므로 문두의 Were는 옳습니다. 의문문이나 오타처럼 보인다고 X를 고르면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c2-ox-002",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "sentence": "Without the old dam, the valley farms [[u:would flood]] every single spring.",
+      "isCorrect": true,
+      "translation": "그 오래된 댐이 없다면 계곡의 농장들은 봄마다 물에 잠길 것입니다.",
+      "hints": [
+        "every single spring이 가리키는 시점이 과거인지 현재의 반복인지 확인해 보십시오.",
+        "without 구문의 시제는 주절 동사의 형태와 시간 단서로 판단합니다."
+      ],
+      "explanation": "every single spring은 현재에도 반복되는 일을 가리키므로 이 문장은 현재 사실의 반대, 곧 가정법 과거입니다. 따라서 주절은 would+원형인 would flood가 옳습니다. 가정법이라는 이유만으로 would have flooded를 기대하면 시간 단서를 놓친 것입니다."
+    },
+    {
+      "id": "u12-c2-ox-003",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "sentence": "Had the expedition carried a second radio, the rescuers [[u:might have found]] the frozen camp within hours.",
+      "isCorrect": true,
+      "translation": "탐험대가 예비 무전기를 하나 더 가져갔더라면 구조대는 몇 시간 안에 얼어붙은 캠프를 발견했을지도 모릅니다.",
+      "hints": [
+        "문두의 Had가 무엇의 도치인지 먼저 판단해 보십시오.",
+        "가정법 과거완료의 주절에는 would만 아니라 다른 추측의 조동사도 have와 짝지어 설 수 있습니다."
+      ],
+      "explanation": "문두의 Had는 If the expedition had carried의 if 생략 도치이므로 가정법 과거완료 문장입니다. 주절은 조동사+have p.p.가 필요한데, might have found는 would have found보다 약한 추측을 나타낼 뿐 형태상 완전히 옳습니다. would가 아니라고 틀렸다고 보면 안 됩니다."
+    },
+    {
+      "id": "u12-c2-ox-004",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "sentence": "If the manuscript had survived the great fire, scholars today [[u:would know]] far more about the city's founding.",
+      "isCorrect": true,
+      "translation": "그 필사본이 대화재에서 살아남았더라면 오늘날 학자들은 그 도시의 건립에 대해 훨씬 더 많이 알고 있을 것입니다.",
+      "hints": [
+        "if절의 시점과 주절의 today가 가리키는 시점을 따로 확인해 보십시오.",
+        "조건과 결과의 시점이 다르면 두 절의 동사 형태도 각자의 시점을 따릅니다."
+      ],
+      "explanation": "if절은 had survived로 과거 사실의 반대를 말하지만, 주절에는 today가 있어 결과는 현재의 일입니다. 현재 사실의 반대는 would+원형으로 표시하므로 would know가 옳습니다. had p.p.만 보고 기계적으로 would have known을 기대하면 시간 단서를 놓친 것입니다."
+    },
+    {
+      "id": "u12-c2-ox-005",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "sentence": "If Earth [[u:has]] no axial tilt, the seasons would disappear entirely.",
+      "isCorrect": false,
+      "correction": "had",
+      "translation": "지구에 자전축 기울기가 없다면 계절은 완전히 사라질 것입니다.",
+      "hints": [
+        "주절의 조동사 형태를 먼저 확인하고, if절과 짝이 맞는지 살펴보십시오.",
+        "주절이 would+원형이면 if절은 현재형이 아니라 한 시제 물러난 형태여야 합니다."
+      ],
+      "explanation": "지구에는 실제로 자전축 기울기가 있으므로 이 문장은 현재 사실의 반대를 말하는 가정법 과거입니다. 주절의 would disappear와 짝을 이루려면 if절은 과거형 had여야 하고, 현재형 has는 단순 조건문과 가정법을 뒤섞은 것이라 틀립니다."
+    },
+    {
+      "id": "u12-c2-ox-006",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "sentence": "Had the archive been digitized in time, the 2003 fire [[u:would destroy]] nothing of value.",
+      "isCorrect": false,
+      "correction": "would have destroyed",
+      "translation": "그 기록물이 제때 디지털화되었더라면 2003년의 화재는 귀중한 것을 아무것도 파괴하지 못했을 것입니다.",
+      "hints": [
+        "문두의 Had와 2003이라는 연도가 어떤 시제 짝을 요구하는지 확인해 보십시오.",
+        "과거 사실의 반대를 말할 때 주절의 조동사 뒤에는 완료형이 이어져야 합니다."
+      ],
+      "explanation": "문두의 Had는 if 생략 도치로, If the archive had been digitized의 가정법 과거완료입니다. 2003년 화재라는 과거 사실의 반대를 말하므로 주절은 would have p.p.여야 하고, would destroy는 시제 짝이 어긋나 틀립니다. would have destroyed로 고쳐야 합니다."
+    },
+    {
+      "id": "u12-c2-ox-007",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "sentence": "But for the old levee along the river, the flood [[u:would sweep]] the entire village away last spring.",
+      "isCorrect": false,
+      "correction": "would have swept",
+      "translation": "강가의 오래된 제방이 없었더라면 지난봄의 홍수는 마을 전체를 쓸어 가 버렸을 것입니다.",
+      "hints": [
+        "last spring이라는 시간 표현이 조건의 시점을 어디에 고정하는지 확인해 보십시오.",
+        "but for 구문의 시제는 주절의 시간 단서로 판단합니다 — 과거의 일이면 조동사 뒤가 완료형이 됩니다."
+      ],
+      "explanation": "But for the old levee는 '제방이 없었더라면'의 조건이고, last spring이 과거 시점을 고정하므로 과거 사실의 반대인 가정법 과거완료입니다. 주절은 would have swept이어야 하며, would sweep은 현재 반대의 짝이라 틀립니다."
+    },
+    {
+      "id": "u12-c2-ox-008",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "sentence": "If the dinosaurs [[u:survived]] the asteroid impact, mammals would never have dominated the planet.",
+      "isCorrect": false,
+      "correction": "had survived",
+      "translation": "공룡들이 소행성 충돌에서 살아남았더라면 포유류는 결코 지구를 지배하지 못했을 것입니다.",
+      "hints": [
+        "주절의 조동사 뒤 형태가 완료형인지 먼저 확인해 보십시오.",
+        "주절이 would have p.p.이면 if절도 그 짝에 맞는 완료형이어야 합니다."
+      ],
+      "explanation": "주절이 would never have dominated의 가정법 과거완료이므로 if절은 had p.p.와 짝을 이루어야 합니다. 공룡이 실제로는 살아남지 못한 과거 사실의 반대이므로 단순 과거 survived가 아니라 had survived로 써야 합니다."
+    },
+    {
+      "id": "u12-c2-wf-001",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["subjunctive"],
+      "stem": "If the moon {{blank}} closer to Earth, the tides would flood most coastal cities.",
+      "given": "orbit",
+      "acceptedAnswers": ["orbited"],
+      "translation": "달이 지구에 더 가깝게 공전한다면 조수가 대부분의 해안 도시를 물에 잠기게 할 것입니다.",
+      "hints": [
+        "주절의 would flood가 어떤 가정법의 짝인지 확인해 보십시오.",
+        "현재 사실의 반대를 말할 때 if절의 동사는 한 시제 물러난 형태를 씁니다."
+      ],
+      "explanation": "주절이 would+원형(would flood)이므로 현재 사실의 반대를 말하는 가정법 과거입니다. if절의 동사는 과거형 orbited가 유일한 답입니다. 달이 실제로는 그렇게 가깝지 않다는 사실을 과거형으로 표시하는 것입니다."
+    },
+    {
+      "id": "u12-c2-wf-002",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["subjunctive"],
+      "stem": "If the students had saved their notes, they would {{blank}} them again before yesterday's exam.",
+      "given": "review",
+      "acceptedAnswers": ["have reviewed"],
+      "translation": "학생들이 필기를 보관해 두었더라면 어제 시험 전에 그것을 다시 살펴보았을 것입니다.",
+      "hints": [
+        "if절의 had saved와 yesterday라는 단서가 가리키는 시점을 확인해 보십시오.",
+        "과거 사실의 반대에서는 주절의 조동사 뒤에 완료형이 이어집니다."
+      ],
+      "explanation": "if절이 had saved이고 yesterday's exam이 과거 시점을 고정하므로 가정법 과거완료입니다. 주절은 would have p.p.가 되어야 하므로 빈칸에는 have reviewed가 들어갑니다."
+    },
+    {
+      "id": "u12-c2-wf-003",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "stem": "If the city reservoir {{blank}} more water now, officials would not need to limit daily use.",
+      "given": "hold",
+      "acceptedAnswers": ["held"],
+      "translation": "지금 도시 저수지에 물이 더 많이 담겨 있다면 당국이 하루 사용량을 제한할 필요가 없을 것입니다.",
+      "hints": [
+        "now와 주절의 would not need가 어떤 가정법을 가리키는지 확인해 보십시오.",
+        "현재 사실의 반대는 if절에서 한 시제 물러난 동사 형태로 표시합니다."
+      ],
+      "explanation": "now가 현재 시점을, 주절의 would not need가 가정법 과거의 짝을 보여 줍니다. 현재 사실의 반대이므로 if절의 동사는 과거형 held가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c2-wf-004",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "stem": "Had the lighthouse keeper fallen asleep that night, the cargo ship would {{blank}} the hidden reef.",
+      "given": "strike",
+      "acceptedAnswers": ["have struck"],
+      "translation": "그날 밤 등대지기가 잠들었더라면 화물선은 숨어 있던 암초에 부딪혔을 것입니다.",
+      "hints": [
+        "문두의 Had가 어떤 구문의 도치인지 먼저 판단해 보십시오.",
+        "과거 사실의 반대에서는 주절의 조동사 뒤가 완료형이어야 합니다."
+      ],
+      "explanation": "문두의 Had는 If the keeper had fallen asleep의 if 생략 도치로, 가정법 과거완료입니다. 주절은 would have p.p.가 되어야 하므로 have struck이 답입니다. strike의 과거분사가 struck이라는 것까지 정확히 써야 합니다."
+    },
+    {
+      "id": "u12-c2-wf-005",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "stem": "If the observatory {{blank}} the comet a week earlier last spring, astronomers would have plotted its complete orbit.",
+      "given": "spot",
+      "acceptedAnswers": ["had spotted"],
+      "translation": "지난봄에 그 천문대가 혜성을 일주일만 더 일찍 발견했더라면 천문학자들은 그 궤도 전체를 그려 냈을 것입니다.",
+      "hints": [
+        "주절의 would have plotted와 last spring이 고정하는 시점을 확인해 보십시오.",
+        "과거 사실의 반대에서는 if절이 완료형 짝을 갖추어야 합니다."
+      ],
+      "explanation": "주절이 would have plotted이고 last spring이 과거 시점을 고정하므로 가정법 과거완료입니다. if절은 had p.p.가 되어야 하므로 had spotted가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c2-wf-006",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "stem": "Without the thick cloud cover that shrouded the island last month, the eruption's glow would {{blank}} visible from the mainland.",
+      "given": "be",
+      "acceptedAnswers": ["have been"],
+      "translation": "지난달 그 섬을 뒤덮었던 두꺼운 구름층이 없었더라면 분화의 불빛은 본토에서도 보였을 것입니다.",
+      "hints": [
+        "without 구문 속의 last month가 조건의 시점을 어디에 고정하는지 확인해 보십시오.",
+        "과거 사실의 반대라면 주절의 조동사 뒤에는 완료형이 이어져야 합니다."
+      ],
+      "explanation": "without구는 '구름층이 없었더라면'의 조건절 구실을 하고, last month가 과거 시점을 고정하므로 가정법 과거완료입니다. 주절은 would have p.p.가 되어야 하므로 빈칸에는 have been이 들어갑니다."
+    },
+    {
+      "id": "u12-c2-wc-001",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "sentence": "If the miners [[u:have heeded]] the warning sirens, they would have escaped the collapse.",
+      "wrong": "have heeded",
+      "acceptedAnswers": ["had heeded"],
+      "translation": "광부들이 경보 사이렌에 주의를 기울였더라면 붕괴를 피했을 것입니다.",
+      "hints": [
+        "주절의 would have escaped가 요구하는 if절의 짝을 확인해 보십시오.",
+        "과거 사실의 반대에서 if절은 현재완료가 아니라 한 시제 더 물러난 완료형을 씁니다."
+      ],
+      "explanation": "주절이 would have escaped의 가정법 과거완료이므로 if절은 had p.p.여야 합니다. 현재완료 have heeded는 실제 과거 사실의 반대를 표시하지 못하므로 had heeded로 고칩니다."
+    },
+    {
+      "id": "u12-c2-wc-002",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "sentence": "Without gravity, a candle flame [[u:would burned]] in a perfect blue sphere.",
+      "wrong": "would burned",
+      "acceptedAnswers": ["would burn"],
+      "translation": "중력이 없다면 촛불의 불꽃은 완벽한 파란 구 모양으로 탈 것입니다.",
+      "hints": [
+        "조동사 바로 뒤에 올 수 있는 동사의 형태를 확인해 보십시오.",
+        "현재 사실의 반대를 말하는 without 구문에서 주절은 조동사+원형의 짝을 갖습니다."
+      ],
+      "explanation": "would 같은 조동사 뒤에는 동사원형이 와야 하므로 would burned는 형태 자체가 비문입니다. 중력이 실제로 존재하는 현재 사실의 반대이므로 가정법 과거의 would burn으로 고칩니다."
+    },
+    {
+      "id": "u12-c2-wc-003",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "sentence": "Had the manuscript been copied earlier, its final chapters [[u:would survive]] the monastery fire of 1846.",
+      "wrong": "would survive",
+      "acceptedAnswers": ["would have survived"],
+      "translation": "그 필사본이 더 일찍 필사되었더라면 마지막 장들은 1846년의 수도원 화재에서 살아남았을 것입니다.",
+      "hints": [
+        "문두의 Had와 1846이라는 연도가 어떤 시제 짝을 고정하는지 확인해 보십시오.",
+        "과거 사실의 반대에서는 주절의 조동사 뒤에 완료형이 이어져야 합니다."
+      ],
+      "explanation": "문두의 Had는 if 생략 도치로 가정법 과거완료를 만들고, 1846년 화재라는 과거 시점이 결과의 시점도 과거로 고정합니다. 따라서 주절은 would have survived로 고쳐야 짝이 맞습니다."
+    },
+    {
+      "id": "u12-c2-wc-004",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "sentence": "But for the interpreter's quick thinking, the treaty talks [[u:would collapse]] within the first hour of the 1905 conference.",
+      "wrong": "would collapse",
+      "acceptedAnswers": ["would have collapsed"],
+      "translation": "통역사의 기지가 없었더라면 조약 회담은 1905년 회의의 첫 한 시간 안에 결렬되었을 것입니다.",
+      "hints": [
+        "but for 구문이 숨기고 있는 조건의 뜻과 1905라는 연도를 함께 확인해 보십시오.",
+        "조건이 과거의 일이면 주절의 조동사 뒤는 완료형이어야 합니다."
+      ],
+      "explanation": "But for는 '~이 없었더라면'의 조건절 구실을 하고, 1905년 회의라는 과거 시점이 있으므로 가정법 과거완료입니다. 주절은 would have collapsed로 고쳐야 하며, would collapse는 현재 반대의 짝이라 시제가 어긋납니다."
+    },
+    {
+      "id": "u12-c3-ox-001",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["comparative-intensifier"],
+      "sentence": "The panel judged the second bridge design [[u:far more practical]] than the award-winning first proposal.",
+      "isCorrect": true,
+      "translation": "심사단은 두 번째 교량 설계가 수상작인 첫 번째 제안보다 훨씬 더 실용적이라고 판단했습니다.",
+      "hints": [
+        "밑줄 근처에 than이 있는지 확인하고, 강조어와 비교급의 조합을 살펴보십시오.",
+        "비교급 앞에 설 수 있는 강조어와 설 수 없는 강조어가 나뉘어 있습니다."
+      ],
+      "explanation": "than이 있으므로 비교급 more practical이 옳고, 비교급을 강조하는 far는 much·even·still과 함께 허용되는 강조어입니다. far가 낯설다고 틀렸다고 판단하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c3-ox-002",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["comparative-intensifier"],
+      "sentence": "The canal route, despite its winding path, proved [[u:still cheaper]] than the direct mountain railway.",
+      "isCorrect": true,
+      "translation": "그 운하 노선은 구불구불한 경로에도 불구하고 직선으로 놓인 산악 철도보다 훨씬 더 저렴한 것으로 드러났습니다.",
+      "hints": [
+        "밑줄의 첫 단어가 '여전히'의 뜻인지 비교급 강조인지 뒤의 형태와 함께 판단해 보십시오.",
+        "비교급 앞에는 much·even·far와 같은 계열의 강조어가 설 수 있습니다."
+      ],
+      "explanation": "still은 '여전히'라는 뜻 외에 비교급을 강조하는 부사로도 쓰이며, much·even·far와 같은 계열입니다. 뒤에 than이 있으므로 비교급 cheaper와의 결합은 옳습니다. still을 시간 부사로만 알고 있으면 틀렸다고 착각하기 쉽습니다."
+    },
+    {
+      "id": "u12-c3-ox-003",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["the-comparative"],
+      "sentence": "The more carefully the pottery shards were cleaned, [[u:the more]] detail emerged from beneath the glaze.",
+      "isCorrect": true,
+      "translation": "도자기 파편을 더 조심스럽게 닦아 낼수록 유약 아래에서 더 많은 세부 문양이 드러났습니다.",
+      "hints": [
+        "콤마 앞뒤 두 절이 어떤 짝 구문을 이루는지 확인해 보십시오.",
+        "이 짝 구문에서 뒤 절의 시작 부분은 명사를 수식하는 형태로도 설 수 있습니다."
+      ],
+      "explanation": "The 비교급 ~, the 비교급 ~ 구문에서 뒤 절의 the more는 much의 비교급으로서 명사 detail을 직접 수식하는 '더 많은'의 뜻이므로 옳습니다. the more 뒤에 형용사가 없다고 틀렸다고 보면 안 됩니다."
+    },
+    {
+      "id": "u12-c3-ox-004",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["as-as"],
+      "sentence": "The replacement cable is three times as [[u:thick]] as the corroded line it replaced.",
+      "isCorrect": true,
+      "translation": "교체용 케이블은 부식되어 교체된 기존 선보다 세 배 굵습니다.",
+      "hints": [
+        "as ~ as 사이에 어떤 등급의 형태가 서야 하는지 확인해 보십시오.",
+        "배수 표현이 앞에 붙어도 as ~ as 사이의 형태 규칙은 달라지지 않습니다."
+      ],
+      "explanation": "배수사 three times가 앞에 있어도 as ~ as 동등 비교의 사이에는 원급이 들어갑니다. 따라서 원급 thick이 옳고, '세 배 더 굵다'는 해석에 이끌려 비교급을 기대하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c3-ox-005",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["comparative-intensifier"],
+      "sentence": "The new alloy frame is [[u:very lighter]] than the steel version used in earlier models.",
+      "isCorrect": false,
+      "correction": "much lighter",
+      "translation": "새 합금 프레임은 이전 모델에 쓰인 강철 프레임보다 훨씬 더 가볍습니다.",
+      "hints": [
+        "밑줄 뒤의 than을 확인하고, 앞의 강조어가 그 자리에 설 수 있는지 판단해 보십시오.",
+        "원급을 강조하는 부사와 비교급을 강조하는 부사는 서로 자리를 바꿀 수 없습니다."
+      ],
+      "explanation": "than이 있으므로 lighter는 비교급인데, very는 원급 전용 강조어라서 비교급 앞에 설 수 없습니다. much·even·far·still 계열로 바꾸어 much lighter처럼 써야 옳습니다."
+    },
+    {
+      "id": "u12-c3-ox-006",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["double-comparative"],
+      "sentence": "The mountain trail grew [[u:more steeper]] as it approached the exposed ridge.",
+      "isCorrect": false,
+      "correction": "steeper",
+      "translation": "산길은 노출된 능선에 가까워질수록 더 가팔라졌습니다.",
+      "hints": [
+        "밑줄 안에서 비교의 뜻이 몇 번 표시되어 있는지 세어 보십시오.",
+        "비교급은 한 단어 안에서든 구 안에서든 한 번만 표시해야 합니다."
+      ],
+      "explanation": "steeper는 이미 -er로 비교급이 완성된 형태인데 그 앞에 more를 겹치면 비교가 이중으로 표시되어 비문이 됩니다. more를 지운 steeper가 바른 형태입니다."
+    },
+    {
+      "id": "u12-c3-ox-007",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["as-as"],
+      "sentence": "The replica sword, though cast in a modern alloy, is as [[u:heavier]] as the fourteenth-century original.",
+      "isCorrect": false,
+      "correction": "heavy",
+      "translation": "그 복제 검은 현대 합금으로 주조되었음에도 14세기의 원본만큼 무겁습니다.",
+      "hints": [
+        "밑줄을 감싸고 있는 두 as를 먼저 찾아 짝으로 묶어 보십시오.",
+        "동등 비교의 두 as 사이에는 어떤 등급의 형태가 서야 하는지 떠올려 보십시오."
+      ],
+      "explanation": "삽입구 though cast in a modern alloy를 걷어 내면 as ~ as 동등 비교의 틀이 드러납니다. 두 as 사이에는 원급이 서야 하므로 비교급 heavier는 틀렸고 heavy로 고쳐야 합니다."
+    },
+    {
+      "id": "u12-c3-ox-008",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["the-comparative"],
+      "sentence": "The louder the auction hall became, the [[u:hard]] it was for bidders to follow the calling of prices.",
+      "isCorrect": false,
+      "correction": "harder",
+      "translation": "경매장이 시끄러워질수록 입찰자들이 호가를 따라가기는 더 어려워졌습니다.",
+      "hints": [
+        "콤마 앞 절이 어떤 형태로 시작하는지 확인하고, 뒤 절과 짝을 맞추어 보십시오.",
+        "이 짝 구문은 콤마 앞뒤 두 절이 같은 등급의 형태로 시작해야 완성됩니다."
+      ],
+      "explanation": "앞 절이 The louder의 the+비교급으로 시작했으므로 뒤 절도 the+비교급으로 짝을 맞추어야 합니다. 원급 hard는 짝을 깨뜨리므로 harder로 고쳐 the harder가 되어야 합니다."
+    },
+    {
+      "id": "u12-c3-wf-001",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["the-comparative"],
+      "stem": "The {{blank}} the climbers went, the thinner the mountain air became.",
+      "given": "high",
+      "acceptedAnswers": ["higher"],
+      "translation": "등반가들이 더 높이 오를수록 산 공기는 더 희박해졌습니다.",
+      "hints": [
+        "콤마 뒤 절의 the thinner와 짝을 이루는 형태를 찾아보십시오.",
+        "'~할수록 더 …하다'의 구문은 양쪽 절이 같은 등급의 형태로 시작합니다."
+      ],
+      "explanation": "뒤 절이 the thinner의 the+비교급이므로 앞 절도 the+비교급으로 짝을 맞춥니다. high의 비교급 higher가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c3-wf-002",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["as-as"],
+      "stem": "No other rope in the storehouse was as {{blank}} as the new nylon line.",
+      "given": "strong",
+      "acceptedAnswers": ["strong"],
+      "translation": "창고의 다른 어떤 밧줄도 새 나일론 줄만큼 튼튼하지 않았습니다.",
+      "hints": [
+        "빈칸을 감싼 두 as의 짝을 먼저 확인해 보십시오.",
+        "동등 비교의 두 as 사이에 들어가는 등급은 정해져 있습니다."
+      ],
+      "explanation": "as ~ as 동등 비교의 사이에는 원급이 서므로 strong을 그대로 씁니다. '가장 튼튼하다'는 최상급의 뜻으로 해석된다고 해서 형태를 바꾸면 틀립니다."
+    },
+    {
+      "id": "u12-c3-wf-003",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["comparative-intensifier"],
+      "stem": "The sudden storm made the mountain crossing far {{blank}} than the guides had predicted.",
+      "given": "dangerous",
+      "acceptedAnswers": ["more dangerous"],
+      "translation": "갑작스러운 폭풍은 산악 횡단을 안내인들이 예측했던 것보다 훨씬 더 위험하게 만들었습니다.",
+      "hints": [
+        "빈칸 뒤의 than과 앞의 far가 각각 어떤 형태를 요구하는지 확인해 보십시오.",
+        "than 앞에는 비교급이 서고, 긴 형용사는 단어 끝을 바꾸지 않고 앞에 단어를 더해 비교급을 만듭니다."
+      ],
+      "explanation": "than이 있으므로 비교급이 필요하고, far는 비교급을 강조하는 부사입니다. dangerous처럼 긴 형용사는 more를 붙여 more dangerous로 비교급을 만듭니다."
+    },
+    {
+      "id": "u12-c3-wf-004",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["as-as"],
+      "stem": "The new printing press could copy pages three times as {{blank}} as any scribe in the city.",
+      "given": "fast",
+      "acceptedAnswers": ["fast"],
+      "translation": "새 인쇄기는 도시의 어떤 필경사보다도 세 배 빠르게 페이지를 복사할 수 있었습니다.",
+      "hints": [
+        "배수사 뒤에 이어지는 as ~ as의 짝을 확인해 보십시오.",
+        "배수 표현은 '배수사+as+원급+as'의 고정 어순을 지킵니다."
+      ],
+      "explanation": "배수 비교는 '배수사+as+원급+as'의 어순이므로 as ~ as 사이에는 원급 fast를 그대로 씁니다. '세 배 더 빠르게'라는 해석에 이끌려 비교급으로 바꾸면 어순 규칙이 깨집니다."
+    },
+    {
+      "id": "u12-c3-wf-005",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["the-comparative"],
+      "stem": "The more sites the archaeologists uncovered, the {{blank}} the ancient trade network appeared.",
+      "given": "complex",
+      "acceptedAnswers": ["more complex"],
+      "translation": "고고학자들이 더 많은 유적지를 발굴할수록 고대 무역망은 더 복잡해 보였습니다.",
+      "hints": [
+        "앞 절의 The more와 짝을 이루어야 할 형태를 확인해 보십시오.",
+        "이 짝 구문의 빈칸 자리에는 긴 형용사의 비교급 형태가 통째로 들어가야 합니다."
+      ],
+      "explanation": "The 비교급 ~, the 비교급 ~ 구문이므로 빈칸에는 complex의 비교급이 필요합니다. complex는 긴 형용사라서 more complex로 비교급을 만들며, 이것이 the와 결합해 짝을 완성합니다."
+    },
+    {
+      "id": "u12-c3-wf-006",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["comparative-intensifier"],
+      "stem": "Recent sonar surveys show the ocean trench to be even {{blank}} than the deepest previous sounding suggested.",
+      "given": "deep",
+      "acceptedAnswers": ["deeper"],
+      "translation": "최근의 수중 음파 조사는 그 해구가 이전의 가장 깊은 측심이 시사했던 것보다 훨씬 더 깊다는 것을 보여 줍니다.",
+      "hints": [
+        "빈칸 앞의 even과 뒤의 than이 각각 어떤 등급과 어울리는지 확인해 보십시오.",
+        "than과 짝을 이루는 자리에는 비교급이 서고, even은 그 비교급을 강조합니다."
+      ],
+      "explanation": "뒤에 than이 있으므로 비교급 deeper가 필요하고, 앞의 even은 비교급을 강조하는 부사입니다. 문장 안의 deepest는 별개의 최상급 수식어일 뿐, 빈칸의 등급 판단에는 than이 결정적 단서입니다."
+    },
+    {
+      "id": "u12-c3-wc-001",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["as-as"],
+      "sentence": "The glass footbridge is three times as [[u:stronger]] as the old wooden span it replaced.",
+      "wrong": "stronger",
+      "acceptedAnswers": ["strong"],
+      "translation": "그 유리 인도교는 자신이 대체한 낡은 목조 다리보다 세 배 튼튼합니다.",
+      "hints": [
+        "밑줄을 감싼 두 as를 짝으로 묶고 그 사이의 형태를 확인해 보십시오.",
+        "배수 표현은 '배수사+as+원급+as'의 어순을 지켜야 합니다."
+      ],
+      "explanation": "three times as ~ as의 배수 비교에서 두 as 사이에는 원급이 서야 합니다. 비교급 stronger는 이 틀을 깨뜨리므로 원급 strong으로 고칩니다."
+    },
+    {
+      "id": "u12-c3-wc-002",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["the-comparative"],
+      "sentence": "The higher the weather balloon rose, the [[u:thin]] the surrounding air became.",
+      "wrong": "thin",
+      "acceptedAnswers": ["thinner"],
+      "translation": "기상 관측 기구가 더 높이 오를수록 주변 공기는 더 희박해졌습니다.",
+      "hints": [
+        "앞 절의 The higher가 어떤 짝을 요구하는지 확인해 보십시오.",
+        "이 짝 구문은 콤마 앞뒤 두 절이 모두 같은 등급으로 시작해야 합니다."
+      ],
+      "explanation": "앞 절이 The higher의 the+비교급으로 시작했으므로 뒤 절도 the+비교급의 짝이어야 합니다. 원급 thin을 비교급 thinner로 고쳐 the thinner를 완성합니다."
+    },
+    {
+      "id": "u12-c3-wc-003",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["as-as"],
+      "sentence": "Sound travels through solid steel almost fifteen times as [[u:faster]] as it does through open air.",
+      "wrong": "faster",
+      "acceptedAnswers": ["fast"],
+      "translation": "소리는 단단한 강철 속에서 트인 공기 중에서보다 거의 열다섯 배 빠르게 전달됩니다.",
+      "hints": [
+        "배수사와 두 as의 짝을 확인하고 밑줄의 등급을 판단해 보십시오.",
+        "as ~ as 사이에는 비교의 뜻이 아무리 강해도 원급이 들어갑니다."
+      ],
+      "explanation": "fifteen times as ~ as의 배수 비교 틀에서 두 as 사이에는 원급이 서야 합니다. '열다섯 배나 빠르다'는 해석에 이끌려 놓기 쉬운 비교급 faster를 원급 fast로 고쳐야 합니다."
+    },
+    {
+      "id": "u12-c3-wc-004",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["the-comparative"],
+      "sentence": "The more the polar glaciers melted, [[u:higher]] the global sea level climbed.",
+      "wrong": "higher",
+      "acceptedAnswers": ["the higher"],
+      "translation": "극지방의 빙하가 더 많이 녹을수록 전 지구의 해수면은 더 높이 올라갔습니다.",
+      "hints": [
+        "앞 절의 The more가 요구하는 짝 구문의 완성 조건을 확인해 보십시오.",
+        "이 짝 구문에서는 비교급 앞에 반드시 붙어야 하는 관사가 있습니다."
+      ],
+      "explanation": "The 비교급 ~, the 비교급 ~ 구문은 콤마 앞뒤 두 절이 모두 the+비교급으로 시작해야 완성됩니다. 뒤 절의 비교급 higher 앞에 the가 빠져 있으므로 the higher로 고칩니다."
+    },
+    {
+      "id": "u12-c4-ox-001",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["enough-order"],
+      "sentence": "By midwinter the lake ice was [[u:thick enough]] to support the fully loaded sledges.",
+      "isCorrect": true,
+      "translation": "한겨울이 되자 호수의 얼음은 짐을 가득 실은 썰매를 지탱할 만큼 두꺼워졌습니다.",
+      "hints": [
+        "밑줄에서 enough가 어떤 품사의 단어와 짝을 이루는지 확인해 보십시오.",
+        "enough는 짝이 되는 단어의 품사에 따라 앞이나 뒤 중 한쪽에만 설 수 있습니다."
+      ],
+      "explanation": "enough는 형용사·부사와 어울릴 때 그 뒤에 서므로, 형용사 thick 뒤에 온 thick enough는 바른 어순입니다. '충분히 두껍다'는 해석 순서에 이끌려 앞에 두어야 한다고 생각하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c4-ox-002",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "sentence": "Radio astronomers still wonder why [[u:the signal repeats]] every ninety minutes without fail.",
+      "isCorrect": true,
+      "translation": "전파 천문학자들은 왜 그 신호가 어김없이 90분마다 반복되는지 여전히 궁금해합니다.",
+      "hints": [
+        "의문사 why가 이끄는 절이 문장에서 어떤 성분 노릇을 하는지 확인해 보십시오.",
+        "동사의 목적어로 쓰인 의문사절은 물음이 아니므로 평서문의 어순을 따릅니다."
+      ],
+      "explanation": "why절은 wonder의 목적어인 간접의문문이므로 의문사+주어+동사의 평서 어순이 옳습니다. 직접의문문처럼 does the signal repeat로 도치해야 한다고 생각하면 틀립니다."
+    },
+    {
+      "id": "u12-c4-ox-003",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["indirect-question"],
+      "sentence": "No surviving record explains how [[u:the medieval masons raised]] the great granite blocks without iron cranes.",
+      "isCorrect": true,
+      "translation": "중세 석공들이 철제 기중기 없이 어떻게 그 거대한 화강암 덩어리들을 들어 올렸는지 설명해 주는 기록은 남아 있지 않습니다.",
+      "hints": [
+        "how가 이끄는 절이 explains의 어떤 성분인지 확인해 보십시오.",
+        "간접의문문에서는 조동사를 세우지 않고 본동사가 직접 시제를 갖습니다."
+      ],
+      "explanation": "how절은 explains의 목적어인 간접의문문이므로 의문사+주어+동사의 어순이 옳고, 본동사 raised가 직접 과거 시제를 갖습니다. did the masons raise의 직접의문문 어순을 기대하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u12-c4-ox-004",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["enough-order"],
+      "sentence": "The old bell tower, weakened by two earthquakes, was no longer [[u:stable enough]] for visitors to climb.",
+      "isCorrect": true,
+      "translation": "두 차례의 지진으로 약해진 그 오래된 종탑은 더 이상 방문객이 오를 만큼 안정적이지 않았습니다.",
+      "hints": [
+        "삽입구를 걷어 낸 뒤 밑줄의 두 단어가 어떤 순서로 서 있는지 확인해 보십시오.",
+        "enough가 형용사와 짝을 이루면 형용사가 먼저 옵니다."
+      ],
+      "explanation": "삽입구 weakened by two earthquakes를 걷어 내면 be동사의 보어 자리에 형용사 stable과 enough가 이어진 구조입니다. enough는 형용사 뒤에 서므로 stable enough가 바른 어순입니다."
+    },
+    {
+      "id": "u12-c4-ox-005",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "sentence": "The repair manual does not say where [[u:is the valve]] located on the older engine models.",
+      "isCorrect": false,
+      "correction": "the valve is",
+      "translation": "그 수리 설명서에는 구형 엔진 모델에서 밸브가 어디에 위치하는지 나와 있지 않습니다.",
+      "hints": [
+        "where가 이끄는 절이 say의 어떤 성분인지 확인해 보십시오.",
+        "간접의문문에서는 be동사도 주어보다 뒤에 서야 합니다."
+      ],
+      "explanation": "where절은 say의 목적어인 간접의문문이므로 의문사+주어+동사의 어순이어야 합니다. be동사 is가 주어 the valve 앞에 나온 것은 직접의문문의 도치를 그대로 둔 것이므로 the valve is로 고칩니다."
+    },
+    {
+      "id": "u12-c4-ox-006",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["enough-order"],
+      "sentence": "That autumn the mountain stream was not [[u:enough deep]] for the salmon to spawn safely.",
+      "isCorrect": false,
+      "correction": "deep enough",
+      "translation": "그해 가을 그 산간 개울은 연어가 안전하게 산란할 만큼 깊지 않았습니다.",
+      "hints": [
+        "밑줄에서 enough의 짝이 되는 단어의 품사를 확인해 보십시오.",
+        "enough의 위치는 짝이 명사인지 형용사·부사인지에 따라 반대가 됩니다."
+      ],
+      "explanation": "enough가 형용사 deep과 짝을 이루므로 형용사 뒤에 서는 deep enough가 바른 어순입니다. '충분히 깊다'는 우리말 순서대로 enough를 앞에 두면 틀립니다."
+    },
+    {
+      "id": "u12-c4-ox-007",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["indirect-question"],
+      "sentence": "Historians long debated why [[u:had the fortress]] surrendered without a single recorded battle.",
+      "isCorrect": false,
+      "correction": "the fortress had",
+      "translation": "역사가들은 왜 그 요새가 기록된 전투 한 번 없이 항복했는지를 오랫동안 논쟁했습니다.",
+      "hints": [
+        "why절이 debated의 어떤 성분인지, 절 안의 어순이 어떤지 확인해 보십시오.",
+        "간접의문문 안에서는 조동사가 주어 앞으로 나올 수 없습니다."
+      ],
+      "explanation": "why절은 debated의 목적어인 간접의문문이므로 평서 어순이어야 합니다. 조동사 had가 주어 the fortress 앞에 나온 것은 직접의문문의 도치이므로 the fortress had로 고쳐 why the fortress had surrendered로 만듭니다."
+    },
+    {
+      "id": "u12-c4-ox-008",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["enough-order"],
+      "sentence": "Only a few of the salvaged oak beams were [[u:enough sound]] to reuse in the cathedral roof.",
+      "isCorrect": false,
+      "correction": "sound enough",
+      "translation": "인양된 참나무 들보 가운데 대성당 지붕에 다시 쓸 만큼 온전한 것은 몇 개뿐이었습니다.",
+      "hints": [
+        "밑줄에서 sound가 어떤 품사로 쓰였는지 먼저 판단해 보십시오.",
+        "enough가 형용사와 짝이면 형용사가 앞, enough가 뒤의 어순이 됩니다."
+      ],
+      "explanation": "여기서 sound는 '(구조가) 온전한'이라는 뜻의 형용사이므로 enough는 그 뒤에 서야 합니다. enough sound를 sound enough로 고쳐야 바른 어순입니다. sound를 명사로 착각하면 enough를 앞에 두는 오류를 옳다고 보게 됩니다."
+    },
+    {
+      "id": "u12-c4-wf-001",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["enough-order"],
+      "stem": "The oak shelf was {{blank}} to bear the weight of the marble bust.",
+      "given": "sturdy",
+      "acceptedAnswers": ["sturdy enough"],
+      "translation": "그 참나무 선반은 대리석 흉상의 무게를 견딜 만큼 튼튼했습니다.",
+      "hints": [
+        "빈칸 뒤의 to부정사가 어떤 정도 표현과 짝을 이루는지 생각해 보십시오.",
+        "'~할 만큼 충분히 …하다'를 만드는 정도 부사는 형용사와의 어순이 정해져 있습니다."
+      ],
+      "explanation": "'~할 만큼 튼튼하다'는 형용사+enough+to부정사의 틀로 표현합니다. enough는 형용사 뒤에 서므로 sturdy enough가 답이고, enough sturdy의 어순은 틀립니다."
+    },
+    {
+      "id": "u12-c4-wf-002",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["enough-order"],
+      "stem": "The polar expedition packed {{blank}} to last through the four-month winter.",
+      "given": "food",
+      "acceptedAnswers": ["enough food"],
+      "translation": "그 극지 탐험대는 넉 달의 겨울을 버틸 만큼 충분한 식량을 꾸렸습니다.",
+      "hints": [
+        "빈칸에 들어갈 말이 packed의 목적어이며 to부정사와 이어짐을 확인해 보십시오.",
+        "'~할 만큼 충분한'이라는 정도 표현이 명사와 짝을 이룰 때는 형용사·부사 짝일 때와 어순이 반대가 됩니다."
+      ],
+      "explanation": "'겨울을 버틸 만큼 충분한 식량'은 enough+명사의 어순으로 만듭니다. enough는 형용사·부사 뒤에 서지만 명사 앞에는 먼저 서므로 enough food가 답입니다."
+    },
+    {
+      "id": "u12-c4-wf-003",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "stem": "The report explains how the ancient city {{blank}} its water supply two thousand years ago.",
+      "given": "manage",
+      "acceptedAnswers": ["managed"],
+      "translation": "그 보고서는 그 고대 도시가 2천 년 전에 상수 공급을 어떻게 관리했는지 설명합니다.",
+      "hints": [
+        "how절이 explains의 목적어라는 점과 문장 끝의 시간 표현을 확인해 보십시오.",
+        "간접의문문에서는 조동사를 세우지 않고 본동사가 직접 시제를 표시합니다."
+      ],
+      "explanation": "how절은 explains의 목적어인 간접의문문이므로 의문사+주어+동사의 어순을 따르고, 본동사가 직접 시제를 갖습니다. two thousand years ago가 명백한 과거이므로 과거형 managed가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c4-wf-004",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "stem": "No one knows exactly when the mural {{blank}} beneath the layers of plaster centuries ago.",
+      "given": "disappear",
+      "acceptedAnswers": ["disappeared"],
+      "translation": "그 벽화가 수 세기 전에 언제 회반죽 층 아래로 사라졌는지는 아무도 정확히 모릅니다.",
+      "hints": [
+        "when절이 knows의 목적어라는 점과 centuries ago라는 단서를 확인해 보십시오.",
+        "간접의문문 안에서는 조동사의 도움 없이 본동사가 시제를 직접 갖습니다."
+      ],
+      "explanation": "when절은 knows의 목적어인 간접의문문이므로 평서 어순에 본동사가 직접 시제를 표시합니다. centuries ago가 과거를 고정하므로 disappeared가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c4-wf-005",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["indirect-question"],
+      "stem": "The committee wants to know why the restoration {{blank}} so far behind schedule last winter despite the extra funding.",
+      "given": "fall",
+      "acceptedAnswers": ["fell"],
+      "translation": "위원회는 추가 예산에도 불구하고 지난겨울 복원 작업이 왜 그렇게 일정에 뒤처졌는지 알고 싶어 합니다.",
+      "hints": [
+        "why절이 wants to know의 목적어라는 점과 last winter라는 시간 단서를 확인해 보십시오.",
+        "간접의문문은 물음의 뜻이라도 조동사 없이 본동사가 직접 시제를 갖는 평서 어순입니다."
+      ],
+      "explanation": "why절은 wants to know의 목적어인 간접의문문이므로 조동사를 세우지 않고 본동사가 직접 시제를 갖습니다. 주절이 현재 시제이고 last winter가 과거 시점을 고정하므로, 과거완료가 아닌 fall의 과거형 fell이 유일한 답입니다."
+    },
+    {
+      "id": "u12-c4-wf-006",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["indirect-question"],
+      "stem": "Not even the veteran rangers can explain how last August's wildfire {{blank}} the wide river without burning the eastern bank.",
+      "given": "cross",
+      "acceptedAnswers": ["crossed"],
+      "translation": "베테랑 산림 감시원들조차 지난 8월의 산불이 어떻게 동쪽 기슭을 태우지 않고 그 넓은 강을 건넜는지 설명하지 못합니다.",
+      "hints": [
+        "how절이 can explain의 목적어라는 점과 last August라는 단서를 확인해 보십시오.",
+        "간접의문문 안의 본동사는 조동사의 도움 없이 스스로 시제를 표시합니다."
+      ],
+      "explanation": "how절은 can explain의 목적어인 간접의문문이므로 평서 어순에 본동사가 직접 시제를 갖습니다. 주절이 현재 시제이고 last August가 과거 시점을 고정하므로, 과거완료가 아닌 과거형 crossed가 유일한 답입니다."
+    },
+    {
+      "id": "u12-c4-wc-001",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "sentence": "The engineers could not determine why [[u:did the dam crack]] after only a decade of service.",
+      "wrong": "did the dam crack",
+      "acceptedAnswers": ["the dam cracked"],
+      "translation": "엔지니어들은 왜 그 댐이 사용 십 년 만에 균열이 갔는지 밝혀내지 못했습니다.",
+      "hints": [
+        "why절이 determine의 목적어라는 점을 확인해 보십시오.",
+        "간접의문문에서는 조동사를 세우지 않고 주어 뒤의 본동사가 직접 시제를 갖습니다."
+      ],
+      "explanation": "why절은 determine의 목적어인 간접의문문이므로 직접의문문의 did 도치를 그대로 두면 틀립니다. did를 없애고 본동사에 과거 시제를 직접 실어 the dam cracked의 평서 어순으로 고칩니다."
+    },
+    {
+      "id": "u12-c4-wc-002",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["enough-order"],
+      "sentence": "The emergency shelter was not [[u:enough large]] to hold everyone displaced by the flood.",
+      "wrong": "enough large",
+      "acceptedAnswers": ["large enough"],
+      "translation": "그 임시 대피소는 홍수로 집을 잃은 모든 사람을 수용할 만큼 크지 않았습니다.",
+      "hints": [
+        "밑줄에서 enough의 짝이 되는 단어의 품사를 확인해 보십시오.",
+        "enough는 짝이 형용사·부사이면 그 뒤로 물러나야 합니다."
+      ],
+      "explanation": "enough가 형용사 large와 짝을 이루므로 형용사 뒤에 서야 합니다. enough large를 large enough로 고쳐야 '~할 만큼 큰'의 바른 어순이 됩니다."
+    },
+    {
+      "id": "u12-c4-wc-003",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["indirect-question"],
+      "sentence": "The archivists wondered where [[u:had the letters]] been hidden during the wartime occupation.",
+      "wrong": "had the letters",
+      "acceptedAnswers": ["the letters had"],
+      "translation": "기록 보관 담당자들은 전시 점령기 동안 그 편지들이 어디에 숨겨져 있었는지 궁금해했습니다.",
+      "hints": [
+        "where절이 wondered의 목적어라는 점과 절 안의 어순을 확인해 보십시오.",
+        "간접의문문 안에서는 조동사가 주어보다 앞에 설 수 없습니다."
+      ],
+      "explanation": "where절은 wondered의 목적어인 간접의문문이므로 의문사+주어+동사의 평서 어순이어야 합니다. 조동사 had가 주어 앞에 나온 직접의문문 어순을 the letters had로 고쳐 where the letters had been hidden으로 만듭니다."
+    },
+    {
+      "id": "u12-c4-wc-004",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["enough-order"],
+      "sentence": "The old projector no longer runs [[u:enough smoothly]] to screen the archival films safely.",
+      "wrong": "enough smoothly",
+      "acceptedAnswers": ["smoothly enough"],
+      "translation": "그 낡은 영사기는 더 이상 기록 영화를 안전하게 상영할 만큼 부드럽게 돌아가지 않습니다.",
+      "hints": [
+        "밑줄에서 enough의 짝이 되는 단어가 동사를 꾸미는 부사임을 확인해 보십시오.",
+        "enough는 형용사만 아니라 부사와 짝을 이룰 때도 그 뒤에 섭니다."
+      ],
+      "explanation": "smoothly는 동사 runs를 꾸미는 부사이고, enough는 형용사·부사와 짝을 이룰 때 그 뒤에 섭니다. enough smoothly를 smoothly enough로 고쳐야 바른 어순입니다."
+    }
+  ]
+}

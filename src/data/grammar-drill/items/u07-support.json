@@ -1,0 +1,1214 @@
+{
+  "unitId": "u07",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u07-c1-ox-001",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "intransitive-complete"],
+      "sentence": "The cabin [[u:where]] the ranger stays during the fire season has no electricity.",
+      "isCorrect": true,
+      "translation": "산불 철에 그 감시원이 머무는 오두막에는 전기가 들어오지 않습니다.",
+      "hints": [
+        "관계사 뒤의 절만 떼어 내어 주어와 동사, 목적어가 갖추어졌는지 세어 보십시오.",
+        "목적어가 안 보여도 동사가 자동사라면 그 절은 이미 완전한 절입니다."
+      ],
+      "explanation": "관계사 뒤의 절은 the ranger stays (during the fire season)로, stay는 목적어가 필요 없는 자동사이므로 완전한 절입니다. 완전한 절 앞이므로 관계부사 where가 옳습니다. 목적어가 안 보인다는 이유만으로 불완전하다고 판단해 관계대명사로 바꾸면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u07-c1-ox-002",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "subject-gap"],
+      "sentence": "Historians mark 15 April 1912 as the day [[u:that]] transformed maritime law forever.",
+      "isCorrect": true,
+      "translation": "역사가들은 1912년 4월 15일을 해상 법규를 영원히 바꾸어 놓은 날로 기록합니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 있는지부터 확인해 보십시오.",
+        "선행사가 시간 명사라도 뒤 절에 성분 결손이 있으면 관계부사는 설 수 없습니다."
+      ],
+      "explanation": "뒤 절 transformed maritime law forever에는 주어가 빠져 있으므로 불완전한 절입니다. 따라서 시간 선행사 the day 뒤라도 주어 빈자리를 채우는 관계대명사 that이 옳습니다. '날이니까 when'이라는 반사 반응이 이 문항의 함정입니다."
+    },
+    {
+      "id": "u07-c1-ox-003",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The reef [[u:which]] marine photographers documented so lavishly during the 1990s has lost nearly all of its color.",
+      "isCorrect": true,
+      "translation": "해양 사진가들이 1990년대에 그토록 공들여 기록했던 그 산호초는 색을 거의 다 잃었습니다.",
+      "hints": [
+        "부사와 전치사구를 괄호로 묶고, 타동사의 목적어가 실재하는지 세어 보십시오.",
+        "수식어를 걷어낸 골격에 빈자리가 남으면 그 빈자리를 채우는 관계사가 필요합니다."
+      ],
+      "explanation": "뒤 절의 골격은 marine photographers documented ___이고, so lavishly와 during the 1990s는 수식어일 뿐 documented의 목적어가 아닙니다. 목적어가 빠진 불완전한 절이므로 관계대명사 which가 옳습니다. 산호초가 장소처럼 느껴진다는 이유로 관계부사를 기대하면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-ox-004",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where"],
+      "sentence": "The cramped kitchen [[u:where]] the chef quietly perfects each dish on the tasting menu seats only four guests.",
+      "isCorrect": true,
+      "translation": "그 셰프가 시식 메뉴의 요리 하나하나를 조용히 완성해 내는 비좁은 주방은 손님을 네 명밖에 받지 못합니다.",
+      "hints": [
+        "관계사 뒤 절의 동사가 목적어를 이미 데리고 있는지 확인해 보십시오.",
+        "주어와 목적어가 모두 갖추어진 절 앞에는 어떤 종류의 관계사가 서는지 떠올려 보십시오."
+      ],
+      "explanation": "뒤 절은 the chef perfects each dish로 주어와 목적어가 모두 갖추어진 완전한 절입니다. 완전한 절 앞이므로 관계부사 where가 옳습니다. 절이 길고 수식어가 많아 결손이 있는 것처럼 보여도, 골격을 세어 보면 빈자리가 없습니다."
+    },
+    {
+      "id": "u07-c1-ox-005",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The gallery [[u:where]] the collector donated to the city in 1998 now charges no admission.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "그 수집가가 1998년에 시에 기증한 미술관은 이제 입장료를 받지 않습니다.",
+      "hints": [
+        "관계사 뒤 절에서 donated의 목적어가 보이는지 확인해 보십시오.",
+        "타동사의 목적어가 빠진 불완전한 절 앞에는 관계부사가 설 수 없습니다."
+      ],
+      "explanation": "뒤 절은 the collector donated ___ to the city로, donated의 목적어가 빠진 불완전한 절입니다. 관계부사는 완전한 절만 이끌 수 있으므로 where는 틀렸고, 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 선행사가 장소라는 이유로 where를 허용하면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-ox-006",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "intransitive-complete"],
+      "sentence": "The narrow platform [[u:which]] hundreds of commuters wait during the morning rush was finally widened.",
+      "isCorrect": false,
+      "correction": "where",
+      "translation": "수백 명의 통근자가 아침 혼잡 시간에 기다리는 그 좁은 승강장이 마침내 확장되었습니다.",
+      "hints": [
+        "관계사 뒤 절의 동사 wait가 목적어를 필요로 하는 동사인지 확인해 보십시오.",
+        "성분이 모두 갖추어진 완전한 절 앞에서 관계대명사는 채울 빈자리가 없습니다."
+      ],
+      "explanation": "뒤 절 hundreds of commuters wait는 자동사 wait로 끝나는 완전한 절입니다. 관계대명사 which는 절 안의 빈자리를 채워야만 설 수 있는데 이 절에는 빈자리가 없으므로 틀렸고, 완전한 절을 이끄는 관계부사 where로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c1-ox-007",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The village [[u:where]] the retreating army burned to the ground in a single night was never rebuilt.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "퇴각하던 군대가 하룻밤 사이에 잿더미로 만든 그 마을은 끝내 재건되지 못했습니다.",
+      "hints": [
+        "to the ground와 in a single night 같은 수식어를 괄호로 묶고 절의 골격만 남겨 보십시오.",
+        "타동사 뒤에 목적어가 실재하는지가 완전성 판단의 핵심입니다."
+      ],
+      "explanation": "수식어 to the ground와 in a single night를 걷어내면 뒤 절의 골격은 the army burned ___으로, burned의 목적어가 빠져 있습니다. 불완전한 절 앞이므로 where는 틀렸고 관계대명사 which로 고쳐야 합니다. 전치사구들이 목적어처럼 보이게 만드는 것이 이 문항의 함정입니다."
+    },
+    {
+      "id": "u07-c1-ox-008",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "intransitive-complete"],
+      "sentence": "The renovated dormitory [[u:which]] exhausted medical interns sleep between back-to-back shifts stands beside the emergency wing.",
+      "isCorrect": false,
+      "correction": "where",
+      "translation": "지친 수련의들이 연이은 근무 사이에 눈을 붙이는 새로 단장한 기숙사는 응급 병동 옆에 서 있습니다.",
+      "hints": [
+        "관계사 뒤 절의 동사가 자동사인지 타동사인지부터 판정해 보십시오.",
+        "자동사로 끝나 성분이 완비된 절 앞에 관계대명사가 서면 채울 빈자리가 없습니다."
+      ],
+      "explanation": "뒤 절은 interns sleep (between back-to-back shifts)로, sleep은 목적어를 취하지 않는 자동사이므로 완전한 절입니다. which는 절 안의 빈자리를 채워야 하는데 빈자리가 없으므로 틀렸고, 관계부사 where로 고쳐야 합니다. between 이하는 수식어일 뿐 결손과 무관합니다."
+    },
+    {
+      "id": "u07-c1-wf-001",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["which-vs-where", "antecedent-agreement"],
+      "stem": "The lab where the interns still {{blank}} every morning opens at seven.",
+      "given": "gather",
+      "acceptedAnswers": ["gather"],
+      "translation": "인턴들이 지금도 매일 아침 모이는 그 실험실은 일곱 시에 문을 엽니다.",
+      "hints": [
+        "빈칸의 동사가 어느 절에 속해 있고, 그 절의 주어가 무엇인지 확인해 보십시오.",
+        "관계부사 뒤의 완전한 절에서는 절 안의 주어가 동사의 수를 결정하고, 시간 표현이 시제를 고정합니다."
+      ],
+      "explanation": "빈칸은 관계부사 where가 이끄는 완전한 절의 동사 자리이고, 이 절의 주어는 복수 명사 the interns입니다. still이 현재를 고정하므로 복수 현재형 gather가 옳습니다. 선행사 The lab의 수에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-wf-002",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["subject-gap", "antecedent-agreement"],
+      "stem": "Visitors admire the bridge that {{blank}} the two islands today.",
+      "given": "connect",
+      "acceptedAnswers": ["connects"],
+      "translation": "방문객들은 오늘날 그 두 섬을 잇고 있는 다리에 감탄합니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 따로 있는지 확인해 보십시오.",
+        "관계사 자신이 주어 노릇을 하면 동사의 수는 선행사가 결정하고, 시간 표현이 시제를 고정합니다."
+      ],
+      "explanation": "관계사 뒤 절에는 주어가 없으므로 that이 주어 자리를 채우는 관계대명사이고, 동사의 수는 선행사가 결정합니다. 선행사는 단수 명사 the bridge이고 today가 현재를 고정하므로 3인칭 단수 현재형 connects가 옳습니다."
+    },
+    {
+      "id": "u07-c1-wf-003",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "antecedent-agreement"],
+      "stem": "The workshop where the town's carpenters still {{blank}} traditional tools attracts young apprentices.",
+      "given": "make",
+      "acceptedAnswers": ["make"],
+      "translation": "그 마을 목수들이 지금도 전통 연장을 만드는 공방은 젊은 견습생들을 끌어모읍니다.",
+      "hints": [
+        "빈칸의 동사가 선행사를 받는 자리인지, 절 안의 주어를 받는 자리인지 구분해 보십시오.",
+        "완전한 절을 이끄는 관계사 뒤에서는 절 안의 주어가 동사의 수를 정합니다."
+      ],
+      "explanation": "where가 이끄는 절은 자체 주어 the town's carpenters를 갖춘 완전한 절이므로, 빈칸의 동사는 이 복수 주어에 일치시킵니다. still이 현재를 고정하므로 복수 현재형 make가 옳습니다. 단수인 선행사 The workshop이나 소유격 속 the town's에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-wf-004",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["subject-gap", "antecedent-agreement", "intervening-pp"],
+      "stem": "The mural of the city's founders that {{blank}} the station wall today attracts photographers from across the country.",
+      "given": "cover",
+      "acceptedAnswers": ["covers"],
+      "translation": "오늘날 역사 벽면을 뒤덮고 있는, 도시 창건자들을 그린 벽화는 전국에서 사진가들을 불러 모읍니다.",
+      "hints": [
+        "관계사 바로 앞의 전치사구를 괄호로 묶고 진짜 선행사를 찾아보십시오.",
+        "관계사가 주어 노릇을 하는 절에서 동사의 수는 전치사구 속 명사가 아니라 선행사가 정합니다."
+      ],
+      "explanation": "that 뒤 절에는 주어가 없으므로 that이 주어인 관계대명사절이고, 동사의 수는 선행사가 결정합니다. 선행사는 밑줄 바로 앞의 복수 명사 founders가 아니라 전치사구 앞의 단수 명사 The mural입니다. today가 현재를 고정하므로 covers가 옳습니다."
+    },
+    {
+      "id": "u07-c1-wf-005",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "intervening-pp", "antecedent-agreement"],
+      "stem": "The gate where the convoy of supply trucks {{blank}} every evening now stays open around the clock.",
+      "given": "pass",
+      "acceptedAnswers": ["passes"],
+      "translation": "보급 트럭 행렬이 매일 저녁 통과하는 그 관문은 이제 24시간 내내 열려 있습니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, 그 뒤에 붙은 전치사구를 괄호로 묶어 보십시오.",
+        "완전한 절 안에서 동사의 수는 of 뒤의 명사가 아니라 주어 핵이 정하고, 시간 표현이 시제를 고정합니다."
+      ],
+      "explanation": "where가 이끄는 완전한 절의 주어 핵은 단수 명사 the convoy이고, of supply trucks는 전치사구 수식어입니다. now와 every evening이 현재의 반복을 고정하므로 단수 현재형 passes가 옳습니다. 인접한 복수 명사 trucks에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-wf-006",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["subject-gap", "antecedent-agreement", "inserted-clause"],
+      "stem": "The custom that, according to letters written by early settlers, still {{blank}} harvest celebrations in the region reflects centuries of exchange.",
+      "given": "shape",
+      "acceptedAnswers": ["shapes"],
+      "translation": "초기 정착민들이 쓴 편지들에 따르면 지금도 그 지역의 추수 축제를 빚어내고 있는 그 관습은 수백 년에 걸친 교류를 반영합니다.",
+      "hints": [
+        "콤마 사이의 삽입구를 괄호로 묶고, 관계사 뒤 절에 주어가 따로 있는지 확인해 보십시오.",
+        "관계사가 주어인 절에서 동사의 수는 삽입구 속 명사가 아니라 선행사가 정합니다."
+      ],
+      "explanation": "according to letters written by early settlers는 콤마로 끼어든 삽입구이므로 걷어냅니다. 남는 절에는 주어가 없어 that이 주어인 관계대명사절이고, 동사의 수는 단수 선행사 The custom이 결정합니다. still이 현재를 고정하므로 shapes가 옳습니다. 삽입구 속 복수 명사 letters와 settlers는 미끼입니다."
+    },
+    {
+      "id": "u07-c1-wc-001",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "The expedition finally reached the research station, [[u:where]] the government had closed two winters earlier.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "탐사대는 마침내 그 연구 기지에 도착했는데, 그곳은 정부가 두 해 전 겨울에 폐쇄한 곳이었습니다.",
+      "hints": [
+        "관계사 뒤 절에서 had closed의 목적어가 보이는지 세어 보십시오.",
+        "목적어가 빠진 불완전한 절 앞에는 그 빈자리를 채우는 관계대명사가 필요합니다."
+      ],
+      "explanation": "뒤 절은 the government had closed ___로, closed의 목적어가 빠진 불완전한 절입니다. 관계부사는 완전한 절만 이끌 수 있으므로 where는 틀렸고, 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 선행사가 장소라는 이유로 where를 고르면 함정에 빠집니다."
+    },
+    {
+      "id": "u07-c1-wc-002",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "subject-gap", "comma-which"],
+      "sentence": "They restored the tide mill, [[u:where]] once supplied flour to every village along the estuary.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "그들은 그 조력 방앗간을 복원했는데, 그것은 한때 하구를 따라 늘어선 모든 마을에 밀가루를 공급하던 곳이었습니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 있는지부터 확인해 보십시오.",
+        "주어가 빠진 절 앞에는 그 주어 자리를 스스로 채우는 관계대명사가 서야 합니다."
+      ],
+      "explanation": "뒤 절 once supplied flour to every village에는 주어가 없습니다. 관계부사는 성분이 완비된 절만 이끌 수 있으므로 where는 틀렸고, 주어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 방앗간이 장소 명사라는 인상에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c1-wc-003",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "Scholars still debate the winter of 1709, [[u:when]] contemporary diarists described in almost obsessive detail.",
+      "wrong": "when",
+      "acceptedAnswers": ["which"],
+      "translation": "학자들은 1709년의 겨울을 두고 여전히 논쟁하는데, 그 겨울은 당대의 일기 작가들이 거의 강박적으로 상세하게 묘사한 대상입니다.",
+      "hints": [
+        "관계사 뒤 절에서 described의 목적어가 실재하는지, in almost obsessive detail이 목적어인지 따져 보십시오.",
+        "전치사구는 목적어가 아닙니다 — 목적어가 빠진 절에는 빈자리를 채우는 관계대명사가 필요합니다."
+      ],
+      "explanation": "뒤 절의 골격은 diarists described ___이고, in almost obsessive detail은 전치사구 수식어일 뿐 목적어가 아닙니다. 목적어가 빠진 불완전한 절이므로 시간 선행사라도 when은 설 수 없고, 콤마 뒤에서 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c1-wc-004",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "No one challenged the official reason, [[u:why]] the ministry repeated at every press conference until the archive quietly reopened.",
+      "wrong": "why",
+      "acceptedAnswers": ["which"],
+      "translation": "아무도 그 공식적인 이유에 이의를 제기하지 않았는데, 그것은 기록보관소가 조용히 다시 문을 열 때까지 정부 부처가 모든 기자회견에서 되풀이한 것이었습니다.",
+      "hints": [
+        "관계사 뒤 절에서 repeated의 목적어가 보이는지 세어 보십시오.",
+        "선행사가 이유 명사라도 뒤 절에 결손이 있으면 관계부사는 후보에서 제외됩니다."
+      ],
+      "explanation": "뒤 절은 the ministry repeated ___ at every press conference로, repeated의 목적어가 빠진 불완전한 절입니다. 선행사가 reason이라는 이유만으로 why를 쓰면 함정에 빠집니다. 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c2-ox-001",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice"],
+      "sentence": "The report shows [[u:how]] smallholder farmers adapted their terraces after the 2004 floods.",
+      "isCorrect": true,
+      "translation": "그 보고서는 2004년 홍수 이후 소농들이 자신들의 계단밭을 어떻게 개조했는지를 보여 줍니다.",
+      "hints": [
+        "밑줄 뒤 절에 주어와 목적어가 모두 갖추어져 있는지 세어 보십시오.",
+        "방법을 나타내는 관계부사는 선행사 없이 홀로 완전한 절을 이끌 수 있습니다."
+      ],
+      "explanation": "뒤 절은 farmers adapted their terraces로 주어와 목적어가 완비된 완전한 절입니다. 방법의 관계부사 how는 선행사 the way 없이 단독으로 완전한 절을 이끌어 shows의 목적어 노릇을 하므로 옳습니다. 앞에 the way가 없다고 틀렸다고 의심하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u07-c2-ox-002",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice"],
+      "sentence": "Biologists finally identified the reason [[u:why]] the herds abandon their northern pastures so early each autumn.",
+      "isCorrect": true,
+      "translation": "생물학자들은 그 무리들이 매년 가을 그토록 일찍 북쪽 목초지를 떠나는 이유를 마침내 밝혀냈습니다.",
+      "hints": [
+        "밑줄 뒤 절에서 abandon의 목적어가 실재하는지 확인해 보십시오.",
+        "이유 명사를 선행사로 받는 관계부사는 뒤 절이 완전할 때만 설 수 있습니다."
+      ],
+      "explanation": "뒤 절은 the herds abandon their northern pastures로 주어와 목적어가 모두 갖추어진 완전한 절입니다. 선행사가 이유 명사 the reason이고 절이 완전하므로 관계부사 why가 옳습니다. 타동사 abandon이 보인다고 반사적으로 결손을 의심하면 안 됩니다 — 목적어가 버젓이 있습니다."
+    },
+    {
+      "id": "u07-c2-ox-003",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "which-vs-where"],
+      "sentence": "Bibliographers prize the decade [[u:when]] the printing towns of the lowlands doubled their output despite two ruinous wars.",
+      "isCorrect": true,
+      "translation": "서지학자들은 저지대의 인쇄 도시들이 두 차례의 참혹한 전쟁에도 불구하고 생산량을 두 배로 늘린 그 10년을 귀중하게 여깁니다.",
+      "hints": [
+        "밑줄 뒤 절의 골격에서 주어와 doubled의 목적어를 차례로 찾아보십시오.",
+        "완전한 절 앞에서는 선행사의 종류가 어느 관계부사를 쓸지 정합니다."
+      ],
+      "explanation": "뒤 절은 the printing towns doubled their output으로 주어와 목적어가 완비된 완전한 절이고, despite 이하는 수식어입니다. 완전한 절 앞이므로 관계부사가 서고, 선행사 the decade가 시간 명사이므로 when이 옳습니다. towns라는 장소 명사가 절 안에 보인다고 다른 관계부사를 떠올리면 안 됩니다."
+    },
+    {
+      "id": "u07-c2-ox-004",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["the-way-how"],
+      "sentence": "Neuroscientists have finally mapped [[u:the way]] the brain rewards small, uncertain gains during play.",
+      "isCorrect": true,
+      "translation": "신경과학자들은 뇌가 놀이 중의 작고 불확실한 이득에 보상을 부여하는 방식을 마침내 규명해 냈습니다.",
+      "hints": [
+        "밑줄 뒤에 이어지는 절이 완전한지 확인하고, 밑줄과 절 사이에 무엇이 더 필요해 보이는지 따져 보십시오.",
+        "방법의 선행사는 관계부사 없이 바로 완전한 절을 데리고 올 수 있습니다."
+      ],
+      "explanation": "the way 뒤의 절 the brain rewards small, uncertain gains는 주어와 목적어가 완비된 완전한 절입니다. 방법을 나타낼 때는 the way가 관계부사 없이 바로 완전한 절을 이끌 수 있으므로 옳은 표현입니다. 무언가 빠진 듯 보여도 the way 뒤에 how를 겹쳐 쓰면 오히려 비문이 됩니다."
+    },
+    {
+      "id": "u07-c2-ox-005",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["the-way-how"],
+      "sentence": "Anthropologists recorded [[u:the way how]] island communities divide the catch after every storm.",
+      "isCorrect": false,
+      "correction": "the way",
+      "translation": "인류학자들은 섬 공동체들이 폭풍이 지나갈 때마다 어획물을 나누는 방식을 기록했습니다.",
+      "hints": [
+        "방법을 나타내는 선행사와 관계부사가 한 자리에 함께 설 수 있는지 떠올려 보십시오.",
+        "방법 표현은 두 가지 형태 중 하나만 남기고 겹쳐 쓰지 않습니다."
+      ],
+      "explanation": "방법을 나타낼 때 the way와 how는 겹쳐 쓸 수 없습니다 — the way how형은 그 자체로 비문입니다. 뒤 절이 완전하므로 the way만 남기거나 how만 남긴 형태로 고쳐야 하며, 대표 수정형은 the way입니다."
+    },
+    {
+      "id": "u07-c2-ox-006",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice", "object-gap"],
+      "sentence": "She never forgot the summer [[u:when]] her family spent at the mountain refuge above the treeline.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "그녀는 가족이 수목한계선 위의 산장에서 보낸 그 여름을 결코 잊지 않았습니다.",
+      "hints": [
+        "밑줄 뒤 절에서 spent의 목적어가 보이는지 세어 보십시오.",
+        "선행사가 시간 명사라도 뒤 절에 목적어 결손이 있으면 관계부사는 설 수 없습니다."
+      ],
+      "explanation": "뒤 절은 her family spent ___ at the mountain refuge로, spent의 목적어가 빠진 불완전한 절입니다. 선행사 the summer가 시간 명사라는 이유로 when을 고르면 함정에 빠집니다. 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c2-ox-007",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "object-gap"],
+      "sentence": "The tribunal rejected the reason [[u:why]] the ministry gave for sealing the archive.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "재판부는 그 부처가 기록보관소 봉쇄의 근거로 제시한 이유를 받아들이지 않았습니다.",
+      "hints": [
+        "밑줄 뒤 절에서 gave의 목적어가 실재하는지, for 이하가 목적어인지 구분해 보십시오.",
+        "이유 명사가 선행사라도 뒤 절에 빈자리가 있으면 그 빈자리를 채우는 관계사가 필요합니다."
+      ],
+      "explanation": "뒤 절의 골격은 the ministry gave ___ for sealing the archive로, gave의 목적어가 빠져 있고 for 이하는 전치사구입니다. 선행사가 the reason이어도 불완전한 절 앞에는 why가 설 수 없으므로 틀렸고, 목적어 빈자리를 채우는 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c2-ox-008",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "prep-rel"],
+      "sentence": "The committee mapped the process [[u:why]] funding applications crawl through three separate offices.",
+      "isCorrect": false,
+      "correction": "by which",
+      "translation": "위원회는 지원금 신청서가 세 개의 개별 부서를 거쳐 가는 절차를 도식화했습니다.",
+      "hints": [
+        "뒤 절의 완전성을 먼저 확인한 다음, 선행사가 어떤 종류의 명사인지 살펴보십시오.",
+        "완전한 절 앞이라도 관계부사는 선행사의 종류와 짝이 맞아야 합니다."
+      ],
+      "explanation": "뒤 절 funding applications crawl through three separate offices는 완전한 절이므로 관계부사 계열이 설 자리는 맞습니다. 그러나 why는 the reason 같은 이유 명사만 선행사로 받는데, the process는 이유가 아니라 절차입니다. 절차 명사와 짝을 이루는 by which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c2-wf-001",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["rel-adverb-choice", "past-marker"],
+      "stem": "No one knows the reason why the expedition suddenly {{blank}} its southern route last spring.",
+      "given": "abandon",
+      "acceptedAnswers": ["abandoned"],
+      "translation": "그 탐사대가 지난봄에 갑자기 남쪽 경로를 포기한 이유는 아무도 모릅니다.",
+      "hints": [
+        "빈칸이 속한 절의 시간 표현을 찾아 시제를 고정해 보십시오.",
+        "관계부사 뒤의 완전한 절에서 동사는 절 안의 주어와 시간 표현에 맞춥니다."
+      ],
+      "explanation": "빈칸은 관계부사 why가 이끄는 완전한 절의 동사 자리이고, 주어는 단수 명사 the expedition입니다. last spring이 명백한 과거 시점을 고정하므로 과거형 abandoned가 옳습니다."
+    },
+    {
+      "id": "u07-c2-wf-002",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["rel-adverb-choice"],
+      "stem": "The safety manual explains how divers now {{blank}} their air hoses twice before every descent.",
+      "given": "check",
+      "acceptedAnswers": ["check"],
+      "translation": "그 안전 지침서는 잠수부들이 요즘 매번 하강하기 전에 공기 호스를 두 번 점검하는 방법을 설명합니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어가 단수인지 복수인지 확인해 보십시오.",
+        "방법의 관계부사가 이끄는 완전한 절에서 동사는 절 안의 주어와 시간 표현이 정합니다."
+      ],
+      "explanation": "빈칸은 how가 이끄는 완전한 절의 동사 자리이고, 주어는 복수 명사 divers입니다. now와 before every descent가 현재의 반복 절차를 고정하므로 복수 현재형 check가 옳습니다."
+    },
+    {
+      "id": "u07-c2-wf-003",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice", "intervening-pp"],
+      "stem": "Winter is the season when the reserve's wolves {{blank}} across the frozen lake in search of prey.",
+      "given": "travel",
+      "acceptedAnswers": ["travel"],
+      "translation": "겨울은 그 보호구역의 늑대들이 먹이를 찾아 얼어붙은 호수를 건너 이동하는 계절입니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵이 무엇인지, 소유격에 끌리지 않았는지 확인해 보십시오.",
+        "관계부사 뒤 완전한 절의 동사는 절 안의 주어 핵과 문장의 시제 틀에 맞춥니다."
+      ],
+      "explanation": "when이 이끄는 완전한 절의 주어 핵은 복수 명사 wolves이고, the reserve's는 소유격 수식어입니다. Winter is the season이라는 현재 시제 틀이 일반적 습성을 나타내므로 복수 현재형 travel이 옳습니다. 단수 명사 reserve에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c2-wf-004",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice", "intervening-pp", "past-marker"],
+      "stem": "Economists still debate the reason why the housing market of the coastal provinces {{blank}} so sharply in 2008.",
+      "given": "fall",
+      "acceptedAnswers": ["fell"],
+      "translation": "경제학자들은 2008년에 그 해안 지방들의 주택 시장이 그토록 가파르게 추락한 이유를 두고 여전히 논쟁합니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, of 뒤의 명사를 괄호로 묶어 보십시오.",
+        "절 안의 연도 표현이 시제를 하나로 고정합니다."
+      ],
+      "explanation": "why가 이끄는 완전한 절의 주어 핵은 단수 명사 the housing market이고, of the coastal provinces는 전치사구 수식어입니다. in 2008이 명백한 과거 시점을 고정하므로 과거형 fell이 옳습니다. 인접한 복수 명사 provinces는 미끼입니다."
+    },
+    {
+      "id": "u07-c2-wf-005",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "intervening-clause", "past-marker"],
+      "stem": "The chronicle records the year 1666, when the plague that had emptied the port cities finally {{blank}} from the peninsula.",
+      "given": "retreat",
+      "acceptedAnswers": ["retreated"],
+      "translation": "그 연대기는 항구 도시들을 텅 비게 만들었던 역병이 마침내 반도에서 물러난 해인 1666년을 기록하고 있습니다.",
+      "hints": [
+        "빈칸이 속한 절에서 주어 핵과 그 주어를 꾸미는 관계사절을 구분해 보십시오.",
+        "선행사의 연도가 절의 시제를 고정하고, 동사는 삽입된 절 너머의 주어 핵을 따릅니다."
+      ],
+      "explanation": "when이 이끄는 완전한 절의 주어 핵은 단수 명사 the plague이고, that had emptied the port cities는 이를 꾸미는 관계사절입니다. 선행사 the year 1666이 과거 시점을 고정하므로 과거형 retreated가 옳습니다. 관계사절 속 복수 명사 cities에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c2-wf-006",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "intervening-clause"],
+      "stem": "The study shows how children who grow up beside the sea {{blank}} approaching storms earlier than adults do.",
+      "given": "sense",
+      "acceptedAnswers": ["sense"],
+      "translation": "그 연구는 바닷가에서 자라는 아이들이 다가오는 폭풍을 어른들보다 얼마나 더 일찍 감지하는지를 보여 줍니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵과, 그 주어를 꾸미는 관계사절을 구분해 보십시오.",
+        "문장 끝의 대동사가 절 전체의 시제를 알려 주고, 동사의 수는 주어 핵이 정합니다."
+      ],
+      "explanation": "how가 이끄는 완전한 절의 주어 핵은 복수 명사 children이고, who grow up beside the sea는 이를 꾸미는 관계사절입니다. 문장 끝의 대동사 do가 현재 시제를 고정하므로 복수 현재형 sense가 옳습니다. 관계사절 속 단수 명사 the sea에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c2-wc-001",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice", "object-gap", "comma-which"],
+      "sentence": "Residents still talk about the spring of 2011, [[u:when]] the local newspaper covered day after day.",
+      "wrong": "when",
+      "acceptedAnswers": ["which"],
+      "translation": "주민들은 2011년 봄에 대해 여전히 이야기하는데, 그 봄은 지역 신문이 하루도 빠짐없이 보도한 시기였습니다.",
+      "hints": [
+        "관계사 뒤 절에서 covered의 목적어가 보이는지 세어 보십시오.",
+        "시간 선행사라도 뒤 절에 목적어 결손이 있으면 관계부사는 설 수 없습니다."
+      ],
+      "explanation": "뒤 절은 the local newspaper covered ___ day after day로, covered의 목적어가 빠진 불완전한 절입니다. 선행사가 시간 표현이라는 이유로 when을 쓰면 함정에 빠집니다. 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c2-wc-002",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["rel-adverb-choice", "object-gap", "comma-which"],
+      "sentence": "The report finally names the reason, [[u:why]] the auditors had suspected from the very beginning.",
+      "wrong": "why",
+      "acceptedAnswers": ["which"],
+      "translation": "그 보고서는 마침내 그 이유를 명시하는데, 그것은 감사관들이 맨 처음부터 의심해 온 것이었습니다.",
+      "hints": [
+        "관계사 뒤 절에서 had suspected의 목적어가 실재하는지 확인해 보십시오.",
+        "선행사가 이유 명사라는 사실보다 절의 완전성 확인이 항상 먼저입니다."
+      ],
+      "explanation": "뒤 절은 the auditors had suspected ___로, suspected의 목적어가 빠진 불완전한 절입니다. 선행사 the reason만 보고 why를 고르면 안 되고, 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 완전성 확인이 관계부사 선택보다 먼저입니다."
+    },
+    {
+      "id": "u07-c2-wc-003",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "subject-gap", "comma-which"],
+      "sentence": "The exhibition centers on 1848, [[u:when]] permanently transformed political life across the continent.",
+      "wrong": "when",
+      "acceptedAnswers": ["which"],
+      "translation": "그 전시는 1848년에 초점을 맞추는데, 그 해는 대륙 전역의 정치 지형을 영구히 바꾸어 놓았습니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 있는지부터 확인해 보십시오.",
+        "주어가 빠진 절 앞에는 그 자리를 스스로 채우는 관계대명사가 필요합니다."
+      ],
+      "explanation": "뒤 절 permanently transformed political life에는 주어가 없습니다. 관계부사는 성분이 완비된 절만 이끌 수 있으므로 연도 선행사라도 when은 틀렸고, 주어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 부사 permanently가 주어처럼 보이게 만드는 것이 함정입니다."
+    },
+    {
+      "id": "u07-c2-wc-004",
+      "unitId": "u07",
+      "conceptId": "u07-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["rel-adverb-choice", "object-gap", "comma-which"],
+      "sentence": "Economists keep returning to the true reason, [[u:why]] the central bank never publicly acknowledged during the long crisis.",
+      "wrong": "why",
+      "acceptedAnswers": ["which"],
+      "translation": "경제학자들은 그 진짜 이유로 거듭 돌아오는데, 그것은 중앙은행이 긴 위기 동안 공개적으로는 한 번도 인정하지 않은 것이었습니다.",
+      "hints": [
+        "부사들을 걷어내고 acknowledged의 목적어가 남는지 세어 보십시오.",
+        "이유 명사 뒤라도 절에 빈자리가 있으면 관계부사가 아니라 그 빈자리를 채우는 관계사가 섭니다."
+      ],
+      "explanation": "뒤 절의 골격은 the central bank acknowledged ___이고, never와 publicly, during the long crisis는 모두 수식어입니다. acknowledged의 목적어가 빠진 불완전한 절이므로 why는 틀렸고, 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-ox-001",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-rel"],
+      "sentence": "The archive [[u:in which]] the original treaty drafts survived two fires has now been digitized.",
+      "isCorrect": true,
+      "translation": "원본 조약 초안들이 두 차례의 화재를 견뎌 낸 그 기록보관소는 이제 디지털화되었습니다.",
+      "hints": [
+        "밑줄 뒤 절에 주어와 목적어가 갖추어져 있는지 세어 보십시오.",
+        "전치사를 절 끝으로 되돌려 원래 문장이 복원되는지 확인해 보십시오."
+      ],
+      "explanation": "뒤 절은 the drafts survived two fires로 성분이 완비된 완전한 절이고, 전치사를 되돌리면 the drafts survived two fires in the archive로 자연스럽게 복원됩니다. 전치사+관계대명사는 관계부사와 같은 자리, 곧 완전한 절 앞에 서므로 옳습니다. 겉모습이 낯설다고 틀렸다고 의심하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u07-c3-ox-002",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "abstract-antecedent"],
+      "sentence": "The temperature [[u:at which]] this new alloy melts surprised even the foundry's own engineers.",
+      "isCorrect": true,
+      "translation": "이 새 합금이 녹는 온도는 주조 공장의 자체 기술자들마저 놀라게 했습니다.",
+      "hints": [
+        "밑줄 뒤 절만 떼어 내어 성분이 완비되었는지 확인해 보십시오.",
+        "전치사를 절 끝으로 되돌렸을 때 '동사+전치사+선행사' 짝이 성립하는지 살펴보십시오."
+      ],
+      "explanation": "뒤 절 this new alloy melts는 자동사 melt로 끝나는 완전한 절이고, 전치사를 되돌리면 the alloy melts at the temperature로 복원됩니다. 완전한 절 앞의 전치사+관계대명사이므로 옳은 표현입니다. 선행사가 눈에 보이는 장소가 아니어도 이 구조는 성립합니다."
+    },
+    {
+      "id": "u07-c3-ox-003",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "abstract-antecedent"],
+      "sentence": "The quiet confidence [[u:with which]] the young pianist reshaped the familiar concerto divided the festival's critics.",
+      "isCorrect": true,
+      "translation": "그 젊은 피아니스트가 익숙한 협주곡을 새로 빚어낸 조용한 자신감은 축제 평론가들의 평가를 갈라놓았습니다.",
+      "hints": [
+        "밑줄 뒤 절에서 reshaped의 목적어가 실재하는지 세어 보십시오.",
+        "전치사를 절 끝으로 되돌려 선행사와 짝이 맞는지 확인해 보십시오."
+      ],
+      "explanation": "뒤 절은 the pianist reshaped the concerto로 주어와 목적어가 완비된 완전한 절입니다. 전치사를 되돌리면 reshaped the concerto with the confidence로 자연스럽게 복원되므로 with which는 옳습니다. 추상 명사 confidence가 선행사여도 완전한 절 앞의 전치사+관계대명사는 정상적인 구조입니다."
+    },
+    {
+      "id": "u07-c3-ox-004",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "abstract-antecedent"],
+      "sentence": "The mechanism [[u:by which]] deep-sea vents sustain entire food webs without sunlight remained a mystery until 1977.",
+      "isCorrect": true,
+      "translation": "심해 열수구가 햇빛 없이 먹이 그물 전체를 지탱하는 기제는 1977년까지 수수께끼로 남아 있었습니다.",
+      "hints": [
+        "밑줄 뒤 절의 주어와 목적어를 차례로 찾아 완전성을 확인해 보십시오.",
+        "전치사를 절 끝으로 되돌렸을 때 의미가 성립하면 이 구조는 관계부사와 같은 자리에 선 것입니다."
+      ],
+      "explanation": "뒤 절은 vents sustain entire food webs로 성분이 완비된 완전한 절이고, without sunlight는 수식어입니다. 전치사를 되돌리면 sustain food webs by the mechanism으로 복원되므로 by which는 옳습니다. 낯선 겉모습 때문에 틀렸다고 판단하면 출제자의 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u07-c3-ox-005",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "conj-that"],
+      "sentence": "The greenhouse [[u:in that]] the botanists raise their alpine species stays cool all summer.",
+      "isCorrect": false,
+      "correction": "in which",
+      "translation": "식물학자들이 고산 식물종을 기르는 그 온실은 여름 내내 서늘하게 유지됩니다.",
+      "hints": [
+        "전치사 바로 뒤에 어떤 관계사가 설 수 있는지 떠올려 보십시오.",
+        "뒤 절이 완전하다면 전치사와 짝을 이룰 수 있는 관계대명사는 하나로 정해져 있습니다."
+      ],
+      "explanation": "뒤 절 the botanists raise their alpine species는 완전한 절이므로 전치사+관계대명사가 설 자리는 맞습니다. 그러나 전치사 바로 뒤에는 that을 쓸 수 없습니다 — 사물 선행사의 관계사 구문에서 전치사 뒤 자리는 which만 가능하므로 in which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-ox-006",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "object-gap"],
+      "sentence": "The novel [[u:in which]] the festival critics praised most warmly went on to win the national prize.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "축제 평론가들이 가장 따뜻하게 호평한 그 소설은 이후 국가 문학상을 수상했습니다.",
+      "hints": [
+        "밑줄 뒤 절에서 praised의 목적어가 보이는지 세어 보십시오.",
+        "뒤 절에 결손이 있으면 전치사+관계대명사가 아니라 빈자리를 채우는 관계대명사만 섭니다."
+      ],
+      "explanation": "뒤 절은 the critics praised ___ most warmly로, praised의 목적어가 빠진 불완전한 절입니다. 전치사+관계대명사는 완전한 절 앞에만 설 수 있으므로 in which는 틀렸고, 전치사 없이 목적어 빈자리를 채우는 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-ox-007",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "wrong-prep-pair"],
+      "sentence": "The speed [[u:by which]] rumors crossed the medieval trade routes still astonishes modern readers.",
+      "isCorrect": false,
+      "correction": "at which",
+      "translation": "소문이 중세 교역로를 타고 퍼져 나가던 속도는 지금도 현대 독자들을 놀라게 합니다.",
+      "hints": [
+        "전치사를 절 끝으로 되돌려 선행사와 자연스러운 짝을 이루는지 확인해 보십시오.",
+        "전치사+관계대명사에서는 아무 전치사나 쓸 수 없고, 복원했을 때 성립하는 전치사만 가능합니다."
+      ],
+      "explanation": "뒤 절 rumors crossed the medieval trade routes는 완전한 절이므로 전치사+관계대명사 자리는 맞습니다. 그러나 전치사를 되돌리면 crossed the routes by the speed가 아니라 at the speed가 성립하는 짝입니다. 속도 명사 the speed와 호응하는 전치사는 at이므로 at which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-ox-008",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "conj-that"],
+      "sentence": "The patience [[u:with that]] the restorers lifted eight layers of varnish impressed every visitor to the studio.",
+      "isCorrect": false,
+      "correction": "with which",
+      "translation": "복원가들이 여덟 겹의 바니시를 걷어 내던 그 인내심은 작업실을 찾은 모든 방문객에게 깊은 인상을 남겼습니다.",
+      "hints": [
+        "밑줄의 전치사 바로 뒤에 온 관계사가 그 자리에 설 수 있는 형태인지 확인해 보십시오.",
+        "전치사 뒤 자리에 설 수 있는 관계대명사는 종류가 정해져 있습니다."
+      ],
+      "explanation": "뒤 절 the restorers lifted eight layers of varnish는 완전한 절이므로 전치사+관계대명사 구조가 설 자리는 맞습니다. 그러나 전치사 바로 뒤에는 that이 올 수 없으므로 with that은 틀렸고, with which로 고쳐야 합니다. 절이 길어도 판단 기준은 전치사 뒤 관계사의 종류입니다."
+    },
+    {
+      "id": "u07-c3-wf-001",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["prep-rel", "antecedent-agreement"],
+      "stem": "The rate at which the glacier {{blank}} today alarms every visiting scientist.",
+      "given": "retreat",
+      "acceptedAnswers": ["retreats"],
+      "translation": "그 빙하가 오늘날 후퇴하는 속도는 방문하는 모든 과학자를 불안하게 합니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어가 무엇인지 확인해 보십시오.",
+        "전치사+관계대명사 뒤의 완전한 절에서 동사는 절 안의 주어와 시간 표현에 맞춥니다."
+      ],
+      "explanation": "빈칸은 at which가 이끄는 완전한 절의 동사 자리이고, 이 절의 주어는 단수 명사 the glacier입니다. today가 현재를 고정하므로 3인칭 단수 현재형 retreats가 옳습니다."
+    },
+    {
+      "id": "u07-c3-wf-002",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["prep-rel", "antecedent-agreement"],
+      "stem": "The house in which the poet's descendants still {{blank}} welcomes visitors each summer.",
+      "given": "live",
+      "acceptedAnswers": ["live"],
+      "translation": "그 시인의 후손들이 지금도 살고 있는 집은 여름마다 방문객을 맞이합니다.",
+      "hints": [
+        "빈칸의 동사가 선행사가 아니라 절 안의 주어를 따라야 하는 자리인지 확인해 보십시오.",
+        "전치사+관계대명사 뒤 완전한 절에서는 절 안의 주어가 동사의 수를 정합니다."
+      ],
+      "explanation": "in which가 이끄는 절의 주어는 복수 명사 descendants이므로 동사는 복수형이어야 하고, still이 현재를 고정합니다. 따라서 기본형 그대로인 live가 옳습니다. 단수인 선행사 The house나 소유격 the poet's에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c3-wf-003",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "past-marker"],
+      "stem": "The precision with which the island's masons {{blank}} these granite joints centuries ago still puzzles engineers.",
+      "given": "shape",
+      "acceptedAnswers": ["shaped"],
+      "translation": "그 섬의 석공들이 수백 년 전에 이 화강암 이음매들을 다듬어 낸 정밀함은 지금도 기술자들을 어리둥절하게 합니다.",
+      "hints": [
+        "빈칸이 속한 절의 시간 표현을 찾아 시제를 고정해 보십시오.",
+        "주절의 시제와 관계사절의 시제는 서로 다를 수 있습니다 — 절 안의 시간 표현이 우선입니다."
+      ],
+      "explanation": "빈칸은 with which가 이끄는 완전한 절의 동사 자리이고, 절 안의 centuries ago가 명백한 과거 시점을 고정합니다. 따라서 과거형 shaped가 옳습니다. 주절의 현재 시제 puzzles에 끌려 현재형을 쓰면 안 됩니다."
+    },
+    {
+      "id": "u07-c3-wf-004",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "past-marker"],
+      "stem": "The ease with which false rumors {{blank}} through the crowded port in 1720 astonished the governor.",
+      "given": "travel",
+      "acceptedAnswers": ["traveled", "travelled"],
+      "translation": "1720년에 헛소문이 그 붐비는 항구를 타고 퍼져 나가던 손쉬움은 총독을 경악하게 했습니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어와 시간 표현을 차례로 확인해 보십시오.",
+        "절 안의 연도 표현이 시제를 하나로 고정합니다."
+      ],
+      "explanation": "빈칸은 with which가 이끄는 완전한 절의 동사 자리이고, 주어는 복수 명사 false rumors입니다. in 1720이 명백한 과거 시점을 고정하므로 과거형 traveled가 옳습니다."
+    },
+    {
+      "id": "u07-c3-wf-005",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "intervening-pp", "antecedent-agreement"],
+      "stem": "The framework by which the ministry's economists now {{blank}} the cost of coastal flooding replaces a model from the 1950s.",
+      "given": "estimate",
+      "acceptedAnswers": ["estimate"],
+      "translation": "그 부처의 경제학자들이 이제 해안 침수 비용을 산정하는 데 쓰는 체계는 1950년대의 모형을 대체합니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, 소유격 수식어를 괄호로 묶어 보십시오.",
+        "전치사+관계대명사 뒤 완전한 절에서 동사의 수는 절 안의 주어 핵이 정합니다."
+      ],
+      "explanation": "by which가 이끄는 완전한 절의 주어 핵은 복수 명사 economists이고, the ministry's는 소유격 수식어입니다. now가 현재를 고정하므로 복수 현재형 estimate가 옳습니다. 단수인 선행사 The framework나 ministry에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c3-wf-006",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "inserted-clause", "antecedent-agreement"],
+      "stem": "The depth at which these bacteria, unlike any species catalogued before 1977, still {{blank}} without sunlight stuns marine biologists.",
+      "given": "thrive",
+      "acceptedAnswers": ["thrive"],
+      "translation": "1977년 이전에 분류된 그 어떤 종과도 달리 이 박테리아들이 지금도 햇빛 없이 번성하는 수심은 해양 생물학자들을 놀라게 합니다.",
+      "hints": [
+        "콤마 사이의 삽입구를 괄호로 묶고, 빈칸이 속한 절의 주어를 찾아보십시오.",
+        "삽입구 속 명사가 아니라 절 안의 주어가 동사의 수를 정하고, 부사가 시제를 고정합니다."
+      ],
+      "explanation": "unlike any species catalogued before 1977은 콤마로 끼어든 삽입구이므로 걷어냅니다. at which가 이끄는 절의 주어는 복수 명사 these bacteria이고, still과 주절의 현재 시제가 현재를 고정하므로 복수 현재형 thrive가 옳습니다. 삽입구 속 단수 명사 species 표면에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c3-wc-001",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "which-vs-where"],
+      "sentence": "The cellar in [[u:where]] the vineyard ages its oldest vintages stays at a constant temperature.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "그 포도원이 가장 오래된 빈티지들을 숙성시키는 지하 저장고는 일정한 온도로 유지됩니다.",
+      "hints": [
+        "밑줄 앞에 이미 전치사가 와 있다는 점에 주목해 보십시오.",
+        "전치사 뒤 자리에 설 수 있는 관계사의 종류는 정해져 있습니다 — 관계부사는 전치사를 이미 품고 있습니다."
+      ],
+      "explanation": "관계부사는 전치사의 의미를 이미 품고 있으므로 전치사 뒤에 겹쳐 쓸 수 없습니다. 앞의 전치사 in을 살리려면 그 뒤 자리는 관계대명사 which여야 하므로 which로 고쳐야 합니다. 뒤 절 the vineyard ages its oldest vintages가 완전하므로 in which 구조 자체는 성립합니다."
+    },
+    {
+      "id": "u07-c3-wc-002",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["prep-rel", "conj-that"],
+      "sentence": "The telescope through [[u:that]] astronomers first traced the moons of Jupiter is displayed in Florence.",
+      "wrong": "that",
+      "acceptedAnswers": ["which"],
+      "translation": "천문학자들이 처음으로 목성의 위성들을 추적 관측한 그 망원경은 피렌체에 전시되어 있습니다.",
+      "hints": [
+        "밑줄이 전치사 바로 뒤 자리라는 점에 주목해 보십시오.",
+        "전치사 뒤에 설 수 있는 관계사와 설 수 없는 관계사를 구분해 보십시오."
+      ],
+      "explanation": "뒤 절 astronomers traced the moons of Jupiter는 완전한 절이므로 전치사+관계대명사 자리는 맞습니다. 그러나 전치사 바로 뒤에는 that을 쓸 수 없습니다 — 사물 선행사의 전치사 뒤 자리는 which만 가능하므로 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-wc-003",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "wrong-prep-pair"],
+      "sentence": "The pace [[u:in which]] cities absorb new technologies varies more than planners admit.",
+      "wrong": "in which",
+      "acceptedAnswers": ["at which"],
+      "translation": "도시들이 신기술을 흡수하는 속도는 도시계획가들이 인정하는 것보다 더 큰 편차를 보입니다.",
+      "hints": [
+        "전치사를 절 끝으로 되돌려 선행사와 자연스러운 짝을 이루는지 확인해 보십시오.",
+        "속도 계열의 선행사와 호응하는 전치사는 따로 정해져 있습니다."
+      ],
+      "explanation": "뒤 절 cities absorb new technologies는 완전한 절이므로 전치사+관계대명사 구조는 맞습니다. 그러나 전치사를 되돌리면 absorb technologies in the pace가 아니라 at the pace가 성립하는 짝입니다. 속도 명사 the pace와 호응하는 전치사는 at이므로 at which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c3-wc-004",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["prep-rel", "wrong-prep-pair"],
+      "sentence": "The ease [[u:for which]] misinformation crosses language barriers alarms every fact-checking agency.",
+      "wrong": "for which",
+      "acceptedAnswers": ["with which"],
+      "translation": "잘못된 정보가 언어 장벽을 넘나드는 그 손쉬움은 모든 팩트체크 기관을 긴장시킵니다.",
+      "hints": [
+        "전치사를 절 끝으로 되돌려 '동사구+전치사+선행사'가 자연스럽게 복원되는지 확인해 보십시오.",
+        "정도나 태도를 나타내는 추상 선행사와 짝을 이루는 전치사를 떠올려 보십시오."
+      ],
+      "explanation": "뒤 절 misinformation crosses language barriers는 완전한 절이므로 전치사+관계대명사 자리는 맞습니다. 그러나 복원하면 crosses barriers for the ease가 아니라 with the ease가 성립하는 짝입니다. 손쉬움을 나타내는 the ease와 호응하는 전치사는 with이므로 with which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c4-ox-001",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["abstract-antecedent", "which-vs-where"],
+      "sentence": "Negotiations reached a point [[u:where]] neither side could concede anything further.",
+      "isCorrect": true,
+      "translation": "협상은 어느 쪽도 더 이상 아무것도 양보할 수 없는 지점에 이르렀습니다.",
+      "hints": [
+        "선행사의 의미보다 먼저, 밑줄 뒤 절에 주어와 목적어가 갖추어져 있는지 세어 보십시오.",
+        "눈에 보이는 장소가 아닌 선행사라도 뒤 절이 완전하면 관계부사가 설 수 있습니다."
+      ],
+      "explanation": "뒤 절은 neither side could concede anything further로 주어와 목적어가 완비된 완전한 절입니다. 선행사 a point는 눈에 보이는 장소가 아닌 추상 명사이지만, 완전한 절 앞이므로 관계부사 where가 옳습니다. 추상 명사라는 이유로 관계대명사를 기대하면 미끼에 걸린 것입니다."
+    },
+    {
+      "id": "u07-c4-ox-002",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["abstract-antecedent", "which-vs-where"],
+      "sentence": "The clinic often faces situations [[u:where]] families reject the safest treatment for cultural reasons.",
+      "isCorrect": true,
+      "translation": "그 병원은 가족들이 문화적 이유로 가장 안전한 치료법을 거부하는 상황을 자주 마주합니다.",
+      "hints": [
+        "밑줄 뒤 절에서 reject의 목적어가 실재하는지 확인해 보십시오.",
+        "선행사가 상황을 나타내는 추상 명사라도 판단 기준은 오직 절의 완전성입니다."
+      ],
+      "explanation": "뒤 절은 families reject the safest treatment로 주어와 목적어가 모두 갖추어진 완전한 절입니다. 추상 선행사 situations 뒤라도 완전한 절 앞에는 관계부사 where가 옳습니다. '상황은 장소가 아니니까 틀렸다'는 판단이 바로 출제자가 노리는 오답 경로입니다."
+    },
+    {
+      "id": "u07-c4-ox-003",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["abstract-antecedent", "which-vs-where"],
+      "sentence": "Economists describe a stage [[u:where]] additional investment in aging infrastructure actually lowers a region's total output.",
+      "isCorrect": true,
+      "translation": "경제학자들은 노후 기반 시설에 대한 추가 투자가 오히려 지역 총생산을 떨어뜨리는 단계를 기술합니다.",
+      "hints": [
+        "전치사구를 괄호로 묶고 밑줄 뒤 절의 주어 핵과 목적어를 찾아보십시오.",
+        "선행사가 추상 명사인지 아닌지는 판단 기준이 아닙니다 — 절의 성분만 셉니다."
+      ],
+      "explanation": "뒤 절의 골격은 additional investment lowers a region's total output으로, 주어와 목적어가 완비된 완전한 절입니다. in aging infrastructure는 주어를 꾸미는 전치사구입니다. 추상 선행사 a stage라도 완전한 절 앞이므로 where가 옳으며, 낯설어 보인다고 오류로 판정하면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-ox-004",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The border fortress [[u:which]] the empire abandoned after the peace treaty still dominates the valley's skyline.",
+      "isCorrect": true,
+      "translation": "제국이 평화 조약 이후 버려 둔 그 국경 요새는 지금도 계곡의 스카이라인을 압도합니다.",
+      "hints": [
+        "선행사가 장소라는 인상은 접어 두고, 밑줄 뒤 절에서 abandoned의 목적어를 세어 보십시오.",
+        "장소 선행사라도 뒤 절에 결손이 있으면 그 빈자리를 채우는 관계사가 옳습니다."
+      ],
+      "explanation": "뒤 절은 the empire abandoned ___ after the peace treaty로, abandoned의 목적어가 빠진 불완전한 절입니다. 선행사 fortress가 장소 명사여도 결손이 있으므로 관계대명사 which가 옳습니다. '요새는 장소니까 where'라는 반사 반응이 이 문항이 심어 둔 함정입니다."
+    },
+    {
+      "id": "u07-c4-ox-005",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The aquarium [[u:where]] the city built on reclaimed land draws two million visitors a year.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "시가 매립지에 세운 그 수족관은 한 해 2백만 명의 방문객을 끌어들입니다.",
+      "hints": [
+        "밑줄 뒤 절에서 built의 목적어가 보이는지 확인해 보십시오.",
+        "장소 선행사라는 이유만으로 관계부사를 허용하면 안 됩니다 — 결손부터 셉니다."
+      ],
+      "explanation": "뒤 절은 the city built ___ on reclaimed land로, built의 목적어가 빠진 불완전한 절입니다. 관계부사는 완전한 절만 이끌 수 있으므로 where는 틀렸고, 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 수족관이 장소라는 의미에 끌려 where를 고르면 함정에 빠집니다."
+    },
+    {
+      "id": "u07-c4-ox-006",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The bakery [[u:where]] the family opened in 1952 still uses its original stone ovens.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "그 가족이 1952년에 문을 연 빵집은 지금도 원래의 돌 화덕을 사용합니다.",
+      "hints": [
+        "밑줄 뒤 절에서 opened의 목적어가 실재하는지 세어 보십시오.",
+        "in 1952 같은 전치사구는 목적어가 아닙니다 — 결손 여부로만 판단합니다."
+      ],
+      "explanation": "뒤 절은 the family opened ___ in 1952로, opened의 목적어가 빠진 불완전한 절이고 in 1952는 수식어일 뿐입니다. 불완전한 절 앞에는 관계부사가 설 수 없으므로 where는 틀렸고, which로 고쳐야 합니다. 빵집이라는 장소 선행사가 심어 둔 미끼에 걸리면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-ox-007",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["abstract-antecedent", "which-vs-where"],
+      "sentence": "We have reached a situation [[u:which]] every further delay multiplies the project's final cost.",
+      "isCorrect": false,
+      "correction": "where",
+      "translation": "우리는 더 미룰 때마다 프로젝트의 최종 비용이 몇 배로 불어나는 상황에 이르렀습니다.",
+      "hints": [
+        "밑줄 뒤 절에 주어와 목적어가 모두 있는지 세어 보십시오.",
+        "완전한 절 앞에서 관계대명사는 채울 빈자리가 없습니다 — 함정은 양방향으로 작동합니다."
+      ],
+      "explanation": "뒤 절은 every further delay multiplies the project's final cost로, 주어와 목적어가 완비된 완전한 절입니다. 관계대명사 which는 절 안의 빈자리를 채워야만 설 수 있으므로 틀렸고, 완전한 절을 이끄는 관계부사 where로 고쳐야 합니다. 추상 선행사 situation도 완전한 절 앞에서는 where를 받습니다."
+    },
+    {
+      "id": "u07-c4-ox-008",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap"],
+      "sentence": "The observatory [[u:where]] the government funded so lavishly during the space race now struggles to pay its own staff.",
+      "isCorrect": false,
+      "correction": "which",
+      "translation": "우주 경쟁 시절 정부가 그토록 아낌없이 지원했던 그 천문대는 이제 자체 직원들의 급여도 감당하기 어려워하고 있습니다.",
+      "hints": [
+        "so lavishly와 during the space race를 괄호로 묶고 절의 골격만 남겨 보십시오.",
+        "부사와 전치사구는 목적어가 아닙니다 — 타동사의 목적어 결손을 확인합니다."
+      ],
+      "explanation": "수식어 so lavishly와 during the space race를 걷어내면 뒤 절의 골격은 the government funded ___로, funded의 목적어가 빠져 있습니다. 불완전한 절 앞이므로 where는 틀렸고 which로 고쳐야 합니다. 천문대라는 장소 선행사와 긴 수식어가 결손을 가리는 이중 함정입니다."
+    },
+    {
+      "id": "u07-c4-wf-001",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["which-vs-where", "antecedent-agreement"],
+      "stem": "The garden where the peacocks {{blank}} every evening now belongs to the city.",
+      "given": "wander",
+      "acceptedAnswers": ["wander"],
+      "translation": "공작들이 매일 저녁 거니는 그 정원은 이제 시 소유가 되었습니다.",
+      "hints": [
+        "빈칸의 동사가 어느 절에 속해 있고, 그 절의 주어가 무엇인지 확인해 보십시오.",
+        "관계부사 뒤 완전한 절의 동사는 절 안의 주어와 시간 표현을 따릅니다."
+      ],
+      "explanation": "빈칸은 관계부사 where가 이끄는 완전한 절의 동사 자리이고, 절의 주어는 복수 명사 the peacocks입니다. now와 every evening이 현재의 반복을 고정하므로 복수 현재형 wander가 옳습니다. 단수인 선행사 The garden에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-wf-002",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["subject-gap", "antecedent-agreement", "past-marker"],
+      "stem": "She revisited the cottage that {{blank}} her grandparents until the flood of 1998.",
+      "given": "house",
+      "acceptedAnswers": ["housed"],
+      "translation": "그녀는 1998년 홍수 전까지 조부모가 살던 그 오두막을 다시 찾았습니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 따로 있는지 확인해 보십시오.",
+        "관계사가 주어인 절에서 동사는 선행사의 수를 따르고, 절 안의 시간 표현이 시제를 고정합니다."
+      ],
+      "explanation": "that 뒤 절에는 주어가 없으므로 that이 주어인 관계대명사절이고, 동사는 단수 선행사 the cottage에 맞춥니다. until the flood of 1998이 과거 시점을 고정하므로 과거형 housed가 옳습니다. 장소 선행사여도 뒤 절에 주어 결손이 있으면 관계대명사 구조임을 함께 확인합니다."
+    },
+    {
+      "id": "u07-c4-wf-003",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "intervening-pp", "antecedent-agreement"],
+      "stem": "The harbor where fishing boats from every northern village {{blank}} their catch each dawn now stands half empty.",
+      "given": "unload",
+      "acceptedAnswers": ["unload"],
+      "translation": "북쪽 모든 마을의 어선들이 새벽마다 어획물을 부리던 그 항구는 이제 반쯤 비어 있습니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, from 이하의 전치사구를 괄호로 묶어 보십시오.",
+        "완전한 절 안에서 동사의 수는 전치사구 속 명사가 아니라 주어 핵이 정합니다."
+      ],
+      "explanation": "where가 이끄는 완전한 절의 주어 핵은 복수 명사 fishing boats이고, from every northern village는 전치사구 수식어입니다. now와 each dawn이 현재의 반복을 고정하므로 복수 현재형 unload가 옳습니다. 인접한 단수 명사 village에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-wf-004",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["subject-gap", "antecedent-agreement", "past-marker"],
+      "stem": "The plaza that {{blank}} thousands of protesters in 1989 now hosts a quiet book market.",
+      "given": "hold",
+      "acceptedAnswers": ["held"],
+      "translation": "1989년에 수천 명의 시위대를 품었던 그 광장은 이제 조용한 책 시장을 엽니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 따로 있는지, 관계사 자신이 주어인지 판정해 보십시오.",
+        "관계사가 주어인 절에서 시제는 절 안의 연도 표현이 고정합니다."
+      ],
+      "explanation": "that 뒤 절에는 주어가 없으므로 that이 주어인 관계대명사절입니다. 절 안의 in 1989가 과거 시점을 고정하므로 과거형 held가 옳습니다. 주절의 현재 시제 hosts에 끌려 현재형을 쓰면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-wf-005",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["abstract-antecedent", "which-vs-where", "antecedent-agreement"],
+      "stem": "We have reached a point where small design choices made a decade ago now {{blank}} the entire transport system.",
+      "given": "constrain",
+      "acceptedAnswers": ["constrain"],
+      "translation": "우리는 십 년 전에 내려진 작은 설계상의 선택들이 이제 교통 체계 전체를 옥죄는 지점에 도달했습니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, 분사구 수식어를 괄호로 묶어 보십시오.",
+        "추상 선행사 뒤의 완전한 절에서도 동사의 수는 절 안의 주어 핵이 정합니다."
+      ],
+      "explanation": "where가 이끄는 완전한 절의 주어 핵은 복수 명사 choices이고, made a decade ago는 분사구 수식어입니다. now가 현재를 고정하므로 복수 현재형 constrain이 옳습니다. 분사구 속 a decade ago라는 과거 표현이나 단수 선행사 a point에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-wf-006",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "intervening-clause", "antecedent-agreement"],
+      "stem": "The district where the mills that once wove the empire's cotton now {{blank}} tourists instead of workers has become a heritage quarter.",
+      "given": "attract",
+      "acceptedAnswers": ["attract"],
+      "translation": "한때 제국의 면직물을 짜던 방직 공장들이 이제 노동자 대신 관광객을 불러 모으는 그 지구는 유산 지구가 되었습니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵과, 그 주어를 꾸미는 관계사절을 구분해 보십시오.",
+        "동사의 수는 삽입된 관계사절 속 명사가 아니라 절의 주어 핵이 정하고, 부사가 시제를 고정합니다."
+      ],
+      "explanation": "where가 이끄는 완전한 절의 주어 핵은 복수 명사 the mills이고, that once wove the empire's cotton은 이를 꾸미는 관계사절입니다. now가 현재를 고정하므로 복수 현재형 attract가 옳습니다. 관계사절 속 단수 명사 cotton이나 과거형 wove에 끌리면 안 됩니다."
+    },
+    {
+      "id": "u07-c4-wc-001",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "Tourists crowd the old lighthouse, [[u:where]] a retired keeper still maintains with obvious pride.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "관광객들은 그 오래된 등대로 몰려드는데, 그곳은 은퇴한 등대지기가 지금도 뚜렷한 자부심으로 관리하는 곳입니다.",
+      "hints": [
+        "관계사 뒤 절에서 maintains의 목적어가 보이는지 세어 보십시오.",
+        "with 이하의 전치사구는 목적어가 아닙니다 — 결손이 있으면 관계부사는 설 수 없습니다."
+      ],
+      "explanation": "뒤 절은 a retired keeper maintains ___ with obvious pride로, maintains의 목적어가 빠진 불완전한 절입니다. 등대가 장소라는 이유로 where를 허용하면 함정에 빠집니다. 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c4-wc-002",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["which-vs-where", "subject-gap", "comma-which"],
+      "sentence": "The council finally preserved the market hall, [[u:where]] once hosted the region's largest cattle fair.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "시의회는 마침내 그 시장 건물을 보존했는데, 그곳은 한때 그 지역 최대의 가축 시장이 열리던 곳이었습니다.",
+      "hints": [
+        "관계사 뒤 절에 주어가 있는지부터 확인해 보십시오.",
+        "장소 선행사라는 인상보다 절의 성분 결손 확인이 항상 먼저입니다."
+      ],
+      "explanation": "뒤 절 once hosted the region's largest cattle fair에는 주어가 없습니다. 관계부사는 성분이 완비된 절만 이끌 수 있으므로 where는 틀렸고, 주어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다. 시장 건물이라는 장소 선행사가 where를 부르는 미끼입니다."
+    },
+    {
+      "id": "u07-c4-wc-003",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "He sold the farmhouse, [[u:where]] three generations of his family had rebuilt after every flood, to a developer from the capital.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "그는 삼대에 걸쳐 가족이 홍수가 날 때마다 다시 세워 온 그 농가를 수도에서 온 개발업자에게 팔았습니다.",
+      "hints": [
+        "관계사 뒤 절에서 had rebuilt의 목적어가 실재하는지, after every flood가 목적어인지 구분해 보십시오.",
+        "전치사구를 걷어낸 골격에 빈자리가 남으면 그 빈자리를 채우는 관계사가 필요합니다."
+      ],
+      "explanation": "뒤 절의 골격은 three generations had rebuilt ___이고, after every flood는 전치사구 수식어입니다. rebuilt의 목적어가 빠진 불완전한 절이므로 농가라는 장소 선행사라도 where는 설 수 없고, 콤마 뒤에서 목적어 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    },
+    {
+      "id": "u07-c4-wc-004",
+      "unitId": "u07",
+      "conceptId": "u07-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["which-vs-where", "object-gap", "comma-which"],
+      "sentence": "Urban historians keep returning to the port district, [[u:where]] postwar planners reshaped around the automobile with almost religious zeal.",
+      "wrong": "where",
+      "acceptedAnswers": ["which"],
+      "translation": "도시사 연구자들은 그 항만 지구로 거듭 돌아오는데, 그곳은 전후 도시계획가들이 거의 종교적인 열정으로 자동차 중심으로 재편한 곳입니다.",
+      "hints": [
+        "around the automobile과 with almost religious zeal을 괄호로 묶고 절의 골격만 남겨 보십시오.",
+        "타동사의 목적어가 빠져 있으면 장소 선행사라도 관계부사는 후보에서 제외됩니다."
+      ],
+      "explanation": "수식어를 걷어내면 뒤 절의 골격은 postwar planners reshaped ___로, reshaped의 목적어가 빠져 있습니다. 항만 지구라는 장소 선행사와 긴 전치사구들이 결손을 가리지만, 불완전한 절 앞이므로 where는 틀렸고 콤마 뒤에서 빈자리를 채우는 관계대명사 which로 고쳐야 합니다."
+    }
+  ]
+}

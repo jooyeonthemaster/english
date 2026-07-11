@@ -154,6 +154,11 @@ export const ATLAS_WEBTOON_DETECT_MODEL_ID = resolveAtlasModel(
   ATLAS_STANDARD_MODEL_ID,
 );
 
+export const ATLAS_WEBTOON_REVIEW_MODEL_ID = resolveAtlasModel(
+  ["ATLASCLOUD_WEBTOON_REVIEW_MODEL", "OPENROUTER_WEBTOON_REVIEW_MODEL", "GEMINI_WEBTOON_REVIEW_MODEL", "GEMINI_MODEL"],
+  ATLAS_STANDARD_MODEL_ID,
+);
+
 export function isAtlasGeminiModel(modelId: string): boolean {
   return normalizeAtlasModelId(modelId).toLowerCase().startsWith("google/gemini-");
 }

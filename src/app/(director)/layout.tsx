@@ -16,7 +16,10 @@ export default async function DirectorLayout({
   const staff = await getStaffSession();
 
   if (!staff) {
-    redirect("/login?callbackUrl=/director");
+    // 로그인 후 사실상의 홈(문제 생성)으로 곧장 보낸다. "/director" 로 두면 로그인
+    // 직후 config redirect(/director → 문제 생성)를 한 번 더 거치는 hop 이 생기므로
+    // 최종 목적지를 콜백에 그대로 박는다. (auth-redirect.ts DEFAULT_DIRECTOR_REDIRECT)
+    redirect("/login?callbackUrl=/director/workbench/questions/generate");
   }
 
   if (staff.role !== "DIRECTOR") {

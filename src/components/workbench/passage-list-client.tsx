@@ -49,6 +49,10 @@ import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 
+// 학습지 → 학생 앱 과제 배포 (U6)
+import { AssignmentComposer } from "@/components/study-assignments/assignment-composer";
+import { useWorksheetAssign } from "./use-worksheet-assign";
+
 // Hooks
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "./hooks/use-selection";
@@ -885,6 +889,18 @@ export function PassageListClient({
     [deletingIds, router, koScope],
   );
 
+  // 학습지 "학생에게 배포" — 최신 PRIME 보고서 id 를 조회해 과제 컴포저를
+  // WORKSHEET 프리셋으로 연다(U6). 카드 쪽은 보고서 있는 지문만 버튼을 렌더.
+  const worksheetAssign = useWorksheetAssign();
+  const handleAssignPassage = useCallback(
+    (id: string) => {
+      const p = displayedPassages.find((x) => x.id === id);
+      if (!p) return;
+      void worksheetAssign.openAssign({ id: p.id, title: p.title });
+    },
+    [displayedPassages, worksheetAssign],
+  );
+
   // 선택한 학습지 일괄 검수완료 — 미검수가 하나라도 있으면 검수완료로, 모두
   // 검수완료 상태면 검수취소로 토글한다. 낙관적 상태(reviewOverrides)도 갱신.
   const handleBulkReview = useCallback(async () => {
@@ -1386,6 +1402,8 @@ export function PassageListClient({
                         dupCount={dupCountById.get(p.id) ?? 0}
                         onDelete={handleDeleteOne}
                         deleteBusy={deletingIds.has(p.id)}
+                        onAssign={handleAssignPassage}
+                        assignBusy={worksheetAssign.busyId === p.id}
                       />
                     ))}
                   </DragSelect>
@@ -1414,6 +1432,14 @@ export function PassageListClient({
           onClose={() => setModalPassageId(null)}
         />
       )}
+
+      {/* ─── 학습지 과제 배포 컴포저 (U6) ─── */}
+      <AssignmentComposer
+        open={worksheetAssign.open}
+        onClose={worksheetAssign.close}
+        preset={worksheetAssign.preset}
+        onCreated={worksheetAssign.onCreated}
+      />
     </div>
   );
 }

@@ -16,6 +16,10 @@ interface PageHeaderProps {
   schoolName: string;
   className: string;
   examDate: string;
+  // 공유 QR 자기등록(E4) — enrollEnabled 시 빌더가 생성한 QR data URI. 있으면 첫
+  // 페이지 헤더 우측 정보 컬럼 옆에 64×64 QR + "응시 QR" 캡션을 인쇄 포함으로 표시.
+  // null/미지정이면 기존과 완전히 동일(무회귀).
+  examEnrollQrDataUrl?: string | null;
   onHeaderChange: (patch: HeaderPatch) => void;
   readOnly?: boolean;
 }
@@ -36,6 +40,7 @@ export function PageHeader({
   schoolName,
   className,
   examDate,
+  examEnrollQrDataUrl,
   onHeaderChange,
   readOnly = false,
 }: PageHeaderProps) {
@@ -109,25 +114,50 @@ export function PageHeader({
             </h2>
           </div>
         </div>
-        <div
-          className={cn(
-            "w-[168px] shrink-0 space-y-1 text-[10px]",
-            visual.infoClass,
-          )}
-        >
-          <div className="flex justify-between border-b pb-1">
-            <span>학교</span>
-            <span className="font-semibold">{schoolName || " "}</span>
-          </div>
-          <div className="flex justify-between border-b pb-1">
-            <span>반</span>
-            <span className="font-semibold">{className || " "}</span>
-          </div>
-          <div className="flex justify-between border-b pb-1">
-            <span>{studentNameLabel || "이름"}</span>
-            <span className="min-w-[64px]">&nbsp;</span>
-          </div>
-        </div>
+        {(() => {
+          const infoColumn = (
+            <div
+              className={cn(
+                "w-[168px] shrink-0 space-y-1 text-[10px]",
+                visual.infoClass,
+              )}
+            >
+              <div className="flex justify-between border-b pb-1">
+                <span>학교</span>
+                <span className="font-semibold">{schoolName || " "}</span>
+              </div>
+              <div className="flex justify-between border-b pb-1">
+                <span>반</span>
+                <span className="font-semibold">{className || " "}</span>
+              </div>
+              <div className="flex justify-between border-b pb-1">
+                <span>{studentNameLabel || "이름"}</span>
+                <span className="min-w-[64px]">&nbsp;</span>
+              </div>
+            </div>
+          );
+          // QR 없으면 기존 정보 컬럼을 그대로 반환(무회귀). 있으면 정보 컬럼 옆에
+          // 64×64 QR + "응시 QR" 캡션을 붙인다(no-print 아님 — 인쇄에 포함).
+          if (!examEnrollQrDataUrl) return infoColumn;
+          return (
+            <div className="flex shrink-0 items-start gap-2">
+              <div className="flex shrink-0 flex-col items-center">
+                <NextImage
+                  src={examEnrollQrDataUrl}
+                  alt="응시 QR"
+                  width={64}
+                  height={64}
+                  unoptimized
+                  className="h-16 w-16 rounded-sm border border-slate-200 bg-white object-contain"
+                />
+                <span className="mt-0.5 text-[8px] font-semibold tracking-tight text-slate-500">
+                  응시 QR
+                </span>
+              </div>
+              {infoColumn}
+            </div>
+          );
+        })()}
       </div>
       <div
         className={cn(

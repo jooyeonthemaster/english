@@ -1,0 +1,822 @@
+{
+  "unitId": "u05",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u05-c1-ch-001",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["coord-pair"],
+      "stem": "The volunteers cleaned the beach and {{blank}} the plastic waste.",
+      "options": ["sorted", "sorting"],
+      "answer": 0,
+      "translation": "자원봉사자들은 해변을 청소하고 플라스틱 쓰레기를 분류했습니다.",
+      "hints": [
+        "and 뒤 항의 짝이 되는 동사를 문장 앞쪽에서 찾아 보십시오.",
+        "등위접속사는 문법적으로 같은 형태끼리 연결합니다 — 앞 항이 과거형 본동사라면 뒤 항도 같은 형태여야 합니다."
+      ],
+      "explanation": "and의 짝은 본동사 cleaned이고, 뒤 항도 같은 역할의 동사여야 하므로 과거형 sorted가 옳습니다. sorting을 고르면 과거형 본동사와 분사가 접속사로 묶여 병렬이 깨집니다. 등위접속사 병렬은 접속사 앞뒤 항의 문법 형태 일치가 핵심입니다."
+    },
+    {
+      "id": "u05-c1-ch-002",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["coord-pair"],
+      "stem": "These short courses cover writing clear reports and {{blank}} data with simple charts.",
+      "options": ["presents", "presenting"],
+      "answer": 1,
+      "translation": "이 단기 강좌들은 명확한 보고서를 쓰는 것과 간단한 도표로 자료를 제시하는 것을 다룹니다.",
+      "hints": [
+        "and가 무엇과 무엇을 연결하는지 — cover의 목적어 형태를 확인해 보십시오.",
+        "첫 항이 동명사라면 and 뒤 항도 같은 형태여야 합니다."
+      ],
+      "explanation": "and의 짝은 cover의 목적어인 동명사 writing이므로 뒤 항도 동명사 presenting이 옳습니다. presents를 고르면 복수 주어 courses와 수도 맞지 않고, 동명사 목적어와 시제 동사가 묶여 병렬도 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-003",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["coord-pair"],
+      "stem": "This sensor monitors soil moisture or {{blank}} sudden temperature drops.",
+      "options": ["detecting", "detects"],
+      "answer": 1,
+      "translation": "이 센서는 토양 수분을 관찰하거나 갑작스러운 기온 하강을 감지합니다.",
+      "hints": [
+        "or 뒤 항의 짝을 찾아 보십시오 — 주어가 하는 두 가지 동작입니다.",
+        "앞 항이 단수 주어에 맞춘 현재형 본동사라면 뒤 항도 같은 형태여야 합니다."
+      ],
+      "explanation": "or의 짝은 본동사 monitors이므로 뒤 항도 단수 주어 This sensor에 맞춘 현재형 detects가 옳습니다. detecting을 고르면 본동사와 분사가 묶여 병렬이 깨지고 문장의 두 번째 동사가 사라집니다."
+    },
+    {
+      "id": "u05-c1-ch-004",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["coord-pair"],
+      "stem": "Early farmers planted seeds, watered the fields, and {{blank}} the harvest.",
+      "options": ["storing", "stored"],
+      "answer": 1,
+      "translation": "초기 농부들은 씨앗을 심고, 밭에 물을 대고, 수확물을 저장했습니다.",
+      "hints": [
+        "세 개의 동작이 나열되고 있습니다 — 첫 항의 형태를 확인해 보십시오.",
+        "A, B, and C 나열에서는 마지막 항일수록 첫 항으로 되돌아가 형태를 대조해야 합니다."
+      ],
+      "explanation": "planted, watered와 이어지는 세 항 나열이므로 마지막 항도 과거형 stored가 옳습니다. 긴 나열의 마지막 항에서 첫 항의 형태를 잊고 storing을 고르면 본동사 나열이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-005",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The curator examined the ancient vase carefully and, after much hesitation, {{blank}} its true origin.",
+      "options": ["revealed", "revealing"],
+      "answer": 0,
+      "translation": "그 큐레이터는 고대 화병을 주의 깊게 살펴보고, 오랜 망설임 끝에 그것의 진짜 출처를 밝혔습니다.",
+      "hints": [
+        "and 바로 뒤에 끼어든 콤마 사이의 어구를 건너뛰고 짝을 찾아 보십시오.",
+        "짝은 접속사 바로 앞 단어가 아니라 역할이 같은 항입니다 — 삽입 부사구는 괄호로 묶고 판단합니다."
+      ],
+      "explanation": "and 뒤의 after much hesitation은 삽입 부사구이므로 건너뛰고, 짝인 본동사 examined와 형태를 맞춘 과거형 revealed가 옳습니다. revealing을 고르면 본동사와 병렬을 이루지 못해 두 번째 동작의 동사가 사라집니다."
+    },
+    {
+      "id": "u05-c1-ch-006",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["coord-pair"],
+      "stem": "A skilled negotiator values listening patiently to objections and {{blank}} small concessions early.",
+      "options": ["to offer", "offering"],
+      "answer": 1,
+      "translation": "노련한 협상가는 반대 의견을 참을성 있게 듣는 것과 작은 양보를 일찍 제안하는 것을 중시합니다.",
+      "hints": [
+        "and 뒤 항의 짝은 values의 목적어입니다 — 그 형태를 먼저 확인해 보십시오.",
+        "부사와 전치사구를 걷어내면 첫 항의 핵심 형태가 보입니다 — 뒤 항도 같은 형태여야 합니다."
+      ],
+      "explanation": "and의 짝은 values의 목적어인 동명사 listening이고, patiently to objections는 수식어일 뿐입니다. 따라서 뒤 항도 동명사 offering이 옳습니다. to offer를 고르면 동명사와 to부정사가 묶여 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-007",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The river rose steadily through the night and by morning {{blank}} the low wooden bridge.",
+      "options": ["covering", "covered"],
+      "answer": 1,
+      "translation": "강물은 밤새 꾸준히 불어났고 아침 무렵에는 낮은 나무다리를 뒤덮었습니다.",
+      "hints": [
+        "and 뒤의 전치사구를 건너뛴 자리에 어떤 형태가 필요한지 살펴 보십시오.",
+        "뒤 항의 짝은 접속사 바로 앞의 명사가 아니라 문장 앞쪽의 본동사입니다."
+      ],
+      "explanation": "and 뒤의 by morning은 부사구이므로 건너뛰면 짝은 본동사 rose입니다. 따라서 과거형 covered가 옳습니다. and 바로 앞의 night나 by morning에 끌려 covering을 고르면 본동사 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-008",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["coord-pair"],
+      "stem": "Modern telescopes gather faint light, filter out background noise, and {{blank}} sharp images of distant galaxies.",
+      "options": ["produce", "producing"],
+      "answer": 0,
+      "translation": "현대의 망원경들은 희미한 빛을 모으고, 배경 잡음을 걸러 내고, 먼 은하들의 선명한 이미지를 만들어 냅니다.",
+      "hints": [
+        "세 항이 나열된 문장입니다 — 첫 항과 둘째 항의 형태를 확인해 보십시오.",
+        "나열의 마지막 항도 첫 항과 같은 형태여야 합니다 — 주어가 하는 세 번째 동작입니다."
+      ],
+      "explanation": "gather, filter와 이어지는 세 항 병렬이므로 복수 주어에 맞춘 현재형 produce가 옳습니다. producing을 고르면 앞의 두 본동사와 분사가 묶여 나열이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-009",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The theory that the economist proposed in the 1950s explained inflation clearly and, despite early resistance from his colleagues, {{blank}} standard policy advice for decades.",
+      "options": ["shaped", "shaping"],
+      "answer": 0,
+      "translation": "그 경제학자가 1950년대에 제안한 이론은 인플레이션을 명확하게 설명했고, 동료들의 초기 반발에도 불구하고 수십 년 동안 표준적인 정책 조언을 형성했습니다.",
+      "hints": [
+        "and 뒤의 despite 전치사구를 괄호로 묶고, 짝이 되는 동사를 찾아 보십시오.",
+        "주어를 꾸미는 관계절과 삽입 전치사구를 걷어내면 본동사 병렬이 드러납니다."
+      ],
+      "explanation": "주어 The theory를 꾸미는 관계절(that ... 1950s)과 삽입된 despite 전치사구를 걷어내면, and의 짝은 본동사 explained입니다. 따라서 과거형 shaped가 옳습니다. shaping을 고르면 두 번째 본동사가 사라져 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-010",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The training program emphasizes reading patients' records thoroughly, asking questions that reveal hidden symptoms, and {{blank}} every decision in plain language.",
+      "options": ["explaining", "to explain"],
+      "answer": 0,
+      "translation": "그 훈련 프로그램은 환자의 기록을 꼼꼼히 읽는 것, 숨은 증상을 드러내는 질문을 던지는 것, 그리고 모든 결정을 쉬운 말로 설명하는 것을 강조합니다.",
+      "hints": [
+        "emphasizes의 목적어로 무엇이 나열되고 있는지 첫 항부터 확인해 보십시오.",
+        "긴 나열의 마지막 항은 첫 항의 형태로 되돌아가 대조해야 합니다."
+      ],
+      "explanation": "emphasizes의 목적어로 동명사 reading, asking이 나열되고 있으므로 마지막 항도 동명사 explaining이 옳습니다. 둘째 항의 관계절(that ... symptoms) 때문에 첫 형태를 잊고 to explain을 고르면 동명사 나열이 깨집니다."
+    },
+    {
+      "id": "u05-c1-ch-011",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The archaeologists photographed each layer of soil and, after checking its exact depth, {{blank}} the fragments to the field laboratory.",
+      "options": ["sent", "sending"],
+      "answer": 0,
+      "translation": "고고학자들은 각 토양층을 촬영했고, 정확한 깊이를 확인한 뒤에 파편들을 현장 실험실로 보냈습니다.",
+      "hints": [
+        "and 뒤 콤마 사이의 어구는 삽입입니다 — 그 안의 -ing에 끌리지 말고 짝을 찾아 보십시오.",
+        "삽입 어구를 괄호로 묶으면 접속사가 연결하는 두 본동사가 드러납니다."
+      ],
+      "explanation": "and 뒤의 after checking its exact depth는 삽입 부사구이고, 그 안의 checking은 전치사 after의 목적어일 뿐입니다. and의 짝은 본동사 photographed이므로 과거형 sent가 옳습니다. 삽입구의 -ing에 끌려 sending을 고르면 두 번째 본동사가 사라집니다."
+    },
+    {
+      "id": "u05-c1-ch-012",
+      "unitId": "u05",
+      "conceptId": "u05-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["coord-pair", "distant-parallel"],
+      "stem": "The committee praised the design for its bold use of glass but ultimately {{blank}} the plan on the grounds of cost.",
+      "options": ["rejecting", "rejected"],
+      "answer": 1,
+      "translation": "위원회는 유리를 과감하게 사용한 점에서 그 설계를 칭찬했지만, 결국 비용을 이유로 그 계획을 부결했습니다.",
+      "hints": [
+        "but도 등위접속사입니다 — 무엇과 무엇을 연결하는지 짝을 찾아 보십시오.",
+        "긴 전치사구와 부사를 걷어내면 접속사 앞뒤의 본동사 병렬이 보입니다."
+      ],
+      "explanation": "but의 짝은 본동사 praised이고, for its bold use of glass는 수식 전치사구, ultimately는 부사입니다. 따라서 과거형 rejected가 옳습니다. rejecting을 고르면 praised와 병렬을 이루지 못해 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u05-c2-ch-001",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["correlative"],
+      "stem": "The new vaccine proved both safe and {{blank}} in early trials.",
+      "options": ["effectively", "effective"],
+      "answer": 1,
+      "translation": "그 새 백신은 초기 시험에서 안전하면서도 효과적인 것으로 입증되었습니다.",
+      "hints": [
+        "both와 and가 짝을 이루는 상관접속사 구문입니다 — A 자리의 품사를 확인해 보십시오.",
+        "both A and B에서 A와 B는 같은 문법 형태여야 합니다."
+      ],
+      "explanation": "both A and B 상관접속사 병렬에서 A는 보어 자리의 형용사 safe이므로 B도 형용사 effective가 옳습니다. 부사 effectively를 고르면 형용사와 부사가 묶여 병렬이 깨지고 보어 자리에 부사가 오게 됩니다."
+    },
+    {
+      "id": "u05-c2-ch-002",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["correlative"],
+      "stem": "Guests can either park nearby or {{blank}} the free shuttle.",
+      "options": ["take", "taking"],
+      "answer": 0,
+      "translation": "손님들은 근처에 주차하거나 무료 셔틀을 이용하실 수 있습니다.",
+      "hints": [
+        "either와 or가 짝을 이룹니다 — 신호어 either 바로 뒤 형태를 확인해 보십시오.",
+        "either A or B에서 A가 동사원형이면 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "either A or B 병렬에서 A는 조동사 can 뒤의 원형 park이므로 B도 원형 take가 옳습니다. taking을 고르면 원형과 -ing형이 묶여 A와 B의 형태가 어긋납니다."
+    },
+    {
+      "id": "u05-c2-ch-003",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["correlative"],
+      "stem": "Neither scolding children nor {{blank}} them with toys builds lasting discipline.",
+      "options": ["bribe", "bribing"],
+      "answer": 1,
+      "translation": "아이들을 꾸짖는 것도 장난감으로 달래는 것도 지속적인 규율을 길러 주지 못합니다.",
+      "hints": [
+        "neither와 nor가 짝을 이루며 문장의 주어를 만들고 있습니다 — A 자리의 형태를 확인해 보십시오.",
+        "neither A nor B에서 A가 동명사구라면 B도 같은 형태여야 주어가 성립합니다."
+      ],
+      "explanation": "neither A nor B가 주어 자리에 온 구문으로, A는 동명사구 scolding children입니다. 따라서 B도 동명사 bribing이 옳습니다. 원형 bribe를 고르면 동사원형은 주어가 될 수 없어 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u05-c2-ch-004",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["correlative"],
+      "stem": "This herb not only flavors the dish but also {{blank}} digestion.",
+      "options": ["aids", "aiding"],
+      "answer": 0,
+      "translation": "이 허브는 요리에 풍미를 더할 뿐 아니라 소화도 돕습니다.",
+      "hints": [
+        "not only와 but also가 짝을 이룹니다 — not only 바로 뒤 형태를 확인해 보십시오.",
+        "not only A but also B에서 A가 시제를 갖춘 동사라면 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "not only A but also B 병렬에서 A는 단수 주어에 맞춘 현재형 동사 flavors이므로 B도 aids가 옳습니다. aiding을 고르면 본동사와 분사가 짝이 되어 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c2-ch-005",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["correlative", "prep-gerund"],
+      "stem": "Her research interests range from decoding ancient scripts to {{blank}} lost trade routes with modern software.",
+      "options": ["map", "mapping"],
+      "answer": 1,
+      "translation": "그녀의 연구 관심사는 고대 문자를 해독하는 것부터 현대 소프트웨어로 사라진 교역로를 지도로 그리는 것까지 걸쳐 있습니다.",
+      "hints": [
+        "from과 to가 짝을 이루는 전치사 짝 구문입니다 — from 뒤 형태를 확인해 보십시오.",
+        "from A to B에서 to는 전치사이므로 B는 A와 같은 명사 계열 형태여야 합니다."
+      ],
+      "explanation": "from A to B 짝 구문에서 A는 동명사 decoding이므로, 전치사 to 뒤의 B도 동명사 mapping이 옳습니다. to를 부정사 표지로 착각해 원형 map을 고르면 전치사 짝 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c2-ch-006",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "stem": "Restoring an old mural involves both cleaning the surface gently and {{blank}} missing pigment layer by layer.",
+      "options": ["rebuilding", "to rebuild"],
+      "answer": 0,
+      "translation": "낡은 벽화를 복원하는 일은 표면을 부드럽게 닦아 내는 것과 사라진 안료를 한 겹씩 다시 쌓는 것을 모두 포함합니다.",
+      "hints": [
+        "both와 and의 짝을 확인하고, both 바로 뒤 항의 형태를 보십시오.",
+        "both A and B에서 A가 동명사구라면 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "both A and B 병렬에서 A는 involves의 목적어인 동명사구 cleaning the surface gently이므로 B도 동명사 rebuilding이 옳습니다. to rebuild를 고르면 동명사와 to부정사가 묶여 A와 B의 형태가 어긋납니다."
+    },
+    {
+      "id": "u05-c2-ch-007",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "stem": "Facing budget cuts, the museum was forced either to shorten its opening hours or {{blank}} its education programs.",
+      "options": ["to cancel", "canceling"],
+      "answer": 0,
+      "translation": "예산 삭감에 직면하여, 그 박물관은 개관 시간을 줄이거나 교육 프로그램을 취소할 수밖에 없었습니다.",
+      "hints": [
+        "either와 or가 짝을 이룹니다 — either 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "A가 to부정사로 시작했다면 B도 그와 나란한 형태여야 합니다."
+      ],
+      "explanation": "either A or B 병렬에서 A는 to부정사 to shorten이므로 B도 to cancel이 옳습니다. canceling을 고르면 to부정사와 동명사가 묶여 병렬이 깨집니다. 참고로 이런 자리에서는 두 번째 to를 생략한 원형도 가능하지만, 동명사는 불가능합니다."
+    },
+    {
+      "id": "u05-c2-ch-008",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["correlative"],
+      "stem": "The medieval map neither showed accurate distances nor {{blank}} the coastline's true shape.",
+      "options": ["capturing", "captured"],
+      "answer": 1,
+      "translation": "그 중세 지도는 정확한 거리를 보여 주지도, 해안선의 실제 모양을 담아내지도 못했습니다.",
+      "hints": [
+        "neither와 nor가 짝을 이룹니다 — neither 바로 뒤 항의 형태를 확인해 보십시오.",
+        "neither A nor B에서 A가 과거형 동사라면 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "neither A nor B 병렬에서 A는 과거형 동사 showed이므로 B도 captured가 옳습니다. capturing을 고르면 본동사와 분사가 짝이 되어 병렬이 깨지고 nor 뒤의 동사가 사라집니다."
+    },
+    {
+      "id": "u05-c2-ch-009",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "distant-parallel"],
+      "stem": "The 1854 cholera study not only traced the outbreak to a single water pump but also, in the process, {{blank}} the foundations of modern epidemiology.",
+      "options": ["laying", "laid"],
+      "answer": 1,
+      "translation": "1854년의 콜레라 연구는 발병을 단 하나의 물 펌프로 추적해 냈을 뿐 아니라, 그 과정에서 현대 역학의 토대를 놓았습니다.",
+      "hints": [
+        "but also 뒤 콤마 사이의 삽입 어구를 건너뛰고, not only 뒤 항과 대조해 보십시오.",
+        "not only A but also B에서 A가 과거형 본동사라면 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "not only A but also B 병렬에서 A는 과거형 본동사 traced이고, but also 뒤의 in the process는 삽입 부사구입니다. 따라서 B도 과거형 laid가 옳습니다. laying을 고르면 두 번째 본동사가 사라져 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c2-ch-010",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "distant-parallel"],
+      "stem": "Success in simultaneous interpretation demands both listening to a speaker whose pace never slows and {{blank}} accurate speech at nearly the same moment.",
+      "options": ["producing", "to produce"],
+      "answer": 0,
+      "translation": "동시통역에서의 성공은 속도가 결코 느려지지 않는 화자의 말을 듣는 것과 거의 같은 순간에 정확한 발화를 만들어 내는 것을 동시에 요구합니다.",
+      "hints": [
+        "both와 and의 짝을 먼저 그어 보십시오 — A 안의 관계절은 수식어일 뿐입니다.",
+        "both A and B에서 A가 동명사구라면, 관계절이 아무리 길어도 B는 같은 형태여야 합니다."
+      ],
+      "explanation": "both A and B 병렬에서 A는 동명사구 listening to a speaker이고, whose pace never slows는 speaker를 꾸미는 관계절입니다. 따라서 B도 동명사 producing이 옳습니다. 관계절에 가려 짝을 놓치고 to produce를 고르면 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c2-ch-011",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "prep-gerund", "distant-parallel"],
+      "stem": "Over three decades, the composer's style shifted from imitating the dense harmonies of his teachers to {{blank}} silence itself as a musical element.",
+      "options": ["treating", "treat"],
+      "answer": 0,
+      "translation": "30년에 걸쳐 그 작곡가의 양식은 스승들의 빽빽한 화성을 모방하는 것에서 침묵 그 자체를 음악적 요소로 다루는 것으로 옮겨 갔습니다.",
+      "hints": [
+        "from과 to가 짝을 이루는 구문입니다 — from 바로 뒤에서 A의 형태를 확정해 보십시오.",
+        "이 구문의 to는 전치사이므로 뒤에는 명사 계열 형태가 와야 합니다."
+      ],
+      "explanation": "shifted from A to B 짝 구문에서 A는 동명사 imitating이므로, 전치사 to 뒤의 B도 동명사 treating이 옳습니다. A가 길어 전치사 짝이 멀어졌다고 to를 부정사 표지로 읽고 원형 treat를 고르면 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c2-ch-012",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["correlative", "distant-parallel"],
+      "stem": "When oxygen levels drop, deep-sea crabs either slow their metabolism to a near standstill or {{blank}} toward shallower water in search of richer currents.",
+      "options": ["migrating", "migrate"],
+      "answer": 1,
+      "translation": "산소 농도가 떨어지면 심해 게들은 신진대사를 거의 정지 상태까지 늦추거나 더 풍부한 해류를 찾아 얕은 물 쪽으로 이동합니다.",
+      "hints": [
+        "either와 or의 짝을 긋고, either 바로 뒤 항의 형태를 확인해 보십시오.",
+        "A가 주어에 맞춘 현재형 본동사라면 or 뒤의 B도 같은 형태여야 합니다."
+      ],
+      "explanation": "either A or B 병렬에서 A는 복수 주어 crabs에 맞춘 현재형 본동사 slow이므로 B도 migrate가 옳습니다. A가 길어 짝이 멀어졌다고 migrating을 고르면 본동사와 분사가 묶여 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-001",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "Students can submit essays online or {{blank}} printed copies.",
+      "options": ["deliver", "delivering"],
+      "answer": 0,
+      "translation": "학생들은 에세이를 온라인으로 제출하거나 인쇄본으로 낼 수 있습니다.",
+      "hints": [
+        "or 앞쪽에 조동사가 있는지 확인해 보십시오.",
+        "조동사의 힘은 or 뒤 항까지 미칩니다 — 뒤 항도 앞 항과 같은 형태여야 합니다."
+      ],
+      "explanation": "조동사 can이 or 뒤 항까지 공유되는 병렬이므로, submit과 나란한 원형 deliver가 옳습니다. delivering을 고르면 can에 걸리는 원형과 -ing형이 묶여 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-002",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "Divers must check their gear and {{blank}} near a partner at all times.",
+      "options": ["staying", "stay"],
+      "answer": 1,
+      "translation": "잠수부들은 항상 장비를 점검하고 짝 곁에 머물러야 합니다.",
+      "hints": [
+        "and 앞쪽의 조동사가 뒤 항에도 힘을 미치는지 살펴 보십시오.",
+        "조동사가 공유되면 and 뒤 항도 앞 항과 같은 원형이어야 합니다."
+      ],
+      "explanation": "조동사 must가 and 뒤 항까지 공유되므로, check와 병렬인 원형 stay가 옳습니다. staying을 고르면 must에 걸릴 수 없는 -ing형이 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-003",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "The glacier has thinned rapidly and {{blank}} nearly a mile since 1990.",
+      "options": ["retreated", "retreating"],
+      "answer": 0,
+      "translation": "그 빙하는 1990년 이래 빠르게 얇아졌고 거의 1마일이나 후퇴했습니다.",
+      "hints": [
+        "and 앞쪽의 has가 뒤 항에도 공유되는지 확인해 보십시오.",
+        "have나 has 뒤에 이어지는 병렬 항은 과거분사끼리 나란해야 합니다."
+      ],
+      "explanation": "has가 공유되는 완료형 병렬로, thinned와 나란한 과거분사 retreated가 옳습니다. retreating을 고르면 has에 걸리는 분사 형태가 어긋나 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-004",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "The charity aims to build wells and {{blank}} local crews.",
+      "options": ["training", "train"],
+      "answer": 1,
+      "translation": "그 자선단체는 우물을 짓고 현지 인력을 훈련하는 것을 목표로 합니다.",
+      "hints": [
+        "and 앞쪽의 to가 뒤 항까지 공유될 수 있음을 떠올려 보십시오.",
+        "to부정사 병렬에서 두 번째 to는 생략할 수 있습니다 — 그 자리에 올 수 있는 형태를 고르십시오."
+      ],
+      "explanation": "aims to build의 to가 and 뒤 항까지 공유되는 병렬이므로, build와 나란한 원형 train이 옳습니다(to를 반복해 써도 같은 구조입니다). training을 고르면 to에 걸릴 수 없는 -ing형이 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-005",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair", "distant-parallel"],
+      "stem": "The new policy will reduce paperwork significantly and, over time, {{blank}} morale across every department.",
+      "options": ["improve", "improving"],
+      "answer": 0,
+      "translation": "새 정책은 서류 작업을 크게 줄이고, 시간이 지나면서 모든 부서의 사기를 끌어올릴 것입니다.",
+      "hints": [
+        "and 뒤 콤마 사이의 부사구를 건너뛰고, 앞쪽의 조동사를 찾아 보십시오.",
+        "조동사가 공유되면 삽입 어구가 끼어도 뒤 항은 앞 항과 같은 원형이어야 합니다."
+      ],
+      "explanation": "조동사 will이 and 뒤 항까지 공유되고, over time은 삽입 부사구입니다. 따라서 reduce와 병렬인 원형 improve가 옳습니다. improving을 고르면 will에 걸릴 수 없는 형태가 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-006",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "The observatory tracked the comet for six weeks and {{blank}} its findings in a public database last spring.",
+      "options": ["publish", "published"],
+      "answer": 1,
+      "translation": "그 천문대는 6주 동안 혜성을 추적했고 지난봄에 관측 결과를 공개 데이터베이스에 발표했습니다.",
+      "hints": [
+        "and 앞쪽에 뒤 항까지 공유될 조동사가 있는지 먼저 확인해 보십시오.",
+        "공유할 조동사나 to가 없다면 and 뒤 항은 시제를 갖춘 본동사여야 합니다."
+      ],
+      "explanation": "앞 항은 조동사 없는 과거형 본동사 tracked이므로 뒤 항에 공유될 조동사가 없습니다. 따라서 and 뒤 항도 시제를 갖춘 과거형 published가 옳습니다. 원형 publish를 고르면 단수 주어와도 맞지 않는 시제 없는 동사가 홀로 서게 됩니다."
+    },
+    {
+      "id": "u05-c3-ch-007",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "Coral reefs have survived four mass extinctions and {{blank}} to changing seas for millions of years.",
+      "options": ["adapted", "adapting"],
+      "answer": 0,
+      "translation": "산호초는 네 차례의 대멸종에서 살아남았고 수백만 년 동안 변화하는 바다에 적응해 왔습니다.",
+      "hints": [
+        "and 앞쪽의 have가 뒤 항에도 힘을 미치는지 확인해 보십시오.",
+        "have가 공유되는 완료형 병렬에서는 과거분사끼리 나란해야 합니다."
+      ],
+      "explanation": "have가 공유되는 완료형 병렬로, survived와 나란한 과거분사 adapted가 옳습니다. adapting을 고르면 have에 걸리는 분사 형태가 어긋나 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-008",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["shared-aux", "coord-pair"],
+      "stem": "Researchers should record raw data immediately and {{blank}} every correction in the margin.",
+      "options": ["noting", "note"],
+      "answer": 1,
+      "translation": "연구자들은 원자료를 즉시 기록하고 모든 수정 사항을 여백에 적어 두어야 합니다.",
+      "hints": [
+        "and 앞쪽의 조동사가 뒤 항까지 공유되는 구조인지 살펴 보십시오.",
+        "조동사가 공유되면 뒤 항은 앞 항과 같은 원형이어야 합니다."
+      ],
+      "explanation": "조동사 should가 and 뒤 항까지 공유되므로, record와 병렬인 원형 note가 옳습니다. noting을 고르면 should에 걸릴 수 없는 -ing형이 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-009",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "coord-pair", "distant-parallel"],
+      "stem": "Under the new agreement, member states may raise tariffs on selected imports or, if their industries face sudden damage, {{blank}} emergency quotas for up to a year.",
+      "options": ["impose", "imposing"],
+      "answer": 0,
+      "translation": "새 협정에 따라 회원국들은 선별된 수입품에 관세를 올리거나, 자국 산업이 갑작스러운 피해를 입을 경우 최대 1년간 긴급 할당제를 시행할 수 있습니다.",
+      "hints": [
+        "or 뒤에 끼어든 if절을 괄호로 묶고, 앞쪽의 조동사를 찾아 보십시오.",
+        "조동사의 힘은 삽입절을 건너 or 뒤 항까지 미칩니다 — 앞 항과 같은 형태가 필요합니다."
+      ],
+      "explanation": "조동사 may가 or 뒤 항까지 공유되고, if their industries face sudden damage는 삽입된 조건절입니다. 따라서 raise와 병렬인 원형 impose가 옳습니다. 삽입절에 가려 공유 구조를 놓치고 imposing을 고르면 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-010",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "stem": "The foundation promised to digitize the composer's surviving manuscripts within five years and {{blank}} free access to scholars on every continent.",
+      "options": ["guaranteeing", "guarantee"],
+      "answer": 1,
+      "translation": "그 재단은 5년 안에 그 작곡가의 현존 악보를 디지털화하고 모든 대륙의 학자들에게 무료 열람을 보장하겠다고 약속했습니다.",
+      "hints": [
+        "and 앞쪽 멀리 있는 to가 뒤 항까지 공유되는지 확인해 보십시오.",
+        "to부정사 병렬에서 두 번째 to는 생략될 수 있습니다 — to가 공유될 때 올 수 있는 형태를 고르십시오."
+      ],
+      "explanation": "promised to digitize의 to가 and 뒤 항까지 공유되는 병렬이므로, digitize와 나란한 원형 guarantee가 옳습니다. 첫 항이 길어 to가 멀어졌다고 guaranteeing을 고르면 to에 걸릴 수 없는 형태가 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c3-ch-011",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "stem": "The lighthouse keeper, who knew every reef that could wreck a hull, watched the horizon each evening and {{blank}} warnings to passing ships by lamp.",
+      "options": ["flash", "flashed"],
+      "answer": 1,
+      "translation": "선체를 난파시킬 수 있는 모든 암초를 알고 있던 등대지기는 저녁마다 수평선을 살폈고 등불로 지나가는 배들에 경고 신호를 보냈습니다.",
+      "hints": [
+        "관계절 안의 조동사는 관계절 밖으로 힘을 미치지 못합니다 — and의 짝은 주절에서 찾으십시오.",
+        "공유할 조동사가 주절에 없다면 and 뒤 항은 시제를 갖춘 본동사여야 합니다."
+      ],
+      "explanation": "could는 관계절(that could wreck a hull) 안의 조동사이므로 주절의 and 뒤 항에 공유될 수 없습니다. and의 짝은 주절 본동사 watched이므로 과거형 flashed가 옳습니다. 관계절의 could를 공유 조동사로 착각해 원형 flash를 고르면 단수 주어와도 맞지 않는 시제 없는 동사가 남습니다."
+    },
+    {
+      "id": "u05-c3-ch-012",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["shared-aux", "distant-parallel"],
+      "stem": "Since its founding, the institute has funded research that private donors once ignored and, without seeking publicity, {{blank}} dozens of young scientists through graduate school.",
+      "options": ["supported", "supporting"],
+      "answer": 0,
+      "translation": "설립 이래 그 연구소는 한때 민간 기부자들이 외면하던 연구에 자금을 대 왔고, 세간의 이목을 구하지 않으면서 수십 명의 젊은 과학자들이 대학원을 마치도록 지원해 왔습니다.",
+      "hints": [
+        "and 뒤 삽입 어구 안의 -ing에 끌리지 말고, 앞쪽의 has가 공유되는지 확인해 보십시오.",
+        "has가 공유되는 완료형 병렬에서는 과거분사끼리 나란해야 합니다."
+      ],
+      "explanation": "has가 and 뒤 항까지 공유되는 완료형 병렬이고, without seeking publicity는 삽입 전치사구입니다. 따라서 funded와 나란한 과거분사 supported가 옳습니다. 삽입구의 seeking에 끌려 supporting을 고르면 has에 걸리는 형태가 어긋나 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-001",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["prep-gerund"],
+      "stem": "Historians work by gathering documents and by {{blank}} them against other sources.",
+      "options": ["check", "checking"],
+      "answer": 1,
+      "translation": "역사가들은 문서를 수집하고 그것들을 다른 사료와 대조함으로써 연구합니다.",
+      "hints": [
+        "and 뒤에 반복된 by에 주목해 보십시오 — 그 뒤가 어떤 자리인지 확인합니다.",
+        "전치사 뒤에 동사가 온다면 동명사 형태여야 합니다."
+      ],
+      "explanation": "전치사 by가 항마다 반복된 병렬로, 각 항은 by의 목적어여야 합니다. 전치사 뒤에는 동명사가 오므로 gathering과 나란한 checking이 옳습니다. 원형 check를 고르면 전치사의 목적어 자리에 동사원형이 와서 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u05-c4-ch-002",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["prep-gerund"],
+      "stem": "She is interested in sketching birds and {{blank}} their calls.",
+      "options": ["recording", "to record"],
+      "answer": 0,
+      "translation": "그녀는 새를 스케치하는 것과 새들의 울음소리를 녹음하는 것에 관심이 있습니다.",
+      "hints": [
+        "and 앞쪽의 전치사 in이 뒤 항까지 공유되는지 확인해 보십시오.",
+        "전치사가 공유되면 뒤 항도 그 전치사에 걸리는 동명사여야 합니다."
+      ],
+      "explanation": "전치사 in이 and 뒤 항까지 공유되는 병렬이므로, sketching과 나란한 동명사 recording이 옳습니다. to record를 고르면 전치사 in에 걸릴 수 없는 to부정사가 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-003",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comparison-parallel"],
+      "stem": "Preventing rust is far easier than {{blank}} it later.",
+      "options": ["remove", "removing"],
+      "answer": 1,
+      "translation": "녹을 예방하는 것이 나중에 녹을 제거하는 것보다 훨씬 쉽습니다.",
+      "hints": [
+        "than이 무엇과 무엇을 비교하는지 — 문장 첫머리의 주어 형태를 확인해 보십시오.",
+        "비교 병렬에서는 than 양쪽 항의 형태가 일치해야 합니다."
+      ],
+      "explanation": "than 비교 병렬로, 비교 대상은 문장 첫머리의 동명사구 주어 Preventing rust입니다. 따라서 than 뒤도 동명사 removing이 옳습니다. 원형 remove를 고르면 비교되는 양쪽의 형태가 어긋납니다."
+    },
+    {
+      "id": "u05-c4-ch-004",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comparison-parallel", "as-as"],
+      "stem": "Reading aloud is as valuable as {{blank}} silently for young learners.",
+      "options": ["to read", "reading"],
+      "answer": 1,
+      "translation": "어린 학습자들에게는 소리 내어 읽는 것이 조용히 읽는 것만큼 가치가 있습니다.",
+      "hints": [
+        "as ~ as가 무엇과 무엇을 비교하는지, 문장 첫머리의 주어 형태를 확인해 보십시오.",
+        "as ~ as 비교 병렬에서는 양쪽 항의 형태가 일치해야 합니다."
+      ],
+      "explanation": "as ~ as 비교 병렬로, 비교 대상은 동명사구 주어 Reading aloud입니다. 따라서 두 번째 as 뒤도 동명사 reading이 옳습니다. to read를 고르면 동명사와 to부정사가 비교되어 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-005",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "stem": "The coach reduced injuries by warming up players longer and {{blank}} recovery days between hard sessions.",
+      "options": ["scheduling", "schedule"],
+      "answer": 0,
+      "translation": "그 코치는 선수들의 준비운동 시간을 늘리고 고강도 훈련 사이에 회복일을 배치함으로써 부상을 줄였습니다.",
+      "hints": [
+        "and 뒤 항이 어느 전치사에 걸리는지 앞쪽을 살펴 보십시오.",
+        "첫 항이 전치사의 목적어인 동명사라면 and 뒤 항도 같은 전치사에 걸리는 동명사여야 합니다."
+      ],
+      "explanation": "전치사 by가 and 뒤 항까지 공유되는 병렬이므로, warming과 나란한 동명사 scheduling이 옳습니다. 원형 schedule을 고르면 by에 걸릴 수 없는 형태가 오고 단수 주어와도 맞지 않아 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u05-c4-ch-006",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "stem": "For most beginners, chess improvement is less about memorizing openings and more about {{blank}} simple endgames deeply.",
+      "options": ["understand", "understanding"],
+      "answer": 1,
+      "translation": "대부분의 초보자에게 체스 실력 향상은 오프닝을 암기하는 것이라기보다 단순한 엔드게임을 깊이 이해하는 것에 가깝습니다.",
+      "hints": [
+        "less about과 more about이 짝을 이룹니다 — about 뒤가 어떤 자리인지 보십시오.",
+        "전치사 뒤에 동사가 온다면 동명사 형태여야 합니다."
+      ],
+      "explanation": "less about A and more about B 병렬로, 반복된 전치사 about 뒤는 목적어 자리입니다. 따라서 memorizing과 나란한 동명사 understanding이 옳습니다. 원형 understand를 고르면 전치사의 목적어 자리에 동사원형이 와서 문장이 성립하지 않습니다."
+    },
+    {
+      "id": "u05-c4-ch-007",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "stem": "The report accused the firm of hiding safety data and {{blank}} regulators for years.",
+      "options": ["misleading", "mislead"],
+      "answer": 0,
+      "translation": "그 보고서는 그 회사가 안전 자료를 숨기고 수년간 규제 당국을 오도했다고 고발했습니다.",
+      "hints": [
+        "and 뒤 항이 앞쪽의 어느 전치사에 걸리는지 확인해 보십시오.",
+        "전치사가 공유되는 병렬에서는 뒤 항도 동명사여야 합니다."
+      ],
+      "explanation": "accused A of B 구문의 전치사 of가 and 뒤 항까지 공유되므로, hiding과 나란한 동명사 misleading이 옳습니다. 원형 mislead를 고르면 of에 걸릴 수 없는 형태가 오고 단수 주어와도 맞지 않습니다."
+    },
+    {
+      "id": "u05-c4-ch-008",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["prep-gerund"],
+      "stem": "This graduate seminar focuses on framing precise research questions and {{blank}} competing evidence against rival explanations.",
+      "options": ["weighing", "weigh"],
+      "answer": 0,
+      "translation": "이 대학원 세미나는 정밀한 연구 질문을 구성하는 것과 상충하는 증거를 경쟁 가설에 견주어 평가하는 것에 초점을 맞춥니다.",
+      "hints": [
+        "and 뒤 항이 걸리는 전치사를 앞쪽에서 찾아 보십시오.",
+        "전치사 뒤 병렬에서는 각 항이 모두 동명사나 명사여야 합니다."
+      ],
+      "explanation": "focuses on의 전치사 on이 and 뒤 항까지 공유되는 병렬이므로, framing과 나란한 동명사 weighing이 옳습니다. 원형 weigh를 고르면 전치사에 걸릴 수 없는 형태가 와서 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-009",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "prep-to", "distant-parallel"],
+      "stem": "Economists credit the region's recovery to rebuilding ports that the storm had destroyed and {{blank}} small factories with loans that carried almost no interest.",
+      "options": ["to equip", "equipping"],
+      "answer": 1,
+      "translation": "경제학자들은 그 지역의 회복을 폭풍이 파괴했던 항구들을 재건한 것과 거의 무이자에 가까운 대출로 소규모 공장들에 설비를 갖추어 준 것의 결과로 봅니다.",
+      "hints": [
+        "credit A to B 구문의 to가 전치사임을 확인하고, 그 뒤 첫 항의 형태를 보십시오.",
+        "전치사 to가 공유되는 병렬에서는 뒤 항도 동명사여야 합니다 — 부정사 표지 to와 혼동하지 마십시오."
+      ],
+      "explanation": "credit A to B 구문의 to는 전치사이고, 그 목적어인 동명사 rebuilding이 첫 항입니다. 따라서 and 뒤 항도 동명사 equipping이 옳습니다. 관계절로 첫 항이 길어지자 to를 부정사 표지로 착각해 to equip을 고르면 전치사 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-010",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comparison-parallel", "distant-parallel"],
+      "stem": "Persuading skeptical listeners with patient, well-ordered evidence is usually more effective than {{blank}} them with a sudden flood of statistics.",
+      "options": ["overwhelming", "overwhelm"],
+      "answer": 0,
+      "translation": "회의적인 청중을 끈기 있고 잘 정돈된 증거로 설득하는 것이 갑작스러운 통계의 홍수로 그들을 압도하는 것보다 대개 더 효과적입니다.",
+      "hints": [
+        "than의 비교 대상을 문장 첫머리에서 찾아 보십시오 — 수식어에 가려 멀리 있습니다.",
+        "비교 병렬에서는 than 양쪽 항의 형태가 일치해야 합니다."
+      ],
+      "explanation": "than 비교 병렬로, 비교 대상은 문장 첫머리의 동명사구 주어 Persuading skeptical listeners입니다. 수식어가 길어 짝이 멀어졌지만 than 뒤도 동명사 overwhelming이 옳습니다. 원형 overwhelm을 고르면 비교 양쪽의 형태가 어긋납니다."
+    },
+    {
+      "id": "u05-c4-ch-011",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comparison-parallel", "as-as", "distant-parallel"],
+      "stem": "For a young violinist, listening closely to recordings of great performers can be as instructive as {{blank}} for hours under a strict teacher.",
+      "options": ["practicing", "to practice"],
+      "answer": 0,
+      "translation": "젊은 바이올린 연주자에게는 위대한 연주자들의 녹음을 골똘히 듣는 것이 엄격한 스승 아래에서 몇 시간씩 연습하는 것만큼 유익할 수 있습니다.",
+      "hints": [
+        "as ~ as의 비교 대상을 콤마 뒤 주어 자리에서 찾아 보십시오.",
+        "as ~ as 비교 병렬에서는 양쪽 항의 형태가 일치해야 합니다."
+      ],
+      "explanation": "as ~ as 비교 병렬로, 비교 대상은 동명사구 주어 listening closely to recordings입니다. 따라서 두 번째 as 뒤도 동명사 practicing이 옳습니다. to practice를 고르면 동명사와 to부정사가 비교되어 병렬이 깨집니다."
+    },
+    {
+      "id": "u05-c4-ch-012",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "stem": "The city was praised for restoring its historic canals, which had carried grain for centuries, and {{blank}} the waterfront into public gardens.",
+      "options": ["turn", "turning"],
+      "answer": 1,
+      "translation": "그 도시는 수 세기 동안 곡물을 실어 나르던 역사적인 운하들을 복원하고 물가를 공공 정원으로 바꾼 점에서 찬사를 받았습니다.",
+      "hints": [
+        "and 뒤 항이 걸리는 전치사를 관계절 너머 앞쪽에서 찾아 보십시오.",
+        "첫 항이 전치사의 목적어인 동명사라면, 삽입 관계절이 있어도 뒤 항은 같은 전치사에 걸리는 동명사여야 합니다."
+      ],
+      "explanation": "was praised for의 전치사 for가 and 뒤 항까지 공유되는 병렬이고, which had carried grain for centuries는 canals를 꾸미는 삽입 관계절입니다. 따라서 restoring과 나란한 동명사 turning이 옳습니다. 원형 turn을 고르면 for에 걸릴 수 없는 형태가 와서 병렬이 깨집니다."
+    }
+  ]
+}

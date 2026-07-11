@@ -1,0 +1,267 @@
+{
+  "setId": "set1",
+  "title": "복합 세트 Ⅰ — 골격기 총정리",
+  "unitScope": ["u01", "u02", "u03", "u04", "u05"],
+  "items": [
+    {
+      "id": "mx1-ps-001",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Many small creatures that inhabit the cold, sunless waters of the deep ocean produce their own light, a remarkable phenomenon [[1:known]] as bioluminescence. Because sunlight never reaches these extreme depths, the faint light [[2:generated]] by internal chemical reactions serves several distinct purposes. Some predatory fish that drift silently through the dark water [[3:using]] this glow to lure smaller prey toward their waiting jaws. Others suddenly release thick clouds of luminous fluid [[4:to confuse]] the larger hunters that chase them. The capacity of these fragile organisms to produce controlled flashes [[5:has]] evolved independently in many separate lineages.",
+      "answer": 3,
+      "correction": "use",
+      "underlineUnits": ["u04", "u04", "u01", "u01", "u02"],
+      "rationales": [
+        "phenomenon을 뒤에서 수식하는 과거분사로, 현상이 그렇게 '불리는' 수동 관계이므로 known이 옳습니다.",
+        "the faint light를 수식하는 분사로, 빛이 화학 반응에 의해 '생성되는' 수동 관계이므로 generated가 옳습니다.",
+        "주어 Some predatory fish를 받는 본동사가 이 문장에 없습니다. that절은 관계절이고 using은 준동사이므로, 본동사 use로 고쳐야 합니다.",
+        "clouds of luminous fluid를 방출하는 '목적'을 나타내는 부사적 to부정사이므로 to confuse가 옳습니다.",
+        "주어 핵은 단수 The capacity이고 of these organisms와 to부정사구는 수식어이므로, 단수 동사 has가 옳습니다. 바로 앞의 복수 organisms에 끌리면 안 됩니다."
+      ],
+      "gist": "심해 생물의 생물발광은 여러 독립적 계통에서 각기 진화한 다목적 능력입니다.",
+      "hints": [
+        "각 문장에서 주어를 찾은 뒤, 그 주어를 받는 본동사가 실제로 있는지 하나씩 세어 보십시오.",
+        "접속사나 관계사가 추가되지 않았다면 한 절의 본동사는 하나여야 하며, -ing형은 혼자서 본동사가 될 수 없습니다."
+      ],
+      "explanation": "세 번째 밑줄이 포함된 문장은 주어 Some predatory fish를 받는 본동사가 없는 비문입니다. that절은 관계절, using과 to lure는 준동사여서 문장을 완성하지 못합니다. 따라서 준동사 using을 본동사 use로 고쳐야 문장의 골격이 완성됩니다. 나머지 밑줄은 분사 수식, 목적의 to부정사, 단수 주어 수일치로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-002",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The vast network of stone aqueducts that supplied ancient Rome with fresh water [[1:were]] among the greatest engineering achievements of the classical world. Each channel, carefully [[2:sloped]] at a precise downward angle, allowed gravity alone to carry the flow. The engineers who designed these structures [[3:had]] to hold a gentle, unbroken gradient across many miles of terrain. Once it reached the city, the water [[4:was distributed]] through lead pipes to public fountains, heated baths, and wealthy homes. The mathematical precision [[5:demanded]] by such projects still impresses modern builders today.",
+      "answer": 1,
+      "correction": "was",
+      "underlineUnits": ["u02", "u04", "u01", "u03", "u04"],
+      "rationales": [
+        "주어 핵은 단수 The vast network이고 of stone aqueducts that supplied ancient Rome with fresh water는 모두 수식어이므로, 단수 동사 was로 고쳐야 합니다. 복수 aqueducts나 water에 끌리면 안 됩니다.",
+        "Each channel을 뒤에서 수식하는 분사로, 수로가 특정 각도로 '기울여진' 수동 관계이므로 과거분사 sloped가 옳습니다.",
+        "who절의 designed와 별개로 주어 The engineers를 받는 본동사가 필요하며, had가 그 본동사이므로 옳습니다.",
+        "물이 납관을 통해 '분배되는' 대상이므로 수동태 was distributed가 옳습니다.",
+        "문장의 본동사는 impresses이고, demanded by such projects는 The precision을 수식하는 과거분사구이므로 demanded가 옳습니다. 본동사로 착각하기 쉬운 미끼입니다."
+      ],
+      "gist": "로마의 수로망은 중력만으로 물을 나르도록 정밀하게 설계된 고전 세계 최고의 공학 성취였습니다.",
+      "hints": [
+        "첫 문장에서 동사의 수를 정하기 전에, 진짜 주어의 핵이 무엇인지 문장 맨 앞에서 찾아보십시오.",
+        "of구와 관계절은 괄호로 묶어 무시하고, 남는 단수·복수 주어 핵이 동사의 수를 결정합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 주어 핵은 단수 명사 The vast network이며, 그 뒤의 of stone aqueducts that supplied ancient Rome with fresh water는 모두 수식어입니다. 수식어를 걷어내면 The network ___ among ...이 되므로 단수 동사 was가 옳고, were는 틀립니다. 나머지 밑줄은 분사 수식, 본동사, 수동태, 명사 수식 분사구로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-003",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["passive-with-object", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "When a foraging honeybee discovers a rich source of nectar, it returns to the hive and performs a movement [[1:called]] the waggle dance. The angle at which the bee waggles [[2:indicates]] the direction of the food relative to the sun. Nearby workers, [[3:crowding]] around the dancer, read this coded message with remarkable accuracy. The distance to the flowers [[4:is encoded]] in the duration of each waggle run. In this way, a single successful forager [[5:is transmitted]] complex spatial information to dozens of nearby hive mates within minutes.",
+      "answer": 5,
+      "correction": "transmits",
+      "underlineUnits": ["u03", "u02", "u04", "u03", "u03"],
+      "rationales": [
+        "movement를 수식하는 과거분사로, 그 동작이 waggle dance라고 '불리는' 관계이므로 called가 옳습니다. 뒤의 명사구는 call A B 구문에서 남은 보어입니다.",
+        "주어 핵은 단수 The angle이고 at which the bee waggles는 관계절 수식이므로, 단수 동사 indicates가 옳습니다.",
+        "주어 Nearby workers를 받는 본동사는 read이며, crowding around the dancer는 workers가 능동적으로 '모여드는' 관계의 분사구이므로 crowding이 옳습니다.",
+        "거리 정보가 각 run의 길이에 '부호화되는' 대상이므로 수동태 is encoded가 옳습니다.",
+        "forager가 정보를 '전달하는' 주체이고 동사 뒤에 목적어 complex spatial information이 그대로 남아 있으므로, 수동태는 틀리며 능동 transmits로 고쳐야 합니다."
+      ],
+      "gist": "꿀벌은 왜글 댄스의 각도와 지속 시간으로 먹이의 방향과 거리를 동료에게 전달합니다.",
+      "hints": [
+        "마지막 문장에서 동사 뒤에 목적어가 남아 있는지, 그리고 주어가 그 동작을 하는 쪽인지 받는 쪽인지 따져 보십시오.",
+        "행위의 주체가 주어이고 동사 뒤에 목적어가 그대로 있으면 능동태여야 합니다."
+      ],
+      "explanation": "다섯 번째 밑줄에서 forager는 정보를 전달하는 행위의 주체이고, 동사 뒤에는 목적어 complex spatial information이 그대로 놓여 있습니다. 목적어를 취하는 능동 관계이므로 수동태 is transmitted는 틀리고 능동 transmits가 옳습니다. 나머지 밑줄은 보어를 남긴 분사, 단수 수일치, 능동 분사, 정상 수동태로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-004",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "During the Italian Renaissance, painters discovered linear perspective, a technique [[1:allowing]] them to create a convincing illusion of depth on a flat surface. Straight lines drawn across the canvas appeared to converge at a single [[2:vanished]] point on the distant horizon. The impression of real space that these paintings produced often [[3:persuades]] modern viewers that the scene extends far beyond the wall. Architects who studied the method [[4:realized]] that the same geometry governed both buildings and pictures. Even now, art students [[5:are taught]] the very principles that Brunelleschi first demonstrated in Florence.",
+      "answer": 2,
+      "correction": "vanishing",
+      "underlineUnits": ["u04", "u04", "u02", "u01", "u03"],
+      "rationales": [
+        "technique를 수식하는 분사로, 기법이 화가들에게 깊이의 착시를 '가능하게 하는' 능동 관계이므로 allowing이 옳습니다.",
+        "선들이 그 점을 향해 계속 '사라져 가는' 진행·미완의 관계이므로 현재분사 vanishing이 옳습니다. 완료를 뜻하는 vanished는 '이미 사라진 점'이 되어 converge at과 어긋납니다.",
+        "주어 핵은 단수 The impression이고 of real space that these paintings produced는 수식어이므로, 단수 동사 persuades가 옳습니다. 복수 paintings에 끌리면 안 됩니다.",
+        "who studied the method는 관계절이고 주어 Architects를 받는 본동사가 필요하므로, realized가 그 본동사로 옳습니다.",
+        "teach는 두 개의 목적어를 취하는 동사여서 수동태 뒤에 목적어 the very principles가 남을 수 있으므로 are taught가 옳습니다. 능동으로 착각하기 쉬운 미끼입니다."
+      ],
+      "gist": "르네상스 화가들은 선원근법으로 평면에 깊이의 착시를 만들어냈습니다.",
+      "hints": [
+        "두 번째 밑줄에서, 그 점을 향한 선들의 움직임이 이미 끝난 일인지 계속 진행되는 일인지 생각해 보십시오.",
+        "자동사의 분사는 목적어 유무가 아니라, 진행·미완이면 -ing, 완료면 과거분사로 결정됩니다."
+      ],
+      "explanation": "두 번째 밑줄은 선들이 그 점을 향해 계속 '사라져 가는' 진행 관계를 나타내야 하므로 현재분사 vanishing이 옳습니다. 완료를 뜻하는 과거분사 vanished는 '이미 사라져 버린 점'이라는 뜻이 되어 converge at과 모순됩니다. 이는 목적어가 없으면 무조건 과거분사라는 암기의 반례입니다. 나머지 밑줄은 능동 분사, 단수 수일치, 본동사, 목적어를 남긴 수동태로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-005",
+      "unitId": "u05",
+      "conceptId": "u05-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["correlative", "distant-parallel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Polar glaciers preserve a remarkably detailed record of the ancient atmosphere, trapping tiny bubbles of air as each winter's snow is buried and [[1:compressed]] into solid ice. By drilling deep cores and [[2:analyzing]] the bubbles layer by layer, researchers can reconstruct temperatures from hundreds of thousands of years ago. The chemistry of these trapped air bubbles [[3:reveals]] how carbon dioxide levels rose and fell across distant ages. These records allow scientists not only to measure past climate change but also [[4:predicting]] how the planet may respond to future warming. Such evidence, [[5:gathered]] from remote ice sheets, now guides global policy.",
+      "answer": 4,
+      "correction": "to predict",
+      "underlineUnits": ["u05", "u05", "u02", "u05", "u04"],
+      "rationales": [
+        "as절의 동사는 is buried and compressed로, 조동사 is를 공유하는 수동태 병렬이므로 과거분사 compressed가 옳습니다.",
+        "전치사 By의 목적어로 drilling과 analyzing이 병렬을 이루므로 동명사 analyzing이 옳습니다.",
+        "주어 핵은 단수 The chemistry이고 of these trapped air bubbles는 수식어이므로, 단수 동사 reveals가 옳습니다. 복수 bubbles에 끌리면 안 됩니다.",
+        "not only A but also B 구문에서 A가 to measure이므로 B도 같은 형태여야 합니다. 따라서 predicting은 틀리며 to predict로 고쳐 병렬을 맞춰야 합니다.",
+        "문장의 본동사는 guides이고, gathered from remote ice sheets는 Such evidence를 수식하는 과거분사구이므로 gathered가 옳습니다. 본동사로 착각하기 쉬운 미끼입니다."
+      ],
+      "gist": "빙하 코어의 공기 방울은 수십만 년 전 기후를 복원하는 정밀한 기록입니다.",
+      "hints": [
+        "네 번째 밑줄이 어떤 상관접속사의 뒷항인지 확인하고, 그 짝이 되는 앞항의 형태를 찾아보십시오.",
+        "not only A but also B에서 A와 B는 반드시 같은 문법 형태로 대응해야 합니다."
+      ],
+      "explanation": "네 번째 밑줄은 상관접속사 not only A but also B의 B 자리로, A에 해당하는 to measure past climate change와 형태가 일치해야 합니다. 따라서 동명사 predicting은 병렬을 깨뜨리므로 틀리고, to predict로 고쳐야 합니다. 나머지 밑줄은 조동사 공유 수동 병렬, 전치사+동명사 병렬, 단수 수일치, 명사 수식 분사구로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-006",
+      "unitId": "u01",
+      "conceptId": "u01-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["no-main-verb", "double-verb", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Volcanic eruptions, despite the destruction they cause, ultimately enrich the land that surrounds them. The fine ash [[1:ejected]] high into the atmosphere eventually settles over vast stretches of distant farmland. Minerals contained in this ash, slowly released as the particles break down, [[2:making]] the soil remarkably fertile. Farmers who have lived near active volcanoes for many generations [[3:understand]] this hidden benefit well. The rich harvests that such ground produces [[4:explain]] why dense populations settle in obviously dangerous regions. Over the centuries, the risk of a sudden eruption [[5:has been]] outweighed by the promise of abundant crops.",
+      "answer": 2,
+      "correction": "make",
+      "underlineUnits": ["u04", "u01", "u01", "u02", "u03"],
+      "rationales": [
+        "The fine ash를 수식하는 과거분사로, 재가 대기 중으로 '분출되는' 수동 관계이며 문장의 본동사는 settles이므로 ejected가 옳습니다.",
+        "주어 Minerals를 받는 본동사가 이 문장에 없습니다. contained와 released는 분사 수식어이므로, making을 본동사 make로 고쳐야 문장이 완성됩니다.",
+        "who절의 have lived와 별개로 주어 Farmers를 받는 본동사가 필요하며, understand가 그 본동사이므로 옳습니다.",
+        "주어 핵은 복수 The rich harvests이고 that such ground produces는 관계절 수식이므로, 복수 동사 explain이 옳습니다. 관계절 안의 단수 ground에 끌리면 안 됩니다.",
+        "위험이 풍작의 약속에 의해 '능가당하는' 관계이고 완료 시제이므로, 완료 수동태 has been outweighed가 옳습니다."
+      ],
+      "gist": "화산재의 무기질이 토양을 비옥하게 만들어, 위험을 무릅쓰고도 사람들이 화산 인근에 모여 삽니다.",
+      "hints": [
+        "두 번째 밑줄이 있는 문장에서 주어 Minerals를 찾은 뒤, 그 주어를 받는 본동사가 실제로 있는지 확인해 보십시오.",
+        "분사구로 이루어진 수식어를 모두 걷어내면, 주어를 받쳐 줄 본동사가 하나 남아 있어야 합니다."
+      ],
+      "explanation": "두 번째 밑줄이 있는 문장은 주어 Minerals를 받는 본동사가 없는 비문입니다. contained in this ash와 slowly released as the particles break down은 모두 분사 수식어여서 문장을 완성하지 못합니다. 따라서 준동사 making을 본동사 make로 고쳐야 합니다. 나머지 밑줄은 분사 수식, 본동사, 복수 수일치, 완료 수동태로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-007",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Every autumn, millions of songbirds abandon their breeding grounds and begin a journey that stretches across entire continents. Guided by instinct, they navigate using several cues [[1:offered]] by the natural world. During the day, they read the position of the sun; at night, they memorize the patterns [[2:formed]] by the stars. Some species can both sense the Earth's magnetic field and [[3:follow]] coastlines toward their destination. When thick clouds hide every familiar landmark, these internal compasses [[4:keep]] the flock on course. Yet the exact mechanism by which such small birds detect magnetism [[5:remain]] poorly understood.",
+      "answer": 5,
+      "correction": "remains",
+      "underlineUnits": ["u04", "u04", "u05", "u01", "u02"],
+      "rationales": [
+        "several cues를 수식하는 과거분사로, 단서가 자연에 의해 '제공되는' 수동 관계이므로 offered가 옳습니다.",
+        "the patterns를 수식하는 과거분사로, 무늬가 별들에 의해 '형성되는' 수동 관계이므로 formed가 옳습니다.",
+        "both A and B 병렬에서 조동사 can을 공유하며 앞항이 원형 sense이므로, 뒷항도 원형 follow가 옳습니다.",
+        "When절과 별개로 주어 these internal compasses를 받는 본동사가 필요하며, 복수 주어에 맞는 keep이 옳습니다.",
+        "주어 핵은 단수 the exact mechanism이고 by which such small birds detect magnetism은 관계절 수식이므로, 단수 동사 remains로 고쳐야 합니다. 복수 birds에 끌려 remain을 쓰면 안 됩니다."
+      ],
+      "gist": "철새는 태양·별·지자기 같은 여러 단서로 대륙을 가로질러 이동하지만 그 원리는 아직 불분명합니다.",
+      "hints": [
+        "마지막 문장에서 동사의 수를 정하기 전에, by which로 시작하는 관계절을 괄호로 묶고 진짜 주어의 핵을 찾아보십시오.",
+        "관계절 안의 명사가 아니라 관계절이 꾸미는 주어 핵의 수가 본동사의 수를 결정합니다."
+      ],
+      "explanation": "다섯 번째 밑줄의 주어 핵은 단수 명사 the exact mechanism이며, by which such small birds detect magnetism은 이를 꾸미는 관계절입니다. 관계절 안의 복수 birds를 걷어내면 주어는 단수이므로 동사는 remains가 옳고, remain은 틀립니다. 나머지 밑줄은 과거분사 수식, 병렬, 본동사로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-008",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["relative-gap", "passive-with-object"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The open-air theaters of ancient Greece achieved acoustics so precise that a whisper on the stage could reach the highest row. The rows of stone seats that the builders [[1:were arranged]] in a steep semicircle reflected sound upward toward the audience. The hard limestone surfaces [[2:filtered]] out low-frequency noise from the crowd while preserving the actors' voices. Sound waves produced on the circular stage [[3:were amplified]] by the very shape of the bowl. Spectators seated far from the performers [[4:heard]] each spoken line clearly without any mechanical aid. Modern engineers who study these ruins remain [[5:impressed]] by such ancient mastery.",
+      "answer": 1,
+      "correction": "arranged",
+      "underlineUnits": ["u03", "u03", "u03", "u01", "u04"],
+      "rationales": [
+        "관계절 that the builders ___ in a steep semicircle에서 that은 목적어 seats를 가리키고 주어는 the builders입니다. 건축가들이 좌석을 '배치한' 능동 관계이므로 arranged로 고쳐야 하며, were arranged는 틀립니다.",
+        "surfaces가 소음을 '걸러내는' 주체이고 뒤에 목적어 low-frequency noise가 있으므로 능동 filtered가 옳습니다.",
+        "음파가 그릇 모양에 의해 '증폭되는' 대상이므로 수동태 were amplified가 옳습니다. 앞의 produced는 waves를 수식하는 분사입니다.",
+        "seated far from the performers는 Spectators를 수식하는 분사이고, 주어를 받는 본동사가 필요하므로 heard가 옳습니다.",
+        "engineers가 감정을 '느끼는' 쪽이고 remain의 보어 자리이므로 과거분사 impressed가 옳습니다."
+      ],
+      "gist": "고대 그리스 극장은 좌석 배치와 재질, 무대 형태로 무대 위 속삭임까지 관객에게 전달했습니다.",
+      "hints": [
+        "첫 번째 밑줄이 들어 있는 관계절에서, 관계대명사 that이 무엇을 대신하는지와 그 절의 주어가 누구인지 확인해 보십시오.",
+        "관계절에서 목적어가 관계대명사로 빠져나가면, 남은 주어가 동작을 하는 능동태가 됩니다."
+      ],
+      "explanation": "첫 번째 밑줄은 관계절 that the builders ___ in a steep semicircle 안에 있습니다. 관계대명사 that이 목적어 the seats를 대신하고 주어는 the builders이므로, 건축가들이 좌석을 배치했다는 능동 관계입니다. 따라서 수동태 were arranged는 틀리고 능동 arranged가 옳습니다. 나머지 밑줄은 능동, 정상 수동태, 본동사, 감정 분사 보어로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-009",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The octopus ranks among the most remarkable masters of disguise in the entire animal kingdom. Special cells in its skin, [[1:filled]] with colored pigment, expand or contract within milliseconds. The range of patterns that a single octopus can generate [[2:rivals]] the palette of a skilled painter. When a shark passes overhead, the animal instantly copies the ocean floor and [[3:vanishes]] against the background. Biologists who study this behavior find the speed of each transformation [[4:amazed]] whenever they film it in the wild. The disguise [[5:controlled]] entirely by the creature's nervous system functions even in near-total darkness.",
+      "answer": 4,
+      "correction": "amazing",
+      "underlineUnits": ["u04", "u02", "u05", "u04", "u04"],
+      "rationales": [
+        "Special cells를 수식하는 과거분사로, 세포가 색소로 '채워지는' 수동 관계이므로 filled가 옳습니다.",
+        "주어 핵은 단수 The range이고 of patterns that a single octopus can generate는 수식어이므로, 단수 동사 rivals가 옳습니다. 복수 patterns에 끌리면 안 됩니다.",
+        "등위접속사 and로 copies와 vanishes가 병렬을 이루며, 둘 다 단수 주어 the animal에 호응하므로 vanishes가 옳습니다.",
+        "감정동사 amaze의 유발 대상이 the speed이고 속도가 놀라움을 '일으키는' 관계이므로 amazing으로 고쳐야 합니다. amazed는 감정을 '느끼는' 쪽에 쓰므로 무생물 주어에는 맞지 않습니다.",
+        "The disguise를 수식하는 과거분사로, 위장이 신경계에 의해 '통제되는' 수동 관계이며 문장의 본동사는 functions이므로 controlled가 옳습니다."
+      ],
+      "gist": "문어는 피부 세포로 순식간에 주변과 똑같이 위장하는 뛰어난 변장의 달인입니다.",
+      "hints": [
+        "네 번째 밑줄에서, 그 대상이 감정을 '일으키는' 쪽인지 '느끼는' 쪽인지 판단해 보십시오.",
+        "감정동사는 감정을 유발하면 -ing, 감정을 느끼는 대상에는 과거분사를 씁니다."
+      ],
+      "explanation": "네 번째 밑줄은 find A B(5형식)의 보어 자리로, 목적어 the speed of each transformation이 놀라움을 '일으키는' 쪽입니다. 감정을 유발하면 현재분사를 쓰므로 amazing이 옳고, 감정을 느끼는 쪽에 쓰는 amazed는 무생물 주어와 맞지 않아 틀립니다. 나머지 밑줄은 과거분사 수식, 단수 수일치, 병렬, 과거분사 수식으로 모두 옳습니다."
+    },
+    {
+      "id": "mx1-ps-010",
+      "unitId": "u05",
+      "conceptId": "u05-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["prep-gerund", "distant-parallel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The invention of the printing press in the fifteenth century transformed European society more deeply than almost any technology before it. Books, once copied slowly by hand, could suddenly be produced in huge quantities and [[1:sold]] at prices ordinary families could afford. This flood of affordable texts encouraged more citizens to learn to read and [[2:to question]] the authorities who had long controlled knowledge. Printers competed by making their editions more readable and [[3:to correct]] the errors that generations of scribes had introduced. Ideas that once circulated only inside monasteries [[4:spread]] rapidly across national borders. The revolution [[5:set]] in motion by movable type still shapes how we share information today.",
+      "answer": 3,
+      "correction": "correcting",
+      "underlineUnits": ["u05", "u05", "u05", "u01", "u04"],
+      "rationales": [
+        "조동사 be를 공유하는 수동태 병렬로, be produced와 (be) sold가 대응하므로 과거분사 sold가 옳습니다.",
+        "encouraged가 이끄는 to부정사 병렬에서 to learn to read와 to question the authorities가 대응하므로 to question이 옳습니다.",
+        "전치사 by의 목적어로 앞의 making과 병렬을 이루어야 하므로, to correct는 틀리며 동명사 correcting으로 고쳐야 합니다.",
+        "that once circulated는 관계절이고 주어 Ideas를 받는 본동사가 필요하므로, 과거 시제 본동사 spread가 옳습니다.",
+        "문장의 본동사는 shapes이고, set in motion by movable type는 The revolution을 수식하는 과거분사구이므로 set이 옳습니다. 본동사로 착각하기 쉬운 미끼입니다."
+      ],
+      "gist": "인쇄기의 발명은 값싼 책을 대량 보급해 문해력과 지식의 확산을 이끌었습니다.",
+      "hints": [
+        "세 번째 밑줄이 어떤 전치사의 목적어로 무엇과 나란히 연결되는지 확인해 보십시오.",
+        "전치사의 목적어로 여러 요소가 and로 연결되면, 모두 같은 동명사 형태여야 합니다."
+      ],
+      "explanation": "세 번째 밑줄은 전치사 by의 목적어 자리로, 앞의 동명사 making their editions more readable와 병렬을 이루어야 합니다. 따라서 to correct는 병렬을 깨뜨리므로 틀리고, 동명사 correcting으로 고쳐야 합니다. 나머지 밑줄은 조동사 공유 수동 병렬, to부정사 병렬, 본동사, 명사 수식 분사구로 모두 옳습니다."
+    }
+  ]
+}

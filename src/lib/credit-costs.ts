@@ -30,10 +30,16 @@ export const CREDIT_COSTS = {
   // Webtoon
   WEBTOON_IMAGE: 5,            // 일반(STANDARD) — Gemini nano-banana-2 로 9:16 웹툰 이미지
   WEBTOON_IMAGE_PREMIUM: 10,   // 프리미엄(PREMIUM) — GPT Image 2 로 9:16 웹툰 이미지
+  WEBTOON_EXAM_DOWNLOAD: 3,     // 검수 완료 기출 웹툰 다운로드 — 직접 생성 대비 절반 수준
 
   // Exam report (학생 시험 리포트)
   EXAM_ANALYSIS: 1,            // 시험지 문항 분석 — 문항당 단가 (최소 15, costOverride 로 청구. 구조화(OCR/vision)는 무료)
   EXAM_STUDENT_REPORT: 5,      // 학생 1명 상담 리포트 생성 (수치는 서버 결정론, 내러티브만 AI)
+
+  // 자체 시험지 배포·응시 (26-07-09 대개편) — 과금 원칙: 모델 × 실호출 수.
+  // 할당·응시·결정론 채점·이력 시각화는 AI 0콜 → 전부 무과금(상수 자체가 없음).
+  EXAM_ANALYSIS_BOOST: 1,      // 자체 시험지 AI 심층분석 보강 — 문항당 단가(텍스트 배치 분석, vision 프로브 없어 최소 문항수 floor 없음)
+  EXAM_TREND_ANALYSIS: 5,      // 학생 1명 AI 추세변화 분석 — 프리미엄 내러티브 1콜(EXAM_STUDENT_REPORT 동급)
 } as const;
 
 export type OperationType = keyof typeof CREDIT_COSTS;
@@ -56,8 +62,11 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   PASSAGE_VARIANT: "AI 지문 변형 (전체)",
   WEBTOON_IMAGE: "웹툰 이미지 생성 (일반)",
   WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
+  WEBTOON_EXAM_DOWNLOAD: "기출 웹툰 다운로드",
   EXAM_ANALYSIS: "시험지 문항 분석",
   EXAM_STUDENT_REPORT: "학생 시험 리포트",
+  EXAM_ANALYSIS_BOOST: "AI 심층분석 보강",
+  EXAM_TREND_ANALYSIS: "AI 추세변화 분석",
 };
 
 // Top-up pricing tiers (KRW per credit pack). expiryDays = credit validity from

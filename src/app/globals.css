@@ -2310,3 +2310,37 @@ body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; 
 .animate-red-glow {
   animation: red-glow-blink 1.2s ease-in-out infinite;
 }
+
+/* ── 강사면 어법 마크업 렌더(밑줄·번호·빈칸) ─────────────────────────────────
+   MarkupText(.gd-u/.gd-u-num/.gd-blank)는 학생 앱 gd.css(.gd-app 스코프)에만
+   스타일이 있어 디렉터 화면(문항 상세 모달 등)에서는 무스타일로 밀착 렌더된다.
+   디렉터 소비처는 래퍼에 .teacher-markup 을 붙여 이 블록을 쓴다. */
+.teacher-markup .gd-u {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  margin: 0 2px;
+}
+.teacher-markup .gd-u-num {
+  font-weight: 700;
+  margin-right: 3px;
+  color: #1d4ed8; /* blue-700 */
+}
+.teacher-markup .gd-u[data-state="correct"] {
+  background: #ecfdf5; /* emerald-50 */
+  text-decoration-color: #10b981;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.teacher-markup .gd-u[data-state="wrong"] {
+  background: #fff1f2; /* rose-50 */
+  text-decoration-color: #f43f5e;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.teacher-markup .gd-blank {
+  display: inline-block;
+  min-width: 3.5rem;
+  border-bottom: 1.5px solid #94a3b8;
+  margin: 0 3px;
+}

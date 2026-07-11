@@ -1,0 +1,822 @@
+{
+  "unitId": "u06",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u06-c1-ch-001",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "no-antecedent"],
+      "stem": "{{blank}} the study revealed changed our view of sleep.",
+      "options": ["What", "That"],
+      "answer": 0,
+      "translation": "그 연구가 밝혀낸 것이 수면에 대한 우리의 관점을 바꾸었습니다.",
+      "hints": [
+        "빈칸 앞에 수식을 받을 명사(선행사)가 있는지부터 확인해 보십시오.",
+        "선행사가 없는 자리에서는 선행사를 스스로 포함하는 관계사가 명사절을 만들어 주어 자리를 채웁니다."
+      ],
+      "explanation": "빈칸 앞에는 선행사가 될 명사가 전혀 없고, 관계사가 이끄는 절 전체가 문장의 주어 자리를 차지합니다. revealed는 목적어가 필요한 타동사인데 그 자리가 비어 있으므로, 선행사를 스스로 포함해 빈자리를 채우는 What이 옳습니다. That은 뒤에 완전한 절이 와야 하므로 목적어가 결손된 이 절을 이끌 수 없습니다."
+    },
+    {
+      "id": "u06-c1-ch-002",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "indefinite-antecedent"],
+      "stem": "Everything {{blank}} the volunteers collected reached the shelter safely.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "자원봉사자들이 모은 모든 것이 무사히 보호소에 도착했습니다.",
+      "hints": [
+        "'~것'이라는 해석에 기대지 말고, 빈칸 바로 앞에 수식을 받을 명사가 실재하는지 보십시오.",
+        "선행사를 이미 포함한 관계사는 명사 뒤에 다시 설 수 없습니다."
+      ],
+      "explanation": "빈칸 앞의 대명사 Everything이 선행사이고, collected의 목적어 자리가 비어 그 빈자리로 선행사가 들어가 해석됩니다. 선행사가 실재하므로 관계대명사 that이 옳습니다. '~것'으로 해석된다는 이유로 what을 고르면 선행사를 이미 포함한 what이 명사 뒤에 겹쳐 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-003",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "no-antecedent"],
+      "stem": "The committee praised {{blank}} the interns had designed for the fair.",
+      "options": ["what", "that"],
+      "answer": 0,
+      "translation": "위원회는 인턴들이 박람회를 위해 설계한 것을 칭찬했습니다.",
+      "hints": [
+        "빈칸 앞이 명사가 아니라 동사라는 점에 주목하고, 수식을 받을 선행사가 있는지 보십시오.",
+        "선행사가 없으면 명사절을 만들어 목적어 자리를 통째로 채우는 관계사가 필요합니다."
+      ],
+      "explanation": "빈칸 앞은 타동사 praised뿐이어서 수식을 받을 선행사가 없고, 빈칸 이하의 절 전체가 praised의 목적어 자리를 채워야 합니다. designed의 목적어도 비어 있으므로 선행사를 포함하는 what이 옳습니다. that은 선행사를 수식하거나 완전한 절을 이끌어야 하므로 이 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c1-ch-004",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what"],
+      "stem": "The mural {{blank}} the students painted brightened the old station.",
+      "options": ["what", "which"],
+      "answer": 1,
+      "translation": "학생들이 그린 그 벽화가 낡은 역사를 환하게 만들었습니다.",
+      "hints": [
+        "빈칸 바로 앞의 명사가 뒤 절의 수식을 받는 선행사인지 확인해 보십시오.",
+        "선행사가 실재하는 자리에는 선행사를 또 포함하는 관계사를 겹쳐 쓸 수 없습니다."
+      ],
+      "explanation": "빈칸 앞의 The mural이 선행사이고, painted의 목적어 자리가 비어 선행사가 그 빈자리로 들어가 해석됩니다. 선행사가 실재하므로 관계대명사 which가 옳습니다. what은 선행사를 스스로 포함하는 말이라 명사 바로 뒤에 겹치면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-005",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "intervening-pp"],
+      "stem": "The instrument in the corner {{blank}} the composer once owned still works.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "구석에 놓인, 그 작곡가가 한때 소유했던 악기는 여전히 작동합니다.",
+      "hints": [
+        "빈칸 바로 앞의 전치사구를 걷어 내고, 그 앞에 진짜 선행사가 있는지 확인해 보십시오.",
+        "선행사는 관계사 바로 앞이 아니라 수식어 너머에 있을 수 있습니다 — 선행사가 실재하면 선행사를 포함하는 관계사는 쓸 수 없습니다."
+      ],
+      "explanation": "전치사구 in the corner를 괄호로 묶으면 선행사 The instrument가 드러나고, owned의 목적어 자리가 비어 선행사가 그 빈자리로 들어갑니다. 선행사가 실재하므로 관계대명사 that이 옳습니다. 선행사가 멀리 있어 안 보인다는 이유로 what을 고르면 선행사와 what이 겹치는 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-006",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "no-antecedent", "clause-subject"],
+      "stem": "{{blank}} the settlers left behind now fills three halls of the museum.",
+      "options": ["Which", "What"],
+      "answer": 1,
+      "translation": "정착민들이 남기고 간 것이 지금 그 박물관의 세 전시실을 채우고 있습니다.",
+      "hints": [
+        "문장 맨 앞이므로 빈칸 앞에는 아무것도 없습니다 — 선행사가 존재할 수 있는 자리인지 보십시오.",
+        "선행사 없이 명사절을 만들어 문장의 주어 자리를 채우려면 선행사를 스스로 포함한 관계사가 필요합니다."
+      ],
+      "explanation": "빈칸이 문장 맨 앞이라 선행사가 될 명사가 없고, 빈칸이 이끄는 절 전체가 동사 fills의 주어입니다. left behind의 목적어가 결손되어 있으므로 선행사를 포함해 그 빈자리를 채우는 What이 옳습니다. Which는 앞에 선행사가 있어야 하는 관계대명사라 이 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c1-ch-007",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what"],
+      "stem": "The few tools {{blank}} the divers salvaged from the wreck are displayed downtown.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "잠수부들이 난파선에서 건져 올린 몇 안 되는 도구들이 시내에 전시되어 있습니다.",
+      "hints": [
+        "빈칸 앞의 명사구가 뒤 절의 수식을 받는 선행사인지 확인해 보십시오.",
+        "우리말로 '~한 것'이라 자연스럽게 옮겨져도, 선행사가 실재하면 선행사 포함 관계사는 설 수 없습니다."
+      ],
+      "explanation": "빈칸 앞의 The few tools가 선행사이고, salvaged의 목적어 자리가 비어 선행사가 그 빈자리로 들어가 해석됩니다. 선행사가 실재하므로 관계대명사 that이 옳습니다. '건져 올린 것'이라는 해석에 끌려 what을 고르면 선행사와 what이 겹치는 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-008",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "no-antecedent"],
+      "stem": "The foundation will fund {{blank}} promises the greatest long-term benefit to rural schools.",
+      "options": ["what", "that"],
+      "answer": 0,
+      "translation": "그 재단은 농촌 학교에 가장 큰 장기적 이익을 약속하는 것에 기금을 지원할 것입니다.",
+      "hints": [
+        "빈칸 앞이 명사가 아니라 동사라는 점에 주목하십시오 — 선행사가 없는 자리입니다.",
+        "뒤 절에 주어가 비어 있다면, 그 빈자리를 채우면서 명사절도 만드는 관계사가 필요합니다."
+      ],
+      "explanation": "빈칸 앞은 타동사 fund뿐이어서 선행사가 없고, 빈칸 이하가 fund의 목적어인 명사절이 되어야 합니다. 뒤 절은 promises의 주어가 비어 있으므로, 선행사를 포함하며 주어 빈자리를 채우는 what이 옳습니다. that은 선행사도 없고 완전한 절도 아닌 이 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c1-ch-009",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "intervening-pp"],
+      "stem": "The formula for measuring soil health {{blank}} the agency published in 2019 has been adopted by farms across the region.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "그 기관이 2019년에 발표한 토양 건강 측정 공식은 지역 전역의 농장들에 채택되어 왔습니다.",
+      "hints": [
+        "빈칸 바로 앞의 전치사구를 괄호로 묶고, 그 앞에서 수식을 받을 진짜 선행사를 찾아보십시오.",
+        "선행사가 수식어 너머에 실재한다면, 선행사를 스스로 포함하는 관계사는 겹쳐 쓸 수 없습니다."
+      ],
+      "explanation": "for measuring soil health는 선행사를 가리는 전치사구이고, 진짜 선행사는 그 앞의 The formula입니다. published의 목적어 자리가 비어 선행사가 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. 선행사가 멀어 보이지 않는다고 what을 고르면 선행사 formula와 what이 겹치는 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-010",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "no-antecedent", "clause-subject"],
+      "stem": "{{blank}} the villagers managed to preserve during the long occupation eventually became the core of the national archive.",
+      "options": ["That", "What"],
+      "answer": 1,
+      "translation": "긴 점령기 동안 마을 사람들이 어렵게 지켜 낸 것이 마침내 국립 기록관의 핵심 소장품이 되었습니다.",
+      "hints": [
+        "문장 맨 앞 자리입니다 — 선행사가 없다는 사실과 preserve의 목적어 유무를 함께 확인해 보십시오.",
+        "선행사 없이 목적어 결손을 채우며 주어 명사절을 만드는 관계사만 이 자리에 설 수 있습니다."
+      ],
+      "explanation": "빈칸 앞에 선행사가 없고, 빈칸이 이끄는 절이 동사 became의 주어 명사절이 됩니다. preserve는 타동사인데 목적어가 비어 있으므로, 선행사를 포함해 그 빈자리를 채우는 What이 옳습니다. That은 완전한 절만 이끌 수 있어 목적어가 결손된 이 절과는 맞지 않습니다."
+    },
+    {
+      "id": "u06-c1-ch-011",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "intervening-pp"],
+      "stem": "The single document among the thousands of pages recovered from the archive {{blank}} historians still cite is a short letter from 1871.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "그 기록보관소에서 회수된 수천 장의 문서 가운데 역사가들이 지금도 인용하는 단 하나의 문서는 1871년의 짧은 편지입니다.",
+      "hints": [
+        "빈칸 앞의 among 전치사구와 분사구를 모두 걷어 내고, 문장 맨 앞에서 진짜 선행사를 찾아보십시오.",
+        "선행사가 여러 겹의 수식어 뒤에 숨어 있어도, 실재하기만 하면 선행사 포함 관계사는 쓸 수 없습니다."
+      ],
+      "explanation": "among the thousands of pages와 recovered from the archive는 모두 수식어이고, 진짜 선행사는 문두의 The single document입니다. cite의 목적어 자리가 비어 선행사가 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. 수식어 두 겹에 가려 선행사가 없다고 판단해 what을 고르면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c1-ch-012",
+      "unitId": "u06",
+      "conceptId": "u06-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "no-antecedent", "inserted-clause"],
+      "stem": "The new exhibition invites visitors to reconsider {{blank}} earlier generations, often without realizing it, had thrown away as worthless.",
+      "options": ["that", "what"],
+      "answer": 1,
+      "translation": "그 새 전시는 이전 세대들이 흔히 자신도 모르게 쓸모없다고 여겨 버렸던 것을 다시 생각해 보도록 관람객을 초대합니다.",
+      "hints": [
+        "빈칸 앞이 동사 reconsider라는 점, 그리고 콤마로 삽입된 구를 걷어 낸 뒤 절의 목적어 유무를 확인해 보십시오.",
+        "선행사가 없고 뒤 절에 목적어 결손이 있다면, 그 둘을 동시에 해결하는 관계사가 필요합니다."
+      ],
+      "explanation": "빈칸 앞은 타동사 reconsider뿐이라 선행사가 없고, 빈칸 이하가 그 목적어인 명사절이 되어야 합니다. 삽입구 often without realizing it을 걷어 내면 had thrown away의 목적어가 비어 있음이 드러나므로, 선행사를 포함해 빈자리를 채우는 what이 옳습니다. that은 선행사가 없는 이 자리에서 불완전한 절을 이끌 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-001",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "conj-that"],
+      "stem": "The survey shows {{blank}} most commuters prefer quiet carriages.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "그 조사는 대부분의 통근자가 조용한 객차를 선호한다는 것을 보여 줍니다.",
+      "hints": [
+        "빈칸 뒤 절의 주어·동사·목적어를 하나씩 세어 보십시오.",
+        "빠진 성분이 하나도 없는 완전한 절 앞에는 접속사가 섭니다."
+      ],
+      "explanation": "빈칸 뒤는 commuters(주어) prefer(동사) carriages(목적어)로 성분이 모두 갖추어진 완전한 절입니다. 완전한 절을 이끌어 shows의 목적어 명사절을 만드는 접속사 that이 옳습니다. what은 절 안의 빈자리를 채우는 말이므로 결손이 없는 이 절에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-002",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "object-gap"],
+      "stem": "Nobody at the station could explain {{blank}} the strange signal meant.",
+      "options": ["that", "what"],
+      "answer": 1,
+      "translation": "역에 있던 누구도 그 이상한 신호가 무엇을 의미하는지 설명하지 못했습니다.",
+      "hints": [
+        "explain이라는 동사만 보고 찍지 말고, 빈칸 뒤 절에서 meant의 목적어가 있는지 세어 보십시오.",
+        "뒤 절의 타동사에 목적어가 비어 있으면 그 빈자리를 채우는 관계사를 골라야 합니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the strange signal(주어) meant(동사)까지만 있고 타동사 meant의 목적어가 비어 있는 불완전한 절입니다. 그 빈자리를 채우며 explain의 목적어 명사절을 만드는 what이 옳습니다. explain 뒤라는 이유만으로 완전한 절용 접속사 that을 고르면 목적어 결손을 설명할 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-003",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "object-gap"],
+      "stem": "The guide described {{blank}} the pilgrims would see at dawn.",
+      "options": ["what", "that"],
+      "answer": 0,
+      "translation": "안내인은 순례자들이 동틀 녘에 보게 될 것을 미리 설명해 주었습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 see의 목적어가 보이는지 확인해 보십시오.",
+        "목적어가 한 자리 비어 있는 불완전한 절 앞에는 그 빈자리를 스스로 채우는 관계사가 섭니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the pilgrims(주어) would see(동사)까지만 있고 타동사 see의 목적어가 결손된 불완전한 절입니다. 그 빈자리를 채우며 described의 목적어 명사절을 만드는 what이 옳습니다. that은 완전한 절 앞에만 서므로 이 자리에 맞지 않습니다."
+    },
+    {
+      "id": "u06-c2-ch-004",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "conj-that"],
+      "stem": "Early results suggest {{blank}} the vaccine protects older patients as well.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "초기 결과는 그 백신이 고령 환자들도 보호한다는 것을 시사합니다.",
+      "hints": [
+        "빈칸 뒤 절에서 protects의 목적어가 실제로 있는지 확인해 보십시오.",
+        "주어·동사·목적어가 다 갖추어진 절이라면 빈자리를 채우는 관계사가 아니라 접속사가 필요합니다."
+      ],
+      "explanation": "빈칸 뒤는 the vaccine(주어) protects(동사) older patients(목적어)로 결손이 없는 완전한 절입니다. 완전한 절을 이끌어 suggest의 목적어 명사절을 만드는 접속사 that이 옳습니다. what을 고르면 채울 빈자리가 없어 비문이 됩니다."
+    },
+    {
+      "id": "u06-c2-ch-005",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "object-gap", "clause-subject"],
+      "stem": "{{blank}} the committee unveiled at the press briefing reassured most of the staff.",
+      "options": ["What", "That"],
+      "answer": 0,
+      "translation": "위원회가 기자 브리핑에서 공개한 것이 직원 대부분을 안심시켰습니다.",
+      "hints": [
+        "빈칸이 이끄는 절이 문장 전체의 주어가 됩니다 — unveiled의 목적어가 있는지 세어 보십시오.",
+        "뒤 절에 목적어 결손이 있으면 완전한 절용 접속사는 설 수 없습니다."
+      ],
+      "explanation": "빈칸이 이끄는 절 전체가 동사 reassured의 주어 명사절입니다. 절 안에서 타동사 unveiled의 목적어가 비어 있으므로, 그 빈자리를 채우는 What이 옳습니다. That은 완전한 절만 이끌기 때문에 목적어가 결손된 이 절 앞에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-006",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "conj-that", "inserted-clause"],
+      "stem": "The report concluded {{blank}}, despite early doubts, the bridge remained structurally sound.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "그 보고서는 초기의 의구심에도 불구하고 그 다리가 구조적으로 건전한 상태를 유지했다고 결론지었습니다.",
+      "hints": [
+        "콤마로 삽입된 despite 구를 걷어 내고 남는 절의 성분을 세어 보십시오.",
+        "삽입구를 제외한 절에 빠진 성분이 없다면 완전한 절을 이끄는 접속사가 필요합니다."
+      ],
+      "explanation": "삽입구 despite early doubts를 걷어 내면 the bridge(주어) remained(동사) structurally sound(보어)로 완전한 절이 남습니다. 완전한 절을 이끌어 concluded의 목적어 명사절을 만드는 접속사 that이 옳습니다. what은 절 안의 빈자리를 전제로 하므로 결손이 없는 이 절에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-007",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "prep-what"],
+      "stem": "Long-term motivation often depends on {{blank}} students believe about their own ability.",
+      "options": ["what", "that"],
+      "answer": 0,
+      "translation": "장기적인 동기는 흔히 학생들이 자신의 능력에 관해 무엇을 믿는가에 달려 있습니다.",
+      "hints": [
+        "빈칸 바로 앞에 전치사 on이 있다는 점부터 확인해 보십시오.",
+        "전치사 바로 뒤의 명사절 자리에는 완전한 절을 이끄는 접속사가 설 수 없습니다."
+      ],
+      "explanation": "빈칸은 전치사 on의 목적어인 명사절 자리이고, 절 안에서도 believe의 목적어가 비어 있습니다. 전치사 뒤에 서면서 빈자리를 채우는 what이 옳습니다. 접속사 that은 전치사 바로 뒤에 설 수 없으므로 이 자리에서는 처음부터 배제됩니다."
+    },
+    {
+      "id": "u06-c2-ch-008",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "conj-that"],
+      "stem": "Astronomers confirmed {{blank}} the comet would soon vanish beyond the orbit of Mars.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "천문학자들은 그 혜성이 곧 화성 궤도 너머로 사라지리라는 것을 확인했습니다.",
+      "hints": [
+        "빈칸 뒤 절의 동사 뒤에 목적어가 보이지 않아도 절이 완결되는지 따져 보십시오.",
+        "전치사구는 성분 결손이 아닙니다 — 자동사로 완결된 절 앞에는 접속사가 섭니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the comet(주어) would vanish(동사)에 부사 soon과 전치사구 beyond the orbit of Mars가 이어진 완전한 절입니다. vanish는 목적어를 취하지 않는 자동사이므로 결손이 없고, 완전한 절을 이끌어 confirmed의 목적어 명사절을 만드는 접속사 that이 옳습니다. what은 절 안의 빈자리를 전제로 하므로 자동사와 전치사구로 완결된 이 절에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-009",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "object-gap", "clause-subject"],
+      "stem": "{{blank}} the researchers had quietly assumed about family income turned out to distort nearly every conclusion in the report.",
+      "options": ["That", "What"],
+      "answer": 1,
+      "translation": "연구자들이 가계 소득에 관해 은연중에 가정해 온 것이 보고서의 거의 모든 결론을 왜곡한 것으로 드러났습니다.",
+      "hints": [
+        "문두의 절이 문장 전체의 주어입니다 — assumed의 목적어가 절 안에 있는지 세어 보십시오.",
+        "about 전치사구는 목적어가 아닙니다 — 타동사의 목적어 결손이 확인되면 빈자리를 채우는 관계사를 고릅니다."
+      ],
+      "explanation": "빈칸이 이끄는 절이 동사 turned out의 주어 명사절입니다. about family income은 전치사구일 뿐이어서 타동사 assumed의 목적어는 여전히 비어 있습니다. 그 빈자리를 채우는 What이 옳고, 완전한 절만 이끄는 That은 이 결손 앞에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c2-ch-010",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "conj-that"],
+      "stem": "The commission finally admitted {{blank}} the safety warnings issued by junior engineers had been ignored for over a decade.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "위원회는 하급 기술자들이 제기한 안전 경고가 십 년 넘게 묵살되어 왔다는 것을 마침내 인정했습니다.",
+      "hints": [
+        "issued by junior engineers는 명사를 꾸미는 분사구입니다 — 걷어 내고 절의 뼈대를 세어 보십시오.",
+        "수동태 절은 목적어가 없어도 완전합니다 — 결손이 없으면 접속사를 고릅니다."
+      ],
+      "explanation": "분사구 issued by junior engineers를 걷어 내면 the safety warnings(주어) had been ignored(수동태 동사)라는 뼈대가 남습니다. 수동태는 목적어 없이 완전하므로 이 절에는 결손이 없고, 완전한 절을 이끄는 접속사 that이 옳습니다. 목적어가 안 보인다는 인상만으로 what을 고르면 수동태의 완전성을 놓친 것입니다."
+    },
+    {
+      "id": "u06-c2-ch-011",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "prep-what"],
+      "stem": "The value of a forest cannot be captured by {{blank}} a timber market is willing to pay for its trees.",
+      "options": ["that", "what"],
+      "answer": 1,
+      "translation": "숲의 가치는 목재 시장이 그 나무들에 기꺼이 지불하려는 금액만으로는 담아낼 수 없습니다.",
+      "hints": [
+        "빈칸 바로 앞의 전치사 by를 확인하고, pay 뒤에 무엇이 빠져 있는지 세어 보십시오.",
+        "전치사 뒤 명사절 자리이면서 절 안에 결손까지 있다면 답은 하나로 좁혀집니다."
+      ],
+      "explanation": "빈칸은 전치사 by의 목적어인 명사절 자리이고, 절 안에서도 pay의 목적어(지불 금액)가 비어 있습니다. 전치사 뒤에 서면서 그 빈자리를 채우는 what이 옳습니다. 접속사 that은 전치사 바로 뒤에 설 수 없고 완전한 절만 이끌므로 두 가지 이유로 배제됩니다."
+    },
+    {
+      "id": "u06-c2-ch-012",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "conj-that", "intervening-clause"],
+      "stem": "The study revealed {{blank}} children who grow up around several languages switch attention more flexibly than their peers.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "그 연구는 여러 언어에 둘러싸여 자라는 아이들이 또래보다 더 유연하게 주의를 전환한다는 것을 밝혀냈습니다.",
+      "hints": [
+        "who grow up around several languages는 주어를 꾸미는 관계절입니다 — 괄호로 묶고 큰 절의 성분을 세어 보십시오.",
+        "수식어를 걷어 낸 절에 주어·동사·목적어가 다 있으면 완전한 절용 접속사를 고릅니다."
+      ],
+      "explanation": "관계절 who grow up around several languages를 괄호로 묶으면 children(주어) switch(동사) attention(목적어)이라는 완전한 뼈대가 남습니다. 결손이 없으므로 완전한 절을 이끌어 revealed의 목적어 명사절을 만드는 접속사 that이 옳습니다. 절 안의 관계절 때문에 복잡해 보여도 큰 절의 성분에는 빈자리가 없으므로 what은 설 수 없습니다."
+    },
+    {
+      "id": "u06-c3-ch-001",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comma-which", "clause-antecedent"],
+      "stem": "The factory reduced its night shifts, {{blank}} pleased the local residents.",
+      "options": ["which", "that"],
+      "answer": 0,
+      "translation": "그 공장은 야간 교대 근무를 줄였고, 이는 지역 주민들을 기쁘게 했습니다.",
+      "hints": [
+        "빈칸 바로 앞에 콤마가 있다는 점부터 확인해 보십시오.",
+        "콤마 뒤에서 앞 내용을 이어받는 계속적 용법에 설 수 없는 관계사가 있습니다."
+      ],
+      "explanation": "빈칸 앞에 콤마가 있는 계속적 용법 자리이고, 관계사는 앞 절 전체(야간 근무를 줄인 일)를 선행사로 받아 pleased의 주어가 됩니다. 콤마 뒤 계속적 용법에는 which가 옳습니다. that은 콤마 뒤 계속적 용법에 설 수 없으므로 배제됩니다."
+    },
+    {
+      "id": "u06-c3-ch-002",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comma-which"],
+      "stem": "The orchestra performed a forgotten symphony, {{blank}} the critics praised warmly.",
+      "options": ["that", "which"],
+      "answer": 1,
+      "translation": "그 오케스트라는 잊혔던 교향곡을 연주했고, 평론가들은 그 곡을 따뜻하게 호평했습니다.",
+      "hints": [
+        "빈칸이 콤마 뒤 관계사 자리라는 점을 먼저 확인해 보십시오.",
+        "계속적 용법 자리에서는 후보 하나가 기계적으로 탈락합니다."
+      ],
+      "explanation": "빈칸은 콤마 뒤 계속적 용법 자리로, 선행사 a forgotten symphony를 이어받아 praised의 목적어 빈자리를 채웁니다. 콤마 뒤에는 which가 옳습니다. that은 계속적 용법에 쓸 수 없으므로, 절의 구조가 맞아 보여도 콤마가 보이는 순간 탈락시켜야 합니다."
+    },
+    {
+      "id": "u06-c3-ch-003",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comma-which", "clause-antecedent", "that-vs-what"],
+      "stem": "Prices fell for three straight months, {{blank}} no economist had predicted.",
+      "options": ["what", "which"],
+      "answer": 1,
+      "translation": "물가가 석 달 연속 하락했는데, 이는 어떤 경제학자도 예측하지 못한 일이었습니다.",
+      "hints": [
+        "'~한 것'이라는 해석에 끌리기 전에, 빈칸 앞의 콤마를 확인해 보십시오.",
+        "선행사를 스스로 포함하는 관계사는 콤마 뒤에서 앞 내용을 받는 자리에 설 수 없습니다."
+      ],
+      "explanation": "빈칸은 콤마 뒤에서 앞 절 전체(석 달 연속 하락한 일)를 선행사로 받는 계속적 용법 자리입니다. 이 자리에는 which가 옳습니다. '아무도 예측하지 못한 것'으로 해석된다는 이유로 what을 고르면 안 됩니다 — what은 선행사를 스스로 포함하므로 콤마 뒤 계속적 용법에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c3-ch-004",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["comma-which", "clause-antecedent"],
+      "stem": "The team lost its main sponsor, {{blank}} threatened the entire season.",
+      "options": ["which", "that"],
+      "answer": 0,
+      "translation": "그 팀은 주요 후원사를 잃었고, 그 일은 시즌 전체를 위태롭게 했습니다.",
+      "hints": [
+        "빈칸 앞의 콤마와, 관계사가 무엇을 받는지를 함께 확인해 보십시오.",
+        "콤마 뒤 계속적 용법에서 기계적으로 제외해야 하는 관계사를 떠올려 보십시오."
+      ],
+      "explanation": "콤마 뒤에서 앞 절 전체(후원사를 잃은 일)를 선행사로 받아 threatened의 주어 노릇을 하는 계속적 용법 자리입니다. 이 자리에는 which가 옳습니다. that은 콤마 뒤 계속적 용법에 설 수 없으므로 해석해 보기 전에 먼저 제외합니다."
+    },
+    {
+      "id": "u06-c3-ch-005",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["comma-which", "quantifier-of-which"],
+      "stem": "The library holds two thousand manuscripts, most of {{blank}} have never been digitized.",
+      "options": ["that", "which"],
+      "answer": 1,
+      "translation": "그 도서관은 필사본 2천 점을 소장하고 있는데, 그 대부분은 아직 디지털화된 적이 없습니다.",
+      "hints": [
+        "빈칸이 'most of + 관계사' 짝 속에 있고, 그 앞에 콤마가 있다는 점을 확인해 보십시오.",
+        "전치사 of 뒤이자 콤마 뒤인 자리에 설 수 없는 관계사부터 지우십시오."
+      ],
+      "explanation": "빈칸은 콤마 뒤에서 선행사 two thousand manuscripts를 받아 전치사 of의 목적어가 되는 계속적 용법 자리입니다. 이 자리에는 which가 옳습니다. that은 콤마 뒤 계속적 용법에도, 전치사 바로 뒤에도 설 수 없으므로 이중으로 배제됩니다."
+    },
+    {
+      "id": "u06-c3-ch-006",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["comma-which"],
+      "stem": "Their new policy, {{blank}} few managers openly supported, doubled the training budget.",
+      "options": ["which", "that"],
+      "answer": 0,
+      "translation": "경영진 중 공개적으로 지지한 사람이 거의 없던 그들의 새 정책은 교육 예산을 두 배로 늘렸습니다.",
+      "hints": [
+        "빈칸이 콤마 두 개 사이의 삽입 관계절 안에 있다는 구조부터 파악해 보십시오.",
+        "콤마로 삽입되는 계속적 용법에는 설 수 없는 관계사가 있습니다."
+      ],
+      "explanation": "빈칸은 콤마 두 개 사이에 삽입된 계속적 용법의 관계절 자리로, 선행사 Their new policy를 받아 supported의 목적어 빈자리를 채웁니다. 이 자리에는 which가 옳습니다. that은 콤마 뒤 계속적 용법에 쓸 수 없으므로 구조가 아무리 자연스러워 보여도 배제해야 합니다."
+    },
+    {
+      "id": "u06-c3-ch-007",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["comma-which", "clause-antecedent", "that-vs-what"],
+      "stem": "The volcano erupted two days earlier than forecast, {{blank}} forced thousands of tourists to evacuate.",
+      "options": ["which", "what"],
+      "answer": 0,
+      "translation": "그 화산은 예보보다 이틀 일찍 분화했고, 이 일로 수천 명의 관광객이 대피해야 했습니다.",
+      "hints": [
+        "관계사가 받는 것이 특정 명사인지, 앞 절 전체인지 확인해 보십시오.",
+        "앞 절 전체를 받는 콤마 뒤 자리에는 선행사를 포함하는 관계사가 설 수 없습니다."
+      ],
+      "explanation": "빈칸은 콤마 뒤에서 앞 절 전체(예보보다 일찍 분화한 일)를 선행사로 받아 forced의 주어가 되는 계속적 용법 자리입니다. 이 자리에는 which가 옳습니다. '~한 것이 대피하게 만들었다'라는 해석 때문에 what을 고르기 쉽지만, what은 선행사를 스스로 포함하므로 앞 내용을 받는 콤마 뒤 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u06-c3-ch-008",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["comma-which", "person-antecedent"],
+      "stem": "The award went to Dr. Alvarez, {{blank}} had mapped the seabed for thirty years.",
+      "options": ["which", "who"],
+      "answer": 1,
+      "translation": "그 상은 알바레스 박사에게 돌아갔는데, 그는 30년 동안 해저 지도를 만들어 온 인물입니다.",
+      "hints": [
+        "콤마 뒤 계속적 용법에서 선행사가 사람인지 사물인지 확인해 보십시오.",
+        "계속적 용법이라도 선행사의 종류에 따라 관계사가 갈립니다."
+      ],
+      "explanation": "빈칸은 콤마 뒤 계속적 용법 자리이고, 선행사는 사람인 Dr. Alvarez입니다. 사람 선행사를 받아 had mapped의 주어가 되는 관계대명사 who가 옳습니다. which는 사물이나 앞 절 전체를 받을 때 쓰므로 사람 선행사에는 맞지 않습니다."
+    },
+    {
+      "id": "u06-c3-ch-009",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comma-which", "clause-antecedent", "clause-subject"],
+      "stem": "The senator apologized to the striking farmers in person, {{blank}} rare in an age of carefully scripted statements.",
+      "options": ["which was", "which were"],
+      "answer": 0,
+      "translation": "그 상원의원은 파업 중인 농민들에게 직접 사과했는데, 이는 치밀하게 준비된 성명서의 시대에 보기 드문 일이었습니다.",
+      "hints": [
+        "관계사가 받는 선행사가 바로 앞의 복수 명사인지, 앞 절 전체인지부터 확정해 보십시오.",
+        "앞 절 전체를 받는 관계사는 단수로 취급합니다 — 바로 앞 명사의 수에 끌리면 안 됩니다."
+      ],
+      "explanation": "관계사가 받는 것은 farmers가 아니라 앞 절 전체, 즉 상원의원이 직접 사과한 일입니다. 절 전체를 받는 which는 단수 취급하므로 which was가 옳습니다. 바로 앞의 복수 명사 farmers나 뒤의 statements에 끌려 복수 동사를 고르면 수일치 함정에 걸린 것입니다."
+    },
+    {
+      "id": "u06-c3-ch-010",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comma-which", "clause-antecedent", "inserted-clause", "that-vs-what"],
+      "stem": "The islanders gradually abandoned their carefully terraced fields, {{blank}} historians say was inevitable once the old trade routes shifted.",
+      "options": ["what", "which"],
+      "answer": 1,
+      "translation": "섬 주민들은 정성 들여 일군 계단식 밭을 서서히 버렸는데, 역사가들은 옛 교역로가 바뀐 이상 그 일이 불가피했다고 말합니다.",
+      "hints": [
+        "historians say는 삽입절입니다 — 걷어 내고 관계사가 무엇을 받는지 확인해 보십시오.",
+        "콤마 뒤에서 앞 절 전체를 받는 자리에는 선행사를 포함하는 관계사가 설 수 없습니다."
+      ],
+      "explanation": "삽입절 historians say를 걷어 내면 관계사가 was inevitable의 주어로서 앞 절 전체(계단식 밭을 버린 일)를 받는 구조가 드러납니다. 콤마 뒤 계속적 용법이므로 which가 옳습니다. '역사가들이 불가피했다고 말하는 것'이라는 해석에 끌려 what을 고르면, 콤마 뒤에 설 수 없는 what의 성질을 놓친 것입니다."
+    },
+    {
+      "id": "u06-c3-ch-011",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comma-which", "quantifier-of-which"],
+      "stem": "The survey reached four hundred rural clinics, nearly half of {{blank}} had no reliable electricity at the time.",
+      "options": ["them", "which"],
+      "answer": 1,
+      "translation": "그 조사는 농촌 진료소 4백 곳을 대상으로 했는데, 그 가운데 거의 절반은 당시 안정적인 전기가 들어오지 않았습니다.",
+      "hints": [
+        "콤마 뒤의 덩어리가 접속사 없이 새로운 절을 이루고 있는지 확인해 보십시오.",
+        "접속사 없이 두 절을 콤마로만 이을 수는 없습니다 — 두 절을 이어 주는 힘이 있는 말을 골라야 합니다."
+      ],
+      "explanation": "콤마 뒤에 동사 had가 있으므로 이 덩어리는 새로운 절이고, 접속사가 없는 이상 두 절을 이어 줄 관계대명사가 필요합니다. 선행사 four hundred rural clinics를 받아 of의 목적어가 되는 which가 옳습니다. 대명사 them을 쓰면 접속사 없이 절 두 개를 콤마로 이어 붙인 비문이 됩니다."
+    },
+    {
+      "id": "u06-c3-ch-012",
+      "unitId": "u06",
+      "conceptId": "u06-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["comma-which", "clause-antecedent"],
+      "stem": "Several banks quietly withdrew from the coal project, {{blank}} campaigners interpreted as a sign that public pressure was finally working.",
+      "options": ["which", "that"],
+      "answer": 0,
+      "translation": "여러 은행이 조용히 석탄 사업에서 손을 뗐고, 운동가들은 이를 여론의 압박이 마침내 통하고 있다는 신호로 해석했습니다.",
+      "hints": [
+        "빈칸 앞의 콤마와, interpreted의 목적어 자리가 비어 있다는 점을 함께 확인해 보십시오.",
+        "콤마 뒤에서 앞 절 전체를 받아 빈자리를 채울 수 있는 관계사는 하나뿐입니다."
+      ],
+      "explanation": "빈칸은 콤마 뒤에서 앞 절 전체(은행들이 사업에서 물러난 일)를 선행사로 받아 interpreted의 목적어 빈자리를 채우는 계속적 용법 자리입니다. 이 자리에는 which가 옳습니다. that은 콤마 뒤 계속적 용법에 설 수 없으므로 절 구조가 맞더라도 배제합니다."
+    },
+    {
+      "id": "u06-c4-ch-001",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["conj-that", "that-vs-which"],
+      "stem": "The fact {{blank}} bees navigate by sunlight amazed the students.",
+      "options": ["that", "which"],
+      "answer": 0,
+      "translation": "벌이 햇빛으로 길을 찾는다는 사실은 학생들을 놀라게 했습니다.",
+      "hints": [
+        "빈칸 뒤 절의 주어와 동사를 확인하고, 빠진 성분이 있는지 세어 보십시오.",
+        "명사 뒤라도 뒤 절이 완전하면 관계대명사가 아니라 명사의 내용을 풀어 주는 접속사가 섭니다."
+      ],
+      "explanation": "빈칸 뒤는 bees(주어) navigate(자동사)에 전치사구 by sunlight가 이어진 완전한 절입니다. 절이 완전하므로 선행사 The fact의 내용을 풀어 주는 동격의 접속사 that이 옳습니다. which는 절 안에 들어갈 빈자리가 있어야 하는 관계대명사라 결손이 없는 이 절에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c4-ch-002",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "relative-gap"],
+      "stem": "The rumor {{blank}} the singer had quietly denied kept spreading online.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "그 가수가 조용히 부인했던 소문은 온라인에서 계속 퍼져 나갔습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 denied의 목적어가 있는지 세어 보십시오.",
+        "명사 뒤의 절이 불완전하면 선행사가 그 빈자리로 들어가는 관계대명사가 필요합니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the singer(주어) had denied(타동사)까지만 있고 denied의 목적어가 비어 있는 불완전한 절입니다. 선행사 The rumor가 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. what은 선행사를 스스로 포함하는 말이라 명사 The rumor 뒤에 겹치면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c4-ch-003",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["conj-that", "that-vs-what"],
+      "stem": "Researchers welcomed the news {{blank}} the wetland would be protected.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "연구자들은 그 습지가 보호될 것이라는 소식을 반겼습니다.",
+      "hints": [
+        "빈칸 뒤 절이 수동태로 완결되어 있는지 확인해 보십시오.",
+        "명사 뒤의 완전한 절은 그 명사의 내용을 설명하는 동격절입니다 — 접속사가 필요합니다."
+      ],
+      "explanation": "빈칸 뒤는 the wetland(주어) would be protected(수동태 동사)로 결손이 없는 완전한 절입니다. 절이 완전하므로 선행사 the news의 내용을 풀어 주는 동격의 접속사 that이 옳습니다. what은 절 안의 빈자리를 채우는 말이므로 완전한 절 앞에는 설 수 없습니다."
+    },
+    {
+      "id": "u06-c4-ch-004",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["that-vs-what", "relative-gap"],
+      "stem": "The excuse {{blank}} the driver offered convinced nobody at the hearing.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "그 운전자가 내놓은 변명은 청문회에서 아무도 납득시키지 못했습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 offered의 목적어가 보이는지 확인해 보십시오.",
+        "명사 뒤 절에 목적어 결손이 있으면 선행사를 빈자리로 보내는 관계대명사를 고릅니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the driver(주어) offered(타동사)까지만 있고 목적어가 비어 있는 불완전한 절입니다. 선행사 The excuse가 offered의 빈자리로 들어가 해석되므로 관계대명사 that이 옳습니다. '내놓은 것'이라는 해석에 끌려 what을 고르면 선행사와 what이 겹치는 비문이 됩니다."
+    },
+    {
+      "id": "u06-c4-ch-005",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["conj-that", "that-vs-what"],
+      "stem": "The belief {{blank}} raw talent alone guarantees a lasting career often discourages young athletes from steady practice.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "순수한 재능만이 오래가는 경력을 보장한다는 믿음은 어린 선수들이 꾸준히 연습하는 것을 단념시키곤 합니다.",
+      "hints": [
+        "빈칸 뒤 절에서 guarantees의 주어와 목적어가 모두 있는지 세어 보십시오.",
+        "'~라는 것'으로 해석되더라도, 절이 완전하면 빈자리를 채우는 관계사는 설 수 없습니다."
+      ],
+      "explanation": "빈칸 뒤는 raw talent alone(주어) guarantees(동사) a lasting career(목적어)로 완전한 절입니다. 절이 완전하므로 선행사 The belief의 내용을 풀어 주는 동격의 접속사 that이 옳습니다. '~라는 믿음'이라는 해석이 what처럼 느껴져도, 결손이 없는 절에 what을 세우면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c4-ch-006",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "relative-gap"],
+      "stem": "The evidence {{blank}} the defense presented on the final day changed few minds.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "변호인단이 마지막 날 제시한 증거는 거의 아무의 마음도 바꾸지 못했습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 presented의 목적어가 실재하는지 확인해 보십시오.",
+        "명사 뒤 절이 불완전하면 동격이 아니라 선행사를 빈자리로 보내는 관계절입니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the defense(주어) presented(타동사)에 전치사구 on the final day가 이어질 뿐, presented의 목적어가 비어 있는 불완전한 절입니다. 선행사 The evidence가 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. what은 선행사를 이미 포함하므로 명사 뒤에 겹쳐 쓸 수 없습니다."
+    },
+    {
+      "id": "u06-c4-ch-007",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["conj-that", "that-vs-which"],
+      "stem": "Their claim {{blank}} the data had been collected without consent triggered a formal review.",
+      "options": ["which", "that"],
+      "answer": 1,
+      "translation": "데이터가 동의 없이 수집되었다는 그들의 주장은 공식 조사를 촉발했습니다.",
+      "hints": [
+        "빈칸 뒤 절이 수동태라는 점에 주목하십시오 — 수동태 절은 목적어 없이도 완결됩니다.",
+        "명사 뒤라도 절이 완전하면 관계대명사는 설 수 없고, 명사의 내용을 풀어 주는 접속사가 섭니다."
+      ],
+      "explanation": "빈칸 뒤는 the data(주어) had been collected(수동태 동사)에 전치사구 without consent가 이어진 완전한 절입니다. 절이 완전하므로 선행사 Their claim의 내용을 설명하는 동격의 접속사 that이 옳습니다. which는 절 안에 빈자리가 있어야 하는 관계대명사인데, 수동태 절에는 채울 결손이 없으므로 설 수 없습니다."
+    },
+    {
+      "id": "u06-c4-ch-008",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["that-vs-what", "relative-gap"],
+      "stem": "The promise {{blank}} the mayor made during the flood is still repeated in local cafes.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "홍수 때 시장이 했던 약속은 지금도 동네 카페들에서 회자되고 있습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 made의 목적어가 있는지, during 구는 성분인지 아닌지 구분해 보십시오.",
+        "명사 뒤 절의 타동사에 목적어가 비어 있으면 선행사가 그 빈자리로 들어가는 관계절입니다."
+      ],
+      "explanation": "빈칸 뒤 절은 the mayor(주어) made(타동사)에 부사구 during the flood가 붙었을 뿐, made의 목적어가 비어 있는 불완전한 절입니다. 선행사 The promise가 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. what은 선행사를 스스로 포함하므로 명사 바로 뒤에 서면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c4-ch-009",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["conj-that", "that-vs-which"],
+      "stem": "The assumption {{blank}} consumers always compare prices rationally has quietly shaped decades of economic modeling in mainstream textbooks.",
+      "options": ["that", "which"],
+      "answer": 0,
+      "translation": "소비자가 언제나 합리적으로 가격을 비교한다는 가정은 주류 교과서의 경제 모형 수십 년 치를 조용히 형성해 왔습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 compare의 주어와 목적어가 모두 갖추어져 있는지 세어 보십시오.",
+        "절에 빈자리가 없다면 관계대명사는 서지 못하고, 명사의 내용을 풀어 주는 접속사만 섭니다."
+      ],
+      "explanation": "빈칸 뒤는 consumers(주어) compare(동사) prices(목적어)에 부사 rationally가 붙은 완전한 절입니다. 절이 완전하므로 선행사 The assumption의 내용을 설명하는 동격의 접속사 that이 옳습니다. '명사 뒤니까 관계대명사'라는 기계적 판단으로 which를 고르면, 절 안에 which가 들어갈 빈자리가 없다는 사실과 충돌합니다."
+    },
+    {
+      "id": "u06-c4-ch-010",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "relative-gap"],
+      "stem": "The warning {{blank}} the junior engineers had repeated in every quarterly report was finally read aloud at the inquiry.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "하급 기술자들이 분기 보고서마다 되풀이했던 그 경고는 마침내 청문회에서 낭독되었습니다.",
+      "hints": [
+        "in every quarterly report는 부사어입니다 — 걷어 내고 repeated의 목적어가 있는지 세어 보십시오.",
+        "명사 뒤 절이 불완전하면 선행사가 빈자리로 들어가는 관계대명사 자리입니다."
+      ],
+      "explanation": "전치사구 in every quarterly report를 걷어 내면 the junior engineers(주어) had repeated(타동사)만 남고 목적어가 비어 있습니다. 선행사 The warning이 그 빈자리로 들어가므로 관계대명사 that이 옳습니다. what은 선행사를 이미 포함한 말이라 명사 The warning 뒤에 겹치면 비문이 됩니다."
+    },
+    {
+      "id": "u06-c4-ch-011",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["conj-that", "that-vs-what"],
+      "stem": "The discovery {{blank}} certain deep-sea microbes survive without sunlight forced biologists to rewrite the boundaries of habitable environments.",
+      "options": ["that", "what"],
+      "answer": 0,
+      "translation": "일부 심해 미생물이 햇빛 없이 생존한다는 발견은 생물학자들로 하여금 서식 가능 환경의 경계를 다시 쓰게 만들었습니다.",
+      "hints": [
+        "빈칸 뒤 절에서 survive가 목적어를 필요로 하는 동사인지 확인해 보십시오.",
+        "자동사로 완결된 절에는 채울 빈자리가 없습니다 — 완전한 절 앞에 서는 말을 고릅니다."
+      ],
+      "explanation": "빈칸 뒤는 certain deep-sea microbes(주어) survive(자동사)에 전치사구 without sunlight가 이어진 완전한 절입니다. survive는 목적어가 필요 없는 자동사이므로 결손이 없고, 선행사 The discovery의 내용을 풀어 주는 동격의 접속사 that이 옳습니다. 목적어가 안 보인다는 이유로 결손이라 판단해 what을 고르면 자동사의 완결성을 놓친 것입니다."
+    },
+    {
+      "id": "u06-c4-ch-012",
+      "unitId": "u06",
+      "conceptId": "u06-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["that-vs-what", "relative-gap", "inserted-clause"],
+      "stem": "The letter {{blank}} the curator believes the painter wrote in his final winter has drawn crowds to the small gallery.",
+      "options": ["what", "that"],
+      "answer": 1,
+      "translation": "큐레이터가 믿기로 그 화가가 생애 마지막 겨울에 쓴 그 편지는 작은 미술관으로 관람객을 끌어모으고 있습니다.",
+      "hints": [
+        "the curator believes는 삽입절입니다 — 걷어 내고 wrote의 목적어가 있는지 세어 보십시오.",
+        "삽입절 너머까지 성분을 세어, 명사 뒤 절의 결손이 확인되면 선행사를 빈자리로 보내는 관계대명사를 고릅니다."
+      ],
+      "explanation": "삽입절 the curator believes를 걷어 내면 the painter(주어) wrote(타동사)에 부사구 in his final winter가 붙었을 뿐, wrote의 목적어가 비어 있습니다. 선행사 The letter가 그 먼 빈자리로 들어가므로 관계대명사 that이 옳습니다. 삽입절 때문에 절이 완전해 보여도, what은 선행사를 포함한 말이라 명사 뒤에 설 수 없습니다."
+    }
+  ]
+}

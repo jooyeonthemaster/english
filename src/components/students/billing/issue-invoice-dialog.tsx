@@ -89,7 +89,7 @@ export function IssueInvoiceDialog({
   function submit() {
     const amt = Number(amount);
     if (!Number.isFinite(amt) || amt < 1) {
-      toast.error("금액을 올바르게 입력하세요.");
+      toast.error("금액을 올바르게 입력해 주세요.");
       return;
     }
     // Duplicate-month guard (server has none): block when an outstanding invoice
@@ -100,7 +100,7 @@ export function IssueInvoiceDialog({
         ["PENDING", "PARTIAL", "OVERDUE"].includes(inv.status),
     );
     if (dup) {
-      toast.error("이번 달 청구서가 이미 있어요.");
+      toast.error("이번 달 청구서가 이미 있습니다.");
       return;
     }
     startTransition(async () => {
@@ -113,11 +113,11 @@ export function IssueInvoiceDialog({
         memo: undefined,
       });
       if (result.success) {
-        toast.success("청구서를 발행했어요.");
+        toast.success("청구서를 발행했습니다.");
         onOpenChange(false);
         onDone();
       } else {
-        toast.error(result.error || "발행에 실패했어요.");
+        toast.error(result.error || "발행에 실패했습니다.");
       }
     });
   }
@@ -126,16 +126,16 @@ export function IssueInvoiceDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-xl sm:max-w-[440px]">
         <DialogHeader>
-          <DialogTitle className="text-lg font-black text-[#191F28]">청구서 발행</DialogTitle>
-          <DialogDescription className="text-sm font-medium text-[#8B95A1]">
-            수강료 청구서를 발행합니다. 실제 결제는 연동되지 않아요.
+          <DialogTitle className="text-lg font-bold text-slate-900">청구서 발행</DialogTitle>
+          <DialogDescription className="text-[12.5px] font-medium text-slate-400">
+            수강료 청구서를 발행합니다. 실제 결제는 연동되지 않습니다.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">청구월</Label>
+              <Label className="text-xs font-semibold text-slate-500">청구월</Label>
               <Select value={month} onValueChange={applyMonth}>
                 <SelectTrigger className="mt-1.5 h-10 rounded-lg">
                   <SelectValue />
@@ -150,7 +150,7 @@ export function IssueInvoiceDialog({
               </Select>
             </div>
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">납부기한</Label>
+              <Label className="text-xs font-semibold text-slate-500">납부기한</Label>
               <Input
                 type="date"
                 value={dueDate}
@@ -161,7 +161,7 @@ export function IssueInvoiceDialog({
           </div>
 
           <div>
-            <Label className="text-xs font-bold text-[#6B7684]">항목</Label>
+            <Label className="text-xs font-semibold text-slate-500">항목</Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -171,7 +171,7 @@ export function IssueInvoiceDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">금액</Label>
+              <Label className="text-xs font-semibold text-slate-500">금액</Label>
               <Input
                 type="number"
                 value={amount}
@@ -182,7 +182,7 @@ export function IssueInvoiceDialog({
               />
             </div>
             <div>
-              <Label className="text-xs font-bold text-[#6B7684]">할인</Label>
+              <Label className="text-xs font-semibold text-slate-500">할인</Label>
               <Input
                 type="number"
                 value={discount}
@@ -193,23 +193,23 @@ export function IssueInvoiceDialog({
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg bg-[#F7F8FA] px-3 py-2.5">
-            <span className="text-xs font-bold text-[#6B7684]">청구 금액</span>
-            <span className="text-base font-black text-[#191F28]">{formatCurrency(finalAmount)}</span>
+          <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2.5">
+            <span className="text-xs font-semibold text-slate-500">청구 금액</span>
+            <span className="text-base font-bold tabular-nums text-slate-900">{formatCurrency(finalAmount)}</span>
           </div>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
           <Button
             variant="outline"
-            className="h-10 rounded-lg border-[#E5E8EB] font-bold text-[#4E5968]"
+            className="h-10 rounded-lg border-slate-200 font-semibold text-slate-600 hover:bg-slate-50"
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
             취소
           </Button>
           <Button
-            className="h-10 rounded-lg bg-blue-600 font-bold text-white hover:bg-blue-700"
+            className="h-10 rounded-lg bg-blue-600 font-semibold text-white hover:bg-blue-700"
             onClick={submit}
             disabled={isPending}
           >

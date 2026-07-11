@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Eye, FileText, Settings, Users } from "lucide-react";
+import { BarChart3, Eye, FileText, Settings, TabletSmartphone, Users } from "lucide-react";
 import { toast } from "sonner";
 import { publishExam } from "@/actions/exams";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +10,7 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { AnalyticsData, ExamDetail } from "./exam-detail-client-parts/types";
 import { ExamDetailPaperPreview } from "./exam-detail-paper-preview";
 import { AnalyticsTab } from "./exam-detail-client-parts/analytics-tab";
+import { DeploymentTab } from "./exam-detail-client-parts/deployment-tab";
 import { ExamQuestionCard } from "./exam-detail-client-parts/exam-question-card";
 import { HeaderSection } from "./exam-detail-client-parts/header-section";
 import { SettingsTab } from "./exam-detail-client-parts/settings-tab";
@@ -32,6 +33,15 @@ export function ExamDetailClient({ exam, analytics }: Props) {
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("preview");
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const deploymentEnabled = FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT;
+
+  // ?tab=deployment 딥링크(배포 모달 등 외부 진입) — window 조회 관례로
+  // useSearchParams Suspense 경계 요구를 피한다(students-tab.tsx 미러).
+  useEffect(() => {
+    if (!deploymentEnabled) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "deployment") setActiveTab("deployment");
+  }, [deploymentEnabled]);
 
   const gradedCount = exam.submissions.filter((s) => s.status === "GRADED").length;
   const totalSubs = exam.submissions.length;
@@ -81,6 +91,15 @@ export function ExamDetailClient({ exam, analytics }: Props) {
             <FileText className="size-4 mr-1.5" />
             문제 목록
           </TabsTrigger>
+          {deploymentEnabled && (
+            <TabsTrigger
+              value="deployment"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
+            >
+              <TabletSmartphone className="size-4 mr-1.5" />
+              학생 응시
+            </TabsTrigger>
+          )}
           {showResults && (
             <TabsTrigger
               value="submissions"
@@ -127,6 +146,17 @@ export function ExamDetailClient({ exam, analytics }: Props) {
             </div>
           )}
         </TabsContent>
+
+        {deploymentEnabled && (
+          <TabsContent value="deployment" className="mt-4">
+            <DeploymentTab
+              examId={exam.id}
+              examTitle={exam.title}
+              questionCount={exam.questions.length}
+              subject={exam.subject ?? null}
+            />
+          </TabsContent>
+        )}
 
         {showResults && (
           <TabsContent value="submissions" className="mt-4">

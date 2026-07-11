@@ -1,0 +1,307 @@
+{
+  "unitId": "u09",
+  "concepts": [
+    {
+      "id": "u09-c1",
+      "unitId": "u09",
+      "order": 1,
+      "title": "분사구문의 원리",
+      "oneLiner": "'접속사+주어+동사'를 분사로 압축한 구문 — 주절 주어 기준으로 읽습니다.",
+      "algorithm": [
+        "콤마로 분리된 분사 덩어리(문두·문중·문미)를 찾고, 주절의 주어에 표시합니다.",
+        "분사 앞의 생략된 주어 자리에 주절 주어를 그대로 복원합니다.",
+        "'주절 주어가 ~하면서/~해서/~한 뒤에'로 풀어 읽어 의미가 자연스러운지 확인합니다.",
+        "부자연스러우면 분사의 형태나 주어 설정이 틀린 자리이므로 능·수동 판단으로 넘어갑니다."
+      ],
+      "rules": [
+        {
+          "rule": "분사구문은 '접속사+주어+동사'의 부사절을 분사 하나로 압축한 표현이며, 생략된 주어는 주절 주어와 같습니다.",
+          "examples": [
+            {
+              "en": "**Walking** along the beach, she found a small blue bottle.",
+              "ko": "해변을 따라 걷다가 그녀는 작은 파란 병 하나를 발견했습니다.",
+              "note": "= While she walked along the beach — 생략된 주어 = 주절 주어 she"
+            }
+          ]
+        },
+        {
+          "rule": "분사구문은 문두·문중·문미 어디에나 올 수 있고, 위치와 관계없이 의미상 주어는 언제나 주절 주어입니다.",
+          "examples": [
+            {
+              "en": "The children ran into the yard, **shouting** with joy.",
+              "ko": "아이들은 기뻐서 소리치며 마당으로 뛰어 들어갔습니다.",
+              "note": "문미 분사구문 — shouting의 주어 = the children"
+            },
+            {
+              "en": "The storm, **moving** slowly north, lost its power over the cold sea.",
+              "ko": "그 폭풍은 천천히 북쪽으로 이동하면서 차가운 바다 위에서 힘을 잃었습니다.",
+              "note": "문중 삽입 분사구문 — moving의 주어 = the storm"
+            }
+          ]
+        },
+        {
+          "rule": "분사구문 자리에는 본동사가 올 수 없습니다 — 접속사 없이 한 문장에 동사가 두 개가 되기 때문입니다.",
+          "examples": [
+            {
+              "en": "**Feeling** tired after the long game, the players went home early.",
+              "ko": "긴 경기 후 피곤함을 느껴서 선수들은 일찍 집으로 갔습니다.",
+              "note": "felt로 바꾸면 접속사 없이 동사 2개(felt, went) → 분사 Feeling이 옳음"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "문두 분사구문과 멀리 있는 주어",
+          "body": "문두 분사구문을 보자마자 판단하면 안 됩니다. 콤마 뒤 주절에서 진짜 주어를 먼저 찾고, 그 주어를 분사 앞에 복원한 뒤에 능·수동을 판단합니다. 주어 앞뒤에 수식어가 길게 붙어 주어가 멀리 숨어 있는 문장이 시험에 자주 나옵니다.",
+          "example": {
+            "en": "**Located** near the station, the new library attracts many students.",
+            "ko": "역 근처에 위치해 있어서 그 새 도서관은 많은 학생을 끌어들입니다.",
+            "note": "Located의 의미상 주어 = the new library — 도서관이 '위치되는' 쪽 → p.p."
+          }
+        },
+        {
+          "title": "주어 복원이 안 되는 문장(현수분사)",
+          "body": "분사의 의미상 주어와 주절 주어가 논리적으로 연결되지 않으면 틀린 문장입니다. 복원해 읽었을 때 '누가 그 동작을 하는지'가 어긋나면 주절 주어나 분사 형태를 의심해야 합니다.",
+          "example": {
+            "en": "**Reading** the report carefully, the editor found several errors.",
+            "ko": "보고서를 꼼꼼히 읽으면서 편집자는 여러 오류를 발견했습니다.",
+            "note": "주절 주어가 several errors라면 '오류가 보고서를 읽는' 꼴 — the editor가 주어라서 정문"
+          }
+        }
+      ],
+      "confusableWith": ["u01-c3", "u01-c4", "u04-c1"]
+    },
+    {
+      "id": "u09-c2",
+      "unitId": "u09",
+      "order": 2,
+      "title": "분사구문의 능·수동",
+      "oneLiner": "주절 주어와 능동 관계면 -ing, 수동 관계면 p.p.(Being 생략)입니다.",
+      "algorithm": [
+        "주절 주어를 찾아 분사 자리에 복원합니다.",
+        "복원한 주어가 분사의 동작을 '하는' 쪽인지 '받는' 쪽인지 판단합니다.",
+        "하는 쪽이면 -ing, 받는 쪽이면 p.p.를 고릅니다 — p.p. 앞에는 Being이 생략되어 있습니다.",
+        "분사 뒤에 목적어가 있으면 능동(-ing) 신호입니다. 단, 목적어가 없다고 곧바로 p.p.로 단정하지 말고 자동사인지 먼저 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "주절 주어가 분사의 동작을 직접 하면(능동 관계) -ing를 씁니다.",
+          "examples": [
+            {
+              "en": "**Noticing** the dark clouds, the farmers covered the young plants.",
+              "ko": "어두운 구름을 알아차리고 농부들은 어린 작물을 덮었습니다.",
+              "note": "the farmers가 구름을 알아차리는 쪽(능동) + 목적어 the dark clouds 존재 → -ing"
+            }
+          ]
+        },
+        {
+          "rule": "주절 주어가 분사의 동작을 받으면(수동 관계) p.p.를 씁니다 — 앞의 Being·Having been은 흔히 생략됩니다.",
+          "examples": [
+            {
+              "en": "**Painted** in bright colors, the old wall now cheers up the street.",
+              "ko": "밝은 색으로 칠해져서 그 오래된 벽은 이제 거리를 환하게 만듭니다.",
+              "note": "= Being painted — the wall이 칠해지는 쪽(수동) → p.p."
+            },
+            {
+              "en": "**Written** in simple English, the guide is easy for beginners.",
+              "ko": "쉬운 영어로 쓰여 있어서 그 안내서는 초보자에게 읽기 쉽습니다.",
+              "note": "the guide가 쓰이는 쪽(수동) → p.p."
+            }
+          ]
+        },
+        {
+          "rule": "분사 뒤에 목적어가 남아 있으면 능동 -ing의 강한 신호입니다. 다만 자동사는 목적어 없이도 능동이므로 -ing를 씁니다.",
+          "examples": [
+            {
+              "en": "**Arriving** at the hall early, the singer checked the microphone twice.",
+              "ko": "공연장에 일찍 도착해서 그 가수는 마이크를 두 번 점검했습니다.",
+              "note": "arrive는 자동사 — 목적어가 없어도 주어가 동작을 함 → -ing"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "'목적어가 없으면 p.p.' 암기의 함정",
+          "body": "arrive·smile·sit 같은 자동사는 목적어가 없어도 주어가 동작을 직접 하므로 -ing가 옳습니다. 목적어 유무만 보고 기계적으로 p.p.를 고르면 바로 이 자리에서 틀립니다.",
+          "example": {
+            "en": "**Smiling** at the camera, the child held up her painting.",
+            "ko": "카메라를 향해 미소 지으며 그 아이는 자기 그림을 들어 올렸습니다.",
+            "note": "smile은 자동사 — 목적어가 없어도 능동 → -ing"
+          }
+        },
+        {
+          "title": "문두 p.p.를 과거형 동사로 착각",
+          "body": "문두의 p.p.는 Being이 생략된 수동 분사구문입니다. 본동사의 과거형으로 잘못 읽으면 문장에 동사가 두 개라고 착각하게 됩니다. Being을 복원해 읽으면 구조가 드러납니다.",
+          "example": {
+            "en": "**Surprised** by the result, the team repeated the experiment.",
+            "ko": "결과에 놀라서 연구팀은 실험을 반복했습니다.",
+            "note": "= Being surprised — surprised는 과거형 동사가 아니라 분사"
+          }
+        },
+        {
+          "title": "감정동사 분사구문",
+          "body": "분사구문에서도 감정동사의 원리는 그대로 적용됩니다. 주절 주어가 감정을 '느끼는' 쪽이면 p.p., 감정을 '일으키는' 쪽이면 -ing를 고릅니다.",
+          "example": {
+            "en": "**Excited** by the news, she called her best friend right away.",
+            "ko": "그 소식에 신이 나서 그녀는 곧바로 가장 친한 친구에게 전화했습니다.",
+            "note": "she가 흥분을 느끼는 쪽 → p.p."
+          }
+        }
+      ],
+      "confusableWith": ["u04-c1", "u04-c4", "u03-c1"]
+    },
+    {
+      "id": "u09-c3",
+      "unitId": "u09",
+      "order": 3,
+      "title": "완료·부정·접속사 잔류",
+      "oneLiner": "Having p.p.(앞선 시간), Not+분사(부정), if eaten형(접속사 잔류)입니다.",
+      "algorithm": [
+        "분사 앞에 붙은 요소(Having·Not·접속사)를 먼저 확인합니다.",
+        "Having p.p.라면 분사구문의 일이 주절보다 앞선 시간인지 문맥으로 확인합니다.",
+        "부정어 Not·Never가 분사 바로 앞에 있는지 봅니다 — 분사 뒤에 오면 틀린 어순입니다.",
+        "접속사가 남아 있어도(when·if·while) 판단은 동일합니다 — 주절 주어를 복원해 능·수동을 결정합니다."
+      ],
+      "rules": [
+        {
+          "rule": "분사구문의 일이 주절보다 앞선 시간이면 Having p.p.를 씁니다 — 수동이면 Having been p.p.입니다.",
+          "examples": [
+            {
+              "en": "**Having finished** the report, she finally turned off her computer.",
+              "ko": "보고서를 끝낸 뒤 그녀는 마침내 컴퓨터를 껐습니다.",
+              "note": "보고서 완료가 컴퓨터 끄기보다 먼저 → Having p.p."
+            },
+            {
+              "en": "**Having been warned** twice, the driver slowed down at the crossing.",
+              "ko": "두 번 경고를 받은 뒤 그 운전자는 건널목에서 속도를 줄였습니다.",
+              "note": "경고를 받는 쪽(수동)+앞선 시간 → Having been p.p."
+            }
+          ]
+        },
+        {
+          "rule": "분사구문의 부정은 부정어(Not·Never)를 분사 바로 앞에 놓습니다.",
+          "examples": [
+            {
+              "en": "**Not knowing** the answer, the student left the last question blank.",
+              "ko": "답을 몰라서 그 학생은 마지막 문제를 비워 두었습니다.",
+              "note": "Knowing not(X) — 부정어는 분사 앞이 원칙"
+            }
+          ]
+        },
+        {
+          "rule": "뜻을 분명히 하려고 접속사를 남긴 분사구문이 있습니다 — 접속사 뒤에서도 주어 복원과 능·수동 판단은 똑같이 합니다.",
+          "examples": [
+            {
+              "en": "**When asked** about the delay, the manager gave a short answer.",
+              "ko": "지연에 대해 질문을 받았을 때 그 관리자는 짧게 대답했습니다.",
+              "note": "= When she was asked — the manager가 질문을 받는 쪽 → p.p."
+            },
+            {
+              "en": "If **left** untreated, the small wound can become a serious problem.",
+              "ko": "치료하지 않고 두면 그 작은 상처는 심각한 문제가 될 수 있습니다.",
+              "note": "= If it is left untreated — the wound가 방치되는 쪽 → p.p."
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "접속사 잔류형을 '주어 없는 절'로 착각",
+          "body": "when asked, if left untreated처럼 접속사 뒤에 주어와 be동사 없이 분사만 남은 형태는 정상 구문입니다. be동사가 없다고 틀린 것이 아니라 '주어+be'가 생략된 것입니다. 주절 주어를 복원해 능·수동만 판단하면 됩니다.",
+          "example": {
+            "en": "**While waiting** for the bus, he reviewed his notes again.",
+            "ko": "버스를 기다리는 동안 그는 자기 필기를 다시 훑어보았습니다.",
+            "note": "= While he was waiting — 접속사+분사도 주절 주어 기준"
+          }
+        },
+        {
+          "title": "Having p.p.의 판단 기준은 시간 순서",
+          "body": "Having p.p.에 밑줄이 있으면 '분사구문의 일이 주절보다 먼저 일어났는가'만 확인하면 됩니다. 형태가 낯설다고 틀렸다고 단정하는 것이 가장 흔한 실수입니다.",
+          "example": {
+            "en": "**Having lived** in Busan for years, she knows the city well.",
+            "ko": "부산에서 여러 해 살았기 때문에 그녀는 그 도시를 잘 압니다.",
+            "note": "산 기간이 아는 시점보다 앞섬 → Having p.p."
+          }
+        }
+      ],
+      "confusableWith": ["u08-c1", "u08-c2", "u09-c2"]
+    },
+    {
+      "id": "u09-c4",
+      "unitId": "u09",
+      "order": 4,
+      "title": "독립분사구문과 with 부대상황",
+      "oneLiner": "주어가 다르면 분사 앞에 주어를 남기고, with+O+분사는 O가 의미상 주어입니다.",
+      "algorithm": [
+        "분사 앞에 별도의 명사가 있는지, 또는 with+명사가 있는지 확인합니다.",
+        "있다면 그 명사가 의미상 주어입니다 — 주절 주어가 아니라 그 명사를 판단 기준으로 삼습니다.",
+        "그 명사가 분사의 동작을 하면 -ing, 받으면 p.p.를 고릅니다."
+      ],
+      "rules": [
+        {
+          "rule": "분사구문의 주어가 주절 주어와 다르면 분사 앞에 그 주어를 그대로 남깁니다(독립분사구문).",
+          "examples": [
+            {
+              "en": "The weather **being** cold, the picnic was moved indoors.",
+              "ko": "날씨가 추워서 소풍은 실내로 옮겨졌습니다.",
+              "note": "being의 주어 = the weather(주절 주어 the picnic과 다름) → 주어 잔류"
+            },
+            {
+              "en": "The game **being** over, the fans slowly left the stadium.",
+              "ko": "경기가 끝나자 팬들은 천천히 경기장을 떠났습니다.",
+              "note": "being의 주어 = the game — 주절 주어 the fans와 달라서 남김"
+            }
+          ]
+        },
+        {
+          "rule": "with+목적어+분사에서는 with 뒤의 목적어가 분사의 의미상 주어입니다 — 목적어가 하면 -ing, 받으면 p.p.입니다.",
+          "examples": [
+            {
+              "en": "She waited quietly with her eyes **fixed** on the door.",
+              "ko": "그녀는 문에 시선을 고정한 채 조용히 기다렸습니다.",
+              "note": "her eyes가 고정되는 쪽(수동) → p.p."
+            },
+            {
+              "en": "He fell asleep with the TV still **running** in the living room.",
+              "ko": "그는 거실에 TV가 계속 켜진 채로 잠들었습니다.",
+              "note": "the TV가 돌아가는 쪽(능동) → -ing"
+            }
+          ]
+        },
+        {
+          "rule": "generally speaking, judging from처럼 말하는 사람이 주어인 표현은 주절 주어와 달라도 굳어진 관용 표현으로 허용됩니다.",
+          "examples": [
+            {
+              "en": "**Judging from** her smile, the interview went very well.",
+              "ko": "그녀의 미소로 판단하건대 면접은 아주 잘 진행되었습니다.",
+              "note": "judging의 논리적 주어는 말하는 사람 — 비인칭 독립분사구문(관용)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "with+O+분사를 주절 주어로 판단하는 실수",
+          "body": "with 구문의 분사는 주절 주어와 아무 관계가 없습니다. with 뒤의 목적어가 분사의 동작을 하는지 받는지만 봅니다. 주절 주어에 끌려 판단하면 능·수동이 뒤집힙니다.",
+          "example": {
+            "en": "The dog sat by the gate with its tail **wagging** happily.",
+            "ko": "그 개는 꼬리를 신나게 흔들며 대문 옆에 앉아 있었습니다.",
+            "note": "its tail이 흔드는 동작을 하는 쪽 → -ing(주절 주어 the dog 기준 금지)"
+          }
+        },
+        {
+          "title": "분사 앞의 명사를 오류로 착각",
+          "body": "분사 앞에 명사가 남아 있다고 비문이 아닙니다. 주절 주어와 달라서 일부러 남긴 독립분사구문입니다. 그 명사를 의미상 주어로 삼아 능·수동을 판단하면 됩니다.",
+          "example": {
+            "en": "The rain **having stopped**, the players returned to the field.",
+            "ko": "비가 그치자 선수들은 경기장으로 돌아갔습니다.",
+            "note": "having stopped의 주어 = the rain(주절 주어 the players와 다름) — 완료형 독립분사구문"
+          }
+        }
+      ],
+      "confusableWith": ["u04-c3", "u09-c2"]
+    }
+  ]
+}

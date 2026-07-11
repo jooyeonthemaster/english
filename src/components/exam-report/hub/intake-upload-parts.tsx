@@ -277,6 +277,12 @@ export function IntakeEmptyGuide() {
           <h3 className="smoat-exam-empty-guide__title min-w-0 text-[15px] font-extrabold leading-snug text-slate-950">
             시험지 사진을 올리면 문항 분석이 시작돼요
           </h3>
+          {/* 필기 허용 안심 카피 — 분석은 인쇄된 문항 기준이라 학생 필기·채점 흔적이
+              있어도 무방(마킹 실물 사진 실측으로 검증됨). "깨끗한 원본" 오해 방지. */}
+          <p className="min-w-0 text-[12px] leading-relaxed text-slate-500">
+            학생 필기나 채점 표시가 있는 시험지도 괜찮습니다 — 인쇄된 문항을
+            기준으로 분석합니다.
+          </p>
         </div>
         <ol className="smoat-exam-empty-guide__steps mt-3 grid gap-2">
           {steps.map((step, index) => (
@@ -431,7 +437,7 @@ export function IntakeCta({
       type="button"
       onClick={onClick}
       // aria-disabled — 비활처럼 보이되 클릭은 살려, handleStart 의 검증 토스트가
-      // 막힌 사유(페이지 없음/제목 없음/학생 이름 없음)를 안내한다.
+      // 막힌 사유(페이지 없음/제목 없음)를 안내한다.
       aria-disabled={disabled}
       className={
         "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +

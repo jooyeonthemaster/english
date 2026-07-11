@@ -1,0 +1,486 @@
+{
+  "unitId": "u09",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u09-c1-mu-001",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["no-main-verb", "double-verb"],
+      "hints": [
+        "접속사가 없는 이 문장에 시제를 가진 동사가 몇 개 있는지 세어 보십시오.",
+        "접속사 없이 한 문장에 본동사는 하나뿐이며, 나머지 동작은 분사가 맡습니다."
+      ],
+      "explanation": "본동사는 이미 produces 하나가 있고 문두에는 접속사도 주어도 없습니다. 접속사 없이 두 개의 본동사가 나란히 올 수 없으므로, 주절 주어 the small workshop이 '결합하는' 능동 관계를 나타내는 분사 Combining으로 고쳐야 합니다. ②는 단수 주어에 일치한 본동사, ③은 violins가 '감탄받는' 대상이므로 각각 옳습니다.",
+      "text": "[[1:Combines]] traditional methods with modern tools, the small workshop [[2:produces]] handmade violins [[3:admired]] by musicians around the world.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "Combining",
+      "rationales": [
+        "접속사도 주어도 없는 문두 자리에 시제 동사가 올 수 없고, 주절 주어 the small workshop이 결합의 주체이므로 분사 Combining이 옳습니다.",
+        "주어의 핵이 단수 명사 the small workshop이므로 단수 동사 produces가 옳습니다.",
+        "바이올린은 음악가들에게 감탄받는 대상이므로 handmade violins를 수식하는 과거분사 admired가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c2-mu-002",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["participle-voice", "ed-ambiguity"],
+      "hints": [
+        "밑줄 친 분사가 꾸미는 주절 주어를 찾아, 그 주어가 동작을 하는지 받는지 따져 보십시오.",
+        "주절 주어가 동작을 받는 관계이면 과거분사를, 직접 하는 관계이면 -ing를 씁니다."
+      ],
+      "explanation": "③ illustrating의 의미상 주어는 주절 주어 The guidebook이며, 안내서는 지도로 '설명되는' 대상입니다. 수동 관계이므로 과거분사 illustrated로 고쳐야 합니다. ②의 printed 역시 안내서가 '인쇄되는' 대상이라 옳고, ①의 sits는 단수 주어에 일치한 자동사 본동사로 옳습니다.",
+      "text": "The guidebook [[1:sits]] in every hotel room, [[2:printed]] in three languages and [[3:illustrating]] with simple maps of the old town.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "illustrated",
+      "rationales": [
+        "단수 주어 The guidebook에 일치하고 sit은 자동사이므로 능동의 본동사 sits가 옳습니다.",
+        "안내서는 세 언어로 인쇄되는 대상이므로 The guidebook을 설명하는 과거분사 printed가 옳습니다.",
+        "안내서는 지도로 설명되는 대상이므로 수동 관계를 나타내는 과거분사 illustrated가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c2-mu-003",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["participle-voice", "passive-with-object"],
+      "hints": [
+        "문두 분사 뒤에 목적어가 남아 있는지 확인하고, 주절 주어가 그 동작을 하는지 받는지 판단해 보십시오.",
+        "분사 뒤에 목적어가 남아 있으면 주어가 동작을 직접 하는 능동이므로 -ing를 씁니다."
+      ],
+      "explanation": "① 문두 분사 뒤에 목적어 a lantern이 남아 있고, 주절 주어 the guide가 등불을 '드는' 능동 주체입니다. 따라서 과거형처럼 보이는 Held가 아니라 현재분사 Holding으로 고쳐야 합니다. ②의 led와 ③의 pointed는 and로 연결된 이 문장의 본동사들로 옳습니다.",
+      "text": "[[1:Held]] a lantern above her head, the guide [[2:led]] the tourists through the dark cave and [[3:pointed]] to ancient paintings on the walls.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "Holding",
+      "rationales": [
+        "분사 뒤에 목적어 a lantern이 있고 주절 주어 the guide가 드는 주체이므로 현재분사 Holding이 옳습니다.",
+        "주어 the guide에 대응하는 이 문장의 본동사이므로 과거형 led가 옳습니다.",
+        "등위접속사 and가 앞의 led와 연결하는 병렬 본동사이므로 pointed가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c3-mu-004",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["conjunction-retained", "participle-voice"],
+      "hints": [
+        "접속사가 남아 있어도 분사 앞에 생략된 '주어+be'를 되살려, 주절 주어가 동작을 하는지 받는지 확인해 보십시오.",
+        "접속사 뒤 분사도 주절 주어와의 관계로 판단하며, 받는 관계이면 과거분사를 씁니다."
+      ],
+      "explanation": "② when 뒤에는 '주어+be동사'가 생략된 분사구문이 이어지고, 생략된 주어는 주절 주어 it(= steel)입니다. 강철은 코팅으로 '처리되는' 대상이므로 수동을 나타내는 과거분사 treated로 고쳐야 합니다. ①의 corrodes는 자동사의 능동 본동사, ③의 resists는 단수 주어에 일치한 본동사로 각각 옳습니다.",
+      "text": "Ordinary steel [[1:corrodes]] quickly near the sea, but when [[2:treating]] with a thin ceramic coating, it [[3:resists]] rust for decades.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "treated",
+      "rationales": [
+        "corrode는 자동사이고 주어 Ordinary steel이 부식하는 주체이므로 능동의 본동사 corrodes가 옳습니다.",
+        "when 뒤 생략된 주어는 steel이고 강철은 코팅으로 처리되는 대상이므로 과거분사 treated가 옳습니다.",
+        "단수 대명사 주어 it에 일치하는 본동사이므로 resists가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c1-mu-005",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "semicolon-clause"],
+      "hints": [
+        "세미콜론 뒤 절에 시제를 가진 본동사가 있는지 확인해 보십시오.",
+        "세미콜론은 두 개의 완전한 절을 잇고, 각 절에는 본동사가 반드시 하나 있어야 합니다."
+      ],
+      "explanation": "세미콜론 뒤는 독립된 절이므로 주어 it에 대한 본동사가 필요합니다. battered by countless storms는 분사구문이고 remaining은 준동사여서 본동사가 될 수 없으므로 remains로 고쳐야 합니다. ①의 standing과 ③의 battered는 각각 등대가 '서 있는'·'두들겨 맞는' 관계를 나타내는 옳은 분사이고, ②의 has guided는 단수 주어에 일치한 본동사입니다.",
+      "text": "The old lighthouse, [[1:standing]] on a rocky cliff, [[2:has guided]] ships for over a century; [[3:battered]] by countless storms, it [[4:remaining]] a proud symbol of the town.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "remains",
+      "rationales": [
+        "본동사 has guided가 따로 있으므로 standing은 The old lighthouse를 수식하는 현재분사이고, 등대가 서 있는 주체이므로 -ing가 옳습니다.",
+        "단수 주어 The old lighthouse에 일치한 현재완료 본동사이므로 has guided가 옳습니다.",
+        "등대는 수많은 폭풍에 두들겨 맞는 대상이므로 수동 관계를 나타내는 과거분사 battered가 옳습니다.",
+        "세미콜론 뒤 절의 주어 it에 대한 본동사가 필요한데 remaining은 준동사이므로 본동사 remains로 고쳐야 합니다."
+      ]
+    },
+    {
+      "id": "u09-c2-mu-006",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["participle-voice", "intransitive-participle"],
+      "hints": [
+        "각 분사가 꾸미는 주어를 찾아, 그 주어가 동작의 주체인지 대상인지 확인해 보십시오.",
+        "분사 뒤에 by+행위자가 이어지면 주어가 동작을 받는다는 신호이므로 과거분사를 씁니다."
+      ],
+      "explanation": "③ surrounding의 의미상 주어는 주절 주어 their small boat이며, 배는 안개에 '둘러싸이는' 대상입니다. 뒤에 by thick fog라는 행위자가 이어지는 것도 수동의 신호이므로 과거분사 surrounded로 고쳐야 합니다. ① Rising은 자동사 rise의 능동으로 목적어가 없어도 -ing가 옳고, ②·④는 각각 주어에 일치한 본동사입니다.",
+      "text": "[[1:Rising]] before dawn, the fishermen [[2:loaded]] their nets, and [[3:surrounding]] by thick fog, their small boat [[4:drifted]] far from the familiar shoreline.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "surrounded",
+      "rationales": [
+        "rise는 자동사이고 주어 the fishermen이 일어나는 주체이므로 목적어가 없어도 현재분사 Rising이 옳습니다.",
+        "주어 the fishermen에 대응하는 본동사이므로 과거형 loaded가 옳습니다.",
+        "배는 짙은 안개에 둘러싸이는 대상이고 뒤에 by thick fog가 이어지므로 과거분사 surrounded가 옳습니다.",
+        "단수 주어 their small boat에 대응하는 본동사이므로 과거형 drifted가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c3-mu-007",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["perfect-participle", "participle-voice"],
+      "hints": [
+        "완료 분사구문 뒤에 by+행위자가 있는지 보고, 주절 주어가 그 동작을 하는지 받는지 확인해 보십시오.",
+        "주절 주어가 동작을 받으면서 그 일이 주절보다 앞섰다면 완료형 수동 분사가 필요합니다."
+      ],
+      "explanation": "② 완료 분사구문의 의미상 주어는 주절 주어 he이며, 도제는 스승에게 '지도를 받는' 대상입니다. 뒤의 by his master가 수동을 확정하므로 능동의 Having instructed가 아니라 수동 완료형 Having been instructed로 고쳐야 합니다. ①의 worked와 ③의 ruined는 각각 주어에 일치한 옳은 본동사입니다.",
+      "text": "The young apprentice [[1:worked]] with real talent. [[2:Having instructed]] many times by his master, however, he still rushed every task and [[3:ruined]] several fine carvings.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "Having been instructed",
+      "rationales": [
+        "주어 The young apprentice에 대응하는 본동사이므로 과거형 worked가 옳습니다.",
+        "도제는 스승에게 지도를 받는 대상이고 그 일이 앞서므로 수동 완료형 Having been instructed가 옳습니다.",
+        "등위접속사 and가 앞의 rushed와 연결하는 병렬 본동사이므로 과거형 ruined가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c4-mu-008",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "passive-with-object"],
+      "hints": [
+        "with 다음의 명사를 그 뒤 분사의 의미상 주어로 보고, 분사 뒤에 목적어가 남아 있는지 확인해 보십시오.",
+        "with 구문의 분사 뒤에 목적어가 남아 있으면 그 명사가 동작을 하는 능동 관계이므로 -ing를 씁니다."
+      ],
+      "explanation": "③ with 부대상황에서 분사의 의미상 주어는 앞의 a single lamp이고, 뒤에 목적어 the crowded room이 남아 있습니다. 램프가 방을 '비추는' 능동 관계이므로 과거분사 lit이 아니라 현재분사 lighting으로 고쳐야 합니다. ②의 stacked는 공책들이 '쌓이는' 대상이라 옳은 과거분사이고, ①의 sat은 주어에 일치한 본동사입니다.",
+      "text": "The old scientist [[1:sat]] quietly at his desk late into the night, with dozens of notebooks [[2:stacked]] beside him and with a single lamp [[3:lit]] the crowded room.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "lighting",
+      "rationales": [
+        "단수 주어 The old scientist에 대응하는 본동사이므로 과거형 sat이 옳습니다.",
+        "with 뒤의 명사 dozens of notebooks가 쌓이는 대상이므로 수동 관계를 나타내는 과거분사 stacked가 옳습니다.",
+        "with 뒤의 명사 a single lamp가 목적어 the crowded room을 거느리고 방을 비추는 주체이므로 현재분사 lighting이 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c2-mu-009",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "participle-voice"],
+      "hints": [
+        "감정을 나타내는 분사는 주절 주어가 그 감정을 일으키는지, 느끼는지 확인해 보십시오.",
+        "사람이 감정을 느끼는 쪽이면 과거분사를, 감정을 일으키는 쪽이면 -ing를 씁니다."
+      ],
+      "explanation": "④ 감정동사의 분사는 주절 주어 the students와의 관계로 결정됩니다. 학생들은 이야기의 반전에 '흥분을 느끼는' 쪽이므로 과거분사 excited로 고쳐야 합니다. ①의 Fascinated도 학생들이 '매료되는' 쪽이라 옳은 과거분사이고, ③ scribbling과 ⑤ losing은 학생들이 직접 하는 동작이라 -ing가 옳습니다.",
+      "text": "The whole lecture hall fell silent. [[1:Fascinated]] by the strange discovery, the students [[2:leaned]] forward, [[3:scribbling]] notes and, [[4:exciting]] by every twist of the story, completely [[5:losing]] track of time.",
+      "underlineCount": 5,
+      "answer": 4,
+      "correction": "excited",
+      "rationales": [
+        "학생들은 낯선 발견에 매료되는 쪽이므로 감정을 느끼는 과거분사 Fascinated가 옳습니다.",
+        "주어 the students에 대응하는 이 문장의 본동사이므로 과거형 leaned가 옳습니다.",
+        "학생들이 필기를 하는 능동 주체이므로 현재분사 scribbling이 옳습니다.",
+        "학생들은 이야기의 반전에 흥분을 느끼는 쪽이므로 과거분사 excited가 옳습니다.",
+        "학생들이 시간 가는 줄 모르고 빠져드는 능동 주체이므로 현재분사 losing이 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c3-mu-010",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["conjunction-retained", "participle-voice", "ed-ambiguity"],
+      "hints": [
+        "접속사 once가 남아 있더라도 그 뒤 분사 앞에 생략된 주어를 되살려 능·수동을 판단해 보십시오.",
+        "생략된 주어가 동작을 받는 관계이면, 접속사 뒤라도 과거분사를 써야 합니다."
+      ],
+      "explanation": "② once 뒤에는 '주어+be'가 생략된 분사구문이 오고, 생략된 주어는 주절 주어 it(= a reputation)입니다. 평판은 스캔들로 '훼손되는' 대상이고 뒤에 by a single scandal이라는 행위자도 있으므로 수동의 과거분사 damaged로 고쳐야 합니다. ①의 built은 평판이 '쌓이는' 대상이라 옳은 과거분사이며, ③ regains와 ④ tries는 각각 주어에 일치한 옳은 본동사입니다.",
+      "text": "A reputation for honesty, [[1:built]] slowly over decades, can disappear in a day; once [[2:damaging]] by a single scandal, it [[3:seldom regains]] its former strength, however hard one [[4:tries]] to restore it.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "damaged",
+      "rationales": [
+        "평판은 오랜 세월에 걸쳐 쌓이는 대상이므로 A reputation을 수식하는 과거분사 built이 옳습니다.",
+        "once 뒤 생략된 주어는 it(평판)이고 평판은 스캔들로 훼손되는 대상이므로 과거분사 damaged가 옳습니다.",
+        "세미콜론 뒤 절의 단수 주어 it에 일치한 본동사이므로 부사 seldom의 수식을 받는 regains가 옳습니다.",
+        "however hard 뒤 절의 단수 주어 one에 일치한 본동사이므로 tries가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c4-mu-011",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["with-absolute", "participle-voice"],
+      "hints": [
+        "with 다음에 오는 각 명사를 그 뒤 분사의 주어로 보고, 명사가 동작을 하는지 받는지 확인해 보십시오.",
+        "with 구문의 명사가 동작을 받는 관계이면 과거분사를 씁니다."
+      ],
+      "explanation": "④ with 부대상황에서 분사의 의미상 주어는 앞의 her speech이며, 연설문은 카드에 '쓰이는' 대상입니다. 수동 관계이므로 과거분사 written으로 고쳐야 합니다. ①의 counted와 ②의 announced 역시 표·결과가 각각 '세어지고'·'발표되는' 대상이라 옳은 과거분사이고, ③의 walked는 주어에 일치한 본동사입니다.",
+      "text": "With the final votes [[1:counted]] and the result [[2:announced]] to the crowd, the newly elected mayor [[3:walked]] onto the stage, with her speech [[4:writing]] on a single folded card in her hand.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "written",
+      "rationales": [
+        "with 뒤의 명사 the final votes가 세어지는 대상이므로 과거분사 counted가 옳습니다.",
+        "with 뒤의 명사 the result가 군중에게 발표되는 대상이므로 과거분사 announced가 옳습니다.",
+        "주어 the newly elected mayor에 대응하는 본동사이므로 과거형 walked가 옳습니다.",
+        "with 뒤의 명사 her speech가 카드에 쓰이는 대상이므로 과거분사 written이 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c2-mu-012",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["participle-voice", "ed-ambiguity"],
+      "hints": [
+        "문장 끝의 분사가 꾸미는 주어를 찾아, 그 주어가 동작을 하는지 받는지 확인해 보십시오.",
+        "주어가 동작을 받는 관계이면 -ing가 아니라 과거분사를 씁니다."
+      ],
+      "explanation": "⑤ admiring의 의미상 주어는 주절 주어 they(= the symphonies)이며, 교향곡은 걸작으로 '평가받는' 쪽입니다. 수동 관계이므로 과거분사 admired로 고쳐야 합니다. ①의 Praised와 ②의 neglected도 교향곡이 '칭송받고'·'외면받는' 대상이라 옳은 과거분사이고, ③ were rediscovered와 ④ fill은 복수 주어에 일치한 옳은 본동사입니다.",
+      "text": "[[1:Praised]] by critics yet [[2:neglected]] by the public for decades, the composer's late symphonies [[3:were rediscovered]] only after his death, and today they [[4:fill]] concert halls, [[5:admiring]] as masterpieces of the modern era.",
+      "underlineCount": 5,
+      "answer": 5,
+      "correction": "admired",
+      "rationales": [
+        "교향곡은 비평가들에게 칭송받는 대상이므로 the symphonies를 수식하는 과거분사 Praised가 옳습니다.",
+        "교향곡은 대중에게 외면받는 대상이므로 Praised와 병렬을 이루는 과거분사 neglected가 옳습니다.",
+        "복수 주어 the composer's late symphonies에 일치하고 교향곡이 재발견되는 대상이므로 수동태 were rediscovered가 옳습니다.",
+        "복수 주어 they에 일치하는 본동사이므로 fill이 옳습니다.",
+        "교향곡은 걸작으로 평가받는 대상이므로 과거분사 admired가 옳습니다."
+      ]
+    },
+    {
+      "id": "u09-c2-ps-001",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["participle-voice", "ed-ambiguity"],
+      "hints": [
+        "분사에 밑줄이 있으면 그 분사가 꾸미는 주절 주어를 찾아, 주어가 동작을 하는지 받는지 따져 보십시오.",
+        "주절 주어가 동작을 받는 관계이고 뒤에 by+행위자가 이어지면 과거분사를 씁니다."
+      ],
+      "explanation": "③ Threatening의 의미상 주어는 주절 주어 some squid이며, 오징어는 포식자에게 '위협받는' 대상입니다. 뒤에 by a hungry predator라는 행위자가 이어지는 것도 수동의 신호이므로 과거분사 Threatened로 고쳐야 합니다. ②의 generated도 빛이 세포에 의해 '생성되는' 대상이라 옳은 과거분사이고, ④의 that과 ⑤의 on which는 각각 불완전한 절과 완전한 절을 바르게 이끕니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Deep in the ocean, where sunlight never [[1:reaches]], many sea creatures create their own light through a reaction known as bioluminescence. This glow, [[2:generated]] by special cells beneath the skin, serves several distinct purposes at once. [[3:Threatening]] by a hungry predator, some squid eject a bright cloud [[4:that]] confuses the attacker and covers their escape. Others produce a steady glow to lure the small animals [[5:on which]] they feed in the lightless depths. To marine biologists, this cold living light, produced almost without heat, remains one of the ocean's most elegant inventions.",
+      "answer": 3,
+      "correction": "Threatened",
+      "rationales": [
+        "관계부사 where가 이끄는 절에서 단수 주어 sunlight에 일치한 본동사이므로 reaches가 옳습니다.",
+        "빛은 특수한 세포에 의해 생성되는 대상이므로 This glow를 수식하는 과거분사 generated가 옳습니다.",
+        "분사의 의미상 주어는 주절 주어 some squid이고 오징어는 포식자에게 위협받는 대상이므로 과거분사 Threatened가 옳습니다.",
+        "선행사 a bright cloud가 있고 뒤 절에 주어가 빠져 있으므로 관계대명사 that이 옳습니다.",
+        "the small animals가 선행사이고 feed on의 목적어 자리를 채워 완전한 절을 이끄므로 전치사+관계대명사 on which가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u04", "u09", "u06", "u07"],
+      "gist": "심해 생물이 화학 반응으로 스스로 빛을 내는 생물발광의 여러 기능을 설명합니다."
+    },
+    {
+      "id": "u09-c1-ps-002",
+      "unitId": "u09",
+      "conceptId": "u09-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "double-verb"],
+      "hints": [
+        "문장 맨 앞의 밑줄이 접속사도 주어도 없이 시제를 가진 동사인지 확인해 보십시오.",
+        "접속사 없이 한 문장에 본동사는 하나뿐이며, 문두의 부사적 수식은 분사가 맡아야 합니다."
+      ],
+      "explanation": "본동사는 이미 proves가 있고, 문두 자리에는 접속사도 주어도 없습니다. 접속사 없이 두 개의 본동사가 나란히 올 수 없으므로, 주절 주어 human memory가 '의존하는' 능동 관계를 나타내는 분사 Relying으로 고쳐야 합니다. ③의 shown과 ④의 what, ⑤의 that은 각각 수동 분사와 관계사·명사절을 바르게 이끕니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "[[1:Relies]] on reconstruction rather than exact recording, human memory often [[2:proves]] surprisingly unreliable. In one classic study, witnesses [[3:shown]] a short film of a car crash later disagreed sharply about the speed of the vehicles. Some were certain the cars had been racing, while others recalled only a gentle bump at low speed. Many even claimed to recall [[4:what]] the film had never contained, such as a broken headlight [[5:that]] simply did not exist. These findings suggest that each act of recall quietly rebuilds the past instead of faithfully replaying it.",
+      "answer": 1,
+      "correction": "Relying",
+      "rationales": [
+        "본동사 proves가 따로 있고 문두에 접속사도 주어도 없으므로, 주절 주어 human memory가 의존하는 주체임을 나타내는 분사 Relying이 옳습니다.",
+        "단수 주어 human memory에 일치한 본동사이므로 proves가 옳습니다.",
+        "witnesses는 짧은 영상을 제시받는 대상이므로 witnesses를 수식하는 과거분사 shown이 옳습니다.",
+        "앞에 선행사가 없고 contained의 목적어가 빠진 불완전한 절을 이끌므로 what이 옳습니다.",
+        "선행사 a broken headlight가 있고 뒤 절에 주어가 빠져 있으므로 관계대명사 that이 옳습니다."
+      ],
+      "underlineUnits": ["u09", "u02", "u04", "u06", "u06"],
+      "gist": "인간의 기억이 정확한 기록이 아니라 재구성이어서 목격자 증언조차 쉽게 왜곡됨을 보여 줍니다."
+    },
+    {
+      "id": "u09-c3-ps-003",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["conjunction-retained", "participle-voice"],
+      "hints": [
+        "if나 when이 남아 있어도 그 뒤 분사 앞에 생략된 주어를 되살려 능·수동을 판단해 보십시오.",
+        "생략된 주어가 동작을 받는 관계이면 접속사 뒤라도 과거분사를 씁니다."
+      ],
+      "explanation": "④ If 뒤에는 '주어+be'가 생략된 분사구문이 이어지며, 생략된 주어는 주절 주어 a single signal error입니다. 신호 오류는 '방치되는' 대상이므로 수동을 나타내는 과거분사 left로 고쳐야 합니다. ①의 designed는 노선이 '설계되는' 대상이라 옳은 과거분사이고, ②의 appears는 자동사의 능동, ③의 knowing은 기술자들이 '아는' 능동 주체라서 각각 옳습니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Modern cities depend on hidden systems that most residents never notice until something breaks. A subway line, [[1:designed]] to move millions of passengers each day, must run almost without interruption. The moment a small fault [[2:appears]], engineers work through the night to keep the morning trains on time, [[3:knowing]] that even a short delay angers thousands. If [[4:leaving]] unattended, a single signal error can spread across the whole network within minutes and paralyze an entire morning commute. Such quiet fragility explains [[5:why]] cities invest so heavily in maintenance the public never sees.",
+      "answer": 4,
+      "correction": "left",
+      "rationales": [
+        "지하철 노선은 수백만 명을 나르도록 설계되는 대상이므로 A subway line을 수식하는 과거분사 designed가 옳습니다.",
+        "appear는 자동사이고 주어 a small fault가 나타나는 주체이므로 능동의 본동사 appears가 옳습니다.",
+        "주절 주어 engineers가 아는 주체이므로 engineers work를 부연하는 현재분사 knowing이 옳습니다.",
+        "If 뒤 생략된 주어는 a single signal error이고 오류는 방치되는 대상이므로 과거분사 left가 옳습니다.",
+        "뒤에 완전한 절이 오고 이유를 나타내므로 관계부사 why가 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u03", "u09", "u09", "u07"],
+      "gist": "지하철망처럼 눈에 띄지 않는 도시 시스템의 취약성과 유지·보수의 중요성을 설명합니다."
+    },
+    {
+      "id": "u09-c4-ps-004",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "participle-voice"],
+      "hints": [
+        "with 다음의 명사를 그 뒤 분사의 의미상 주어로 보고, 명사가 동작을 하는지 받는지 확인해 보십시오.",
+        "with 구문의 명사가 동작을 받는 관계이면 과거분사를 씁니다."
+      ],
+      "explanation": "② with 부대상황에서 분사의 의미상 주어는 앞의 many busy harbors이며, 항구는 얼음에 '묻히는' 대상입니다. 수동 관계이므로 과거분사 buried로 고쳐야 합니다. ③의 denied는 제빵사들이 접근을 '거부당하는' 대상이라 옳은 과거분사이고, ⑤의 Having lost는 가축을 잃은 일이 앞서므로 옳은 완료 분사구문이며, ④의 that은 불완전한 절을 이끄는 관계대명사입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The winter of 1709 [[1:remains]] one of the coldest winters ever recorded in Europe. Rivers froze solid within days, and even the sea near the coast turned to ice, so that trade collapsed, with many busy harbors [[2:burying]] under thick ice for weeks. Bakers, [[3:denied]] access to the frozen mills, sharply raised their prices, a decision [[4:that]] soon pushed the urban poor toward real hunger. [[5:Having lost]] much of their livestock to the cold, country farmers needed years to recover, and the long economic shock reshaped grain markets across half the continent.",
+      "answer": 2,
+      "correction": "buried",
+      "rationales": [
+        "단수 주어 The winter of 1709에 일치한 본동사이므로 remains가 옳습니다.",
+        "with 뒤의 명사 many busy harbors가 두꺼운 얼음에 묻히는 대상이므로 과거분사 buried가 옳습니다.",
+        "제빵사들은 방앗간 접근을 거부당하는 대상이므로 Bakers를 수식하는 과거분사 denied가 옳습니다.",
+        "선행사 a decision이 있고 뒤 절에 주어가 빠져 있으므로 관계대명사 that이 옳습니다.",
+        "가축을 잃은 일이 회복하려 애쓰는 시점보다 앞서므로 완료 분사구문 Having lost가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u09", "u04", "u06", "u09"],
+      "gist": "1709년 유럽의 혹독한 겨울이 무역과 식량 공급에 남긴 충격을 다룹니다."
+    },
+    {
+      "id": "u09-c2-ps-005",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["participle-voice", "intransitive-participle", "ed-ambiguity"],
+      "hints": [
+        "각 분사가 꾸미는 주어를 찾아, 그 주어가 동작을 직접 하는지 받는지 확인해 보십시오.",
+        "주어가 동작을 받는 관계이면 뒤에 by가 없더라도 과거분사를 써야 합니다."
+      ],
+      "explanation": "⑤ exposing의 의미상 주어는 주절 주어 the surface이며, 벽면은 촛불 연기와 습기에 '노출되는' 대상입니다. expose는 타동사이고 벽면은 그 동작을 받으므로 수동을 나타내는 과거분사 exposed로 고쳐야 합니다. ②의 lying은 자동사 lie의 능동으로 목적어가 없어도 -ing가 옳고, ③의 crowded는 장면이 인물들로 '채워지는' 대상이라 옳은 과거분사이며, ①·④의 관계사도 각각 옳습니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "A fresco must be painted onto wet plaster within a few hours, a demanding technique [[1:that]] leaves the artist no room for correction. Michelangelo, [[2:lying]] on his back for years beneath the Sistine ceiling, produced images of astonishing power and scale. The great scenes, [[3:crowded]] with prophets and sibyls, still overwhelm the thousands of visitors [[4:who]] fill the chapel each day. Yet the surface, [[5:exposing]] for centuries to candle smoke and damp air, slowly darkened, until a patient cleaning campaign in the 1980s finally restored the vivid colors Michelangelo had actually chosen.",
+      "answer": 5,
+      "correction": "exposed",
+      "rationales": [
+        "선행사 a technique가 있고 뒤 절에 주어가 빠져 있으므로 관계대명사 that이 옳습니다.",
+        "lie는 자동사이고 주어 Michelangelo가 눕는 주체이므로 목적어가 없어도 현재분사 lying이 옳습니다.",
+        "장면은 예언자와 무녀 상들로 채워지는 대상이므로 The great scenes를 수식하는 과거분사 crowded가 옳습니다.",
+        "선행사 the visitors가 사람이고 뒤 절에 주어가 빠져 있으므로 관계대명사 who가 옳습니다.",
+        "벽면은 연기와 습기에 노출되는 대상이므로 수동을 나타내는 과거분사 exposed가 옳습니다."
+      ],
+      "underlineUnits": ["u06", "u09", "u04", "u06", "u09"],
+      "gist": "젖은 회벽에 그리는 프레스코 기법의 제약과 시스티나 천장화의 보존을 다룹니다."
+    },
+    {
+      "id": "u09-c3-ps-006",
+      "unitId": "u09",
+      "conceptId": "u09-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["conjunction-retained", "participle-voice"],
+      "hints": [
+        "once 같은 접속사가 남아 있어도 그 뒤 분사 앞에 생략된 주어를 되살려 능·수동을 판단해 보십시오.",
+        "생략된 주어가 동작을 받는 관계이면, 접속사 뒤라도 과거분사를 써야 합니다."
+      ],
+      "explanation": "③ once 뒤에는 '주어+be'가 생략된 분사구문이 오고, 생략된 주어는 주절 주어 the exposed peat입니다. 이탄은 연료나 농지를 위해 '채굴되는' 대상이므로 수동을 나타내는 과거분사 harvested로 고쳐야 합니다. ②의 Left도 늪이 '건드려지지 않은 채 놓이는' 대상이라 옳은 과거분사이고, ⑤의 threatens는 단수 주어 the loss에 일치한 옳은 본동사이며, ①·④도 각각 옳습니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Peatlands cover only a small fraction of the earth's surface, yet they [[1:store]] more carbon than all the world's forests combined. Formed over thousands of years from partly decayed plants, they lock enormous amounts of carbon into waterlogged ground. [[2:Left]] undisturbed, a healthy bog quietly absorbs carbon century after century. But once [[3:harvesting]] for fuel or farmland, the exposed peat begins to rot and releases the gases [[4:that]] it had safely held for millennia. Scientists warn that the loss of these dark, unglamorous landscapes [[5:threatens]] the climate as gravely as the clearing of tropical forests.",
+      "answer": 3,
+      "correction": "harvested",
+      "rationales": [
+        "복수 주어 they에 일치한 본동사이므로 store가 옳습니다.",
+        "늪은 건드려지지 않은 채 놓이는 대상이므로 a healthy bog를 가리키는 수동 분사구문 Left가 옳습니다.",
+        "once 뒤 생략된 주어는 the exposed peat이고 이탄은 연료나 농지를 위해 채굴되는 대상이므로 과거분사 harvested가 옳습니다.",
+        "선행사 the gases가 있고 held의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "주어의 핵이 단수 명사 the loss이고 of these landscapes는 수식어이므로 단수 동사 threatens가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u09", "u09", "u06", "u02"],
+      "gist": "이탄지가 숲보다 많은 탄소를 저장하지만 훼손되면 오히려 탄소를 방출함을 설명합니다."
+    },
+    {
+      "id": "u09-c2-ps-007",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["participle-voice", "emotion-participle"],
+      "hints": [
+        "문두의 분사가 꾸미는 주절 주어를 찾아, 그 주어가 동작을 하는지 받는지 확인해 보십시오.",
+        "주절 주어가 동작을 받고 뒤에 by+원인이 이어지면 과거분사를 씁니다."
+      ],
+      "explanation": "① Driving의 의미상 주어는 주절 주어 financial markets이며, 시장은 공포에 '휘둘리는(움직여지는)' 대상입니다. 뒤에 by fear라는 행위자가 이어지는 것도 수동의 신호이므로 과거분사 Driven으로 고쳐야 합니다. ②의 left와 ③의 convinced는 각각 소문이 '방치되고' 투자자들이 '확신하게 되는' 대상이라 옳은 과거분사이고, ⑤의 watching은 은행이 직접 '지켜보는' 능동이라 -ing가 옳습니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "[[1:Driving]] by fear rather than by careful calculation, financial markets often swing far more violently than the underlying real economy warrants. A rumor [[2:left]] uncorrected for a single morning can wipe out billions of dollars in market value. Investors, [[3:convinced]] that everyone else is about to sell, rush for the exit together, and the very panic [[4:that]] they dread soon becomes real. Central banks, [[5:watching]] this fragile mood closely, choose their public words with great care, knowing that one careless phrase can move prices around the world before any policy actually changes.",
+      "answer": 1,
+      "correction": "Driven",
+      "rationales": [
+        "시장은 공포에 휘둘리는 대상이고 뒤에 by fear가 이어지므로 문두 분사구문은 과거분사 Driven이 옳습니다.",
+        "소문은 하루아침 방치되는 대상이므로 A rumor를 수식하는 과거분사 left가 옳습니다.",
+        "투자자들은 남들이 팔 것이라 확신하게 되는 대상이므로 Investors를 수식하는 과거분사 convinced가 옳습니다.",
+        "선행사 the very panic이 있고 dread의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다.",
+        "중앙은행이 시장 심리를 지켜보는 능동 주체이므로 Central banks를 부연하는 현재분사 watching이 옳습니다."
+      ],
+      "underlineUnits": ["u09", "u04", "u04", "u06", "u09"],
+      "gist": "공포 심리에 휘둘리는 금융시장의 변동성과 중앙은행의 신중한 태도를 설명합니다."
+    },
+    {
+      "id": "u09-c4-ps-008",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["with-absolute", "passive-with-object"],
+      "hints": [
+        "with 다음의 명사를 그 뒤 분사의 의미상 주어로 보고, 분사 뒤에 목적어가 남아 있는지 확인해 보십시오.",
+        "with 구문의 명사가 목적어를 거느리고 동작을 직접 하면 과거분사가 아니라 -ing를 씁니다."
+      ],
+      "explanation": "④ with 부대상황에서 분사의 의미상 주어는 앞의 powerful pumps이고, 뒤에는 목적어 chilled water가 남아 있습니다. 펌프가 물을 '밀어 보내는' 능동 관계이므로 과거분사 pushed가 아니라 현재분사 pushing으로 고쳐야 합니다. ①의 packed는 서버가 '채워 넣어지는' 대상이라 옳은 과거분사이고, ③의 passes는 단수 주어 Every message에 일치한 본동사이며, ②의 where와 ⑤의 that도 각각 옳습니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "A modern data center is a far stranger place than most people imagine. Thousands of servers, [[1:packed]] into windowless halls, run without pause and generate an enormous amount of heat. The cool climate of the far north, [[2:where]] land and electricity are cheap, has drawn many of these giant facilities in recent years. Every message a user sends [[3:passes]] silently through such a building before it reaches anyone. The machines never rest, with powerful pumps [[4:pushed]] chilled water through the racks and fans roaring overhead, a scale of hidden effort [[5:that]] few users ever picture.",
+      "answer": 4,
+      "correction": "pushing",
+      "rationales": [
+        "서버는 창문 없는 홀에 채워 넣어지는 대상이므로 Thousands of servers를 수식하는 과거분사 packed가 옳습니다.",
+        "뒤에 성분이 모두 갖춰진 완전한 절이 오고 the cool climate of the far north를 설명하므로 관계부사 where가 옳습니다.",
+        "주어의 핵이 단수 명사 Every message이고 a user sends는 수식하는 관계절이므로 단수 동사 passes가 옳습니다.",
+        "with 뒤의 명사 powerful pumps가 목적어 chilled water를 거느리고 물을 밀어 보내는 주체이므로 현재분사 pushing이 옳습니다.",
+        "선행사 a scale of hidden effort가 있고 picture의 목적어가 빠진 불완전한 절을 이끌므로 관계대명사 that이 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u07", "u02", "u09", "u06"],
+      "gist": "값싼 전력을 찾아 세워진 데이터센터가 막대한 열과 전기를 소모하는 현실을 다룹니다."
+    }
+  ]
+}

@@ -37,8 +37,11 @@ const ESTIMATE_USD_PER_ACTION: Record<OperationType, number> = {
   PASSAGE_VARIANT: 0.002,
   WEBTOON_IMAGE: 0.008,
   WEBTOON_IMAGE_PREMIUM: 0.02,
+  WEBTOON_EXAM_DOWNLOAD: 0.0002,
   EXAM_ANALYSIS: 0.057, // 문항 1개당 — v3 직접분석 실측(26-07-06): 28문항 $1.59(E1a $0.18+E1b/c $1.40)/28
   EXAM_STUDENT_REPORT: 0.05, // 학생 1명당(5cr): E2 판독 $0.15(무과금분 포함)+E4 내러티브 ~$0.10 ≈ $0.25/5cr
+  EXAM_ANALYSIS_BOOST: 0.05, // 문항 1개당 — E1b 개작 텍스트 배치(8문항/콜, vision 프로브 없음). E1b/c 실측 $1.40/28문항 준용
+  EXAM_TREND_ANALYSIS: 0.1, // 학생 1명당 — 프리미엄 내러티브 1콜(E4 동급, 이력 집계 입력 포함) ~$0.10/콜
 };
 
 // 표시 순서(카테고리별).
@@ -58,8 +61,11 @@ const FEATURE_ORDER: OperationType[] = [
   "PASSAGE_VARIANT",
   "WEBTOON_IMAGE",
   "WEBTOON_IMAGE_PREMIUM",
+  "WEBTOON_EXAM_DOWNLOAD",
   "EXAM_ANALYSIS",
   "EXAM_STUDENT_REPORT",
+  "EXAM_ANALYSIS_BOOST",
+  "EXAM_TREND_ANALYSIS",
   "TEXT_EXTRACTION",
 ];
 
@@ -76,9 +82,12 @@ const FEATURE_NOTE: Partial<Record<OperationType, string>> = {
   AUTO_GEN_BATCH: "문제 1개당",
   AI_CHAT: "메시지 1개당",
   WEBTOON_IMAGE: "이미지 1장당",
+  WEBTOON_EXAM_DOWNLOAD: "검수 완료 기출 1장당",
   TEXT_EXTRACTION: "페이지 1장당 · 무료 제공",
   EXAM_ANALYSIS: "문항 1개당 · 최소 15크레딧",
   EXAM_STUDENT_REPORT: "학생 1명당",
+  EXAM_ANALYSIS_BOOST: "문항 1개당",
+  EXAM_TREND_ANALYSIS: "학생 1명당",
 };
 
 export interface MarginTierCell {

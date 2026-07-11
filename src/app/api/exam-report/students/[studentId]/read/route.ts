@@ -1,5 +1,13 @@
 // ============================================================================
-// POST /api/exam-report/students/[studentId]/read — E2 답안 판독(vision)
+// [은퇴 — 26-07-08 플로우 개편] POST .../read — E2 답안 판독(vision)
+//
+// 사진 채점(E2) 기능 폐기 결정으로 UI 진입점(read-step 사진 판독 타일,
+// use-verdict-state.runRead 배선)이 전부 제거되어 이 라우트를 호출하는 화면은
+// 없습니다. 롤백 안전을 위해 라우트 본체는 삭제하지 않고 유지합니다.
+// 기존 판독 데이터(readState/sourceFiles)의 열람은 이 라우트와 무관합니다.
+// ============================================================================
+//
+// (원 사양) POST /api/exam-report/students/[studentId]/read — E2 답안 판독(vision)
 //
 // 학생 마킹 사진(sourceFiles)을 부모 examMap 기준으로 판독해 StudentResponse 를
 // 프리필한다. 무과금. 남용 가드 = 학생당 readRuns 3회 캡(선증가). 동시실행 차단은

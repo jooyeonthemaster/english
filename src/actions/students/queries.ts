@@ -2,7 +2,12 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "./_helpers";
-import type { StudentDeviceItem, StudentFilters } from "./types";
+import {
+  buildStudentsOrderBy,
+  buildStudentsWhere,
+  type StudentDeviceItem,
+  type StudentFilters,
+} from "./types";
 
 /** Paginated student list with filters */
 export async function getStudents(academyId: string, filters?: StudentFilters) {
@@ -14,37 +19,8 @@ export async function getStudents(academyId: string, filters?: StudentFilters) {
   const pageSize = filters?.pageSize ?? 20;
   const skip = (page - 1) * pageSize;
 
-  const where: Record<string, unknown> = { academyId };
-
-  if (filters?.status && filters.status !== "ALL") {
-    where.status = filters.status;
-  }
-  if (filters?.schoolId) {
-    where.schoolId = filters.schoolId;
-  }
-  if (filters?.classId === "__unassigned__") {
-    // Virtual filter: active students belonging to no class.
-    where.classEnrollments = { none: { status: "ENROLLED" } };
-  } else if (filters?.classId) {
-    where.classEnrollments = {
-      some: {
-        classId: filters.classId,
-        status: "ENROLLED",
-      },
-    };
-  }
-  if (filters?.grade) {
-    where.grade = filters.grade;
-  }
-  if (filters?.billing === "unpaid") {
-    where.invoices = { some: { status: { in: ["PENDING", "PARTIAL", "OVERDUE"] } } };
-  }
-  if (filters?.search) {
-    where.OR = [
-      { name: { contains: filters.search, mode: "insensitive" } },
-      { studentCode: { contains: filters.search, mode: "insensitive" } },
-    ];
-  }
+  // where 해석은 CSV 내보내기(export.ts)와 공유 — types.ts 빌더가 정본.
+  const where = buildStudentsWhere(academyId, filters);
 
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -81,7 +57,7 @@ export async function getStudents(academyId: string, filters?: StudentFilters) {
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: buildStudentsOrderBy(filters?.sort),
       skip,
       take: pageSize,
     }),

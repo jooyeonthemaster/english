@@ -1740,6 +1740,7 @@ export function EmbeddedQuestionBank({
         examTitle={examTitle}
         setExamTitle={setExamTitle}
         selectedCount={selectedIds.size}
+        selectedQuestionIds={Array.from(selectedIds)}
         creating={creatingExam}
         onCreate={handleCreateExam}
       />

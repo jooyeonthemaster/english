@@ -4,7 +4,8 @@
 // /a/[token] 답안입력 페이지의 유일한 쓰기 경로. proxy.ts 매처(화이트리스트)에
 // /api 최상위가 없어 미들웨어 자체가 돌지 않는다 — requireStaff 금지, 토큰 검증만.
 // 흐름: 토큰 형식 → answerToken+answerEnabled 행 조회 → gradingConfirmed 잠금 →
-//       examMap 파스 → applyAnswerSubmission(순수) → clamp+scoreSummary 재계산 →
+//       examMap 파스 → applyAnswerSubmission(순수) → 전 문항 기입 검증(missing
+//       있으면 400 INCOMPLETE, 저장 없음) → clamp+scoreSummary 재계산 →
 //       version CAS(충돌 시 재조회 후 재적용, 최대 3회).
 // 보안 1순위: 응답에 정오/점수/정답(correctAnswer·status·scoreSummary) 절대 미포함.
 // ============================================================================
@@ -125,11 +126,24 @@ export async function POST(
       );
     }
 
-    const { responses, applied, skippedReviewed } = applyAnswerSubmission({
+    const { responses, applied, skippedReviewed, missing } = applyAnswerSubmission({
       examMap,
       existing: parseStudentResponses(student.responses),
       entries: body.data.entries,
     });
+    // 전 문항 기입 강제(유저 결정 2) — 유효 entry 가 없는 문항이 하나라도 있으면
+    // 저장 없이 400(클라 우회 방지). missing 은 학생 본인 제출에서 파생된 문항
+    // 번호뿐이라 정오/점수/정답 화이트리스트를 침해하지 않는다.
+    if (missing.length > 0) {
+      return NextResponse.json(
+        {
+          error: "모든 문항의 답을 입력해야 제출할 수 있습니다.",
+          code: "INCOMPLETE",
+          missing,
+        },
+        { status: 400 },
+      );
+    }
     // 전 entry 스킵(examMap 미존재 번호·전부 reviewed)이면 DB 무변경 — 쓰기 자체를 생략.
     // 안 그러면 무의미 POST 반복만으로 answerSubmittedAt 스팸 갱신 + version 증가가
     // 일어나 강사의 updateStudentGrading CAS 가 매번 VERSION_CONFLICT(무인증 쓰기 DoS).

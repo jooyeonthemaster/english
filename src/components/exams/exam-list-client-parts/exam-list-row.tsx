@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Check, FileSearch, PencilLine, Trash2 } from "lucide-react";
+import { Check, FileSearch, PencilLine, Send, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
@@ -30,6 +30,10 @@ interface ExamListRowProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onShowAnalysis?: (id: string) => void;
+  /** 과제 배포 — AssignmentComposer(EXAM 프리셋) 진입. 미지정 시 버튼 숨김. */
+  onAssign?: (id: string) => void;
+  /** 국어 시험지 목록 — 과제 배포 비활성(툴팁 안내, 서버 가드 대칭). */
+  assignLocked?: boolean;
 }
 
 export function ExamListRow({
@@ -40,6 +44,8 @@ export function ExamListRow({
   onEdit,
   onDelete,
   onShowAnalysis,
+  onAssign,
+  assignLocked,
 }: ExamListRowProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -178,6 +184,19 @@ export function ExamListRow({
             className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-slate-100 transition-colors"
           >
             <FileSearch className="w-3.5 h-3.5 text-slate-400" />
+          </button>
+        )}
+        {onAssign && (
+          <button
+            onClick={() => {
+              if (!assignLocked) onAssign(exam.id);
+            }}
+            disabled={assignLocked}
+            title={assignLocked ? "국어 시험지는 지원 예정입니다" : "과제 배포"}
+            aria-label="과제 배포"
+            className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-blue-50 transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+          >
+            <Send className="w-3.5 h-3.5 text-slate-400" />
           </button>
         )}
         <button

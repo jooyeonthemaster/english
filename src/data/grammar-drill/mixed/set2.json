@@ -1,0 +1,267 @@
+{
+  "setId": "set2",
+  "title": "복합 세트 Ⅱ — 연결기 총정리",
+  "unitScope": ["u01", "u02", "u03", "u04", "u05", "u06", "u07", "u08", "u09"],
+  "items": [
+    {
+      "id": "mx2-ps-001",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["that-vs-what", "conj-that", "intransitive-passive", "which-vs-where"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "For much of the twentieth century, psychologists assumed that memory [[1:functioned]] much like a tape recorder that faithfully preserved the past. A long series of careful laboratory experiments has since shown [[2:that]] recollection is instead an active reconstruction of events. Each time we revisit a scene, the mind quietly rebuilds [[3:that]] the original moment actually contained, inventing plausible detail to bridge the gaps. Laboratories [[4:where]] this effect is studied have repeatedly planted convincing false memories in willing volunteers. Such findings reveal just how fragile a witness's testimony [[5:remains]] once suggestive questions begin to intrude.",
+      "answer": 3,
+      "correction": "what",
+      "underlineUnits": ["u01", "u06", "u06", "u07", "u03"],
+      "rationales": [
+        "이미 본동사 functioned가 that절 안의 술어로 자리하므로 과거형이 바르게 쓰였습니다.",
+        "shown 뒤의 절이 성분 결손 없이 완전하므로 명사절을 이끄는 접속사 that이 옳습니다.",
+        "뒤 절이 contained의 목적어가 빠진 불완전한 절이므로 that이 아니라 관계대명사 what이 와야 합니다.",
+        "선행사 Laboratories 뒤에 완전한 절이 이어지므로 관계부사 where가 옳습니다.",
+        "remain은 수동태로 쓸 수 없는 자동사이므로 능동형 remains가 옳습니다."
+      ],
+      "gist": "기억이 수동적 기록이 아니라 능동적 재구성이라는 심리학적 발견을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 that과 what 자리에서는 각각 뒤에 이어지는 절에 빠진 성분이 있는지부터 확인하십시오.",
+        "뒤 절이 성분 하나가 비어 불완전하면 선행사 없이 명사절을 이끄는 연결어가 필요합니다."
+      ],
+      "explanation": "밑줄 ③ 뒤의 the original moment actually contained는 타동사 contained의 목적어가 빠진 불완전한 절입니다. 선행사가 없고 절이 불완전하므로 관계대명사 what이 와야 하며, 완전한 절을 이끄는 that은 올 수 없습니다. 나머지는 완전한 절을 이끄는 접속사 that(②), 완전한 절 앞의 관계부사 where(④), 수동이 불가능한 자동사 remain의 능동형(⑤)으로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-002",
+      "unitId": "u01",
+      "conceptId": "u01-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["no-main-verb", "intervening-pp", "passive-with-object", "conj-that"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The medieval manuscript, discovered inside a sealed crate beneath the old cathedral, [[1:describing]] court rituals that modern historians had long dismissed as pure legend. Because the parchment, together with several fragile wax seals, [[2:has]] survived in unusually dry conditions, its faded text remains legible even after six centuries. The archivists who first catalogued the pages were astonished by how precisely each ceremony [[3:was recorded]] in the margins. The account even names a lavish harvest festival [[4:that]] the city magistrates quietly funded every autumn. What makes the discovery so valuable to scholars is [[5:that]] it confirms events once known only through hostile foreign chronicles.",
+      "answer": 1,
+      "correction": "described",
+      "underlineUnits": ["u01", "u02", "u03", "u06", "u06"],
+      "rationales": [
+        "주절에 본동사가 하나도 없으므로 준동사 describing은 본동사 describes 또는 described로 바뀌어야 합니다.",
+        "진짜 주어는 단수 the parchment이고 together with 이하는 삽입어구이므로 단수 has가 옳습니다.",
+        "each ceremony는 기록되는 대상이고 뒤에 목적어가 없으므로 수동형 was recorded가 옳습니다.",
+        "festival을 선행사로 받아 funded의 목적어 자리가 빈 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "is 뒤의 절이 완전하므로 명사절을 이끄는 접속사 that이 옳습니다."
+      ],
+      "gist": "봉인된 상자에서 발견된 중세 필사본이 전설로 치부되던 사건들을 입증한다는 내용입니다.",
+      "hints": [
+        "문장 전체에서 접속사와 관계사의 수를 세어 본동사가 몇 개 필요한지 확인하십시오.",
+        "삽입된 분사구와 관계절을 걷어내면 주절에 정작 본동사가 남지 않는 경우가 있습니다."
+      ],
+      "explanation": "밑줄 ①이 속한 주절의 주어는 The medieval manuscript인데, discovered 분사구와 that 관계절을 걷어내면 주절에 본동사가 하나도 없습니다. 따라서 준동사 describing이 아니라 본동사 describes 또는 described가 와야 합니다. 나머지는 삽입어구를 지난 단수 주어에 맞춘 has(②), 목적어가 없는 수동형 was recorded(③), 목적어 자리가 빈 절을 이끄는 관계대명사 that(④), 완전한 절을 이끄는 접속사 that(⑤)으로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-003",
+      "unitId": "u07",
+      "conceptId": "u07-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["which-vs-where", "prep-rel", "relative-gap", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "In the study of reaction rates, chemists carefully distinguish the instant [[1:when]] two reactants first collide from the far slower stage that follows. A catalyst works chiefly by lowering the energy barrier [[2:that]] the molecules must overcome before they can rearrange. Because the intermediate compounds formed along the way [[3:are]] often highly unstable, they survive for only tiny fractions of a second. Laboratory experiments have identified a critical temperature [[4:which]] the reaction suddenly accelerates, releasing heat that drives the whole process forward. Chemical engineers exploit this threshold whenever they design reactors [[5:built]] to run continuously without any external heating.",
+      "answer": 4,
+      "correction": "at which",
+      "underlineUnits": ["u07", "u06", "u02", "u07", "u04"],
+      "rationales": [
+        "선행사 instant 뒤에 완전한 절이 이어지므로 시간의 관계부사 when이 옳습니다.",
+        "overcome의 목적어가 빠진 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "진짜 주어는 복수 the intermediate compounds이고 formed 이하는 분사 수식어이므로 are가 옳습니다.",
+        "뒤 절이 완전하므로 관계대명사 which 단독은 쓸 수 없고 at which처럼 전치사를 동반해야 합니다.",
+        "reactors가 만들어지는 대상이므로 이를 수식하는 과거분사 built이 옳습니다."
+      ],
+      "gist": "촉매가 반응 장벽을 낮추어 반응 속도를 높이는 화학 반응 속도론의 원리를 설명합니다.",
+      "hints": [
+        "관계사 뒤에 이어지는 절이 완전한지 불완전한지를 먼저 따져 보십시오.",
+        "완전한 절 앞에는 관계대명사가 단독으로 설 수 없고, 전치사가 함께 있어야 합니다."
+      ],
+      "explanation": "밑줄 ④ 뒤의 the reaction suddenly accelerates는 자동사 accelerates로 끝나는 완전한 절입니다. 완전한 절 앞에서는 관계대명사 which가 단독으로 올 수 없으므로 전치사를 붙인 at which(또는 관계부사 where)가 되어야 합니다. 나머지는 완전한 절 앞의 관계부사 when(①), 목적어가 빠진 절을 이끄는 that(②), 삽입 분사구를 지난 복수 주어에 맞춘 are(③), 명사를 수식하는 과거분사 built(⑤)으로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-004",
+      "unitId": "u09",
+      "conceptId": "u09-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["dangling-subject", "relative-gap", "passive-with-object"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Glaciologists now rely on several decades of satellite data [[1:collected]] from orbiting sensors to track how fast the world's mountain ice is vanishing. Today's glaciers, when set against the records of the 1970s, have already lost a startling share of their mass. [[2:Comparing]] with the earliest field estimates, the latest published figures actually look conservative rather than alarmist. The meltwater [[3:that]] these shrinking glaciers release each summer feeds the rivers on which millions of farmers depend. Scientists warn that, once a glacier retreats past a certain threshold, the damage simply [[4:cannot be reversed]] within any human timescale. Downstream governments are therefore investing heavily in new reservoirs [[5:designed]] to buffer the coming water shortfalls.",
+      "answer": 2,
+      "correction": "Compared",
+      "underlineUnits": ["u04", "u09", "u06", "u03", "u04"],
+      "rationales": [
+        "satellite data가 수집되는 대상이므로 이를 수식하는 과거분사 collected가 옳습니다.",
+        "수치는 비교되는 대상이므로 능동의 Comparing이 아니라 수동의 Compared가 되어야 합니다.",
+        "release의 목적어가 빠진 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "the damage는 되돌려지는 대상이므로 수동형 cannot be reversed가 옳습니다.",
+        "reservoirs가 설계되는 대상이므로 이를 수식하는 과거분사 designed가 옳습니다."
+      ],
+      "gist": "위성 자료로 본 산악 빙하의 급격한 손실과 그 비가역성을 경고하는 글입니다.",
+      "hints": [
+        "문두 분사구문의 의미상 주어를 주절 주어에서 찾아 능동인지 수동인지 판단하십시오.",
+        "주절 주어가 그 동작을 당하는 관계라면 분사는 과거분사가 되어야 합니다."
+      ],
+      "explanation": "밑줄 ②의 분사구문은 주절 주어 the latest published figures를 의미상 주어로 삼는데, 수치는 비교되는 대상이므로 능동의 Comparing이 아니라 수동의 Compared가 되어야 합니다. 나머지는 명사를 수식하는 과거분사 collected(①), 목적어가 빠진 절을 이끄는 관계대명사 that(③), 대상이 되는 수동형 cannot be reversed(④), 명사를 수식하는 과거분사 designed(⑤)로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-005",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "intransitive-passive", "clause-vs-np"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Radiocarbon dating transformed archaeology by giving excavators a clock [[1:that]] runs quite independently of any written records. The technique measures how much of a rare, unstable carbon isotope still [[2:remains]] in a piece of organic material long after burial. [[3:Because]] even a trace of modern contamination can badly distort the reading, laboratories now clean every sample with obsessive care. Charcoal fragments and hardy seeds [[4:are]] generally preferred, since they lock their carbon away in a stable form. Yet a date can still mislead an excavator [[5:despite]] the sample itself was handled perfectly, if the surrounding soil was disturbed in antiquity.",
+      "answer": 5,
+      "correction": "although",
+      "underlineUnits": ["u06", "u03", "u08", "u02", "u08"],
+      "rationales": [
+        "clock을 선행사로 받아 runs의 주어 자리가 빈 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "remain은 수동으로 쓸 수 없는 자동사이므로 능동형 remains가 옳습니다.",
+        "뒤에 완전한 절이 이어지므로 이유를 나타내는 접속사 Because가 옳습니다.",
+        "Charcoal fragments and hardy seeds는 복수 주어이므로 are가 옳습니다.",
+        "뒤에 완전한 절이 오므로 전치사 despite가 아니라 접속사 although가 와야 합니다."
+      ],
+      "gist": "방사성 탄소 연대측정의 원리와 오염·교란이 연대를 왜곡하는 문제를 설명합니다.",
+      "hints": [
+        "밑줄 친 연결어 바로 뒤에 주어와 동사를 갖춘 절이 오는지, 명사구만 오는지 확인하십시오.",
+        "뒤에 완전한 절이 이어진다면 전치사가 아니라 접속사가 와야 합니다."
+      ],
+      "explanation": "밑줄 ⑤ 뒤의 the sample itself was handled perfectly는 주어와 동사를 갖춘 완전한 절입니다. 절 앞에는 전치사 despite가 올 수 없고 접속사 although가 와야 합니다. 나머지는 주어 자리가 빈 절을 이끄는 관계대명사 that(①), 수동이 불가능한 자동사 remain의 능동형(②), 절을 이끄는 접속사 Because(③), 복수 주어에 맞춘 are(④)로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-006",
+      "unitId": "u06",
+      "conceptId": "u06-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["that-vs-what", "conj-that", "prep-rel", "passive-with-object"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "New Caledonian crows have become famous for the sheer ingenuity [[1:with which]] they fashion hooks out of ordinary twigs. In one controlled trial, a straight length of wire [[2:is bent]] into a serviceable hook within seconds, a feat few other animals can match. What most astonishes the researchers is [[3:what]] the birds solve each brand-new puzzle without any prior training at all. Some individuals even keep a favourite tool carefully hidden, [[4:carrying]] it from one foraging site to the next. These observations strongly suggest [[5:that]] complex cognition has evolved more than once along quite separate branches of the tree of life.",
+      "answer": 3,
+      "correction": "that",
+      "underlineUnits": ["u07", "u03", "u06", "u09", "u06"],
+      "rationales": [
+        "선행사 ingenuity 뒤에 완전한 절이 이어지므로 전치사와 결합한 with which가 옳습니다.",
+        "wire는 구부러지는 대상이므로 수동형 is bent가 옳습니다.",
+        "뒤 절이 solve의 목적어까지 갖춘 완전한 절이므로 관계대명사 what이 아니라 접속사 that이 와야 합니다.",
+        "주절 주어 individuals가 도구를 가지고 다니는 능동 관계이므로 분사 carrying이 옳습니다.",
+        "suggest 뒤의 절이 완전하므로 명사절을 이끄는 접속사 that이 옳습니다."
+      ],
+      "gist": "도구를 만드는 까마귀의 지능이 인지가 여러 계통에서 독립적으로 진화했음을 시사한다는 글입니다.",
+      "hints": [
+        "is 뒤 명사절에서 that과 what 중 무엇이 올지, 그 절의 완전성을 따져 보십시오.",
+        "뒤 절에 빠진 성분이 없다면 불완전한 절을 이끄는 관계대명사는 올 수 없습니다."
+      ],
+      "explanation": "밑줄 ③ 뒤의 the birds solve each brand-new puzzle without any prior training은 solve의 목적어까지 갖춘 완전한 절입니다. 완전한 절 앞에는 성분 결손을 요구하는 what이 올 수 없고 접속사 that이 와야 합니다. 나머지는 완전한 절 앞의 전치사+관계대명사 with which(①), 대상이 되는 수동형 is bent(②), 주절 주어와 능동 관계인 분사 carrying(④), 완전한 절을 이끄는 접속사 that(⑤)으로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-007",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "conj-that", "which-vs-where"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "A well-organized immunization campaign [[1:was reached]] millions of young children in its very first year, curbing outbreaks that had once seemed utterly unstoppable. Public-health officials understand [[2:that]] herd immunity shields even those individuals who cannot safely be vaccinated. The exact proportion of a population [[3:that]] must be covered varies sharply from one disease to the next. Measles, [[4:being]] extraordinarily contagious, demands vaccination coverage well above ninety-five percent of the community. Once local vaccination rates begin to slip, the virus quietly returns to neighbourhoods [[5:where]] a dangerous complacency has already taken hold.",
+      "answer": 1,
+      "correction": "reached",
+      "underlineUnits": ["u03", "u06", "u06", "u09", "u07"],
+      "rationales": [
+        "뒤에 목적어 millions of young children이 그대로 있으므로 수동 was reached가 아니라 능동형 reached가 옳습니다.",
+        "understand 뒤의 절이 완전하므로 명사절을 이끄는 접속사 that이 옳습니다.",
+        "must be covered의 주어 자리가 빈 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "주절 주어 Measles를 의미상 주어로 삼는 분사구문이므로 being이 옳습니다.",
+        "선행사 neighbourhoods 뒤에 완전한 절이 이어지므로 관계부사 where가 옳습니다."
+      ],
+      "gist": "예방접종과 집단면역, 그리고 접종률 하락 시 감염병 재유행의 위험을 설명합니다.",
+      "hints": [
+        "밑줄 친 동사 바로 뒤에 목적어가 그대로 남아 있는지 확인하십시오.",
+        "목적어를 그대로 취하는 타동사는 수동태로 바뀔 수 없습니다."
+      ],
+      "explanation": "밑줄 ① 뒤에는 목적어 millions of young children이 그대로 남아 있습니다. 목적어를 취하는 타동사는 수동으로 쓸 수 없으므로 was reached가 아니라 능동형 reached가 되어야 합니다. 나머지는 완전한 절을 이끄는 접속사 that(②), 주어 자리가 빈 절을 이끄는 관계대명사 that(③), 주절 주어를 의미상 주어로 삼는 분사 being(④), 완전한 절 앞의 관계부사 where(⑤)로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-008",
+      "unitId": "u07",
+      "conceptId": "u07-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["prep-rel", "which-vs-where", "conj-that", "distant-parallel"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Economists have long puzzled over the peculiar fate of the resources [[1:that]] no single owner ever controls. A coastal fishery, [[2:shared]] uneasily among dozens of independent boats, illustrates the underlying dilemma vividly. Each skipper quietly reasons [[3:that]] taking one extra haul brings him a private gain while the true cost is spread thinly across everyone. The very abundance [[4:where]] the whole fleet depends therefore erodes season after season until the stock finally collapses. Communities that manage to escape this trap usually do so by inventing rules enforced collectively rather than [[5:imposed]] abruptly from above.",
+      "answer": 4,
+      "correction": "on which",
+      "underlineUnits": ["u06", "u04", "u06", "u07", "u05"],
+      "rationales": [
+        "controls의 목적어가 빠진 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "fishery는 공유되는 대상이므로 이를 수식하는 과거분사 shared가 옳습니다.",
+        "reasons 뒤의 절이 완전하므로 명사절을 이끄는 접속사 that이 옳습니다.",
+        "뒤 절에서 depends on의 목적어가 비어 있으므로 관계부사 where가 아니라 on which가 와야 합니다.",
+        "rather than을 사이에 두고 앞의 enforced와 병렬을 이루므로 과거분사 imposed가 옳습니다."
+      ],
+      "gist": "주인이 없는 공유 자원이 남획으로 고갈되는 공유지의 비극을 경제학적으로 설명합니다.",
+      "hints": [
+        "관계사 뒤 절에서 전치사의 목적어가 빠져 있는지 살펴보십시오.",
+        "depend on처럼 전치사를 동반하는 동사 뒤에 목적어가 없다면 관계부사로는 그 자리를 메울 수 없습니다."
+      ],
+      "explanation": "밑줄 ④ 뒤의 the whole fleet depends는 depend on의 목적어가 빠진 불완전한 절입니다. 관계부사 where는 완전한 절 앞에만 오므로 이 자리에는 전치사를 동반한 on which가 와야 합니다. 나머지는 목적어가 빠진 절을 이끄는 관계대명사 that(①), 명사를 수식하는 과거분사 shared(②), 완전한 절을 이끄는 접속사 that(③), 앞의 enforced와 병렬을 이루는 과거분사 imposed(⑤)로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-009",
+      "unitId": "u09",
+      "conceptId": "u09-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["with-absolute", "relative-gap", "which-vs-where", "passive-with-object"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Mangrove forests reliably guard tropical coastlines against the erosion [[1:that]] powerful storms would otherwise inflict. A single mature tree, its roots [[2:exposing]] to the twice-daily tides, filters out sediment and slows the surge of the incoming waves. [[3:Trapped]] among the dense tangle of roots, fine grey mud gradually builds fresh land at the water's edge. The same forest also shelters quiet lagoons [[4:where]] countless juvenile fish mature before venturing offshore. Where mangroves [[5:have been]] cleared to make room for shrimp farms, the exposed coast grows measurably more vulnerable to seasonal flooding.",
+      "answer": 2,
+      "correction": "exposed",
+      "underlineUnits": ["u06", "u09", "u09", "u07", "u03"],
+      "rationales": [
+        "inflict의 목적어가 빠진 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "뿌리는 조수에 드러나는 대상이므로 능동의 exposing이 아니라 수동의 exposed가 되어야 합니다.",
+        "주절 주어 mud가 갇히는 수동 관계이므로 과거분사 Trapped가 옳습니다.",
+        "선행사 lagoons 뒤에 완전한 절이 이어지므로 관계부사 where가 옳습니다.",
+        "mangroves는 제거되는 대상이므로 수동형 have been cleared가 옳습니다."
+      ],
+      "gist": "맹그로브 숲이 뿌리와 침전물로 해안 침식을 막아 주는 생태적 기능을 설명합니다.",
+      "hints": [
+        "with 없이 명사 뒤에 놓인 분사에서, 그 명사와 분사의 능·수동 관계를 따져 보십시오.",
+        "명사가 그 동작을 당하는 관계라면 분사는 과거분사가 되어야 합니다."
+      ],
+      "explanation": "밑줄 ②는 its roots를 의미상 주어로 삼는 독립분사구문인데, 뿌리는 조수에 드러나는 대상이므로 능동의 exposing이 아니라 수동의 exposed가 되어야 합니다. 나머지는 목적어가 빠진 절을 이끄는 관계대명사 that(①), 주절 주어와 수동 관계인 분사 Trapped(③), 완전한 절 앞의 관계부사 where(④), 대상이 되는 수동형 have been cleared(⑤)로 모두 옳습니다."
+    },
+    {
+      "id": "mx2-ps-010",
+      "unitId": "u05",
+      "conceptId": "u05-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["shared-aux", "coord-pair", "despite-although", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Modern city planners increasingly treat parks and street trees not as mere decoration but as vital infrastructure [[1:that]] performs genuinely measurable work. A single well-placed canopy cools the hot pavement, [[2:absorbs]] sudden storm runoff, and shelters weary pedestrians from the summer glare. Detailed studies [[3:conducted]] right across several continents now link leafy neighbourhoods to markedly lower rates of heat-related illness. [[4:Although]] such striking benefits are by now widely documented, planners still struggle to secure any long-term funding for them. A single mature tree can intercept thousands of litres of rainwater, filter fine airborne dust, and [[5:cooling]] the surrounding air through steady evaporation.",
+      "answer": 5,
+      "correction": "cool",
+      "underlineUnits": ["u06", "u05", "u04", "u08", "u05"],
+      "rationales": [
+        "performs의 주어 자리가 빈 불완전한 절을 이끄므로 관계대명사 that이 옳습니다.",
+        "주어 canopy에 맞춰 cools, shelters와 병렬을 이루는 단수 현재형 absorbs가 옳습니다.",
+        "studies가 수행되는 대상이므로 이를 수식하는 과거분사 conducted가 옳습니다.",
+        "뒤에 완전한 절이 이어지므로 양보를 나타내는 접속사 Although가 옳습니다.",
+        "조동사 can에 걸려 intercept, filter와 병렬을 이루어야 하므로 cooling이 아니라 원형 cool이 옳습니다."
+      ],
+      "gist": "공원과 가로수를 도시의 필수 기반시설로 보는 현대 도시계획의 관점을 설명하는 글입니다.",
+      "hints": [
+        "조동사 can 뒤에 and로 연결된 동사들이 서로 같은 형태인지 확인하십시오.",
+        "하나의 조동사가 여러 동사에 공유될 때 뒤 항의 동사도 앞 항과 같은 형태여야 합니다."
+      ],
+      "explanation": "밑줄 ⑤는 조동사 can에 걸리는 intercept, filter와 and로 병렬을 이루므로 동일한 원형 cool이 되어야 하며, cooling은 병렬을 깨뜨립니다. 나머지는 주어 자리가 빈 절을 이끄는 관계대명사 that(①), 앞뒤 동사와 병렬을 이루는 단수 현재형 absorbs(②), 명사를 수식하는 과거분사 conducted(③), 완전한 절을 이끄는 접속사 Although(④)로 모두 옳습니다."
+    }
+  ]
+}

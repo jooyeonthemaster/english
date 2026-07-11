@@ -1,0 +1,290 @@
+{
+  "unitId": "u06",
+  "concepts": [
+    {
+      "id": "u06-c1",
+      "unitId": "u06",
+      "order": 1,
+      "title": "선행사 유무 판단",
+      "oneLiner": "앞에 선행사(명사)가 있으면 that/which, 없으면 what입니다.",
+      "algorithm": [
+        "밑줄 친 관계사 바로 앞에서 수식을 받을 명사(선행사)를 찾습니다.",
+        "선행사가 있으면 that/which를 고르고, 없으면 선행사를 스스로 포함하는 what을 고릅니다.",
+        "선행사가 안 보이면 관계사 앞의 전치사구·수식어를 걷어 내고 한 번 더 확인합니다.",
+        "what을 골랐다면 what절 전체가 문장에서 주어·목적어·보어 자리를 차지하는지 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "앞에 선행사(명사)가 있으면 that/which가 그 명사를 수식합니다.",
+          "examples": [
+            {
+              "en": "She finally found **the letter that** her grandfather had hidden in the attic.",
+              "ko": "그녀는 마침내 할아버지가 다락에 숨겨 둔 그 편지를 찾아냈습니다.",
+              "note": "선행사 the letter 존재 → that (what 불가)"
+            },
+            {
+              "en": "The **bridge which** connects the two islands was built in 1930.",
+              "ko": "두 섬을 잇는 그 다리는 1930년에 건설되었습니다.",
+              "note": "선행사 bridge 존재 → which"
+            }
+          ]
+        },
+        {
+          "rule": "선행사가 없으면 what이 스스로 명사절(= the thing which)을 만들어 주어·목적어·보어 자리를 채웁니다.",
+          "examples": [
+            {
+              "en": "**What** matters most in science is honest evidence.",
+              "ko": "과학에서 가장 중요한 것은 정직한 증거입니다.",
+              "note": "앞에 명사 없음 → what절이 문장의 주어"
+            },
+            {
+              "en": "The coach praised **what** the players had achieved together.",
+              "ko": "코치는 선수들이 함께 이루어 낸 것을 칭찬했습니다.",
+              "note": "praised의 목적어 자리를 명사절이 채움 → what"
+            }
+          ]
+        },
+        {
+          "rule": "what은 이미 선행사를 포함한 말이므로, 명사 바로 뒤에 또 올 수 없습니다.",
+          "examples": [
+            {
+              "en": "**Everything that** the museum displays was donated by local families.",
+              "ko": "그 박물관이 전시하는 모든 것은 지역 가정들이 기증한 것입니다.",
+              "note": "Everything이 선행사 → that (Everything what은 비문)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "'~것'으로 해석된다고 전부 what은 아닙니다",
+          "body": "everything, all, the thing 같은 명사가 이미 있으면 '~것'으로 해석되더라도 관계사는 that이어야 합니다. 우리말 해석이 아니라 관계사 앞자리에 명사가 실재하는지로 판단합니다.",
+          "example": {
+            "en": "**All that** the witnesses remembered was written down.",
+            "ko": "목격자들이 기억한 모든 것이 기록되었습니다.",
+            "note": "해석은 '~것'이지만 선행사 All 존재 → that"
+          }
+        },
+        {
+          "title": "선행사가 관계사에서 멀리 떨어진 자리",
+          "body": "선행사와 관계사 사이에 전치사구가 끼면 선행사가 없어 보여서 what을 고르기 쉽습니다. 관계사 바로 앞 덩어리를 걷어 내고 그 앞의 진짜 선행사를 찾으십시오.",
+          "example": {
+            "en": "The **theory** about human memory **that** she proposed changed the whole field.",
+            "ko": "그녀가 제안한 인간 기억에 관한 이론은 그 분야 전체를 바꾸었습니다.",
+            "note": "선행사 theory + 전치사구 about human memory 삽입 → that"
+          }
+        }
+      ],
+      "confusableWith": ["u06-c2", "u06-c4"]
+    },
+    {
+      "id": "u06-c2",
+      "unitId": "u06",
+      "order": 2,
+      "title": "명사절 that vs what — 절의 완전성",
+      "oneLiner": "that은 완전한 절, what은 불완전한 절(성분 결손)을 이끕니다.",
+      "algorithm": [
+        "that/what 뒤 절의 주어·목적어·보어를 하나씩 셉니다.",
+        "성분이 모두 갖추어진 완전한 절이면 접속사 that을 고릅니다.",
+        "주어나 목적어가 한 자리 비어 있으면 그 빈자리를 채우는 what을 고릅니다.",
+        "뒤 절의 동사가 타동사인데 목적어가 안 보이면 결손으로 판정합니다.",
+        "전치사 바로 뒤 명사절 자리라면 that이 아니라 what이 서야 함을 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "뒤 절이 완전하면(빠진 성분 없음) 접속사 that이 명사절을 이끕니다.",
+          "examples": [
+            {
+              "en": "The report shows **that** small habits shape our long-term health.",
+              "ko": "그 보고서는 작은 습관이 우리의 장기적 건강을 형성한다는 것을 보여 줍니다.",
+              "note": "habits(주어) shape(동사) health(목적어) — 완전한 절 → that"
+            }
+          ]
+        },
+        {
+          "rule": "뒤 절에 주어나 목적어가 빠져 있으면 what이 그 빈자리를 채웁니다.",
+          "examples": [
+            {
+              "en": "The guide explained **what** the ancient symbols on the wall meant.",
+              "ko": "안내인은 벽에 새겨진 고대 기호들이 무엇을 의미하는지 설명해 주었습니다.",
+              "note": "meant의 목적어 결손 → what"
+            },
+            {
+              "en": "**What** the experiment proved surprised even the researchers.",
+              "ko": "그 실험이 증명해 낸 것은 연구자들조차 놀라게 했습니다.",
+              "note": "proved의 목적어 결손 → what절이 주어"
+            }
+          ]
+        },
+        {
+          "rule": "전치사 바로 뒤의 명사절 자리에는 what이 서고, 접속사 that은 설 수 없습니다.",
+          "examples": [
+            {
+              "en": "Success often depends **on what** you do after a failure.",
+              "ko": "성공은 흔히 실패 뒤에 무엇을 하는가에 달려 있습니다.",
+              "note": "전치사 on 뒤 → that절 불가, what절 가능"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "동사만 보고 찍으면 당합니다 — explain 뒤에도 that과 what이 모두 옵니다",
+          "body": "explain, show, know 같은 동사는 완전한 절(that)과 불완전한 절(what)을 모두 목적어로 취할 수 있습니다. 동사의 종류가 아니라 뒤 절의 빈자리 유무를 끝까지 세어야 합니다.",
+          "example": {
+            "en": "The teacher explained **that** the deadline could not be moved.",
+            "ko": "선생님은 마감일을 옮길 수 없다고 설명하셨습니다.",
+            "note": "explain 뒤라도 절이 완전하면 that"
+          }
+        },
+        {
+          "title": "타동사의 목적어 결손을 놓치는 함정",
+          "body": "뒤 절의 동사가 타동사인데 목적어가 보이지 않으면 그 절은 불완전합니다. 주어와 동사만 확인하고 완전하다고 성급하게 판정하면 that을 골라 틀리게 됩니다.",
+          "example": {
+            "en": "Nobody could predict **what** the new policy would bring.",
+            "ko": "그 새 정책이 무엇을 가져올지는 아무도 예측할 수 없었습니다.",
+            "note": "bring의 목적어 결손 → what"
+          }
+        }
+      ],
+      "confusableWith": ["u06-c1", "u06-c4", "u07-c1"]
+    },
+    {
+      "id": "u06-c3",
+      "unitId": "u06",
+      "order": 3,
+      "title": "콤마+which 계속적 용법",
+      "oneLiner": "콤마+which는 앞 절 전체를 받을 수 있고, that·what은 불가합니다.",
+      "algorithm": [
+        "관계사 자리 바로 앞에 콤마가 있는지 확인합니다.",
+        "콤마가 있으면 that과 what을 후보에서 제외합니다(사물·절이면 which, 사람이면 who).",
+        "which가 특정 명사를 받는지, 앞 절 전체 내용을 받는지 해석으로 확정합니다.",
+        "which가 앞 절 전체를 받으면 뒤따르는 동사가 단수인지까지 점검합니다."
+      ],
+      "rules": [
+        {
+          "rule": "콤마 뒤 계속적 용법에서는 that을 쓸 수 없고 which를 씁니다.",
+          "examples": [
+            {
+              "en": "The team canceled the launch**, which** disappointed thousands of fans.",
+              "ko": "그 팀은 출시를 취소했고, 이는 수천 명의 팬을 실망시켰습니다.",
+              "note": "콤마 뒤 → that 불가, which"
+            }
+          ]
+        },
+        {
+          "rule": "콤마+which는 명사 하나가 아니라 앞 절 전체를 선행사로 받을 수 있습니다.",
+          "examples": [
+            {
+              "en": "He arrived an hour late again**, which** made the whole meeting start over.",
+              "ko": "그는 또 한 시간 늦게 도착했고, 그 일이 회의 전체를 다시 시작하게 만들었습니다.",
+              "note": "선행사 = 앞 절 전체(그가 늦게 도착한 일)"
+            }
+          ]
+        },
+        {
+          "rule": "앞 절 내용을 받는 자리라도 what은 쓸 수 없습니다 — what은 선행사를 스스로 포함하는 말이기 때문입니다.",
+          "examples": [
+            {
+              "en": "The glaciers are melting faster**, which** scientists find deeply alarming.",
+              "ko": "빙하가 더 빠르게 녹고 있는데, 과학자들은 이를 매우 우려스럽게 여깁니다.",
+              "note": "앞 절을 받는 콤마 뒤 자리 → what 불가, which"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "'앞 내용 = ~한 것'이라는 해석에 끌려 what을 고르는 함정",
+          "body": "콤마 뒤에서 앞 문장 내용을 받으면 '~한 것'으로 자연스럽게 해석되기 때문에 what이 정답처럼 보입니다. 그러나 what은 콤마 뒤 계속적 용법에 설 수 없으므로, 콤마가 보이면 기계적으로 which를 선택합니다.",
+          "example": {
+            "en": "Sales doubled in a single year**, which** nobody had expected.",
+            "ko": "매출이 단 1년 만에 두 배가 되었는데, 이는 아무도 예상하지 못한 일이었습니다.",
+            "note": "'~한 것'으로 해석되어도 콤마 뒤 → which"
+          }
+        },
+        {
+          "title": "콤마+which 뒤 동사의 수일치",
+          "body": "which가 앞 절 전체를 받으면 단수 취급하므로 단수 동사가 옵니다. which 바로 앞의 복수 명사에 끌려 복수 동사를 고르지 않도록 주의합니다.",
+          "example": {
+            "en": "She donated all her books**, which was** a generous decision.",
+            "ko": "그녀는 자신의 책을 전부 기증했는데, 그것은 관대한 결정이었습니다.",
+            "note": "which = 앞 절 전체 → 단수 was (books에 끌리지 않기)"
+          }
+        }
+      ],
+      "confusableWith": ["u06-c1", "u06-c2"]
+    },
+    {
+      "id": "u06-c4",
+      "unitId": "u06",
+      "order": 4,
+      "title": "관계대명사 that vs 접속사 that",
+      "oneLiner": "뒤 절이 불완전하면 관계대명사, 완전하면 접속사 that입니다.",
+      "algorithm": [
+        "명사 뒤 that절의 주어·목적어·보어가 다 갖추어졌는지 셉니다.",
+        "불완전하면 관계대명사 that입니다 — 앞의 선행사가 빈자리에 들어가 해석되는지 확인합니다.",
+        "완전하면 접속사 that입니다 — 앞 명사의 내용을 풀어 주는 동격절로 해석되는지 확인합니다.",
+        "fact·idea·news·belief·evidence 뒤의 완전한 절은 동격 that의 대표 신호로 기억합니다."
+      ],
+      "rules": [
+        {
+          "rule": "명사 뒤 that절이 불완전하면 관계대명사 that입니다 — 선행사가 빈자리를 채웁니다.",
+          "examples": [
+            {
+              "en": "The rumor **that** the mayor denied yesterday spread even faster.",
+              "ko": "시장이 어제 부인한 그 소문은 오히려 더 빠르게 퍼졌습니다.",
+              "note": "denied의 목적어 결손 → 관계대명사 that (the rumor가 빈자리로)"
+            }
+          ]
+        },
+        {
+          "rule": "명사 뒤 that절이 완전하면 동격의 접속사 that입니다 — 명사의 내용을 설명합니다.",
+          "examples": [
+            {
+              "en": "The belief **that** hard work always brings success is comforting but incomplete.",
+              "ko": "노력이 항상 성공을 가져온다는 믿음은 위안이 되지만 불완전합니다.",
+              "note": "work(주어) brings(동사) success(목적어) — 완전 → 동격 that"
+            }
+          ]
+        },
+        {
+          "rule": "같은 명사 뒤라도 절의 완전성에 따라 that의 정체가 달라집니다.",
+          "examples": [
+            {
+              "en": "The news **that** the reporter had hidden for weeks finally came out.",
+              "ko": "그 기자가 몇 주 동안 숨겨 왔던 소식이 마침내 드러났습니다.",
+              "note": "hidden의 목적어 결손 → 관계대명사 that"
+            },
+            {
+              "en": "The news **that** the two companies would merge shocked the market.",
+              "ko": "두 회사가 합병할 것이라는 소식은 시장에 충격을 주었습니다.",
+              "note": "완전한 절 → 동격 접속사 that"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "완전한 절 앞의 that을 틀렸다고 찍는 함정",
+          "body": "fact, idea, news 같은 명사 뒤에 완전한 절이 오면 접속사 that이 어법상 옳습니다. '명사 뒤인데 which가 아니다'라는 이유로 옳은 that에 틀렸다고 표시하면 미끼에 걸린 것입니다.",
+          "example": {
+            "en": "The fact **that** oceans absorb carbon dioxide slows global warming.",
+            "ko": "바다가 이산화탄소를 흡수한다는 사실은 지구 온난화를 늦춥니다.",
+            "note": "완전한 절 → 접속사 that이 정문 (which 불가)"
+          }
+        },
+        {
+          "title": "동격 that을 what으로 바꾸려는 함정",
+          "body": "동격절은 '~라는 것'으로 해석되어 what처럼 느껴집니다. 그러나 뒤 절이 완전하면 what은 설 수 없습니다. 해석의 느낌이 아니라 성분 결손 유무로 판단합니다.",
+          "example": {
+            "en": "Researchers welcomed the evidence **that** sleep strengthens memory.",
+            "ko": "연구자들은 수면이 기억을 강화한다는 증거를 반겼습니다.",
+            "note": "완전한 절 → what 불가, 동격 that"
+          }
+        }
+      ],
+      "confusableWith": ["u06-c1", "u06-c2", "u07-c1"]
+    }
+  ]
+}

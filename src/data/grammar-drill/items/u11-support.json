@@ -1,0 +1,1214 @@
+{
+  "unitId": "u11",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u11-c1-ox-001",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["gerund-verb"],
+      "sentence": "The committee has finally finished [[u:to review]] the applications for this year's research grant.",
+      "isCorrect": false,
+      "correction": "reviewing",
+      "translation": "위원회는 올해 연구 지원금에 접수된 신청서 검토를 마침내 끝냈습니다.",
+      "hints": [
+        "밑줄 바로 앞의 동사 finished가 목적어로 어떤 형태를 요구하는 동사인지 확인해 보십시오.",
+        "finish 계열 동사는 목적어로 동명사만 취하고 to부정사는 취하지 못합니다."
+      ],
+      "explanation": "finish는 enjoy·avoid·mind와 같이 동명사만 목적어로 취하는 동사입니다. 따라서 to review가 아니라 동명사 reviewing으로 써야 합니다. finish 뒤의 to부정사는 목적어 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u11-c1-ox-002",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-to"],
+      "sentence": "Many residents object to [[u:building]] a waste facility so close to the elementary school.",
+      "isCorrect": true,
+      "translation": "많은 주민들이 초등학교와 그렇게 가까운 곳에 폐기물 처리 시설을 짓는 것에 반대합니다.",
+      "hints": [
+        "밑줄 앞의 to가 부정사의 to인지 전치사인지, to 뒤에 명사를 넣어 문장이 성립하는지 시험해 보십시오.",
+        "동사 뒤의 to가 전치사라면 그 뒤에는 동사원형이 아니라 동명사가 와야 합니다."
+      ],
+      "explanation": "object to의 to는 전치사이므로 뒤에 동명사 building이 온 것은 옳습니다. to the plan처럼 to 뒤에 명사를 넣어도 문장이 성립하는 것이 전치사라는 증거입니다. 부정사의 to로 착각해 동사원형으로 고치면 오히려 틀립니다."
+    },
+    {
+      "id": "u11-c1-ox-003",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["gerund-verb"],
+      "sentence": "Volunteers avoided [[u:to disturb]] the nesting birds while they cleared the fallen branches from the trail.",
+      "isCorrect": false,
+      "correction": "disturbing",
+      "translation": "자원봉사자들은 등산로에서 쓰러진 나뭇가지를 치우는 동안 둥지를 튼 새들을 방해하는 것을 피했습니다.",
+      "hints": [
+        "밑줄 앞의 동사 avoided가 어떤 형태의 목적어를 요구하는지 떠올려 보십시오.",
+        "avoid 계열 동사의 목적어 자리에는 to부정사가 설 수 없습니다."
+      ],
+      "explanation": "avoid는 동명사만 목적어로 취하는 동사입니다. 따라서 to disturb가 아니라 disturbing으로 써야 합니다. enjoy·finish·mind·give up도 같은 계열이므로 함께 묶어 기억해 두는 것이 안전합니다."
+    },
+    {
+      "id": "u11-c1-ox-004",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["prep-to"],
+      "sentence": "New nurses soon get used to [[u:working]] overnight shifts in the busy emergency ward.",
+      "isCorrect": true,
+      "translation": "신입 간호사들은 분주한 응급 병동의 야간 근무에 곧 익숙해집니다.",
+      "hints": [
+        "used to 앞에 be나 get이 있는지, 아니면 used가 단독으로 쓰였는지 먼저 확인해 보십시오.",
+        "be·get used to(익숙해지다)의 to는 전치사이므로 뒤에 동사원형이 올 수 없습니다."
+      ],
+      "explanation": "get used to(~에 익숙해지다)의 to는 전치사이므로 동명사 working이 온 것은 옳습니다. 과거의 습관을 나타내는 used to+동사원형과 형태가 비슷해 동사원형으로 고치고 싶어지는 자리지만, 앞에 be나 get이 있으면 전치사 to 구문입니다."
+    },
+    {
+      "id": "u11-c1-ox-005",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["gerund-verb", "inserted-clause"],
+      "sentence": "The director, who had defended the budget plan for months, eventually gave up [[u:to convince]] the board and withdrew the proposal entirely.",
+      "isCorrect": false,
+      "correction": "convincing",
+      "translation": "몇 달 동안 그 예산안을 옹호해 온 이사는 결국 이사회를 설득하기를 포기하고 제안을 완전히 철회했습니다.",
+      "hints": [
+        "삽입된 관계절을 걷어내고, 밑줄 앞의 구동사가 목적어로 어떤 형태를 요구하는지 확인해 보십시오.",
+        "give up처럼 여러 단어로 된 표현도 동명사만 목적어로 취한다는 규칙은 그대로 적용됩니다."
+      ],
+      "explanation": "who had defended the budget plan for months는 주어를 꾸미는 삽입 관계절입니다. 이를 걷어내면 gave up의 목적어 자리가 남는데, give up은 동명사만 목적어로 취하므로 to convince가 아니라 convincing이 옳습니다. 표현이 길어져도 이 계열의 규칙은 변하지 않습니다."
+    },
+    {
+      "id": "u11-c1-ox-006",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["gerund-verb"],
+      "sentence": "Economists who study consumer behavior warn that shoppers should avoid [[u:to make]] major purchases when advertisements have deliberately heightened their emotions.",
+      "isCorrect": false,
+      "correction": "making",
+      "translation": "소비자 행동을 연구하는 경제학자들은 광고가 감정을 의도적으로 고조시켜 놓았을 때에는 큰 구매를 피해야 한다고 경고합니다.",
+      "hints": [
+        "warn that절 안에서 should 뒤의 동사 avoid가 목적어로 어떤 형태를 요구하는지 보십시오.",
+        "avoid 계열 동사 뒤의 목적어 자리에 to부정사를 두면 어법상 틀립니다."
+      ],
+      "explanation": "avoid는 동명사만 목적어로 취합니다. that절이 길고 조동사 should가 끼어 있어도 avoid 바로 뒤 목적어 형태 판단은 달라지지 않으므로 to make가 아니라 making이 옳습니다."
+    },
+    {
+      "id": "u11-c1-ox-007",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["prep-to"],
+      "sentence": "The foundation has contributed to [[u:preserving]] wetlands that migratory birds depend on during their long journeys across the continent.",
+      "isCorrect": true,
+      "translation": "그 재단은 철새들이 대륙을 가로지르는 긴 여정 동안 의존하는 습지를 보전하는 데 기여해 왔습니다.",
+      "hints": [
+        "contribute 뒤의 to가 부정사의 to인지 전치사인지, to 뒤에 명사를 넣어 확인해 보십시오.",
+        "전치사 to 뒤에는 동사원형이 아니라 동명사가 와야 합니다."
+      ],
+      "explanation": "contribute to(~에 기여하다)의 to는 전치사이므로 동명사 preserving이 온 것은 옳습니다. to the project처럼 명사를 넣어도 성립하는 to는 전치사입니다. 부정사로 착각해 동사원형으로 고치면 틀립니다."
+    },
+    {
+      "id": "u11-c1-ox-008",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["gerund-verb"],
+      "sentence": "Few candidates genuinely mind [[u:being asked]] about their past failures, yet many still struggle to describe those experiences honestly and precisely.",
+      "isCorrect": true,
+      "translation": "과거의 실패에 관해 질문받는 것을 진심으로 꺼리는 지원자는 거의 없지만, 그 경험을 솔직하고 정확하게 설명하는 데에는 여전히 많은 이들이 어려움을 겪습니다.",
+      "hints": [
+        "mind가 목적어로 어떤 형태를 취하는 동사인지, 그리고 밑줄의 의미가 능동인지 수동인지 나누어 보십시오.",
+        "동명사에도 수동형이 있습니다 — being p.p.는 동명사 자리에 설 수 있는 정상적인 형태입니다."
+      ],
+      "explanation": "mind는 동명사만 목적어로 취하는 동사이고, '질문을 받는' 수동의 의미이므로 동명사의 수동형 being asked가 온 것은 옳습니다. 겉모습이 낯설어 틀려 보이지만, being p.p.는 동명사 자리에 서는 정상적인 수동 형태입니다."
+    },
+    {
+      "id": "u11-c1-wf-001",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["gerund-verb"],
+      "stem": "The children enjoyed {{blank}} sandcastles on the beach all afternoon.",
+      "given": "build",
+      "acceptedAnswers": ["building"],
+      "translation": "아이들은 오후 내내 해변에서 모래성 쌓기를 즐겼습니다.",
+      "hints": [
+        "빈칸 앞의 동사 enjoyed가 목적어로 어떤 형태를 요구하는지 확인해 보십시오.",
+        "enjoy 계열 동사는 목적어로 동명사만 취합니다."
+      ],
+      "explanation": "enjoy는 동명사만 목적어로 취하는 동사이므로 building이 정답입니다. enjoyed to build처럼 to부정사를 쓰면 어법상 틀립니다."
+    },
+    {
+      "id": "u11-c1-wf-002",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["to-verb"],
+      "stem": "After the internship, he decided {{blank}} a career in public health.",
+      "given": "pursue",
+      "acceptedAnswers": ["to pursue"],
+      "translation": "인턴십을 마친 뒤 그는 공중 보건 분야의 진로를 추구하기로 결심했습니다.",
+      "hints": [
+        "빈칸 앞의 동사 decided가 목적어로 어떤 형태를 요구하는지 확인해 보십시오.",
+        "decide 계열 동사는 목적어로 to부정사만 취합니다."
+      ],
+      "explanation": "decide는 want·hope·plan과 같이 to부정사만 목적어로 취하는 동사이므로 to pursue가 정답입니다. decided pursuing처럼 동명사를 쓰면 어법상 틀립니다."
+    },
+    {
+      "id": "u11-c1-wf-003",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["to-verb"],
+      "stem": "The city plans {{blank}} two hundred electric buses over the next three years to cut air pollution.",
+      "given": "purchase",
+      "acceptedAnswers": ["to purchase"],
+      "translation": "그 시는 대기 오염을 줄이기 위해 앞으로 3년에 걸쳐 전기 버스 200대를 구매할 계획입니다.",
+      "hints": [
+        "빈칸 앞의 동사 plans가 어떤 형태의 목적어와 결합하는 동사인지 떠올려 보십시오.",
+        "plan·decide·promise 계열은 목적어로 to부정사만 취합니다."
+      ],
+      "explanation": "plan은 to부정사만 목적어로 취하는 동사이므로 to purchase가 정답입니다. 뒤에 수식어가 길게 이어져도 plans 바로 뒤 목적어 형태 판단은 변하지 않습니다."
+    },
+    {
+      "id": "u11-c1-wf-004",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["gerund-verb"],
+      "stem": "Security experts advise that users avoid {{blank}} personal information on websites they have never visited before.",
+      "given": "enter",
+      "acceptedAnswers": ["entering"],
+      "translation": "보안 전문가들은 한 번도 방문한 적 없는 웹사이트에는 개인 정보를 입력하지 않도록 권고합니다.",
+      "hints": [
+        "advise that절 안의 동사 avoid가 목적어로 어떤 형태를 요구하는지 확인해 보십시오.",
+        "avoid 계열 동사의 목적어 자리에는 to부정사가 아니라 동명사가 옵니다."
+      ],
+      "explanation": "avoid는 동명사만 목적어로 취하므로 entering이 정답입니다. that절 안이라도 avoid 바로 뒤 목적어 형태 판단은 동일하며, to enter로 쓰면 틀립니다."
+    },
+    {
+      "id": "u11-c1-wf-005",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["prep-to"],
+      "stem": "The organization remains committed to {{blank}} clean drinking water to remote villages whose wells were damaged during last spring's floods.",
+      "given": "provide",
+      "acceptedAnswers": ["providing"],
+      "translation": "그 단체는 지난봄 홍수로 우물이 파손된 외딴 마을들에 깨끗한 식수를 공급하는 일에 여전히 전념하고 있습니다.",
+      "hints": [
+        "빈칸 앞의 to가 부정사의 to인지 전치사인지, to 뒤에 명사를 넣어 시험해 보십시오.",
+        "be committed to의 to는 전치사이므로 뒤에는 동사원형이 올 수 없습니다."
+      ],
+      "explanation": "be committed to(~에 전념하다)의 to는 전치사이므로 동명사 providing이 정답입니다. to the goal처럼 명사를 넣어도 성립하는 to는 전치사이며, 동사원형 provide를 그대로 쓰면 틀립니다."
+    },
+    {
+      "id": "u11-c1-wf-006",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["prep-to"],
+      "stem": "The reviewers look forward to {{blank}} how the authors respond to the criticisms raised in the first round of evaluation.",
+      "given": "see",
+      "acceptedAnswers": ["seeing"],
+      "translation": "심사위원들은 1차 평가에서 제기된 비판에 저자들이 어떻게 응답하는지 보게 되기를 고대합니다.",
+      "hints": [
+        "look forward 뒤의 to가 어떤 성격의 to인지 먼저 판정해 보십시오.",
+        "look forward to의 to는 전치사이므로 뒤에 오는 동사는 명사 상당어구 형태여야 합니다."
+      ],
+      "explanation": "look forward to(~을 고대하다)의 to는 전치사이므로 동명사 seeing이 정답입니다. 뒤에 how절이 길게 이어져도 to 바로 뒤의 형태 판단은 달라지지 않으며, 동사원형 see를 쓰면 틀립니다."
+    },
+    {
+      "id": "u11-c1-wc-001",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["gerund-verb"],
+      "sentence": "The orchestra kept [[u:to rehearse]] the final movement until every entrance was perfectly timed.",
+      "wrong": "to rehearse",
+      "acceptedAnswers": ["rehearsing"],
+      "translation": "오케스트라는 모든 파트의 등장이 완벽하게 맞아떨어질 때까지 마지막 악장을 계속 연습했습니다.",
+      "hints": [
+        "밑줄 앞의 동사 kept가 목적어로 어떤 형태를 요구하는지 확인해 보십시오.",
+        "keep 계열 동사는 목적어로 동명사만 취하고 to부정사는 취하지 못합니다."
+      ],
+      "explanation": "keep은 동명사만 목적어로 취하는 동사이므로 to rehearse를 rehearsing으로 고쳐야 합니다. keep 뒤의 to부정사는 목적어 자리에 설 수 없습니다."
+    },
+    {
+      "id": "u11-c1-wc-002",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["prep-to"],
+      "sentence": "We look forward to [[u:hear]] the survey results at next month's board meeting.",
+      "wrong": "hear",
+      "acceptedAnswers": ["hearing"],
+      "translation": "우리는 다음 달 이사회에서 설문 조사 결과를 듣게 되기를 고대합니다.",
+      "hints": [
+        "look forward 뒤의 to가 부정사의 to인지 전치사인지 판정해 보십시오.",
+        "전치사 to 뒤에는 동사원형이 아니라 동명사가 와야 합니다."
+      ],
+      "explanation": "look forward to의 to는 전치사이므로 동사원형 hear를 동명사 hearing으로 고쳐야 합니다. to 뒤에 명사를 넣어 문장이 성립하면 그 to는 전치사라는 증거입니다."
+    },
+    {
+      "id": "u11-c1-wc-003",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["gerund-verb"],
+      "sentence": "Farmers in the valley, worried about the falling water table, have given up [[u:to grow]] rice and switched to crops that need far less water.",
+      "wrong": "to grow",
+      "acceptedAnswers": ["growing"],
+      "translation": "지하수위 하락을 걱정한 그 계곡의 농부들은 벼 재배를 포기하고 물이 훨씬 적게 드는 작물로 전환했습니다.",
+      "hints": [
+        "콤마 사이에 삽입된 분사구를 걷어내고, 구동사 given up이 목적어로 어떤 형태를 요구하는지 보십시오.",
+        "give up처럼 여러 단어로 된 표현도 목적어로는 동명사만 취합니다."
+      ],
+      "explanation": "worried about the falling water table은 삽입 수식어이고, 핵심은 have given up의 목적어 형태입니다. give up은 동명사만 목적어로 취하므로 to grow를 growing으로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c1-wc-004",
+      "unitId": "u11",
+      "conceptId": "u11-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["prep-to"],
+      "sentence": "The senator objected to [[u:be questioned]] about the donations before the official report had been released to the public.",
+      "wrong": "be questioned",
+      "acceptedAnswers": ["being questioned"],
+      "translation": "그 상원의원은 공식 보고서가 대중에 공개되기 전에 기부금에 관해 심문받는 것에 반대했습니다.",
+      "hints": [
+        "object 뒤의 to가 전치사임을 확인하고, 밑줄의 의미가 능동인지 수동인지도 함께 따져 보십시오.",
+        "전치사 to 뒤에는 동명사가 와야 하며, 수동의 의미면 동명사의 수동형을 씁니다."
+      ],
+      "explanation": "object to의 to는 전치사이므로 뒤에는 동명사가 와야 하고, '질문을 받는' 수동의 의미이므로 동명사의 수동형 being questioned로 고쳐야 합니다. be questioned는 동사원형이 이끄는 형태라 전치사 뒤에 설 수 없습니다."
+    },
+    {
+      "id": "u11-c2-ox-001",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "I clearly remember [[u:to see]] the northern lights during our trip to Iceland last winter.",
+      "isCorrect": false,
+      "correction": "seeing",
+      "translation": "나는 지난겨울 아이슬란드 여행에서 오로라를 보았던 것을 또렷이 기억합니다.",
+      "hints": [
+        "문장 안의 시간 표현이 밑줄의 일을 과거로 고정하는지 미래로 고정하는지 확인해 보십시오.",
+        "remember 뒤의 목적어는 이미 한 일이면 동명사, 앞으로 할 일이면 to부정사로 씁니다."
+      ],
+      "explanation": "last winter라는 시간 표현이 오로라를 본 일을 이미 지난 과거로 고정합니다. remember가 과거에 한 일을 목적어로 취할 때는 동명사를 쓰므로 to see가 아니라 seeing이 옳습니다."
+    },
+    {
+      "id": "u11-c2-ox-002",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "On her way home, she stopped [[u:to buy]] fresh bread at the bakery near the station.",
+      "isCorrect": true,
+      "translation": "집에 가는 길에 그녀는 역 근처 빵집에서 갓 구운 빵을 사려고 멈춰 섰습니다.",
+      "hints": [
+        "stop 뒤의 to부정사가 목적어인지, 아니면 멈춘 목적을 나타내는 부사구인지 구분해 보십시오.",
+        "stop은 to부정사를 목적어로 취하지 못하지만, '~하기 위해 멈추다'라는 목적의 부사구는 얼마든지 이끌 수 있습니다."
+      ],
+      "explanation": "여기서 to buy는 stop의 목적어가 아니라 '빵을 사기 위해'라는 목적을 나타내는 부사구입니다. 집에 가는 길에 멈춰 서서 빵을 샀다는 의미이므로 to buy가 옳습니다. stop+동명사 규칙만 기계적으로 적용해 틀렸다고 판단하면 안 됩니다."
+    },
+    {
+      "id": "u11-c2-ox-003",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Don't forget [[u:turning]] off the projector when you leave the lecture hall tonight.",
+      "isCorrect": false,
+      "correction": "to turn",
+      "translation": "오늘 밤 강의실을 나갈 때 프로젝터 끄는 것을 잊지 마십시오.",
+      "hints": [
+        "when you leave 이하의 시간 표현이 밑줄의 일을 어느 시점으로 고정하는지 확인해 보십시오.",
+        "forget 뒤의 목적어는 앞으로 해야 할 일이면 to부정사, 이미 한 일이면 동명사로 씁니다."
+      ],
+      "explanation": "when you leave the lecture hall tonight이 프로젝터를 끄는 일을 앞으로 할 일로 고정합니다. 앞으로 해야 할 일을 잊지 말라는 뜻이므로 turning이 아니라 to turn이 옳습니다."
+    },
+    {
+      "id": "u11-c2-ox-004",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "The soup tasted flat, so I tried [[u:adding]] a pinch of smoked salt to it.",
+      "isCorrect": true,
+      "translation": "수프가 밋밋해서 나는 훈제 소금을 한 꼬집 넣어 보았습니다.",
+      "hints": [
+        "수프가 싱거워서 한 행동이 '애써 노력한 일'인지 '시험 삼아 해 본 일'인지 문맥으로 판정해 보십시오.",
+        "try 뒤의 동명사는 시험 삼아 해 보는 것을, to부정사는 이루기 어려운 일을 애쓰는 것을 나타냅니다."
+      ],
+      "explanation": "소금을 조금 넣는 것은 맛이 밋밋한 문제를 해결하려고 시험 삼아 해 본 행동입니다. try+동명사가 '한번 해 보다'라는 이 의미를 담당하므로 adding이 옳습니다. to add로 바꾸면 소금 넣기 자체가 힘들어 애썼다는 어색한 의미가 됩니다."
+    },
+    {
+      "id": "u11-c2-ox-005",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "When the police questioned her the next morning, the witness clearly remembered [[u:to lock]] the office door the previous evening.",
+      "isCorrect": false,
+      "correction": "locking",
+      "translation": "다음 날 아침 경찰이 심문했을 때, 그 증인은 전날 저녁 사무실 문을 잠갔던 것을 또렷이 기억했습니다.",
+      "hints": [
+        "기억한 시점과 문을 잠근 시점을 나타내는 두 시간 표현을 견주어, 어느 일이 먼저인지 따져 보십시오.",
+        "remember의 목적어가 기억하는 시점보다 먼저 일어난 일을 가리키면 동명사를 써야 합니다."
+      ],
+      "explanation": "기억한 것은 the next morning의 일이고 문을 잠근 것은 the previous evening의 일이므로, 잠근 행위는 기억 시점보다 앞선 이미 일어난 일입니다. 이미 한 일을 기억할 때 remember는 동명사를 목적어로 취하므로 to lock이 아니라 locking이 옳습니다. to lock으로 읽으면 다음 날 아침에 기억해서 전날 저녁에 잠근다는 뜻이 되어 시간 순서가 성립하지 않습니다."
+    },
+    {
+      "id": "u11-c2-ox-006",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Years after the flood, the town finally stopped [[u:to depend]] on the aging bridge and built a safer crossing farther downstream.",
+      "isCorrect": false,
+      "correction": "depending",
+      "translation": "홍수가 나고 여러 해가 지나서야 그 마을은 마침내 노후한 다리에 의존하기를 그만두고 더 하류에 더 안전한 다리를 지었습니다.",
+      "hints": [
+        "문맥상 마을이 다리에 의존하는 행동을 그만둔 것인지, 의존하기 위해 멈춘 것인지 따져 보십시오.",
+        "하던 행동을 그만두었다는 의미라면 stop 뒤에는 동명사가 와야 합니다."
+      ],
+      "explanation": "더 안전한 다리를 새로 지었다는 뒤 내용은 낡은 다리에 의존하던 행동을 그만두었다는 의미를 확정합니다. 하던 일을 중단하는 의미의 stop은 동명사를 목적어로 취하므로 depending이 옳습니다. to depend로 쓰면 '의존하기 위해 멈췄다'는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u11-c2-ox-007",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Halfway through the marathon, the runner stopped [[u:to stretch]] her cramping legs before attempting the steep final section of the course.",
+      "isCorrect": true,
+      "translation": "마라톤 중반에 그 주자는 가파른 마지막 구간에 도전하기 전에 경련이 나는 다리를 풀려고 멈춰 섰습니다.",
+      "hints": [
+        "마라톤 중에 멈춘 이유가 무엇인지 — to부정사가 목적어인지 목적의 부사구인지 구분해 보십시오.",
+        "stop 뒤의 to부정사는 '~하기 위해 멈추다'라는 목적을 나타낼 수 있습니다."
+      ],
+      "explanation": "경련이 난 다리를 풀기 위해 잠시 멈춘 상황이므로 to stretch는 멈춘 목적을 나타내는 부사구이며 옳은 표현입니다. stop은 to부정사를 목적어로 취하지 못한다는 규칙만 떠올려 기계적으로 틀렸다고 판단하면 안 되는 자리입니다."
+    },
+    {
+      "id": "u11-c2-ox-008",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "The professor paused and tried [[u:to recall]] the exact wording of the treaty, but the crucial details escaped him entirely.",
+      "isCorrect": true,
+      "translation": "교수는 잠시 멈추고 조약의 정확한 문구를 떠올리려 애썼지만, 결정적인 세부 내용은 끝내 기억나지 않았습니다.",
+      "hints": [
+        "뒤의 but절이 결과가 어땠다고 말하는지 보고, 애쓴 것인지 시험 삼아 해 본 것인지 판정해 보십시오.",
+        "이루기 어려운 일을 애써 하려 했다는 의미일 때 try는 to부정사와 결합합니다."
+      ],
+      "explanation": "but the crucial details escaped him은 애썼지만 실패했다는 결과를 보여 줍니다. 힘든 일을 이루려고 노력하는 의미의 try는 to부정사와 결합하므로 to recall이 옳습니다. 동명사로 바꾸면 '시험 삼아 떠올려 보다'가 되어 실패의 문맥과 어울리지 않습니다."
+    },
+    {
+      "id": "u11-c2-wf-001",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["meaning-shift"],
+      "stem": "Please remember {{blank}} the plants while I am away next week.",
+      "given": "water",
+      "acceptedAnswers": ["to water"],
+      "translation": "다음 주에 제가 없는 동안 식물에 물 주는 것을 기억해 주십시오.",
+      "hints": [
+        "while I am away next week가 물 주는 일을 어느 시점으로 고정하는지 확인해 보십시오.",
+        "앞으로 해야 할 일을 기억하라는 뜻이면 remember 뒤에는 to부정사가 옵니다."
+      ],
+      "explanation": "다음 주에 없는 동안 물을 주는 것은 앞으로 할 일이므로 to water가 정답입니다. remember+동명사는 이미 한 일을 기억한다는 뜻이라 이 문맥에 맞지 않습니다."
+    },
+    {
+      "id": "u11-c2-wf-002",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["meaning-shift"],
+      "stem": "He will never forget {{blank}} the ocean for the first time as a child.",
+      "given": "see",
+      "acceptedAnswers": ["seeing"],
+      "translation": "그는 어린 시절 처음으로 바다를 보았던 것을 결코 잊지 못할 것입니다.",
+      "hints": [
+        "as a child라는 표현이 바다를 본 일을 어느 시점의 일로 고정하는지 보십시오.",
+        "이미 겪은 일을 잊지 못한다는 뜻이면 forget 뒤에는 동명사가 옵니다."
+      ],
+      "explanation": "as a child가 바다를 본 경험을 이미 지난 과거로 고정합니다. 과거의 경험을 잊지 못한다는 뜻이므로 동명사 seeing이 정답이며, to see는 앞으로 할 일에 쓰는 형태라 맞지 않습니다."
+    },
+    {
+      "id": "u11-c2-wf-003",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "stem": "The printer kept jamming, so we tried {{blank}} it off and on, and that simple step fixed everything.",
+      "given": "turn",
+      "acceptedAnswers": ["turning"],
+      "translation": "프린터가 계속 걸려서 우리는 전원을 껐다 켜 보았고, 그 간단한 조치가 모든 문제를 해결했습니다.",
+      "hints": [
+        "뒤 절이 그 행동의 결과를 어떻게 전하는지 보고, 애쓴 것인지 시험 삼아 한 것인지 판정해 보십시오.",
+        "해결책을 하나 시험해 본다는 의미일 때 try는 동명사와 결합합니다."
+      ],
+      "explanation": "전원을 껐다 켜는 것은 문제를 해결하려고 시험 삼아 해 본 조치이고, 그 간단한 조치가 문제를 해결했다는 뒤 내용이 이를 확인해 줍니다. 따라서 try+동명사 turning이 정답입니다."
+    },
+    {
+      "id": "u11-c2-wf-004",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "stem": "Whenever you leave the laboratory, remember {{blank}} your experiment number in the logbook by the door.",
+      "given": "record",
+      "acceptedAnswers": ["to record"],
+      "translation": "실험실을 나갈 때마다 문 옆의 기록장에 실험 번호를 기록할 것을 기억하십시오.",
+      "hints": [
+        "Whenever you leave가 기록하는 일을 어느 시점의 일로 만드는지 확인해 보십시오.",
+        "그때그때 해야 할 일을 기억하라는 지시면 remember 뒤에는 to부정사가 옵니다."
+      ],
+      "explanation": "실험실을 나갈 때마다 해야 할 일을 기억하라는 지시이므로 to record가 정답입니다. 동명사를 쓰면 이미 기록했던 일을 기억한다는 뜻이 되어 지시문의 문맥과 맞지 않습니다."
+    },
+    {
+      "id": "u11-c2-wf-005",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "stem": "The couple stopped {{blank}} cable television last spring, and they now stream everything, saving nearly forty dollars every month.",
+      "given": "watch",
+      "acceptedAnswers": ["watching"],
+      "translation": "그 부부는 지난봄에 케이블 방송 시청을 그만두었고, 지금은 모든 것을 스트리밍으로 보며 매달 40달러 가까이 아끼고 있습니다.",
+      "hints": [
+        "and they now 뒤의 내용이 이 행동의 성격을 어떻게 확정하는지 살펴보십시오.",
+        "하던 일을 그만두었다는 의미라면 stop은 동명사를 목적어로 취합니다."
+      ],
+      "explanation": "지금은 모든 것을 스트리밍으로 본다는 뒤 내용이 케이블 방송 시청을 그만두었다는 의미를 확정합니다. 하던 행동의 중단이므로 동명사 watching이 정답이며, to watch를 쓰면 '시청하기 위해 멈췄다'는 어긋난 뜻이 됩니다."
+    },
+    {
+      "id": "u11-c2-wf-006",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "stem": "Although the hikers were exhausted, they stopped {{blank}} photographs of the sunlit valley, knowing they would never pass this way again.",
+      "given": "take",
+      "acceptedAnswers": ["to take"],
+      "translation": "등산객들은 지쳐 있었지만, 다시는 이 길을 지나지 못하리라는 것을 알았기에 햇살이 비치는 계곡의 사진을 찍으려고 멈춰 섰습니다.",
+      "hints": [
+        "Although와 knowing 이하가 멈춘 행동의 이유를 어떻게 설명하는지 읽어 보십시오.",
+        "가던 길을 멈춘 목적을 나타낼 때 stop 뒤에는 to부정사가 옵니다."
+      ],
+      "explanation": "다시는 이 길을 지나지 못하리라는 것을 알았기에 지친 몸으로도 멈춰서 사진을 찍었다는 문맥입니다. 멈춘 목적을 나타내므로 to take가 정답이며, 동명사를 쓰면 사진 찍기를 그만두었다는 뜻이 되어 문맥과 정반대가 됩니다."
+    },
+    {
+      "id": "u11-c2-wc-001",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "I distinctly remember [[u:to hand]] my passport to the border officer yesterday morning.",
+      "wrong": "to hand",
+      "acceptedAnswers": ["handing"],
+      "translation": "나는 어제 아침 국경 심사관에게 여권을 건넸던 것을 분명히 기억합니다.",
+      "hints": [
+        "yesterday morning이 여권을 건넨 일을 어느 시점으로 고정하는지 확인해 보십시오.",
+        "이미 한 일을 기억한다는 뜻이면 remember의 목적어는 동명사여야 합니다."
+      ],
+      "explanation": "yesterday morning이 여권을 건넨 일을 이미 지난 과거로 고정합니다. 과거에 한 일을 기억하는 것이므로 to hand를 동명사 handing으로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c2-wc-002",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Don't forget [[u:bringing]] your student ID when you come to the exam hall tomorrow.",
+      "wrong": "bringing",
+      "acceptedAnswers": ["to bring"],
+      "translation": "내일 시험장에 올 때 학생증 가져오는 것을 잊지 마십시오.",
+      "hints": [
+        "when you come 뒤의 시간 표현이 그 일을 어느 시점의 일로 만드는지 보십시오.",
+        "앞으로 해야 할 일을 잊지 말라는 뜻이면 forget 뒤에는 to부정사가 와야 합니다."
+      ],
+      "explanation": "tomorrow가 학생증을 가져오는 일을 앞으로 할 일로 고정합니다. 앞으로 해야 할 일을 잊지 말라는 당부이므로 bringing을 to bring으로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c2-wc-003",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Under pressure from regulators, the plant finally stopped [[u:to discharge]] chemical runoff into the harbor where local families have fished for generations.",
+      "wrong": "to discharge",
+      "acceptedAnswers": ["discharging"],
+      "translation": "규제 당국의 압박 속에 그 공장은 지역 주민들이 대대로 고기를 잡아 온 항만으로 화학 폐수를 방류하는 것을 마침내 중단했습니다.",
+      "hints": [
+        "규제 압박이라는 앞 내용과 밑줄 뒤 내용이 이 행동의 성격을 어떻게 확정하는지 보십시오.",
+        "하던 행동을 그만두었다는 의미라면 stop의 목적어는 동명사여야 합니다."
+      ],
+      "explanation": "규제 당국의 압박으로 오염수 방류를 그만두었다는 문맥이므로 하던 행동의 중단입니다. 따라서 to discharge를 동명사 discharging으로 고쳐야 합니다. to부정사로 두면 '방류하기 위해 멈췄다'는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u11-c2-wc-004",
+      "unitId": "u11",
+      "conceptId": "u11-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["meaning-shift"],
+      "sentence": "Even after hearing the recording twice, the composer could not remember [[u:to write]] the melody, though the notebook was clearly in his own handwriting.",
+      "wrong": "to write",
+      "acceptedAnswers": ["writing"],
+      "translation": "녹음을 두 번이나 듣고도 그 작곡가는 그 선율을 썼던 일을 기억하지 못했지만, 공책에는 분명히 그의 필체로 적혀 있었습니다.",
+      "hints": [
+        "공책에 이미 그의 필체로 적혀 있다는 뒤 내용이 그 일을 어느 시점으로 고정하는지 보십시오.",
+        "이미 일어난 일을 기억하지 못한다는 뜻이면 remember의 목적어는 동명사여야 합니다."
+      ],
+      "explanation": "공책에 자신의 필체로 적혀 있다는 내용은 그 선율을 쓴 일이 이미 일어난 과거임을 보여 줍니다. 과거에 한 일을 기억하지 못하는 것이므로 to write를 writing으로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c3-ox-001",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Modern smartphones process information far more quickly than the earliest desktop computers [[u:were]].",
+      "isCorrect": false,
+      "correction": "did",
+      "translation": "현대 스마트폰은 초창기 데스크톱 컴퓨터가 그랬던 것보다 훨씬 더 빠르게 정보를 처리합니다.",
+      "hints": [
+        "밑줄의 대동사가 앞 절의 어떤 동사를 대신하는지 원본부터 찾아보십시오.",
+        "원본 동사가 일반동사인지 be동사인지에 따라 대신하는 동사의 종류가 결정됩니다."
+      ],
+      "explanation": "대동사가 대신하는 원본은 일반동사 process입니다. 일반동사는 be동사가 아니라 do 계열로 받아야 하고, 초창기 컴퓨터의 과거 성능을 가리키므로 were가 아니라 did가 옳습니다."
+    },
+    {
+      "id": "u11-c3-ox-002",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "The final version of the contract was far more detailed than the earlier drafts [[u:were]].",
+      "isCorrect": true,
+      "translation": "그 계약서의 최종본은 이전 초안들보다 훨씬 더 상세했습니다.",
+      "hints": [
+        "비교 구문의 밑줄이 앞 절의 어떤 동사를 대신하는지 확인해 보십시오.",
+        "원본이 be동사라면 대동사도 반드시 be동사 계열이어야 합니다."
+      ],
+      "explanation": "대동사가 대신하는 원본은 be동사 was(was far more detailed)입니다. be동사는 be동사로 받아야 하므로, 복수 주어 the earlier drafts에 맞춘 were는 옳습니다. 비교 구문이라고 반사적으로 do 계열로 고치면 안 됩니다."
+    },
+    {
+      "id": "u11-c3-ox-003",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "The new branch library is much closer to the student dormitories than the main library [[u:does]].",
+      "isCorrect": false,
+      "correction": "is",
+      "translation": "새 분관 도서관은 본관 도서관보다 학생 기숙사에 훨씬 더 가깝습니다.",
+      "hints": [
+        "than 뒤의 대동사가 대신하는 앞 절의 동사가 무엇인지 찾아보십시오.",
+        "원본이 be동사인 비교 구문에서는 do 계열 대동사를 쓸 수 없습니다."
+      ],
+      "explanation": "대동사가 대신하는 원본은 be동사 is(is much closer)입니다. be동사는 be동사로 받아야 하므로 does가 아니라 is가 옳습니다. 비교 구문에서 습관적으로 do 계열을 쓰는 반사를 경계해야 합니다."
+    },
+    {
+      "id": "u11-c3-ox-004",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Sea levels have risen faster in this decade than they [[u:have]] in any previous one on record.",
+      "isCorrect": true,
+      "translation": "해수면은 기록상 그 어떤 이전 10년보다 최근 10년 동안 더 빠르게 상승해 왔습니다.",
+      "hints": [
+        "앞 절의 동사가 조동사를 포함한 완료형인지 확인해 보십시오.",
+        "완료형을 대신할 때는 일반동사 계열이 아니라 그 조동사를 그대로 받습니다."
+      ],
+      "explanation": "대신하는 원본이 현재완료 have risen이므로 완료 조동사 have로 받은 것은 옳습니다. 일반동사처럼 보인다고 do 계열로 고치면 완료의 의미가 사라져 틀립니다."
+    },
+    {
+      "id": "u11-c3-ox-005",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Students who review their notes the same evening retain the material far better than those who wait until the exam week [[u:are]].",
+      "isCorrect": false,
+      "correction": "do",
+      "translation": "그날 저녁에 필기를 복습하는 학생들은 시험 주간까지 미루는 학생들보다 내용을 훨씬 더 잘 기억합니다.",
+      "hints": [
+        "양쪽의 긴 관계절을 걷어내고, 대동사가 대신하는 원본 동사를 찾아보십시오.",
+        "원본이 일반동사면 be동사로 받을 수 없습니다."
+      ],
+      "explanation": "대동사가 대신하는 원본은 일반동사 retain입니다. who wait until the exam week라는 관계절이 끼어 있어도 판단은 같으며, 복수 주어 those에 맞춘 현재형 do가 옳습니다. be동사 are로 받으면 원본과 종류가 어긋납니다."
+    },
+    {
+      "id": "u11-c3-ox-006",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "sentence": "The desert soil, dry as it appears, holds far more microbial life than the frozen samples collected from the tundra [[u:are]].",
+      "isCorrect": false,
+      "correction": "do",
+      "translation": "사막 토양은 겉보기에는 메말라 보여도 툰드라에서 채취한 냉동 표본들이 지닌 것보다 훨씬 더 많은 미생물을 품고 있습니다.",
+      "hints": [
+        "콤마 사이 삽입구를 걷어내고, 밑줄이 앞 절의 어떤 동사를 대신하는지 확인해 보십시오.",
+        "원본 동사가 일반동사라면 대동사도 일반동사 계열이어야 합니다."
+      ],
+      "explanation": "dry as it appears는 삽입구이고, 대동사가 대신하는 원본은 일반동사 holds입니다. 일반동사는 do 계열로 받아야 하므로 are가 아니라 do가 옳습니다. 주어 the frozen samples가 복수이므로 현재형 do가 됩니다."
+    },
+    {
+      "id": "u11-c3-ox-007",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Wages in the coastal cities are rising, but they are still not as high as they [[u:were]] before the currency crisis a decade ago.",
+      "isCorrect": true,
+      "translation": "해안 도시들의 임금은 오르고 있지만, 10년 전 통화 위기 이전만큼 높지는 않습니다.",
+      "hints": [
+        "as ~ as 비교의 밑줄이 대신하는 원본 동사와, 뒤의 시간 표현을 함께 확인해 보십시오.",
+        "원본이 be동사면 be동사로 받고, 시제는 대동사 자리의 시간 표현에 맞춥니다."
+      ],
+      "explanation": "대동사가 대신하는 원본은 be동사(are not as high)이고, before the currency crisis a decade ago가 과거 시점을 가리키므로 과거형 were가 옳습니다. 일반동사가 아니므로 did로 받으면 틀립니다."
+    },
+    {
+      "id": "u11-c3-ox-008",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be", "past-marker"],
+      "sentence": "Researchers today share their data far more openly than scientists [[u:did]] in the era of paper journals, when raw figures rarely left the laboratory.",
+      "isCorrect": true,
+      "translation": "오늘날 연구자들은 종이 학술지 시대의 과학자들이 그랬던 것보다 훨씬 더 공개적으로 데이터를 공유하는데, 그 시절에는 원자료가 실험실 밖으로 나가는 일이 드물었습니다.",
+      "hints": [
+        "대동사 자리의 시간 표현이 현재인지 과거인지, 원본 동사의 종류와 함께 확인해 보십시오.",
+        "대동사의 시제는 앞 절이 아니라 대동사 자리의 주어와 시간 표현이 결정합니다."
+      ],
+      "explanation": "원본은 일반동사 share이므로 do 계열로 받는 것이 맞고, in the era of paper journals라는 과거 시대 표현이 대동사 자리의 시제를 과거로 고정하므로 did가 옳습니다. 주절이 현재라고 해서 대동사까지 현재로 맞추면 안 됩니다."
+    },
+    {
+      "id": "u11-c3-wf-001",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["do-vs-be"],
+      "stem": "Nora swims much faster than her brother {{blank}}.",
+      "given": "do",
+      "acceptedAnswers": ["does"],
+      "translation": "노라는 남동생보다 훨씬 빠르게 수영합니다.",
+      "hints": [
+        "빈칸이 대신하는 앞 절의 동사가 일반동사인지 be동사인지 확인해 보십시오.",
+        "대동사의 수와 시제는 빈칸 자리의 주어와 문맥에 맞춥니다."
+      ],
+      "explanation": "빈칸은 일반동사 swims를 대신하므로 do 계열로 받아야 하고, 주어 her brother가 3인칭 단수 현재이므로 does가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wf-002",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["do-vs-be"],
+      "stem": "This winter is much colder than last winter {{blank}}.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "올겨울은 지난겨울보다 훨씬 더 춥습니다.",
+      "hints": [
+        "빈칸이 대신하는 앞 절의 동사 종류와, last winter라는 시간 표현을 확인해 보십시오.",
+        "be동사를 대신할 때는 be동사를 쓰되, 시제는 빈칸 자리의 시간 표현에 맞춥니다."
+      ],
+      "explanation": "빈칸은 be동사 is를 대신하므로 be동사로 받아야 하고, last winter가 과거이며 주어가 단수이므로 was가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wf-003",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be", "past-marker"],
+      "stem": "The new turbines generate far more electricity than the old windmills {{blank}} before they were dismantled last year.",
+      "given": "do",
+      "acceptedAnswers": ["did"],
+      "translation": "새 터빈들은 낡은 풍차들이 작년에 철거되기 전에 생산하던 것보다 훨씬 더 많은 전기를 생산합니다.",
+      "hints": [
+        "빈칸이 대신하는 동사의 종류와, before they were dismantled가 가리키는 시점을 확인해 보십시오.",
+        "일반동사를 대신하는 대동사의 시제는 빈칸 자리의 시간 표현이 결정합니다."
+      ],
+      "explanation": "빈칸은 일반동사 generate를 대신하므로 do 계열이고, 철거되기 전이라는 과거 시점이므로 과거형 did가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wf-004",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "stem": "Housing in the suburbs is expensive, but it is still not as costly as the apartments downtown {{blank}}.",
+      "given": "be",
+      "acceptedAnswers": ["are"],
+      "translation": "교외의 주택은 비싸지만, 그래도 도심의 아파트만큼 비싸지는 않습니다.",
+      "hints": [
+        "빈칸이 대신하는 앞 절의 동사 종류를 확인하고, 빈칸 자리 주어의 수를 보십시오.",
+        "be동사를 대신할 때는 be동사를 쓰고, 수는 빈칸 자리의 주어에 맞춥니다."
+      ],
+      "explanation": "빈칸은 be동사 is(is not as costly)를 대신하므로 be동사로 받아야 하고, 주어 the apartments downtown이 복수 현재이므로 are가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wf-005",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "stem": "Bees that forage in pesticide-free meadows navigate back to their hives far more accurately than bees exposed to the chemicals {{blank}}.",
+      "given": "do",
+      "acceptedAnswers": ["do"],
+      "translation": "농약이 없는 초원에서 먹이를 찾는 벌들은 그 화학 물질에 노출된 벌들보다 훨씬 더 정확하게 벌집으로 돌아옵니다.",
+      "hints": [
+        "빈칸 앞의 긴 주어에서 핵을 찾고, 빈칸이 대신하는 원본 동사의 종류를 확인해 보십시오.",
+        "대동사의 수는 빈칸 바로 앞의 명사가 아니라 빈칸 자리 주어의 핵이 결정합니다."
+      ],
+      "explanation": "빈칸은 일반동사 navigate를 대신하므로 do 계열입니다. 빈칸 자리의 주어 핵은 복수 명사 bees이고 exposed to the chemicals는 분사 수식어이므로, 복수 현재형 do가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wf-006",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be", "past-marker"],
+      "stem": "Commuting by rail is now considerably cheaper in real terms than it {{blank}} a generation ago, according to the ministry's latest figures.",
+      "given": "be",
+      "acceptedAnswers": ["was"],
+      "translation": "교통부의 최신 통계에 따르면 철도 통근 비용은 실질 가치 기준으로 한 세대 전보다 지금이 상당히 더 저렴합니다.",
+      "hints": [
+        "빈칸이 대신하는 동사의 종류와, a generation ago가 요구하는 시제를 확인해 보십시오.",
+        "be동사를 대신하면 be동사로 받고, 시제는 빈칸 자리의 시간 부사가 결정합니다."
+      ],
+      "explanation": "빈칸은 be동사 is(is cheaper)를 대신하므로 be동사로 받아야 하고, a generation ago가 과거를 가리키며 주어 it이 단수이므로 was가 정답입니다."
+    },
+    {
+      "id": "u11-c3-wc-001",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Wild wolves cover far greater distances in a single night than even the most active domestic dogs [[u:are]].",
+      "wrong": "are",
+      "acceptedAnswers": ["do"],
+      "translation": "야생 늑대는 가장 활동적인 반려견이 하룻밤에 이동하는 것보다 훨씬 더 먼 거리를 이동합니다.",
+      "hints": [
+        "밑줄이 대신하는 앞 절의 동사를 찾아 그 종류를 확인해 보십시오.",
+        "원본이 일반동사인데 be동사로 받으면 대동사의 종류가 어긋납니다."
+      ],
+      "explanation": "밑줄은 일반동사 cover를 대신하므로 be동사 are가 아니라 do 계열로 받아야 합니다. 주어 domestic dogs가 복수 현재이므로 do로 고치는 것이 옳습니다."
+    },
+    {
+      "id": "u11-c3-wc-002",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["do-vs-be"],
+      "sentence": "The lecture hall is far noisier on open-campus days than it normally [[u:does]].",
+      "wrong": "does",
+      "acceptedAnswers": ["is"],
+      "translation": "그 강당은 평소보다 캠퍼스 개방 행사일에 훨씬 더 시끄럽습니다.",
+      "hints": [
+        "밑줄이 대신하는 앞 절의 동사가 일반동사인지 be동사인지 확인해 보십시오.",
+        "원본이 be동사라면 do 계열 대동사로 받을 수 없습니다."
+      ],
+      "explanation": "밑줄이 대신하는 원본은 be동사 is(is far noisier)입니다. be동사는 be동사로 받아야 하므로 does를 is로 고쳐야 합니다. normally라는 부사와 함께 평소의 상태를 나타내는 현재형입니다."
+    },
+    {
+      "id": "u11-c3-wc-003",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "sentence": "Readers absorb the argument of a well-structured essay far more readily than they [[u:are]] the scattered claims of an unedited draft.",
+      "wrong": "are",
+      "acceptedAnswers": ["do"],
+      "translation": "독자들은 잘 짜인 글의 논지를, 다듬어지지 않은 초고의 산만한 주장보다 훨씬 더 쉽게 받아들입니다.",
+      "hints": [
+        "밑줄 뒤에 목적어가 이어진다는 점에 주목해, 밑줄이 대신하는 동사의 종류를 확인해 보십시오.",
+        "일반동사를 대신하는 대동사는 뒤에 목적어를 다시 취할 수 있습니다."
+      ],
+      "explanation": "밑줄은 일반동사 absorb를 대신하며 뒤에 목적어 the scattered claims까지 이어지므로 be동사 are는 설 수 없습니다. 복수 주어 they의 현재형이므로 do로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c3-wc-004",
+      "unitId": "u11",
+      "conceptId": "u11-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["do-vs-be"],
+      "sentence": "In the 1970s, the islanders were never as dependent on imported oil as mainland residents [[u:did]], because wind and peat supplied most of their heating.",
+      "wrong": "did",
+      "acceptedAnswers": ["were"],
+      "translation": "1970년대에 그 섬 주민들은 본토 주민들만큼 수입 석유에 의존한 적이 없었는데, 바람과 이탄이 난방의 대부분을 감당했기 때문입니다.",
+      "hints": [
+        "as ~ as 비교에서 밑줄이 대신하는 앞 절의 동사 종류를 확인해 보십시오.",
+        "원본이 be동사인 비교에서는 대동사도 be동사 계열이어야 합니다."
+      ],
+      "explanation": "밑줄이 대신하는 원본은 be동사 were(were never as dependent)입니다. be동사는 be동사로 받아야 하므로 did를 were로 고쳐야 합니다. 1970년대라는 같은 과거 시점의 비교이므로 과거형이 유지됩니다."
+    },
+    {
+      "id": "u11-c4-ox-001",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["since-perfect"],
+      "sentence": "Traffic accidents at this intersection [[u:fell]] sharply since the new signal system was installed.",
+      "isCorrect": false,
+      "correction": "have fallen",
+      "translation": "새 신호 체계가 설치된 이후 이 교차로의 교통사고는 급격히 줄었습니다.",
+      "hints": [
+        "since 뒤에 과거 시점이 온다는 것이 주절의 시제에 어떤 제약을 거는지 생각해 보십시오.",
+        "since+과거 시점이 있으면 주절에는 과거가 아니라 현재완료가 와야 합니다."
+      ],
+      "explanation": "since the new signal system was installed는 과거의 출발점부터 지금까지를 뜻하는 표현입니다. 이때 주절의 동사는 현재완료여야 하므로 fell이 아니라 have fallen이 옳습니다. 주어 Traffic accidents가 복수이므로 have를 씁니다."
+    },
+    {
+      "id": "u11-c4-ox-002",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["past-marker"],
+      "sentence": "Archaeologists [[u:uncovered]] the buried temple nearly forty years ago, yet its original purpose remains a mystery.",
+      "isCorrect": true,
+      "translation": "고고학자들은 거의 40년 전에 그 묻힌 신전을 발굴했지만, 그것의 원래 용도는 여전히 수수께끼로 남아 있습니다.",
+      "hints": [
+        "문장 안의 시간 표현 ago가 어떤 시제를 요구하는지 확인해 보십시오.",
+        "이미 끝난 과거 시점을 가리키는 부사는 현재완료와 함께 쓸 수 없습니다."
+      ],
+      "explanation": "nearly forty years ago는 이미 끝난 과거 시점을 가리키므로 단순 과거 uncovered가 옳습니다. 뒤 절의 remains(현재)에 이끌려 현재완료로 고치고 싶어지지만, ago는 현재완료와 함께 쓸 수 없습니다."
+    },
+    {
+      "id": "u11-c4-ox-003",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["past-marker"],
+      "sentence": "She [[u:has finished]] her doctoral thesis two months ago and is now preparing for the final defense.",
+      "isCorrect": false,
+      "correction": "finished",
+      "translation": "그녀는 두 달 전에 박사 논문을 끝냈고 지금은 최종 심사를 준비하고 있습니다.",
+      "hints": [
+        "two months ago라는 시간 표현이 어떤 시제와 어울리는지 확인해 보십시오.",
+        "ago가 붙은 명백한 과거 표시어는 현재완료와 결합할 수 없습니다."
+      ],
+      "explanation": "two months ago는 이미 끝난 과거 시점을 가리키므로 현재완료 has finished와 함께 쓸 수 없습니다. 단순 과거 finished로 써야 옳습니다. 뒤의 is now preparing은 현재의 일이므로 판단에 영향을 주지 않습니다."
+    },
+    {
+      "id": "u11-c4-ox-004",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["since-perfect"],
+      "sentence": "Ever since the scandal broke, the senator [[u:has refused]] to answer questions from local reporters.",
+      "isCorrect": true,
+      "translation": "그 스캔들이 터진 이후로 그 상원의원은 지역 기자들의 질문에 줄곧 답하기를 거부해 왔습니다.",
+      "hints": [
+        "문두의 Ever since절이 주절의 시제에 어떤 제약을 거는지 확인해 보십시오.",
+        "과거의 출발점부터 지금까지 이어지는 일에는 현재완료를 씁니다."
+      ],
+      "explanation": "Ever since the scandal broke는 스캔들이 터진 과거 시점부터 지금까지를 뜻합니다. 그 기간 내내 이어져 온 거부이므로 현재완료 has refused가 옳습니다. since절의 broke가 과거라고 해서 주절까지 과거로 맞추면 틀립니다."
+    },
+    {
+      "id": "u11-c4-ox-005",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["since-perfect"],
+      "sentence": "Public trust in the agency, already weakened by earlier delays, [[u:collapsed]] entirely since the internal report was leaked to the press.",
+      "isCorrect": false,
+      "correction": "has collapsed",
+      "translation": "이전의 지연 사태들로 이미 약해져 있던 그 기관에 대한 대중의 신뢰는 내부 보고서가 언론에 유출된 이후 완전히 무너졌습니다.",
+      "hints": [
+        "콤마 사이의 삽입 분사구를 걷어낸 뒤, since절이 주절 시제에 거는 제약을 확인해 보십시오.",
+        "since+과거 시점 구문에서 주절의 동사는 현재완료여야 합니다."
+      ],
+      "explanation": "already weakened by earlier delays는 삽입 수식어이고, 골격은 Public trust와 since the internal report was leaked의 호응입니다. since+과거 시점이 있으므로 주절은 현재완료 has collapsed가 옳고, 단순 과거 collapsed는 틀립니다."
+    },
+    {
+      "id": "u11-c4-ox-006",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["past-marker"],
+      "sentence": "According to the museum's records, the manuscript [[u:has been donated]] by a private collector in 1952, decades before the archive was digitized.",
+      "isCorrect": false,
+      "correction": "was donated",
+      "translation": "박물관 기록에 따르면 그 필사본은 기록물이 디지털화되기 수십 년 전인 1952년에 한 개인 수집가에 의해 기증되었습니다.",
+      "hints": [
+        "in 1952라는 시간 표현이 어떤 시제를 요구하는지 확인해 보십시오.",
+        "in+과거 연도는 이미 끝난 시점이므로 현재완료와 함께 쓸 수 없습니다."
+      ],
+      "explanation": "in 1952는 이미 끝난 과거 시점을 가리키므로 현재완료 has been donated는 쓸 수 없습니다. 단순 과거 수동 was donated로 써야 옳습니다. 문장 앞뒤의 수식이 길어도 판단 근거는 과거 연도 표현 하나입니다."
+    },
+    {
+      "id": "u11-c4-ox-007",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["since-perfect"],
+      "sentence": "The two nations [[u:have maintained]] an uneasy truce since the border conflict ended, though neither side has withdrawn its troops completely.",
+      "isCorrect": true,
+      "translation": "그 두 나라는 국경 분쟁이 끝난 이후 불안한 휴전을 유지해 왔지만, 어느 쪽도 군대를 완전히 철수하지는 않았습니다.",
+      "hints": [
+        "since절의 동사가 과거라는 사실이 주절에 어떤 시제를 요구하는지 확인해 보십시오.",
+        "과거의 한 시점부터 지금까지 이어지는 상태에는 현재완료를 씁니다."
+      ],
+      "explanation": "since the border conflict ended는 분쟁이 끝난 과거 시점부터 지금까지를 뜻하므로, 그 기간 내내 유지된 휴전은 현재완료 have maintained로 나타내는 것이 옳습니다. since절의 ended가 과거라는 이유로 주절까지 과거로 바꾸면 틀립니다."
+    },
+    {
+      "id": "u11-c4-ox-008",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["past-marker"],
+      "sentence": "Long before the railway arrived, merchants [[u:carried]] salt across these mountains on mule trains that took weeks to reach the coast.",
+      "isCorrect": true,
+      "translation": "철도가 들어오기 훨씬 전에 상인들은 해안까지 몇 주가 걸리는 노새 행렬로 이 산맥을 넘어 소금을 날랐습니다.",
+      "hints": [
+        "Long before the railway arrived가 이 일을 어느 시대의 일로 고정하는지 확인해 보십시오.",
+        "이미 끝난 과거 시대의 반복된 일은 단순 과거로 나타낼 수 있습니다."
+      ],
+      "explanation": "Long before the railway arrived는 철도가 오기 전의 이미 끝난 과거 시대를 가리킵니다. 그 시대에 반복되던 일이므로 단순 과거 carried가 옳습니다. 지금까지 이어지는 일이 아니므로 현재완료로 고치면 오히려 틀립니다."
+    },
+    {
+      "id": "u11-c4-wf-001",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["past-marker"],
+      "stem": "The old ferry service {{blank}} its operations three years ago.",
+      "given": "cease",
+      "acceptedAnswers": ["ceased"],
+      "translation": "그 낡은 여객선 노선은 3년 전에 운항을 중단했습니다.",
+      "hints": [
+        "three years ago라는 시간 표현이 요구하는 시제를 확인해 보십시오.",
+        "ago가 붙은 표현은 이미 끝난 과거이므로 단순 과거와만 어울립니다."
+      ],
+      "explanation": "three years ago는 이미 끝난 과거 시점을 가리키므로 단순 과거 ceased가 정답입니다. ago는 현재완료와 함께 쓸 수 없습니다."
+    },
+    {
+      "id": "u11-c4-wf-002",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["since-perfect"],
+      "stem": "Maria {{blank}} the harbor master since her first summer on the island.",
+      "given": "know",
+      "acceptedAnswers": ["has known"],
+      "translation": "마리아는 섬에서 보낸 첫여름 이후로 그 항만장을 알고 지내 왔습니다.",
+      "hints": [
+        "since her first summer라는 표현이 어느 시점부터 지금까지를 뜻하는지 확인해 보십시오.",
+        "과거의 출발점부터 지금까지 이어지는 일에는 현재완료를 씁니다."
+      ],
+      "explanation": "since her first summer on the island는 과거의 출발점부터 지금까지를 뜻하므로 현재완료 has known이 정답입니다. 단순 과거나 현재형으로 쓰면 since 구문과 어울리지 않습니다."
+    },
+    {
+      "id": "u11-c4-wf-003",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["past-marker"],
+      "stem": "After months of public hearings, the committee {{blank}} its final report to parliament two weeks ago.",
+      "given": "submit",
+      "acceptedAnswers": ["submitted"],
+      "translation": "몇 달에 걸친 공청회 끝에 그 위원회는 2주 전에 최종 보고서를 의회에 제출했습니다.",
+      "hints": [
+        "two weeks ago라는 시간 표현이 어떤 시제를 요구하는지 확인해 보십시오.",
+        "이미 끝난 과거 시점 표현이 있으면 현재완료가 아니라 단순 과거를 씁니다."
+      ],
+      "explanation": "two weeks ago가 보고서 제출을 이미 끝난 과거 시점으로 고정하므로 단순 과거 submitted가 정답입니다. 앞의 After months of public hearings는 판단을 흔들기 위한 수식일 뿐입니다."
+    },
+    {
+      "id": "u11-c4-wf-004",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["since-perfect"],
+      "stem": "Output at the assembly plant {{blank}} by nearly forty percent since the new robots were installed.",
+      "given": "rise",
+      "acceptedAnswers": ["has risen"],
+      "translation": "새 로봇이 설치된 이후 그 조립 공장의 생산량은 거의 40퍼센트 증가했습니다.",
+      "hints": [
+        "since절이 가리키는 출발점과, 그때부터 지금까지의 변화라는 문맥을 확인해 보십시오.",
+        "since+과거 시점이 있으면 주절의 동사는 현재완료여야 합니다."
+      ],
+      "explanation": "since the new robots were installed가 과거의 출발점을 표시하므로 주절은 현재완료 has risen이 정답입니다. 주어 Output이 단수이므로 has를 씁니다."
+    },
+    {
+      "id": "u11-c4-wf-005",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["past-marker"],
+      "stem": "The lighthouse, which had guided fishing boats for over a century, finally {{blank}} dark in 1987, when satellite navigation made it obsolete.",
+      "given": "go",
+      "acceptedAnswers": ["went"],
+      "translation": "한 세기 넘게 어선들을 인도해 온 그 등대는 위성 항법이 등대를 쓸모없게 만든 1987년에 마침내 불을 껐습니다.",
+      "hints": [
+        "삽입된 관계절을 걷어내고, in 1987이라는 연도 표현이 요구하는 시제를 확인해 보십시오.",
+        "in+과거 연도는 이미 끝난 시점이므로 단순 과거와만 결합합니다."
+      ],
+      "explanation": "which had guided fishing boats for over a century는 삽입 관계절이고, 판단 근거는 in 1987이라는 끝난 과거 연도입니다. 따라서 단순 과거 went가 정답이며, 현재완료는 이 연도 표현과 함께 쓸 수 없습니다."
+    },
+    {
+      "id": "u11-c4-wf-006",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["since-perfect"],
+      "stem": "Since the fishing ban took effect a decade ago, the reef {{blank}} more than half of its former coral cover, according to annual surveys.",
+      "given": "regain",
+      "acceptedAnswers": ["has regained"],
+      "translation": "10년 전 어업 금지가 시행된 이후 그 산호초는 연례 조사에 따르면 예전 산호 피복의 절반 이상을 회복했습니다.",
+      "hints": [
+        "문두의 Since절이 가리키는 출발점과 지금까지의 회복이라는 문맥을 확인해 보십시오.",
+        "과거의 출발점부터 현재까지 누적된 변화에는 현재완료를 씁니다."
+      ],
+      "explanation": "Since the fishing ban took effect a decade ago는 10년 전 출발점부터 지금까지를 뜻하므로 주절은 현재완료 has regained가 정답입니다. 주어 the reef가 단수이므로 has를 쓰고, 단순 과거로 쓰면 since 구문과 충돌합니다."
+    },
+    {
+      "id": "u11-c4-wc-001",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["since-perfect"],
+      "sentence": "The mountain village [[u:lost]] a third of its population since the copper mine closed.",
+      "wrong": "lost",
+      "acceptedAnswers": ["has lost"],
+      "translation": "구리 광산이 문을 닫은 이후 그 산간 마을은 인구의 3분의 1을 잃었습니다.",
+      "hints": [
+        "since the copper mine closed가 주절의 시제에 어떤 제약을 거는지 확인해 보십시오.",
+        "since+과거 시점이 있으면 주절은 현재완료여야 합니다."
+      ],
+      "explanation": "since the copper mine closed는 광산이 닫힌 과거부터 지금까지를 뜻하므로 주절의 lost를 현재완료 has lost로 고쳐야 합니다. 주어 The mountain village가 단수이므로 has를 씁니다."
+    },
+    {
+      "id": "u11-c4-wc-002",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["past-marker"],
+      "sentence": "Astronomers [[u:have confirmed]] the comet's return in 1986, when it last passed close to Earth.",
+      "wrong": "have confirmed",
+      "acceptedAnswers": ["confirmed"],
+      "translation": "천문학자들은 그 혜성이 마지막으로 지구 가까이 지나간 1986년에 그것의 회귀를 확인했습니다.",
+      "hints": [
+        "in 1986이라는 연도 표현이 어떤 시제를 요구하는지 확인해 보십시오.",
+        "이미 끝난 과거 연도는 현재완료와 함께 쓸 수 없습니다."
+      ],
+      "explanation": "in 1986은 이미 끝난 과거 시점이므로 현재완료 have confirmed를 단순 과거 confirmed로 고쳐야 합니다. 뒤의 when절 역시 과거의 일임을 확인해 줍니다."
+    },
+    {
+      "id": "u11-c4-wc-003",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["since-perfect"],
+      "sentence": "The company's safety record, once the worst in the industry, [[u:improved]] dramatically since independent auditors began inspecting its factories every quarter.",
+      "wrong": "improved",
+      "acceptedAnswers": ["has improved", "has been improving"],
+      "translation": "한때 업계 최악이었던 그 회사의 안전 기록은 독립 감사인들이 분기마다 공장을 점검하기 시작한 이후 극적으로 개선되었습니다.",
+      "hints": [
+        "콤마 사이의 삽입구를 걷어내고, since절이 주절 시제에 거는 제약을 확인해 보십시오.",
+        "since+과거 시점 구문의 주절에는 현재완료가 와야 합니다."
+      ],
+      "explanation": "once the worst in the industry는 삽입 수식어이고, 골격은 주어 The company's safety record와 since independent auditors began의 호응입니다. since+과거 시점이 있으므로 improved를 현재완료 has improved로 고쳐야 합니다."
+    },
+    {
+      "id": "u11-c4-wc-004",
+      "unitId": "u11",
+      "conceptId": "u11-c4",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["past-marker"],
+      "sentence": "Interest in the composer's early works [[u:has surged]] briefly in 1999, when a film used one of her nocturnes, and then faded again.",
+      "wrong": "has surged",
+      "acceptedAnswers": ["surged"],
+      "translation": "그 작곡가의 초기 작품에 대한 관심은 한 영화가 그녀의 야상곡을 사용한 1999년에 잠시 치솟았다가 다시 사그라들었습니다.",
+      "hints": [
+        "in 1999라는 연도 표현과 뒤의 and then faded가 가리키는 시제를 확인해 보십시오.",
+        "이미 끝난 과거 연도의 일은 현재완료가 아니라 단순 과거로 씁니다."
+      ],
+      "explanation": "in 1999는 이미 끝난 과거 시점이고, 뒤의 faded 역시 과거형으로 이어집니다. 따라서 has surged를 단순 과거 surged로 고쳐야 병렬과 시간 표현이 모두 맞습니다."
+    }
+  ]
+}

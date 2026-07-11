@@ -1,0 +1,240 @@
+{
+  "unitId": "u01",
+  "concepts": [
+    {
+      "id": "u01-c1",
+      "unitId": "u01",
+      "order": 1,
+      "title": "본동사 하나 원칙",
+      "oneLiner": "한 문장(절)에는 본동사가 반드시 하나 있어야 합니다.",
+      "algorithm": [
+        "문장 전체에서 시제를 가진 동사(현재형·과거형·조동사+원형)를 모두 찾아 표시합니다.",
+        "-ing·to부정사·p.p.처럼 시제가 없는 형태는 동사 후보에서 제외합니다.",
+        "남은 시제 동사가 정확히 하나인지 확인합니다 — 하나도 없으면 아직 문장이 아닙니다.",
+        "본동사가 없다면, 밑줄 친 준동사를 시제 있는 동사로 바꿔야 하는 자리인지 검토합니다."
+      ],
+      "rules": [
+        {
+          "rule": "완전한 문장(절)에는 시제를 가진 본동사가 정확히 하나 있어야 합니다.",
+          "examples": [
+            {
+              "en": "The bridge across the river **connects** the two old towns.",
+              "ko": "강을 가로지르는 그 다리는 두 오래된 마을을 연결합니다.",
+              "note": "시제 동사 connects 하나 → 완전한 문장"
+            },
+            {
+              "en": "Ice on the mountain roads **melts** slowly in early spring.",
+              "ko": "산악 도로 위의 얼음은 이른 봄에 천천히 녹습니다.",
+              "note": "주어 Ice + 본동사 melts — 전치사구는 문장의 뼈대가 아님"
+            }
+          ]
+        },
+        {
+          "rule": "주어 뒤에 수식어가 아무리 길게 붙어도 본동사 자리는 반드시 따로 남아 있어야 합니다.",
+          "examples": [
+            {
+              "en": "The letters **kept** in the museum for decades **reveal** the writer's daily life.",
+              "ko": "수십 년간 박물관에 보관된 그 편지들은 작가의 일상을 드러냅니다.",
+              "note": "kept in ... decades는 수식 분사구 → 본동사는 reveal"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "긴 주어의 착시 — 본동사 없는 조각문",
+          "body": "주어에 긴 수식어가 붙으면 문장이 이미 완성된 것처럼 느껴져서, 시제 동사가 하나도 없는 조각문을 완전한 문장으로 착각하기 쉽습니다. 해석의 느낌이 아니라 시제 동사의 존재 여부로 판단해야 합니다.",
+          "example": {
+            "en": "The results of the survey **conducted** across five schools **show** a clear pattern.",
+            "ko": "다섯 개 학교에서 실시된 그 설문의 결과는 뚜렷한 경향을 보여 줍니다.",
+            "note": "conducted는 수식 분사 — show가 본동사(showing이면 본동사가 없는 조각문)"
+          }
+        },
+        {
+          "title": "킬러 — 관계절+분사구 2겹 통과",
+          "body": "주어와 본동사 사이에 관계절과 분사구가 두 겹으로 끼면 그 안의 동사들 때문에 본동사가 이미 나온 듯 보입니다. 수식어를 전부 괄호로 묶은 뒤, 괄호 밖에 시제 동사가 남아 있는지 확인합니다.",
+          "example": {
+            "en": "The medicine that doctors tested in trials lasting five years finally **received** approval.",
+            "ko": "의사들이 5년에 걸친 시험에서 검증한 그 약은 마침내 승인을 받았습니다.",
+            "note": "관계절(that doctors tested)+분사구(lasting five years)를 걷어내면 received가 본동사"
+          }
+        }
+      ],
+      "confusableWith": ["u01-c2", "u01-c3", "u02-c1"]
+    },
+    {
+      "id": "u01-c2",
+      "unitId": "u01",
+      "order": 2,
+      "title": "준동사는 본동사가 될 수 없다",
+      "oneLiner": "-ing·to부정사·p.p.는 혼자서 문장의 동사 노릇을 못 합니다.",
+      "algorithm": [
+        "밑줄 친 단어가 -ing·to부정사·p.p. 형태인지 먼저 확인합니다.",
+        "같은 절 안에 시제를 가진 본동사가 따로 있는지 문장 끝까지 찾습니다.",
+        "본동사가 이미 있으면 밑줄은 준동사가 옳고, 없으면 밑줄이 시제 있는 본동사로 바뀌어야 합니다.",
+        "be·have와 결합된 -ing·p.p.는 동사구의 일부이므로 본동사로 인정합니다."
+      ],
+      "rules": [
+        {
+          "rule": "-ing·to부정사·p.p.는 시제가 없어서 혼자서는 문장의 동사가 될 수 없습니다.",
+          "examples": [
+            {
+              "en": "Farmers in this dry region **depend** on the summer rain.",
+              "ko": "이 건조한 지역의 농부들은 여름비에 의존합니다.",
+              "note": "depending이면 본동사가 사라짐 → 시제 있는 depend"
+            }
+          ]
+        },
+        {
+          "rule": "본동사가 이미 있으면 두 번째 동사 모양은 준동사(수식어)로 물러나야 합니다.",
+          "examples": [
+            {
+              "en": "The engineer **testing** the new engine reported a strange noise.",
+              "ko": "새 엔진을 시험하던 그 기술자는 이상한 소음을 보고했습니다.",
+              "note": "본동사 reported가 따로 있음 → testing은 명사 수식 분사"
+            }
+          ]
+        },
+        {
+          "rule": "be·have와 결합한 -ing·p.p.는 하나의 동사구로서 본동사 역할을 할 수 있습니다.",
+          "examples": [
+            {
+              "en": "The old theater **is being repaired** after the storm damage.",
+              "ko": "그 오래된 극장은 폭풍 피해 이후 수리되고 있습니다.",
+              "note": "is being repaired 전체가 하나의 시제 동사구"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "-ing를 본동사로 착각하는 함정",
+          "body": "주어 바로 뒤의 -ing는 동사처럼 읽히지만 시제가 없으므로 본동사가 아닙니다. 문장 끝까지 시제 동사가 따로 나오는지 확인한 뒤에 -ing 자리의 옳고 그름을 판정합니다.",
+          "example": {
+            "en": "Tourists **visiting** the island every summer **leave** tons of waste behind.",
+            "ko": "매년 여름 그 섬을 찾는 관광객들은 엄청난 양의 쓰레기를 남기고 갑니다.",
+            "note": "visiting은 수식 분사 — 본동사는 leave"
+          }
+        }
+      ],
+      "confusableWith": ["u01-c1", "u01-c4", "u04-c1"]
+    },
+    {
+      "id": "u01-c3",
+      "unitId": "u01",
+      "order": 3,
+      "title": "동사 개수 = 접속사·관계사 개수 + 1",
+      "oneLiner": "접속사·관계사 없이 한 절에 동사가 두 개일 수 없습니다.",
+      "algorithm": [
+        "문장 전체에서 시제를 가진 동사를 모두 세어 표시합니다.",
+        "접속사(and·because·that 등)와 관계사(who·which 등)를 세어 표시합니다.",
+        "I think·I believe처럼 중간에 낀 삽입절은 괄호로 묶고 계산에서 뺍니다.",
+        "'동사 개수 = 연결어 개수 + 1'이 성립하는지 확인합니다 — 동사가 남으면 하나를 준동사로, 모자라면 하나를 본동사로 고칩니다."
+      ],
+      "rules": [
+        {
+          "rule": "접속사·관계사가 하나 늘어날 때마다 시제 동사도 하나 더 올 수 있습니다.",
+          "examples": [
+            {
+              "en": "The city **grew** quickly because the railway **reached** it in 1870.",
+              "ko": "1870년에 철도가 닿았기 때문에 그 도시는 빠르게 성장했습니다.",
+              "note": "접속사 because 1개 → 시제 동사 2개(grew, reached)"
+            }
+          ]
+        },
+        {
+          "rule": "연결어가 없는데 동사 모양이 두 개면, 하나는 반드시 준동사여야 합니다.",
+          "examples": [
+            {
+              "en": "The students **preparing** for the contest **practice** in the gym every evening.",
+              "ko": "대회를 준비하는 학생들은 매일 저녁 체육관에서 연습합니다.",
+              "note": "연결어 0개 → 시제 동사는 practice 하나뿐, preparing은 수식 분사"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "세미콜론·접속부사 뒤에는 새 본동사",
+          "body": "however·thus·therefore는 접속부사이지 접속사가 아니므로, 세미콜론 뒤의 절에는 시제를 가진 본동사가 따로 하나 필요합니다. 접속부사를 접속사로 착각하면 동사 개수 계산이 어긋납니다.",
+          "example": {
+            "en": "The experiment failed twice; **however**, the team **remained** confident about the design.",
+            "ko": "실험은 두 번 실패했습니다. 그러나 연구팀은 설계에 대해 여전히 자신감을 유지했습니다.",
+            "note": "세미콜론이 두 절을 연결 → 뒤 절에도 본동사 remained 필요(however는 접속사가 아님)"
+          }
+        },
+        {
+          "title": "I think 삽입절은 빼고 센다",
+          "body": "관계절 안에 I think·I believe가 끼어들면 동사가 하나 더 있는 것처럼 보입니다. 삽입절을 괄호로 묶어 계산에서 빼면 '동사 개수 = 연결어 개수 + 1' 공식이 다시 맞아떨어집니다.",
+          "example": {
+            "en": "The theory that many experts, **I believe**, once rejected now guides the field.",
+            "ko": "많은 전문가들이, 제 생각에는, 한때 거부했던 그 이론이 이제 그 분야를 이끕니다.",
+            "note": "삽입절 I believe 제외 → 관계사 that 1개 + 시제 동사 2개(rejected, guides)"
+          }
+        }
+      ],
+      "confusableWith": ["u01-c1", "u01-c4"]
+    },
+    {
+      "id": "u01-c4",
+      "unitId": "u01",
+      "order": 4,
+      "title": "동형 함정 — 과거형인가 과거분사인가",
+      "oneLiner": "과거형과 p.p.가 같은 동사의 후치 수식을 본동사로 착각하게 만드는 함정입니다.",
+      "algorithm": [
+        "명사 뒤의 -ed를 만나면 과거형인지 과거분사인지 아직 판단하지 않고 표시만 해 둡니다.",
+        "문장을 끝까지 읽어 시제를 가진 다른 동사가 나오는지 확인합니다.",
+        "다른 본동사가 나오면 그 -ed는 명사를 꾸미는 과거분사이고, 나오지 않으면 그 -ed가 본동사 과거형입니다.",
+        "'그 명사가 ~된 것'이라는 수동 해석이 자연스러운지로 교차 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "-ed 동형 동사는 모양이 아니라 문장 구조로만 과거형인지 과거분사인지 구분합니다.",
+          "examples": [
+            {
+              "en": "The rules **adopted** by the committee in 2019 **remain** in force today.",
+              "ko": "위원회가 2019년에 채택한 그 규칙들은 오늘날에도 여전히 효력을 유지합니다.",
+              "note": "뒤에 본동사 remain이 나옴 → adopted는 과거분사 수식"
+            },
+            {
+              "en": "The committee **adopted** stricter safety rules after the accident.",
+              "ko": "위원회는 그 사고 이후 더 엄격한 안전 규칙을 채택했습니다.",
+              "note": "다른 시제 동사가 없음 → adopted가 본동사(과거형)"
+            }
+          ]
+        },
+        {
+          "rule": "명사 바로 뒤의 p.p.는 '~된 명사'라는 수동 의미의 후치 수식입니다.",
+          "examples": [
+            {
+              "en": "The paintings **stored** in the basement **survived** the fire without damage.",
+              "ko": "지하실에 보관되어 있던 그 그림들은 손상 없이 화재를 견뎌 냈습니다.",
+              "note": "paintings가 '보관되는' 대상 → stored는 후치 수식, 본동사는 survived"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "명사 뒤 -ed 성급한 단정",
+          "body": "명사 뒤의 -ed를 보는 순간 과거형 본동사로 단정하기 쉽습니다. 그 뒤에서 시제를 가진 동사가 또 나오면 앞의 -ed는 과거분사 수식이었던 것이므로, 반드시 문장 끝까지 읽고 판단합니다.",
+          "example": {
+            "en": "The schedule **agreed** on last week already **needs** several important changes.",
+            "ko": "지난주에 합의된 그 일정은 벌써 몇 가지 중요한 수정이 필요합니다.",
+            "note": "agreed 뒤에 본동사 needs가 나옴 → agreed는 과거분사 수식"
+          }
+        },
+        {
+          "title": "-ed 동형 동사에는 모양 단서가 없다",
+          "body": "written·given처럼 과거형과 p.p.의 모양이 다른 동사는 형태만으로 구분되지만, -ed 규칙 동사는 두 형태가 같아 이 단서가 없습니다. -ed를 만나면 '이 명사가 ~된 것인가'라는 수동 해석부터 시험해 봅니다.",
+          "example": {
+            "en": "The novel **written** during the war moved readers around the world.",
+            "ko": "전쟁 중에 집필된 그 소설은 전 세계 독자들에게 감동을 주었습니다.",
+            "note": "written은 p.p. 전용형이라 즉시 수식으로 판별 — -ed 동형에는 이 단서가 없음"
+          }
+        }
+      ],
+      "confusableWith": ["u01-c2", "u01-c3", "u04-c1"]
+    }
+  ]
+}

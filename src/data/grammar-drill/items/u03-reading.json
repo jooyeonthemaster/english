@@ -1,0 +1,485 @@
+{
+  "unitId": "u03",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u03-c2-mu-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object", "relative-gap"],
+      "text": "The research station [[1:was built]] near the glacier in 1998. Each winter the technicians [[2:are recorded]] the ice measurements that the instruments [[3:gather]] automatically.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "record",
+      "rationales": [
+        "The research station은 지어지는 대상이므로 be+p.p. 수동태 was built가 옳습니다.",
+        "the technicians 뒤에 목적어 the ice measurements가 그대로 있으므로 능동 record가 옳고, 수동 are recorded는 틀립니다.",
+        "관계절에서 gather의 목적어는 선행사 the ice measurements로 빠져나간 자리이므로, 목적어가 안 보여도 능동 gather가 옳습니다."
+      ],
+      "hints": [
+        "밑줄 친 동사마다 바로 뒤에 목적어(명사)가 있는지 하나씩 확인해 보십시오.",
+        "타동사 뒤에 목적어가 버젓이 남아 있다면 그 동사는 수동태로 쓸 수 없습니다."
+      ],
+      "explanation": "가운데 밑줄의 주어 the technicians는 측정값을 기록하는 주체이고 동사 뒤에 목적어 the ice measurements가 그대로 남아 있으므로 능동 record가 옳습니다. 목적어가 살아 있는데 수동 are recorded로 쓰면 목적어가 갈 곳이 없어 비문이 됩니다. 첫 밑줄은 지어지는 대상의 수동, 셋째 밑줄은 목적어가 선행사로 빠진 관계절의 능동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c1-mu-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object", "modal-passive"],
+      "text": "The updated software [[1:will detect]] hidden errors far more quickly than before. Users [[2:are notified]] at once, and faulty modules [[3:will replace]] by the system automatically.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "will be replaced",
+      "rationales": [
+        "주어 The updated software가 오류를 탐지하는 주체이고 뒤에 목적어 hidden errors가 있으므로 능동 will detect가 옳습니다.",
+        "Users는 통보를 받는 대상이므로 수동 are notified가 옳습니다.",
+        "faulty modules는 교체되는 대상이므로 조동사 will 뒤에 be+p.p.가 와야 하며, 능동 will replace는 틀립니다."
+      ],
+      "hints": [
+        "각 밑줄의 주어가 그 동작을 직접 하는지, 아니면 당하는지를 먼저 가려 보십시오.",
+        "조동사 뒤에서도 주어가 동작을 당하면 be+과거분사 형태가 필요합니다."
+      ],
+      "explanation": "세 번째 밑줄의 주어 faulty modules는 스스로 교체하는 주체가 아니라 시스템에 의해 교체되는 대상이므로, 조동사 will 뒤에 be replaced 수동이 와야 합니다. 능동 will replace는 뒤의 by the system과도 충돌합니다. 첫 밑줄은 목적어를 거느린 능동, 둘째 밑줄은 통보받는 대상의 수동으로 옳습니다."
+    },
+    {
+      "id": "u03-c4-mu-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["perfect-passive", "been-being"],
+      "text": "The buried temple [[1:was discovered]] by a farmer in 1974. Since then the site [[2:has being studied]] by teams that governments [[3:have funded]] for decades.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "has been studied",
+      "rationales": [
+        "The buried temple은 발견되는 대상이므로 수동 was discovered가 옳습니다.",
+        "완료 수동은 has 뒤에 been+과거분사가 와야 하므로 has been studied가 옳고, has being studied는 틀립니다.",
+        "관계절에서 have funded의 목적어는 선행사 teams로 빠져나간 자리이므로 능동 have funded가 옳습니다."
+      ],
+      "hints": [
+        "완료의 have/has 바로 뒤에 어떤 형태가 오는지 형태 공식을 떠올려 보십시오.",
+        "완료의 have/has 뒤에 오는 형태와 진행의 be동사 뒤에 오는 형태를 혼동하지 않도록 형태 공식을 고정해 두어야 합니다."
+      ],
+      "explanation": "두 번째 밑줄은 완료 수동입니다. 완료를 이끄는 has 뒤에는 been이 와야 하므로 has been studied가 옳고, 진행에 쓰이는 being을 잘못 끼운 has being studied는 틀립니다. 첫 밑줄은 발견되는 대상의 수동, 셋째 밑줄은 목적어가 선행사로 빠진 관계절의 능동으로 옳습니다."
+    },
+    {
+      "id": "u03-c2-mu-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["passive-with-object", "dative-passive", "relative-gap"],
+      "text": "The analysts at a central bank [[1:are examined]] the market data that automated tools [[2:collect]] each hour. After the last crisis, the bank itself [[3:was granted]] new powers to publish its findings.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "examine",
+      "rationales": [
+        "The analysts는 자료를 검토하는 주체이고 뒤에 목적어 the market data가 있으므로 능동 examine이 옳고, 수동 are examined는 틀립니다.",
+        "관계절에서 collect의 목적어는 선행사 the market data로 빠져나간 자리이므로 능동 collect가 옳습니다.",
+        "4형식 동사 grant의 수동태로, was granted 뒤에 명사 new powers가 남는 것이 정상이므로 옳습니다."
+      ],
+      "hints": [
+        "수동태 뒤에 명사가 남았다고 곧바로 능동으로 고치지 말고, 그 동사가 목적어를 두 개 갖는 종류인지 먼저 확인해 보십시오.",
+        "give·grant처럼 목적어가 둘인 동사는 수동 뒤에도 명사가 남지만, 목적어가 하나뿐인 타동사는 수동 뒤에 목적어를 남길 수 없습니다."
+      ],
+      "explanation": "첫 번째 밑줄의 주어 The analysts는 자료를 검토하는 주체이고 동사 뒤에 목적어 the market data가 그대로 남아 있으므로 능동 examine이 옳습니다. examine은 목적어가 하나뿐인 타동사라 수동 뒤에 목적어를 남길 수 없습니다. 둘째 밑줄은 목적어가 선행사로 빠진 관계절의 능동이고, 셋째 밑줄은 목적어를 둘 갖는 grant의 4형식 수동이라 명사가 남는 것이 정상이므로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c1-mu-005",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["passive-agent", "intervening-clause"],
+      "text": "The theory that early memories shape adult personality [[1:was proposed]] a century ago. Over time it [[2:refined]] by researchers who [[3:questioned]] its simpler claims.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "was refined",
+      "rationales": [
+        "The theory는 제안되는 대상이므로 수동 was proposed가 옳습니다.",
+        "앞 문장의 The theory를 받는 it은 다듬어지는 대상이고 뒤에 by researchers가 이어지므로 수동 was refined가 옳으며, 능동 refined는 틀립니다.",
+        "관계대명사 who가 이끄는 절에서 researchers가 주장을 의심하는 주체이므로 능동 questioned가 옳습니다."
+      ],
+      "hints": [
+        "대명사 it이 앞 문장의 무엇을 가리키는지 찾아, 그 대상이 동작을 하는지 당하는지 따져 보십시오.",
+        "뒤에 by+행위자가 이어진다면 그 앞의 동사는 대개 be+과거분사 수동이어야 합니다."
+      ],
+      "explanation": "두 번째 밑줄의 it은 앞 문장의 The theory를 가리키며, 이론은 연구자들에 의해 다듬어지는 대상입니다. 뒤에 by researchers가 이어지므로 was refined 수동이 옳고, 능동 refined는 목적어도 없고 by구와도 충돌합니다. 첫 밑줄은 제안되는 대상의 수동, 셋째 밑줄은 주격 관계절의 능동으로 옳습니다."
+    },
+    {
+      "id": "u03-c2-mu-006",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "intransitive-passive", "relative-gap"],
+      "text": "Wetlands that border the river [[1:absorb]] excess rainwater during storms. When a drought [[2:arises]], the same soils slowly [[3:are released]] the water they stored earlier.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "release",
+      "rationales": [
+        "관계절 that border the river의 수식을 받는 주어 Wetlands가 빗물을 흡수하는 주체이므로 능동 absorb가 옳습니다.",
+        "arise는 목적어를 갖지 않는 자동사여서 수동태 자체가 불가능하므로 능동 arises가 옳습니다.",
+        "the same soils는 물을 내보내는 주체이고 뒤에 목적어 the water가 있으므로 능동 release가 옳고, 수동 are released는 틀립니다."
+      ],
+      "hints": [
+        "세 밑줄 각각에 대해 동사 뒤에 목적어가 있는지, 또 그 동사가 애초에 목적어를 가질 수 있는 동사인지 확인해 보십시오.",
+        "목적어가 뒤따르는 타동사는 수동으로 쓸 수 없고, 목적어를 못 갖는 자동사는 능동으로만 씁니다."
+      ],
+      "explanation": "세 번째 밑줄의 주어 the same soils는 물을 내보내는 주체이고 동사 뒤에 목적어 the water가 그대로 있으므로 능동 release가 옳으며, 수동 are released는 목적어가 갈 곳을 잃어 비문이 됩니다. 둘째 밑줄의 arise는 수동이 불가능한 자동사라 능동이 맞고, 첫 밑줄도 흡수의 주체인 능동으로 옳습니다."
+    },
+    {
+      "id": "u03-c4-mu-007",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["progressive-passive", "been-being", "relative-gap"],
+      "text": "Until the upgrade ends, some neighborhoods [[1:are supplied]] by temporary generators. The old power grid, which engineers [[2:have criticized]] for years, [[3:is been upgraded]] section by section.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "is being upgraded",
+      "rationales": [
+        "some neighborhoods는 전기를 공급받는 대상이므로 수동 are supplied가 옳습니다.",
+        "관계절 which engineers have criticized에서 목적어는 선행사 The old power grid로 빠져나간 자리이므로 능동 have criticized가 옳습니다.",
+        "진행 수동은 be동사 뒤에 being+과거분사가 와야 하므로 is being upgraded가 옳고, been을 끼운 is been upgraded는 틀립니다."
+      ],
+      "hints": [
+        "진행을 나타내는 be동사 바로 뒤에 어떤 분사 형태가 오는지 형태 공식을 떠올려 보십시오.",
+        "완료의 have 뒤와 진행의 be동사 뒤에 오는 형태를 서로 바꿔 쓰면 안 됩니다."
+      ],
+      "explanation": "세 번째 밑줄은 진행 수동입니다. 진행을 이끄는 is 뒤에는 being이 와야 하므로 is being upgraded가 옳고, 완료에 쓰이는 been을 끼운 is been upgraded는 틀립니다. 첫 밑줄은 공급받는 대상의 수동, 둘째 밑줄은 목적어가 선행사로 빠진 관계절의 능동으로 옳습니다."
+    },
+    {
+      "id": "u03-c1-mu-008",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["passive-agent", "perfect-passive", "intervening-clause"],
+      "text": "The mural that covers the library ceiling [[1:depicts]] scenes from local myths. Painted in the 1930s, it [[2:has damaged]] by humidity and now [[3:is being restored]] by specialists.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "has been damaged",
+      "rationales": [
+        "관계절 that covers the library ceiling의 수식을 받는 주어 The mural이 장면을 묘사하는 주체이므로 능동 depicts가 옳습니다.",
+        "앞의 The mural을 받는 it은 습기에 의해 손상되는 대상이므로 완료 수동 has been damaged가 옳고, 능동 has damaged는 틀립니다.",
+        "it은 전문가들에 의해 복원되는 대상이므로 진행 수동 is being restored가 옳습니다."
+      ],
+      "hints": [
+        "대명사 it이 가리키는 대상이 동작을 하는지 당하는지 먼저 가린 뒤, 뒤의 by구가 무엇을 시사하는지 살펴보십시오.",
+        "주어가 동작을 당하는 경우에는 완료 시제라도 반드시 be동사의 과거분사를 넣어 수동 형태를 갖춰야 합니다."
+      ],
+      "explanation": "두 번째 밑줄의 it은 앞 문장의 The mural을 가리키며, 벽화는 습기에 의해 손상되는 대상입니다. 따라서 완료 수동 has been damaged가 옳고, 목적어도 없이 by humidity와 충돌하는 능동 has damaged는 틀립니다. 첫 밑줄은 묘사의 주체인 능동, 셋째 밑줄은 복원되는 대상의 진행 수동으로 옳습니다."
+    },
+    {
+      "id": "u03-c2-mu-009",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "relative-gap", "intransitive-passive"],
+      "text": "Surveys that the institute [[1:conducts]] each year [[2:reveal]] shifting public attitudes. When unexpected results [[3:emerge]], the researchers carefully [[4:are checked]] the wording of every question.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "check",
+      "rationales": [
+        "관계절에서 conducts의 목적어는 선행사 Surveys로 빠져나간 자리이므로 능동 conducts가 옳습니다.",
+        "진짜 주어 Surveys는 복수이고 태도를 드러내는 주체이므로 능동 복수 동사 reveal이 옳습니다.",
+        "emerge는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 emerge가 옳습니다.",
+        "the researchers는 문구를 점검하는 주체이고 뒤에 목적어 the wording이 있으므로 능동 check가 옳고, 수동 are checked는 틀립니다."
+      ],
+      "hints": [
+        "밑줄마다 동사 뒤에 목적어가 있는지, 그리고 그 동사가 목적어를 가질 수 있는 종류인지 함께 확인해 보십시오.",
+        "목적어를 거느린 타동사는 수동으로 쓸 수 없습니다 — 목적어가 살아 있으면 능동입니다."
+      ],
+      "explanation": "네 번째 밑줄의 주어 the researchers는 문구를 점검하는 주체이고 동사 뒤에 목적어 the wording이 그대로 있으므로 능동 check가 옳으며, 수동 are checked는 목적어를 남길 수 없어 비문이 됩니다. 첫 밑줄은 관계절의 능동, 둘째는 복수 주어와 일치한 능동, 셋째는 자동사 emerge의 능동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c2-mu-010",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["passive-with-object", "object-complement-passive", "relative-gap", "intransitive-passive"],
+      "text": "The enzyme that these bacteria [[1:produce]] in cold water was long [[2:considered]] useless. Yet once oxygen levels [[3:fall]], the very same molecules [[4:are broken]] the tough fibers that no other agent [[5:can dissolve]].",
+      "underlineCount": 5,
+      "answer": 4,
+      "correction": "break",
+      "rationales": [
+        "관계절에서 produce의 목적어는 선행사 The enzyme으로 빠져나간 자리이므로 능동 produce가 옳습니다.",
+        "consider는 목적격 보어를 갖는 5형식 동사여서 수동태(was considered) 뒤에 보어 useless가 남는 것이 정상이므로 considered가 옳습니다.",
+        "fall은 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 fall이 옳습니다.",
+        "the very same molecules는 섬유를 분해하는 주체이고 뒤에 목적어 the tough fibers가 있으므로 능동 break가 옳고, 수동 are broken은 틀립니다.",
+        "관계절에서 dissolve의 목적어는 선행사 the tough fibers로 빠져나간 자리이므로 능동 can dissolve가 옳습니다."
+      ],
+      "hints": [
+        "다섯 밑줄 가운데 동사 뒤에 진짜 목적어가 살아 있는 자리를 찾아, 그 동사가 수동으로 쓰일 수 있는지 따져 보십시오.",
+        "목적어가 하나뿐인 타동사는 수동 뒤에 목적어를 남길 수 없지만, 보어를 갖는 동사는 수동 뒤에 형용사·명사가 남을 수 있습니다."
+      ],
+      "explanation": "네 번째 밑줄의 주어 the very same molecules는 섬유를 분해하는 주체이고 동사 뒤에 목적어 the tough fibers가 그대로 있으므로 능동 break가 옳으며, 수동 are broken은 목적어를 남길 수 없어 비문입니다. 둘째 밑줄의 was considered는 보어 useless를 남기는 5형식 수동이라 정상이고, 첫째·다섯째는 관계절의 능동, 셋째는 자동사 fall의 능동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c4-mu-011",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["perfect-passive", "been-being", "relative-gap", "intransitive-passive"],
+      "text": "The manuscripts that the monastery [[1:had preserved]] for centuries [[2:were catalogued]] only recently. Because so many volumes [[3:remained]] unread, several rare texts [[4:have being translated]] by scholars whom the library [[5:invited]] last year.",
+      "underlineCount": 5,
+      "answer": 4,
+      "correction": "have been translated",
+      "rationales": [
+        "관계절에서 had preserved의 목적어는 선행사 The manuscripts로 빠져나간 자리이므로 능동 had preserved가 옳습니다.",
+        "The manuscripts는 목록으로 정리되는 대상이므로 수동 were catalogued가 옳습니다.",
+        "remain은 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 remained가 옳습니다.",
+        "완료 수동은 have 뒤에 been+과거분사가 와야 하므로 have been translated가 옳고, being을 끼운 have being translated는 틀립니다.",
+        "관계절에서 invited의 목적어는 선행사 scholars로 빠져나간 자리이므로 능동 invited가 옳습니다."
+      ],
+      "hints": [
+        "완료를 나타내는 have 바로 뒤에 어떤 분사 형태가 오는지 형태 공식을 떠올려 보십시오.",
+        "완료 뒤에 오는 형태와 진행 뒤에 오는 형태를 뒤바꿔 쓰면 안 됩니다."
+      ],
+      "explanation": "네 번째 밑줄은 완료 수동입니다. 완료를 이끄는 have 뒤에는 been이 와야 하므로 have been translated가 옳고, 진행에 쓰이는 being을 끼운 have being translated는 틀립니다. 첫째·다섯째 밑줄은 목적어가 선행사로 빠진 관계절의 능동, 둘째는 정리되는 대상의 수동, 셋째는 자동사 remain의 능동으로 옳습니다."
+    },
+    {
+      "id": "u03-c1-mu-012",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["passive-agent", "relative-gap", "intransitive-passive"],
+      "text": "The trade agreement that dozens of nations [[1:signed]] in 2001 [[2:reshaped]] global supply chains. When disputes over one clause [[3:arose]], the passage that the smaller states [[4:opposed]] most fiercely [[5:removed]] from the final text before the vote.",
+      "underlineCount": 5,
+      "answer": 5,
+      "correction": "was removed",
+      "rationales": [
+        "관계절에서 signed의 목적어는 선행사 The trade agreement로 빠져나간 자리이므로 능동 signed가 옳습니다.",
+        "주어 The trade agreement가 공급망을 재편한 주체이고 뒤에 목적어 global supply chains가 있으므로 능동 reshaped가 옳습니다.",
+        "arise는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 arose가 옳습니다.",
+        "관계절에서 opposed의 목적어는 선행사 the passage로 빠져나간 자리이므로 능동 opposed가 옳습니다.",
+        "the passage는 최종안에서 삭제되는 대상이므로 수동 was removed가 옳고, 능동 removed는 틀립니다."
+      ],
+      "hints": [
+        "문장의 진짜 주어를 멀리서 찾은 뒤, 그 주어가 동작을 하는지 당하는지 가려 보십시오.",
+        "목적어도 없고 주어가 동작을 당하는 자리라면 be+과거분사 수동이 필요합니다."
+      ],
+      "explanation": "다섯 번째 밑줄의 주어 the passage는 최종안에서 삭제되는 대상이고 뒤에 목적어도 없으므로 수동 was removed가 옳으며, 능동 removed는 목적어가 없어 성립하지 않습니다. 첫째·넷째 밑줄은 관계절의 능동, 둘째는 목적어를 거느린 능동, 셋째는 자동사 arise의 능동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c2-ps-001",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "intransitive-passive", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Astronomers have found that gravity bends the path of starlight. The cluster of galaxies that sits between us and a distant source [[1:acts]] like a giant lens, splitting one image into several. Light [[2:arriving]] from behind the cluster follows curved paths that ordinary telescopes cannot straighten. By comparing these bent images, a single instrument [[3:is calculated]] the hidden mass that no camera can record. Wherever the distortion is strongest, a dense clump of dark matter almost certainly [[4:exists]]. The method [[5:was refined]] over three decades, and today it ranks among the most reliable tools in cosmology.",
+      "answer": 3,
+      "correction": "calculates",
+      "rationales": [
+        "주어의 핵은 단수 The cluster이고 of galaxies와 관계절은 수식어이므로 단수 동사 acts가 옳습니다.",
+        "문장의 본동사는 follows이므로, Light를 뒤에서 꾸미는 arriving은 준동사(현재분사)로 쓴 것이 옳습니다.",
+        "a single instrument는 질량을 계산하는 주체이고 뒤에 목적어 the hidden mass가 있으므로 능동 calculates가 옳으며, 수동 is calculated는 틀립니다.",
+        "exist는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 exists가 옳습니다.",
+        "The method는 다듬어지는 대상이므로 수동 was refined가 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u01", "u03", "u03", "u03"],
+      "gist": "중력 렌즈 현상을 이용해 눈에 보이지 않는 암흑 물질의 질량을 추정하는 방법을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 동사마다 바로 뒤에 목적어가 있는지, 그리고 그 동사가 목적어를 가질 수 있는지 확인해 보십시오.",
+        "목적어를 거느린 타동사는 수동태로 쓸 수 없으며, 목적어가 살아 있으면 능동으로 써야 합니다."
+      ],
+      "explanation": "세 번째 밑줄의 주어 a single instrument는 질량을 계산하는 주체이고 동사 뒤에 목적어 the hidden mass가 그대로 있으므로 능동 calculates가 옳으며, 수동 is calculated는 목적어를 남길 수 없어 비문이 됩니다. 1번은 단수 주어와 일치한 동사, 2번은 본동사 follows가 따로 있어 준동사로 쓴 arriving, 4번은 자동사 exist의 능동, 5번은 다듬어지는 대상의 수동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c1-ps-002",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["passive-agent", "intransitive-passive", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Psychologists once assumed that a memory, once stored, stayed fixed for life. Recent work suggests the opposite. Each time an old event [[1:is recalled]], the memory briefly becomes unstable and open to change. During this short window the original trace [[2:rewrites]] by whatever emotions the person feels at that moment. The list of factors that can reshape a memory [[3:includes]] mood, expectation, and even the wording of a question. Interestingly, distortions [[4:arise]] most easily when people are certain they remember perfectly. A detail [[5:added]] during later retellings can feel just as vivid as the original event.",
+      "answer": 2,
+      "correction": "is rewritten",
+      "rationales": [
+        "an old event은 떠올려지는 대상이므로 수동 is recalled가 옳습니다.",
+        "the original trace는 감정에 의해 고쳐 쓰이는 대상이고 뒤에 by구가 이어지므로 수동 is rewritten이 옳으며, 능동 rewrites는 틀립니다.",
+        "주어의 핵은 단수 The list이고 of factors와 관계절은 수식어이므로 단수 동사 includes가 옳습니다.",
+        "arise는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 arise가 옳습니다.",
+        "문장의 본동사는 can feel이므로, A detail을 뒤에서 꾸미는 added는 준동사(과거분사)로 쓴 것이 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u03", "u02", "u03", "u01"],
+      "gist": "기억은 떠올릴 때마다 불안정해져 당시의 감정에 의해 수정될 수 있다는 재응고 연구를 설명하는 글입니다.",
+      "hints": [
+        "각 밑줄의 주어가 동작을 스스로 하는지 당하는지 먼저 가리고, 뒤따르는 by구가 무엇을 시사하는지 살펴보십시오.",
+        "주어가 동작을 당하는 자리라면, 특히 뒤에 by+행위자가 있으면 be+과거분사 수동이 필요합니다."
+      ],
+      "explanation": "두 번째 밑줄의 주어 the original trace는 감정에 의해 고쳐 쓰이는 대상이고 뒤에 by whatever emotions가 이어지므로 수동 is rewritten이 옳으며, 능동 rewrites는 목적어도 없고 by구와도 충돌합니다. 1번은 떠올려지는 대상의 수동, 3번은 단수 주어와 일치한 동사, 4번은 자동사 arise의 능동, 5번은 본동사가 따로 있어 준동사로 쓴 added로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c4-ps-003",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["progressive-passive", "been-being", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Sociologists studying cities note that neighborhoods rarely blend on their own. The pattern of separation that early housing laws [[1:created]] still shapes where families settle today. Although those laws vanished long ago, the invisible lines they left behind [[2:remain]] surprisingly firm. The web of schools, jobs, and bus routes that surrounds each district [[3:reinforces]] the old divisions year after year. In several cities these boundaries [[4:are been studied]] block by block, so that planners can target the areas that struggle most. Whenever a fair-housing grant is approved, small pockets of integration slowly [[5:appear]] along the edges.",
+      "answer": 4,
+      "correction": "are being studied",
+      "rationales": [
+        "관계절에서 created의 목적어는 선행사 The pattern of separation으로 빠져나간 자리이므로 능동 created가 옳습니다.",
+        "remain은 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 remain이 옳습니다.",
+        "주어의 핵은 단수 The web이고 of schools, jobs, and bus routes와 관계절은 수식어이므로 단수 동사 reinforces가 옳습니다.",
+        "진행 수동은 be동사 뒤에 being+과거분사가 와야 하므로 are being studied가 옳고, been을 끼운 are been studied는 틀립니다.",
+        "appear는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 appear가 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u03", "u02", "u03", "u03"],
+      "gist": "과거의 주거 정책이 그은 분리의 경계가 오늘날까지 유지되며 도시의 거주 양상을 좌우한다는 글입니다.",
+      "hints": [
+        "진행을 나타내는 be동사 바로 뒤에 어떤 분사 형태가 오는지 형태 공식을 떠올려 보십시오.",
+        "완료의 have 뒤에 오는 형태와 진행의 be동사 뒤에 오는 형태를 서로 바꿔 쓰면 안 됩니다."
+      ],
+      "explanation": "네 번째 밑줄은 진행 수동입니다. 진행을 이끄는 are 뒤에는 being이 와야 하므로 are being studied가 옳고, 완료에 쓰이는 been을 끼운 are been studied는 틀립니다. 1번은 관계절의 능동, 2번과 5번은 자동사 remain·appear의 능동, 3번은 단수 주어 The web과 일치한 동사로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c2-ps-004",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["passive-with-object", "perfect-passive", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "By the late fifteenth century, workshops across Europe [[1:were produced]] thousands of printed books each year. Before this shift, every volume that a monastery owned [[2:had been copied]] slowly by hand. The new presses, which a handful of craftsmen [[3:operated]], turned months of labor into a single afternoon. As prices fell, literacy [[4:spread]] far beyond the wealthy few who had once controlled learning. The flood of cheap pamphlets [[5:printed]] in local languages soon reached towns that traveling scholars had never entered, and new ideas began to move faster than any authority could contain them.",
+      "answer": 1,
+      "correction": "produced",
+      "rationales": [
+        "workshops는 책을 생산하는 주체이고 뒤에 목적어 thousands of printed books가 있으므로 능동 produced가 옳으며, 수동 were produced는 틀립니다.",
+        "every volume은 손으로 복제되는 대상이므로 완료 수동 had been copied가 옳습니다.",
+        "관계절에서 operated의 목적어는 선행사 The new presses로 빠져나간 자리이므로 능동 operated가 옳습니다.",
+        "spread는 여기서 목적어 없이 쓰인 자동사 용법이므로 능동 spread가 옳습니다.",
+        "문장의 본동사는 reached이므로, The flood of cheap pamphlets를 뒤에서 꾸미는 printed는 준동사(과거분사)로 쓴 것이 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u03", "u03", "u03", "u01"],
+      "gist": "인쇄술의 등장이 필사 시대를 끝내고 값싼 책을 통해 문해력을 널리 퍼뜨렸다는 역사적 변화를 설명하는 글입니다.",
+      "hints": [
+        "첫 문장의 밑줄부터, 동사 뒤에 목적어가 살아 있는지 그리고 그 동사가 수동으로 쓰일 수 있는지 확인해 보십시오.",
+        "목적어를 거느린 타동사는 수동태로 쓸 수 없으며, 목적어가 있으면 능동으로 써야 합니다."
+      ],
+      "explanation": "첫 번째 밑줄의 주어 workshops는 책을 생산하는 주체이고 동사 뒤에 목적어 thousands of printed books가 그대로 있으므로 능동 produced가 옳으며, 수동 were produced는 목적어를 남길 수 없어 비문이 됩니다. 2번은 복제되는 대상의 완료 수동, 3번은 관계절의 능동, 4번은 자동사 용법의 spread, 5번은 본동사가 따로 있어 준동사로 쓴 printed로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c1-ps-005",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["passive-agent", "object-complement", "dative-passive", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The faded frescoes that line the chapel walls tell a story of constant repair. Each generation of restorers [[1:has left]] its own mark, sometimes helpful and sometimes harmful. A layer of varnish that earlier artists [[2:considered]] protective, for instance, later darkened the very colors it was meant to guard. Historians studying the chapel [[3:were given]] rare access to the original sketches beneath the plaster. The pigments [[4:hidden]] under centuries of grime turned out to be far brighter than anyone expected. Yet the most delicate panel, which a clumsy cleaning in the 1800s nearly ruined, [[5:restored]] only after modern scanning revealed its lost outlines.",
+      "answer": 5,
+      "correction": "was restored",
+      "rationales": [
+        "주어의 핵은 단수 Each generation이고 of restorers는 수식어이므로 단수 동사 has left가 옳습니다.",
+        "관계절에서 considered의 목적어는 선행사 A layer of varnish로 빠져나갔고 protective는 목적격 보어이므로, 목적어가 안 보여도 능동 considered가 옳습니다.",
+        "4형식 동사 give의 수동태로, were given 뒤에 명사 rare access가 남는 것이 정상이므로 옳습니다.",
+        "문장의 본동사는 turned out이므로, The pigments를 뒤에서 꾸미는 hidden은 준동사(과거분사)로 쓴 것이 옳습니다.",
+        "the most delicate panel은 복원되는 대상이고 뒤에 목적어도 없으므로 수동 was restored가 옳으며, 능동 restored는 틀립니다."
+      ],
+      "underlineUnits": ["u02", "u03", "u03", "u01", "u03"],
+      "gist": "여러 세대의 복원 시도가 겹친 예배당 프레스코화가 현대 기술의 도움으로 비로소 복원된 과정을 설명하는 글입니다.",
+      "hints": [
+        "문장마다 진짜 주어를 찾아 그 주어가 동작을 하는지 당하는지 가리고, 동사 뒤에 목적어가 실제로 남아 있는지 확인해 보십시오.",
+        "주어가 동작을 당하고 뒤에 목적어도 없다면 be+과거분사 수동이 필요합니다."
+      ],
+      "explanation": "다섯 번째 밑줄의 주어 the most delicate panel은 스스로 복원하는 주체가 아니라 복원되는 대상이고 뒤에 목적어도 없으므로 수동 was restored가 옳으며, 능동 restored는 성립하지 않습니다. 1번은 단수 주어 Each generation과 일치한 동사, 2번은 목적어가 선행사로 빠지고 보어만 남은 관계절의 능동, 3번은 명사가 남는 give의 4형식 수동, 4번은 본동사가 따로 있어 준동사로 쓴 hidden으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c2-ps-006",
+      "unitId": "u03",
+      "conceptId": "u03-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["passive-with-object", "intransitive-passive", "intervening-clause"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coral reefs survive through a partnership so delicate that a slight change can break it. The tiny algae that each polyp [[1:shelters]] supply most of the energy the coral needs. In warmer, more acidic seas, however, the stressed colonies [[2:are expelled]] the very algae that keep them alive. Once this bond collapses, the network of reefs that once buffered the coast [[3:loses]] its color and its strength. Skeletons that took centuries to build [[4:are dissolved]] by the corrosive water within a few years. Where cool currents still flow, though, healthier reefs somehow [[5:persist]] against the odds.",
+      "answer": 2,
+      "correction": "expel",
+      "rationales": [
+        "관계절에서 shelters의 목적어는 선행사 The tiny algae로 빠져나간 자리이므로 능동 shelters가 옳습니다.",
+        "the stressed colonies는 조류를 내보내는 주체이고 뒤에 목적어 the very algae가 있으므로 능동 expel이 옳으며, 수동 are expelled는 틀립니다.",
+        "주어의 핵은 단수 the network이고 of reefs와 관계절은 수식어이므로 단수 동사 loses가 옳습니다.",
+        "Skeletons는 부식성 바닷물에 의해 녹는 대상이므로 수동 are dissolved가 옳습니다.",
+        "persist는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 persist가 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u03", "u02", "u03", "u03"],
+      "gist": "산호와 조류의 공생이 수온 상승과 산성화로 무너지며 산호초가 쇠퇴하는 과정을 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 동사 뒤에 목적어가 살아 있는 자리를 찾아, 그 동사가 수동으로 쓰일 수 있는지 따져 보십시오.",
+        "목적어를 거느린 타동사는 수동태로 쓸 수 없으므로, 목적어가 남아 있으면 능동이 옳습니다."
+      ],
+      "explanation": "두 번째 밑줄의 주어 the stressed colonies는 조류를 내보내는 주체이고 동사 뒤에 목적어 the very algae가 그대로 있으므로 능동 expel이 옳으며, 수동 are expelled는 목적어를 남길 수 없어 비문이 됩니다. 1번은 관계절의 능동, 3번은 단수 주어 the network과 일치한 동사, 4번은 녹는 대상의 수동, 5번은 자동사 persist의 능동으로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c4-ps-007",
+      "unitId": "u03",
+      "conceptId": "u03-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["perfect-passive", "relative-gap", "intervening-pp"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Every modern economy leans on a bank that works to keep prices steady. The bundle of tools that such a bank [[1:controls]] includes interest rates, reserve limits, and public signals. When borrowing grows cheaper, household spending usually [[2:rises]], and mild inflation tends to follow. Sudden shocks, which no forecast [[3:anticipated]], can push prices upward for years at a time. In several countries, in fact, inflation [[4:has been controlling]] far less easily than older models promised. Yet the confidence of investors and ordinary savers alike [[5:rests]] on the promise that the currency will hold its value.",
+      "answer": 4,
+      "correction": "has been controlled",
+      "rationales": [
+        "관계절에서 controls의 목적어는 선행사 The bundle of tools로 빠져나간 자리이므로 능동 controls가 옳습니다.",
+        "rise는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 rises가 옳습니다.",
+        "관계절에서 anticipated의 목적어는 선행사 Sudden shocks로 빠져나간 자리이므로 능동 anticipated가 옳습니다.",
+        "inflation은 통제되는 대상이므로 완료 수동 has been controlled가 옳으며, 능동 진행형 has been controlling은 틀립니다.",
+        "주어의 핵은 단수 the confidence이고 of investors and ordinary savers alike는 수식어이므로 단수 동사 rests가 옳습니다."
+      ],
+      "underlineUnits": ["u03", "u03", "u03", "u03", "u02"],
+      "gist": "중앙은행이 물가를 안정시키려 애쓰지만 예측하지 못한 충격으로 인플레이션 통제가 갈수록 어려워졌다는 글입니다.",
+      "hints": [
+        "밑줄 친 동사의 주어가 동작을 하는지 당하는지 먼저 가린 뒤, 완료 시제 안에서 태가 제대로 드러났는지 확인해 보십시오.",
+        "주어가 동작을 당한다면 완료 시제에서도 be동사의 과거분사를 넣어 수동 형태를 갖춰야 합니다."
+      ],
+      "explanation": "네 번째 밑줄의 주어 inflation은 스스로 통제하는 주체가 아니라 통제되는 대상이므로 완료 수동 has been controlled가 옳으며, 능동 진행형 has been controlling은 주어와 동작의 관계가 어긋납니다. 1번과 3번은 목적어가 선행사로 빠진 관계절의 능동, 2번은 자동사 rise의 능동, 5번은 단수 주어 the confidence와 일치한 동사로 모두 옳습니다."
+    },
+    {
+      "id": "u03-c1-ps-008",
+      "unitId": "u03",
+      "conceptId": "u03-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["passive-agent", "intervening-pp", "relative-gap"],
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Modern image recognition rests on networks loosely [[1:modeled]] on the human brain. A system of this kind learns by adjusting millions of tiny weights until its guesses steadily improve. The vast dataset that engineers [[2:feed]] into the network shapes almost everything it later knows. During training, each wrong answer [[3:corrects]] by an algorithm that nudges the weights in a better direction. The accuracy of the final predictions [[4:depends]] heavily on how varied the training examples were. Curiously, strange errors sometimes [[5:appear]] when the machine meets an image unlike anything it has seen.",
+      "answer": 3,
+      "correction": "is corrected",
+      "rationales": [
+        "문장의 본동사는 rests이므로, networks를 뒤에서 꾸미는 modeled는 준동사(과거분사)로 쓴 것이 옳습니다.",
+        "관계절에서 feed의 목적어는 선행사 The vast dataset으로 빠져나간 자리이므로 능동 feed가 옳습니다.",
+        "each wrong answer는 알고리즘에 의해 교정되는 대상이고 뒤에 by구가 이어지므로 수동 is corrected가 옳으며, 능동 corrects는 틀립니다.",
+        "주어의 핵은 단수 The accuracy이고 of the final predictions는 수식어이므로 단수 동사 depends가 옳습니다.",
+        "appear는 목적어를 갖지 않는 자동사여서 수동이 불가능하므로 능동 appear가 옳습니다."
+      ],
+      "underlineUnits": ["u01", "u03", "u03", "u02", "u03"],
+      "gist": "이미지 인식 신경망이 오차를 알고리즘으로 교정하며 학습하는 원리와 그 한계를 설명하는 글입니다.",
+      "hints": [
+        "밑줄 친 동사의 주어가 동작을 스스로 하는지 당하는지 가리고, 뒤에 이어지는 by구가 무엇을 시사하는지 살펴보십시오.",
+        "주어가 동작을 당하고 뒤에 by+행위자가 있으면 그 동사는 be+과거분사 수동이어야 합니다."
+      ],
+      "explanation": "세 번째 밑줄의 주어 each wrong answer는 스스로 교정하는 주체가 아니라 알고리즘에 의해 교정되는 대상이고 뒤에 by an algorithm이 이어지므로 수동 is corrected가 옳으며, 능동 corrects는 목적어도 없고 by구와 충돌합니다. 1번은 본동사 rests가 따로 있어 준동사로 쓴 modeled, 2번은 관계절의 능동, 4번은 단수 주어 The accuracy와 일치한 동사, 5번은 자동사 appear의 능동으로 모두 옳습니다."
+    }
+  ]
+}

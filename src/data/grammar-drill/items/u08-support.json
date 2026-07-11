@@ -1,0 +1,912 @@
+{
+  "unitId": "u08",
+  "bank": "support",
+  "items": [
+    {
+      "id": "u08-c1-ox-001",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "while-during"],
+      "sentence": "The volcano remained quiet [[u:during]] scientists monitored its slopes around the clock.",
+      "isCorrect": false,
+      "correction": "while",
+      "translation": "과학자들이 24시간 내내 화산의 경사면을 관찰하는 동안 화산은 조용한 상태를 유지했습니다.",
+      "hints": [
+        "밑줄 바로 뒤에 '주어+동사' 짝이 있는지부터 확인하십시오.",
+        "절 앞에는 접속사만, 동사 없는 명사구 앞에는 전치사만 설 수 있습니다."
+      ],
+      "explanation": "밑줄 뒤의 scientists monitored는 '주어+동사'를 갖춘 절입니다. 절 앞자리에 전치사 during은 설 수 없으므로 접속사 while로 고쳐야 합니다. '~동안'이라는 해석은 같지만, 뒤 구조가 절인지 명사구인지가 품사를 결정합니다."
+    },
+    {
+      "id": "u08-c1-ox-002",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "gerund-as-np", "despite-although"],
+      "sentence": "[[u:Despite]] recording the lowest rainfall in decades, the region avoided a major crop failure.",
+      "isCorrect": true,
+      "translation": "수십 년 만에 가장 적은 강우량을 기록했음에도 불구하고, 그 지역은 대규모 흉작을 피했습니다.",
+      "hints": [
+        "밑줄 뒤의 -ing형이 본동사인지, 주어 없이 쓰인 명사 상당어구인지 확인하십시오.",
+        "주어 없이 시작하는 -ing구는 통째로 명사구이며, 명사구 앞자리는 전치사가 맡습니다."
+      ],
+      "explanation": "recording은 본동사가 아니라 동명사이므로 recording the lowest rainfall in decades 전체가 명사구입니다. 전치사 despite 뒤에 명사구가 온 올바른 구조입니다. -ing형을 동사로 착각해 절이 왔다고 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c1-ox-003",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "because-of"],
+      "sentence": "The seminar was rescheduled [[u:because of]] the guest lecturer missed her connecting flight.",
+      "isCorrect": false,
+      "correction": "because",
+      "translation": "초청 강연자가 연결 항공편을 놓쳤기 때문에 세미나 일정이 변경되었습니다.",
+      "hints": [
+        "밑줄 뒤에서 주어와 짝을 이루는 동사가 있는지 찾아보십시오.",
+        "'주어+동사'를 갖춘 절 앞에는 전치사 표현이 설 수 없습니다."
+      ],
+      "explanation": "밑줄 뒤의 the guest lecturer missed는 '주어+동사'를 갖춘 절입니다. because of는 전치사이므로 명사구만 이끌 수 있고, 절 앞에는 접속사 because가 와야 합니다. of 하나가 접속사와 전치사를 가르는 짝임을 기억해야 합니다."
+    },
+    {
+      "id": "u08-c1-ox-004",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "while-during", "long-np"],
+      "sentence": "[[u:While]] the city's oldest bell tower underwent repairs, tourists photographed it from behind a fence.",
+      "isCorrect": true,
+      "translation": "그 도시에서 가장 오래된 종탑이 수리되는 동안, 관광객들은 울타리 뒤에서 그것을 촬영했습니다.",
+      "hints": [
+        "밑줄 뒤가 명사로 시작하더라도, 그 명사와 짝을 이루는 동사가 뒤에 있는지 끝까지 확인하십시오.",
+        "'주어+동사' 짝이 발견되면 그 앞자리는 접속사가 옳은 자리입니다."
+      ],
+      "explanation": "밑줄 뒤에는 주어 the city's oldest bell tower와 동사 underwent가 갖춰진 절이 이어집니다. 절 앞자리이므로 접속사 while이 옳습니다. 주어가 길어 명사구만 온 것처럼 보이지만, 동사 underwent를 찾으면 절임이 확인됩니다."
+    },
+    {
+      "id": "u08-c1-ox-005",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "while-during", "long-np"],
+      "sentence": "The orchestra rehearsed in the old gymnasium [[u:while]] the extensive renovation of the concert hall's interior.",
+      "isCorrect": false,
+      "correction": "during",
+      "translation": "콘서트홀 내부의 대대적인 보수 공사 동안 오케스트라는 낡은 체육관에서 리허설을 했습니다.",
+      "hints": [
+        "밑줄 뒤 표현이 아무리 길어도, 본동사가 있는지만 확인하십시오.",
+        "동작을 나타내는 명사가 있어도 '주어+동사' 짝이 없으면 명사구이며, 그 앞은 전치사 자리입니다."
+      ],
+      "explanation": "밑줄 뒤의 the extensive renovation of the concert hall's interior에는 본동사가 없으므로 절이 아니라 명사구입니다. 접속사 while은 절만 이끌 수 있으므로 전치사 during으로 고쳐야 합니다. renovation처럼 동작을 나타내는 명사가 있어도 동사 짝이 없으면 절이 아닙니다."
+    },
+    {
+      "id": "u08-c1-ox-006",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "long-np", "intervening-clause"],
+      "sentence": "[[u:During]] the decades when the mill employed most of the town, few residents questioned its safety record.",
+      "isCorrect": true,
+      "translation": "그 제분소가 마을 사람 대부분을 고용했던 수십 년 동안, 그곳의 안전 기록에 의문을 제기한 주민은 거의 없었습니다.",
+      "hints": [
+        "밑줄 뒤에 보이는 동사가 문장의 본동사인지, 명사를 꾸미는 수식절 속 동사인지 확인하십시오.",
+        "수식절은 괄호로 묶고 걷어냅니다 — 남는 것이 명사구라면 그 앞은 전치사 자리입니다."
+      ],
+      "explanation": "밑줄의 목적어는 명사구 the decades이고, when the mill employed most of the town은 그 명사를 꾸미는 관계부사절입니다. employed는 수식절 내부의 동사일 뿐이므로 밑줄 뒤 구조는 여전히 명사구입니다. 따라서 전치사 during이 올바르게 쓰였습니다."
+    },
+    {
+      "id": "u08-c1-ox-007",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "despite-although", "long-np"],
+      "sentence": "The bridge stayed open [[u:despite]] several inspection teams commissioned by the state had warned about corrosion in its main cables.",
+      "isCorrect": false,
+      "correction": "although",
+      "translation": "주(州)가 위촉한 여러 점검팀이 주 케이블의 부식에 대해 경고했음에도 불구하고, 그 다리는 계속 개방되어 있었습니다.",
+      "hints": [
+        "밑줄 뒤의 명사에 붙은 수식어를 걷어낸 뒤, 그 명사와 짝을 이루는 본동사가 있는지 확인하십시오.",
+        "본동사 짝이 있는 절 앞에는 전치사가 아니라 양보의 접속사가 필요합니다."
+      ],
+      "explanation": "밑줄 뒤를 보면 주어 several inspection teams와 본동사 had warned가 갖춰진 절입니다. commissioned by the state는 주어를 꾸미는 분사구일 뿐입니다. 전치사 despite는 절을 이끌 수 없으므로 접속사 although로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c1-ox-008",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["because-of", "free-relative-object", "clause-vs-np"],
+      "sentence": "[[u:Because of]] what the excavation revealed about early trade routes, historians revised several long-held assumptions.",
+      "isCorrect": true,
+      "translation": "그 발굴이 초기 교역로에 관해 밝혀낸 것 때문에, 역사가들은 오랫동안 유지되어 온 여러 가정을 수정했습니다.",
+      "hints": [
+        "밑줄 뒤의 절이 부사절인지, 명사 자리를 채우는 명사절인지 구분해 보십시오.",
+        "전치사는 일반 명사구뿐 아니라 명사절(명사 상당어구)도 목적어로 취할 수 있습니다."
+      ],
+      "explanation": "what the excavation revealed about early trade routes는 what이 이끄는 명사절로, 문장에서 명사 자리에 서는 명사 상당어구입니다. 전치사 because of는 명사 상당어구를 목적어로 취할 수 있으므로 올바른 구조입니다. 절처럼 보인다고 무조건 접속사 자리로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c1-wf-001",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["clause-vs-np", "gerund-as-np"],
+      "stem": "Despite {{blank}} every day, the violinist still felt unprepared.",
+      "given": "practice",
+      "acceptedAnswers": ["practicing", "having practiced"],
+      "translation": "매일 연습했음에도 불구하고, 그 바이올리니스트는 여전히 준비가 부족하다고 느꼈습니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 전치사인지 접속사인지 먼저 확인하십시오.",
+        "전치사 뒤에는 본동사가 올 수 없으므로, 동사를 명사 구실을 하는 형태로 바꿔야 합니다."
+      ],
+      "explanation": "despite는 전치사이므로 뒤에 본동사가 올 수 없습니다. practice를 동명사 practicing으로 바꾸면 practicing every day 전체가 명사구가 되어 전치사의 목적어로 설 수 있습니다."
+    },
+    {
+      "id": "u08-c1-wf-002",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["clause-vs-np"],
+      "stem": "Because the library {{blank}} at nine every night, students leave early.",
+      "given": "close",
+      "acceptedAnswers": ["closes"],
+      "translation": "도서관이 매일 밤 9시에 문을 닫기 때문에, 학생들은 일찍 자리를 뜹니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 절을 이끄는지 명사구를 이끄는지 확인하십시오.",
+        "접속사 뒤에는 '주어+동사'의 절이 필요하며, 주어의 수와 반복을 나타내는 시간 표현이 동사 형태를 결정합니다."
+      ],
+      "explanation": "because는 접속사이므로 뒤에 '주어+동사'를 갖춘 절이 와야 합니다. 주어 the library가 단수이고 every night이 반복되는 습관을 나타내므로 현재시제 단수형 closes가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c1-wf-003",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "past-marker"],
+      "stem": "While the museum {{blank}} closed for repairs last winter, its collection toured five regional galleries.",
+      "given": "remain",
+      "acceptedAnswers": ["remained"],
+      "translation": "지난겨울 박물관이 수리를 위해 문을 닫은 채로 있는 동안, 소장품은 다섯 개 지역 미술관을 순회했습니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 접속사이므로 이 자리에는 절의 본동사가 필요합니다.",
+        "문장 안의 명백한 과거 시점 표현이 동사의 시제를 하나로 고정합니다."
+      ],
+      "explanation": "while은 접속사이므로 절의 본동사가 필요합니다. last winter라는 명백한 과거 시점 부사가 있으므로 과거형 remained가 유일한 답입니다. remain은 상태를 나타내는 동사여서 이 자리에서 진행형으로 쓰지 않습니다."
+    },
+    {
+      "id": "u08-c1-wf-004",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["because-of", "gerund-as-np"],
+      "stem": "Because of {{blank}} the warning signs along the trail, the hikers wandered onto unstable ground.",
+      "given": "ignore",
+      "acceptedAnswers": ["ignoring", "having ignored"],
+      "translation": "등산로를 따라 세워진 경고 표지판들을 무시했기 때문에, 등산객들은 불안정한 지반으로 들어서고 말았습니다.",
+      "hints": [
+        "빈칸 앞의 두 단어짜리 연결어가 절과 명사구 중 무엇을 이끄는지 확인하십시오.",
+        "전치사 표현 뒤에서는 동사가 명사 구실을 하는 형태로 바뀌어야 목적어 자리에 설 수 있습니다."
+      ],
+      "explanation": "because of는 전치사이므로 본동사가 아닌 동명사가 필요합니다. ignore를 ignoring으로 바꾸면 ignoring the warning signs along the trail 전체가 명사구가 되어 전치사의 목적어 역할을 합니다."
+    },
+    {
+      "id": "u08-c1-wf-005",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "gerund-as-np", "intervening-clause"],
+      "stem": "Despite {{blank}} nearly every sales record that the previous management had set, the division was shut down last year.",
+      "given": "break",
+      "acceptedAnswers": ["breaking", "having broken"],
+      "translation": "이전 경영진이 세워 둔 거의 모든 판매 기록을 깼음에도 불구하고, 그 사업부는 지난해 폐쇄되었습니다.",
+      "hints": [
+        "빈칸 뒤에 관계사절이 붙어 있어도, 빈칸 앞 연결어의 품사부터 확인하십시오.",
+        "전치사 뒤 구조는 아무리 길어도 명사구여야 하므로, 동사는 명사 성격의 형태로 바꿔야 합니다."
+      ],
+      "explanation": "despite는 전치사이므로 동명사 breaking이 와야 합니다. 목적어 nearly every sales record에 관계사절 that the previous management had set이 붙어 절처럼 보이지만, had set은 수식절 내부의 동사일 뿐입니다. despite 뒤 전체는 여전히 명사구입니다."
+    },
+    {
+      "id": "u08-c1-wf-006",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "intervening-clause"],
+      "stem": "Because the reef that surrounds the island's southern coast {{blank}} thousands of divers every summer, the government limits daily visitor numbers.",
+      "given": "attract",
+      "acceptedAnswers": ["attracts"],
+      "translation": "섬의 남쪽 해안을 둘러싼 산호초가 여름마다 수천 명의 다이버를 끌어들이기 때문에, 정부는 일일 방문객 수를 제한합니다.",
+      "hints": [
+        "빈칸이 속한 절의 진짜 주어 핵을 찾고, 사이에 낀 수식절은 괄호로 묶으십시오.",
+        "접속사가 이끄는 절에는 본동사가 필요하며, 주어 핵의 수와 반복 표현이 형태를 고정합니다."
+      ],
+      "explanation": "because 뒤 절의 본동사 자리입니다. 주어 핵은 단수 명사 the reef이고 that surrounds the island's southern coast는 수식하는 관계사절입니다. every summer가 반복되는 사실을 나타내므로 현재시제 단수형 attracts가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c1-wc-001",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "while-during"],
+      "sentence": "The rescue team searched the flooded valley [[u:during]] the storm was still raging.",
+      "wrong": "during",
+      "acceptedAnswers": ["while", "when", "as"],
+      "translation": "폭풍이 여전히 몰아치는 동안 구조대는 물에 잠긴 계곡을 수색했습니다.",
+      "hints": [
+        "밑줄 뒤에 '주어+동사' 짝이 있는지 확인하십시오.",
+        "절 앞에는 전치사가 설 수 없습니다 — 같은 뜻으로 절을 이끄는 접속사 짝을 떠올려 보십시오."
+      ],
+      "explanation": "밑줄 뒤의 the storm was still raging는 '주어+동사'를 갖춘 절이므로 전치사 during은 설 수 없습니다. '~동안'의 뜻을 유지하면서 절을 이끌려면 접속사 while로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c1-wc-002",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["clause-vs-np", "because-of"],
+      "sentence": "The flight was canceled [[u:because]] the dense fog at the coastal airport.",
+      "wrong": "because",
+      "acceptedAnswers": ["because of", "due to", "owing to"],
+      "translation": "해안 공항의 짙은 안개 때문에 그 항공편은 결항되었습니다.",
+      "hints": [
+        "밑줄 뒤 표현에 본동사가 있는지 확인하십시오.",
+        "본동사 없는 명사구를 이끌려면 이유를 나타내는 전치사 표현이 필요합니다."
+      ],
+      "explanation": "밑줄 뒤의 the dense fog at the coastal airport에는 본동사가 없으므로 절이 아니라 명사구입니다. 명사구를 이끌려면 전치사구 because of로 고쳐야 합니다. of 하나로 접속사와 전치사가 갈립니다."
+    },
+    {
+      "id": "u08-c1-wc-003",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "despite-although"],
+      "sentence": "[[u:Despite]] the researchers repeated the experiment under far stricter conditions, the same anomaly appeared in every trial.",
+      "wrong": "Despite",
+      "acceptedAnswers": ["Although", "Though", "Even though", "While", "When", "As"],
+      "translation": "연구자들이 훨씬 더 엄격한 조건에서 실험을 반복했음에도 불구하고, 동일한 이상 현상이 모든 시행에서 나타났습니다.",
+      "hints": [
+        "밑줄 바로 뒤에서 '주어+동사' 짝을 찾아보십시오.",
+        "절이 이어진다면 전치사가 아니라 양보의 접속사가 필요합니다."
+      ],
+      "explanation": "밑줄 뒤에 주어 the researchers와 동사 repeated가 갖춰진 절이 이어지므로 전치사 despite는 쓸 수 없습니다. 양보의 절을 이끄는 접속사로 고쳐야 하며, 대표형은 Although입니다."
+    },
+    {
+      "id": "u08-c1-wc-004",
+      "unitId": "u08",
+      "conceptId": "u08-c1",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["clause-vs-np", "because-of", "intervening-clause"],
+      "sentence": "[[u:Because of]] the committee that reviews grant applications rejected the proposal twice, the lab sought private funding.",
+      "wrong": "Because of",
+      "acceptedAnswers": ["Because", "Since", "As"],
+      "translation": "연구비 신청을 심사하는 위원회가 그 제안서를 두 번 반려했기 때문에, 그 연구실은 민간 재원을 찾았습니다.",
+      "hints": [
+        "밑줄 뒤 명사에 붙은 관계사절을 괄호로 묶은 뒤, 그 명사와 짝을 이루는 본동사가 남는지 확인하십시오.",
+        "본동사 짝이 남으면 절이므로, 그 앞자리는 접속사만 설 수 있습니다."
+      ],
+      "explanation": "밑줄 뒤 구조를 보면 주어 핵 the committee에 관계사절 that reviews grant applications가 붙고, 본동사 rejected가 따라오는 완전한 절입니다. 전치사구 because of는 절을 이끌 수 없으므로 접속사 Because로 고쳐야 합니다. 관계사절 속 동사 reviews에 속아 명사구로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c2-ox-001",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["despite-of", "despite-although"],
+      "sentence": "The marathon continued [[u:despite of]] the sudden drop in temperature.",
+      "isCorrect": false,
+      "correction": "despite",
+      "translation": "기온이 갑자기 떨어졌음에도 불구하고 마라톤은 계속되었습니다.",
+      "hints": [
+        "밑줄 친 연결어의 형태 자체가 실제로 존재하는 표현인지 점검하십시오.",
+        "세 단어짜리 전치사구와 한 단어짜리 전치사를 혼동하면 군더더기 성분이 생깁니다."
+      ],
+      "explanation": "despite는 그 자체로 전치사이므로 of를 붙인 despite of라는 형태는 존재하지 않습니다. in spite of와 혼동해 생기는 오류로, despite the sudden drop처럼 바로 명사구를 이끌어야 합니다."
+    },
+    {
+      "id": "u08-c2-ox-002",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["despite-although", "gerund-as-np", "clause-vs-np"],
+      "sentence": "[[u:In spite of]] losing two key sponsors, the theater completed its summer season.",
+      "isCorrect": true,
+      "translation": "두 곳의 핵심 후원사를 잃었음에도 불구하고, 그 극장은 여름 시즌을 끝까지 마쳤습니다.",
+      "hints": [
+        "밑줄 친 표현이 몇 단어이든, 전체가 하나의 품사로 굳어진 표현인지 확인하십시오.",
+        "주어 없이 시작하는 -ing구는 명사구이므로, 그 앞에는 전치사 성격의 표현이 서야 합니다."
+      ],
+      "explanation": "in spite of는 세 단어이지만 전체가 하나의 전치사구입니다. 뒤의 losing two key sponsors는 주어 없는 동명사구, 곧 명사구이므로 전치사구 in spite of가 올바르게 쓰였습니다. 단어 수가 많다고 틀린 형태로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c2-ox-003",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["while-during", "clause-vs-np"],
+      "sentence": "Several priceless manuscripts were damaged [[u:while]] the flood of 1966.",
+      "isCorrect": false,
+      "correction": "during",
+      "translation": "1966년의 홍수 동안 값을 매길 수 없는 여러 필사본이 훼손되었습니다.",
+      "hints": [
+        "밑줄 뒤 표현에 '주어+동사' 짝이 있는지 확인하십시오.",
+        "동사 없는 명사구 앞에는 같은 뜻의 전치사 짝이 와야 합니다."
+      ],
+      "explanation": "밑줄 뒤의 the flood of 1966은 본동사가 없는 명사구입니다. while은 접속사여서 절만 이끌 수 있으므로, 명사구 앞에는 전치사 during이 와야 합니다. '~동안'이라는 해석은 같아도 뒤 구조가 품사를 결정합니다."
+    },
+    {
+      "id": "u08-c2-ox-004",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["because-of", "clause-vs-np"],
+      "sentence": "The villagers stored extra grain [[u:because]] the winter forecast predicted record snowfall.",
+      "isCorrect": true,
+      "translation": "겨울 예보가 기록적인 폭설을 예측했기 때문에, 마을 사람들은 여분의 곡식을 저장했습니다.",
+      "hints": [
+        "밑줄 뒤가 명사로 시작한다고 명사구로 단정하지 말고, 동사 짝이 있는지 끝까지 확인하십시오.",
+        "'주어+동사'를 갖춘 절 앞에는 접속사가 옳은 자리입니다."
+      ],
+      "explanation": "밑줄 뒤에는 주어 the winter forecast와 동사 predicted를 갖춘 절이 이어지므로 접속사 because가 옳습니다. 밑줄 뒤가 명사로 시작한다고 해서 명사구라고 단정하면 안 되고, 동사 짝이 있는지 끝까지 확인해야 합니다."
+    },
+    {
+      "id": "u08-c2-ox-005",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["while-during", "clause-vs-np", "intervening-clause"],
+      "sentence": "Attendance fell sharply [[u:during]] the transit workers who operated the downtown lines staged a weeklong strike.",
+      "isCorrect": false,
+      "correction": "while",
+      "translation": "도심 노선을 운행하던 교통 노동자들이 일주일간 파업을 벌이는 동안 이용객 수가 급감했습니다.",
+      "hints": [
+        "밑줄 뒤 명사에 붙은 관계사절을 괄호로 묶고, 그 명사와 짝을 이루는 본동사가 남는지 확인하십시오.",
+        "본동사 짝이 남는다면 절이므로, 그 앞자리는 접속사만 설 수 있습니다."
+      ],
+      "explanation": "밑줄 뒤 구조의 핵심은 주어 the transit workers와 본동사 staged가 짝을 이룬 절이라는 점입니다. who operated the downtown lines는 주어를 꾸미는 관계사절일 뿐입니다. 절 앞에는 전치사 during이 설 수 없으므로 접속사 while로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c2-ox-006",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "long-np", "intervening-clause"],
+      "sentence": "[[u:Despite]] the objections that several senior engineers raised during the final design review, the launch proceeded on schedule.",
+      "isCorrect": true,
+      "translation": "여러 선임 엔지니어가 최종 설계 검토에서 제기한 반대에도 불구하고, 발사는 예정대로 진행되었습니다.",
+      "hints": [
+        "밑줄 뒤에 보이는 동사가 본동사인지, 앞 명사를 꾸미는 관계사절 속 동사인지 확인하십시오.",
+        "수식절을 걷어낸 뒤 남는 것이 명사구라면 그 앞자리는 전치사가 옳습니다."
+      ],
+      "explanation": "밑줄의 목적어는 명사구 the objections이고, that several senior engineers raised during the final design review는 그 명사를 꾸미는 관계사절입니다. raised는 수식절 내부의 동사이므로 전체 구조는 여전히 명사구이고, 전치사 despite가 옳습니다."
+    },
+    {
+      "id": "u08-c2-ox-007",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["because-of", "clause-vs-np", "long-np"],
+      "sentence": "The observatory postponed the sky survey [[u:because of]] the atmospheric conditions above the summit deteriorated without warning.",
+      "isCorrect": false,
+      "correction": "because",
+      "translation": "정상 위의 대기 상태가 예고 없이 악화되었기 때문에, 천문대는 관측 조사를 연기했습니다.",
+      "hints": [
+        "밑줄 뒤의 긴 명사 표현이 어디까지 이어지는지 본 뒤, 그 뒤에 동사가 따라오는지 확인하십시오.",
+        "'주어+동사' 짝이 완성되는 절 앞에는 전치사 표현이 설 수 없습니다."
+      ],
+      "explanation": "밑줄 뒤를 보면 주어 the atmospheric conditions above the summit과 동사 deteriorated가 짝을 이룬 절입니다. 전치사구 because of는 명사구만 이끌 수 있으므로 접속사 because로 고쳐야 합니다. 주어가 길어 명사구처럼 보이는 것이 함정입니다."
+    },
+    {
+      "id": "u08-c2-ox-008",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["because-of", "clause-vs-np", "long-np"],
+      "sentence": "The festival was canceled [[u:because]] the city's supply of portable generators had been exhausted.",
+      "isCorrect": true,
+      "translation": "시의 이동식 발전기 재고가 바닥났기 때문에 축제가 취소되었습니다.",
+      "hints": [
+        "밑줄 뒤의 명사 표현을 끝까지 따라가며 본동사가 나오는지 확인하십시오.",
+        "명사와 of가 이어져도 그 뒤에 동사 짝이 나오면 전체는 절이며, 절 앞은 접속사 자리입니다."
+      ],
+      "explanation": "밑줄 뒤에는 주어 the city's supply of portable generators와 동사 had been exhausted가 갖춰진 절이 이어집니다. supply of처럼 명사와 of가 이어져 전치사 자리로 착각하기 쉽지만, 동사 짝이 있으므로 접속사 because가 옳습니다."
+    },
+    {
+      "id": "u08-c2-wf-001",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["despite-although", "gerund-as-np"],
+      "stem": "In spite of {{blank}} the race, the young skater smiled brightly.",
+      "given": "lose",
+      "acceptedAnswers": ["losing", "having lost"],
+      "translation": "경기에서 졌음에도 불구하고, 그 어린 스케이트 선수는 밝게 웃었습니다.",
+      "hints": [
+        "빈칸 앞의 세 단어짜리 연결어가 하나의 품사로 굳어진 표현임을 확인하십시오.",
+        "전치사 성격의 표현 뒤에서는 동사가 명사 구실을 하는 형태로 바뀌어야 합니다."
+      ],
+      "explanation": "in spite of는 전체가 하나의 전치사구이므로 본동사가 올 수 없습니다. lose를 동명사 losing으로 바꾸면 losing the race가 명사구가 되어 목적어 자리에 설 수 있습니다."
+    },
+    {
+      "id": "u08-c2-wf-002",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["because-of", "clause-vs-np"],
+      "stem": "Because the bakery {{blank}} fresh bread every morning, neighbors line up early.",
+      "given": "bake",
+      "acceptedAnswers": ["bakes"],
+      "translation": "그 빵집이 아침마다 신선한 빵을 굽기 때문에, 이웃들은 일찍부터 줄을 섭니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 접속사이므로 이 자리에 절의 본동사가 필요합니다.",
+        "주어의 수와 반복을 나타내는 시간 표현이 동사의 형태를 하나로 고정합니다."
+      ],
+      "explanation": "because는 접속사이므로 '주어+동사'의 절이 필요합니다. 주어 the bakery가 단수이고 every morning이 반복되는 습관을 나타내므로 현재시제 단수형 bakes가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c2-wf-003",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["while-during", "past-marker"],
+      "stem": "While the harbor {{blank}} frozen throughout January, supplies arrived by air.",
+      "given": "stay",
+      "acceptedAnswers": ["stayed"],
+      "translation": "1월 내내 항구가 얼어붙어 있는 동안, 물자는 항공편으로 도착했습니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 절을 이끄는 접속사임을 확인하십시오.",
+        "주절 동사의 시제가 이 절의 시제까지 하나로 고정합니다."
+      ],
+      "explanation": "while은 접속사이므로 절의 본동사가 필요합니다. 주절의 arrived가 과거이고 throughout January가 그때의 특정 기간을 가리키므로 과거형 stayed가 답입니다. stay는 이런 상태 의미에서 진행형이 아니라 단순 과거로 씁니다."
+    },
+    {
+      "id": "u08-c2-wf-004",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["despite-although", "gerund-as-np"],
+      "stem": "Despite {{blank}} the highest score in the qualifying round, the gymnast withdrew from the final.",
+      "given": "earn",
+      "acceptedAnswers": ["earning", "having earned"],
+      "translation": "예선에서 최고 점수를 얻었음에도 불구하고, 그 체조 선수는 결승을 기권했습니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 전치사인지 접속사인지부터 확인하십시오.",
+        "전치사 뒤 자리는 명사구여야 하므로 동사를 명사 성격의 형태로 바꿔야 합니다."
+      ],
+      "explanation": "despite는 전치사이므로 동명사 earning이 필요합니다. earning the highest score in the qualifying round 전체가 명사구로서 despite의 목적어가 됩니다."
+    },
+    {
+      "id": "u08-c2-wf-005",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["because-of", "gerund-as-np", "long-np"],
+      "stem": "Because of {{blank}} its entire annual budget on a single failed advertising campaign, the charity nearly collapsed the following year.",
+      "given": "spend",
+      "acceptedAnswers": ["spending", "having spent"],
+      "translation": "연간 예산 전체를 단 한 번의 실패한 광고 캠페인에 써 버렸기 때문에, 그 자선단체는 이듬해 거의 무너질 뻔했습니다.",
+      "hints": [
+        "빈칸 뒤의 목적어와 수식어가 길어도, 빈칸 앞 연결어의 품사부터 판정하십시오.",
+        "전치사 표현 뒤 구조는 아무리 길어도 명사구여야 한다는 원칙이 그대로 적용됩니다."
+      ],
+      "explanation": "because of는 전치사구이므로 본동사가 아닌 동명사 spending이 와야 합니다. 목적어와 수식어가 길게 이어져도 because of 뒤 구조는 그대로 명사구입니다."
+    },
+    {
+      "id": "u08-c2-wf-006",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "clause-vs-np", "intervening-clause"],
+      "stem": "Although the senator who chairs the budget committee {{blank}} with the governor every session, the state always passes its budget on time.",
+      "given": "clash",
+      "acceptedAnswers": ["clashes"],
+      "translation": "예산위원회를 이끄는 그 상원의원이 회기마다 주지사와 충돌하지만, 그 주는 늘 제때 예산을 통과시킵니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, 사이에 낀 관계사절은 괄호로 묶으십시오.",
+        "접속사가 이끄는 절에는 본동사가 필요하며, 주어 핵의 수와 반복 표현이 형태를 고정합니다."
+      ],
+      "explanation": "although는 접속사이므로 절의 본동사가 필요합니다. 주어 핵은 단수 명사 the senator이고 who chairs the budget committee는 관계사절 수식어이며, every session이 반복을 나타내므로 현재시제 단수형 clashes가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c2-wc-001",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["while-during", "clause-vs-np"],
+      "sentence": "The airline grounded its entire fleet [[u:while]] the safety investigation.",
+      "wrong": "while",
+      "acceptedAnswers": ["during", "throughout"],
+      "translation": "안전 조사 기간 동안 그 항공사는 전 기단의 운항을 중단했습니다.",
+      "hints": [
+        "밑줄 뒤 표현에 본동사가 있는지 확인하십시오.",
+        "동사 없는 명사구 앞에는 같은 뜻으로 명사구를 이끄는 전치사 짝이 필요합니다."
+      ],
+      "explanation": "밑줄 뒤의 the safety investigation은 본동사 없는 명사구이므로 접속사 while이 설 수 없습니다. '~동안'의 뜻으로 명사구를 이끄는 전치사 during으로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c2-wc-002",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["despite-of", "despite-although"],
+      "sentence": "The picnic went ahead [[u:despite of]] the cloudy forecast.",
+      "wrong": "despite of",
+      "acceptedAnswers": ["despite", "in spite of"],
+      "translation": "흐린 일기예보에도 불구하고 소풍은 예정대로 진행되었습니다.",
+      "hints": [
+        "밑줄 친 표현의 형태가 사전에 존재하는지 점검하십시오.",
+        "한 단어 전치사와 세 단어 전치사구를 뒤섞으면 불필요한 성분이 생깁니다."
+      ],
+      "explanation": "despite는 그 자체로 완결된 전치사이므로 of가 붙을 수 없습니다. despite로 고치거나, 세 단어 전치사구 in spite of를 통째로 쓰는 것만 가능합니다."
+    },
+    {
+      "id": "u08-c2-wc-003",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["despite-although", "long-np", "intervening-clause"],
+      "sentence": "The premiere drew a record audience [[u:although]] the harsh reviews that appeared in every major newspaper.",
+      "wrong": "although",
+      "acceptedAnswers": ["despite", "in spite of", "notwithstanding", "regardless of"],
+      "translation": "모든 주요 신문에 실린 혹평에도 불구하고, 그 시사회는 기록적인 관객을 모았습니다.",
+      "hints": [
+        "밑줄 뒤 명사에 붙은 관계사절을 걷어낸 뒤, 본동사 짝이 남는지 확인하십시오.",
+        "본동사 짝이 없는 명사구 앞에는 양보의 전치사 표현이 와야 합니다."
+      ],
+      "explanation": "밑줄 뒤의 the harsh reviews that appeared in every major newspaper는 관계사절의 수식을 받는 명사구이고, 본동사 짝이 없습니다. 명사구를 이끌려면 전치사 despite로 고쳐야 합니다. 수식절 속 동사 appeared에 속아 절로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c2-wc-004",
+      "unitId": "u08",
+      "conceptId": "u08-c2",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["while-during", "clause-vs-np", "long-np"],
+      "sentence": "[[u:During]] the curators trained by the national museum catalogued the newly donated archive, the reading room stayed closed to the public.",
+      "wrong": "During",
+      "acceptedAnswers": ["While", "When", "As"],
+      "translation": "국립박물관에서 교육받은 큐레이터들이 새로 기증된 기록물을 목록화하는 동안, 열람실은 일반인에게 계속 폐쇄되었습니다.",
+      "hints": [
+        "밑줄 뒤 명사에 붙은 분사 수식어를 괄호로 묶은 뒤, 그 명사와 짝을 이루는 본동사가 있는지 확인하십시오.",
+        "본동사 짝이 완성되는 절 앞에는 접속사만 설 수 있습니다."
+      ],
+      "explanation": "밑줄 뒤를 보면 주어 the curators와 본동사 catalogued가 짝을 이룬 절입니다. trained by the national museum은 주어를 꾸미는 분사구일 뿐입니다. 절을 이끌려면 접속사 While로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c3-ox-001",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "sentence": "[[u:Now that]] the new telescope is operational, astronomers can map far dimmer galaxies.",
+      "isCorrect": true,
+      "translation": "이제 새 망원경이 가동되기 때문에, 천문학자들은 훨씬 더 어두운 은하들까지 지도로 만들 수 있습니다.",
+      "hints": [
+        "밑줄 친 표현이 절을 이끄는지 명사구를 이끄는지, 뒤에서 '주어+동사' 짝을 찾아 확인하십시오.",
+        "여러 단어로 된 연결어라도 표현 전체가 하나의 접속사일 수 있습니다 — 단어 수는 판단 기준이 아닙니다."
+      ],
+      "explanation": "now that는 두 단어이지만 '이제 ~이므로'라는 뜻의 구접속사입니다. 뒤에 주어 the new telescope와 동사 is가 갖춰진 절이 이어지므로 올바른 구조입니다. 단어 수가 많다고 전치사구로 판단하면 안 됩니다."
+    },
+    {
+      "id": "u08-c3-ox-002",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["phrasal-preposition", "clause-vs-np"],
+      "sentence": "The harvest was saved [[u:thanks to]] the volunteers arrived before the first frost.",
+      "isCorrect": false,
+      "correction": "because",
+      "translation": "자원봉사자들이 첫서리 전에 도착했기 때문에 수확물을 지킬 수 있었습니다.",
+      "hints": [
+        "밑줄 뒤에서 명사와 짝을 이루는 동사가 있는지 확인하십시오.",
+        "명사구만 이끄는 전치사 표현 뒤에 '주어+동사' 절이 오면 틀린 구조입니다."
+      ],
+      "explanation": "thanks to는 전치사구이므로 명사구만 이끌 수 있습니다. 뒤에 주어 the volunteers와 동사 arrived가 짝을 이룬 절이 왔으므로 틀렸고, 절을 이끄는 접속사 because로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c3-ox-003",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "sentence": "[[u:As long as]] the generators keep running, the research station can survive the polar night.",
+      "isCorrect": true,
+      "translation": "발전기들이 계속 돌아가는 한, 그 연구 기지는 극야를 버텨 낼 수 있습니다.",
+      "hints": [
+        "밑줄 친 표현이 조건의 절을 이끄는 굳어진 표현인지 떠올려 보십시오.",
+        "뒤에 '주어+동사' 짝이 이어진다면 그 앞의 여러 단어 연결어는 접속사로 판정합니다."
+      ],
+      "explanation": "as long as는 세 단어이지만 '~하는 한'이라는 조건의 구접속사입니다. 뒤에 주어 the generators와 동사 keep이 갖춰진 절이 이어지므로 올바른 구조입니다."
+    },
+    {
+      "id": "u08-c3-ox-004",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 2,
+      "trapTags": ["phrasal-conjunction", "despite-although", "clause-vs-np"],
+      "sentence": "The expedition continued [[u:even though]] the loss of two supply sledges.",
+      "isCorrect": false,
+      "correction": "despite",
+      "translation": "보급 썰매 두 대를 잃었음에도 불구하고 원정은 계속되었습니다.",
+      "hints": [
+        "밑줄 뒤 표현에 본동사가 있는지 확인하십시오.",
+        "절을 이끄는 구접속사 뒤에 동사 없는 명사구가 오면 틀린 구조입니다."
+      ],
+      "explanation": "even though는 절을 이끄는 구접속사인데, 뒤의 the loss of two supply sledges에는 본동사가 없습니다. 명사구를 이끌려면 전치사 despite로 고쳐야 합니다. loss처럼 동작성 명사가 있어도 동사 짝이 없으면 절이 아닙니다."
+    },
+    {
+      "id": "u08-c3-ox-005",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "sentence": "The new policy is remarkable [[u:in that]] it rewards long-term maintenance rather than visible new construction.",
+      "isCorrect": true,
+      "translation": "그 새 정책은 눈에 띄는 신규 건설보다 장기적인 유지 관리에 보상을 준다는 점에서 주목할 만합니다.",
+      "hints": [
+        "밑줄 친 표현이 전치사와 대명사의 우연한 결합인지, 굳어진 하나의 연결어인지 확인하십시오.",
+        "that로 끝나는 연결어 뒤에 '주어+동사' 절이 이어지면 표현 전체를 접속사로 판정합니다."
+      ],
+      "explanation": "in that는 '~라는 점에서'라는 뜻의 구접속사로, 뒤에 주어 it과 동사 rewards가 갖춰진 완전한 절을 이끕니다. 전치사 in과 지시대명사 that의 결합처럼 보이지만 표현 전체가 하나의 접속사입니다."
+    },
+    {
+      "id": "u08-c3-ox-006",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np", "long-np"],
+      "sentence": "Museum attendance has doubled [[u:now that]] the completion of the new west wing.",
+      "isCorrect": false,
+      "correction": "since",
+      "translation": "새 서관이 완공된 이후로 박물관 방문객 수가 두 배로 늘었습니다.",
+      "hints": [
+        "밑줄 뒤 표현에서 명사와 짝을 이루는 본동사를 찾아보십시오.",
+        "that로 끝나는 연결어는 절을 이끌므로, 동사 없는 명사구가 오면 틀린 구조입니다."
+      ],
+      "explanation": "now that는 절을 이끄는 구접속사인데, 뒤의 the completion of the new west wing은 본동사 없는 명사구입니다. '~ 이후로'의 뜻으로 명사구를 이끄는 전치사 since로 고치면 현재완료 has doubled와도 자연스럽게 호응합니다."
+    },
+    {
+      "id": "u08-c3-ox-007",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np", "intervening-clause"],
+      "sentence": "[[u:Once]] the vaccine that regulators fast-tracked last year reaches rural clinics, infection rates should fall quickly.",
+      "isCorrect": true,
+      "translation": "규제 당국이 지난해 신속 승인한 그 백신이 일단 시골 진료소들에 도달하면, 감염률은 빠르게 떨어질 것입니다.",
+      "hints": [
+        "밑줄 뒤 명사에 붙은 관계사절을 괄호로 묶고, 그 명사와 짝을 이루는 본동사를 찾아보십시오.",
+        "수식절 너머에서 본동사 짝이 완성되면 전체는 절이며, 그 앞의 연결어는 접속사가 옳습니다."
+      ],
+      "explanation": "once는 '일단 ~하면'의 접속사이고, 뒤에는 주어 핵 the vaccine과 본동사 reaches가 짝을 이룬 절이 이어집니다. that regulators fast-tracked last year는 주어를 꾸미는 관계사절이라 동사가 멀리 떨어져 보일 뿐, 구조는 올바른 절입니다."
+    },
+    {
+      "id": "u08-c3-ox-008",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "OX",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "sentence": "The two manuscripts are identical [[u:except that]] a few marginal notes in the second copy.",
+      "isCorrect": false,
+      "correction": "except for",
+      "translation": "두 필사본은 두 번째 사본에 있는 몇 개의 여백 주석을 제외하면 동일합니다.",
+      "hints": [
+        "밑줄 친 표현이 that로 끝난다는 점에 주목하고, 뒤에 무엇이 와야 하는지 확인하십시오.",
+        "that로 끝나는 연결어 뒤에는 '주어+동사'의 절이 와야 하며, 명사구만 오면 틀린 구조입니다."
+      ],
+      "explanation": "except that는 that로 끝나는 구접속사이므로 뒤에 절이 와야 하는데, a few marginal notes in the second copy는 본동사 없는 명사구입니다. 명사구를 이끌려면 전치사구 except for로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c3-wf-001",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "stem": "Unless it {{blank}} tomorrow, the match will start at noon.",
+      "given": "rain",
+      "acceptedAnswers": ["rains"],
+      "translation": "내일 비가 오지 않는 한, 경기는 정오에 시작될 것입니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 조건의 절을 이끄는 접속사임을 확인하십시오.",
+        "조건의 부사절에서는 미래의 일도 현재시제로 나타냅니다."
+      ],
+      "explanation": "unless는 조건의 절을 이끄는 접속사이므로 본동사가 필요합니다. 조건의 부사절에서는 미래의 일도 현재시제로 나타내므로, 주어 it에 맞춘 rains가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c3-wf-002",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 1,
+      "trapTags": ["phrasal-preposition", "gerund-as-np"],
+      "stem": "Instead of {{blank}} a taxi, they walked home along the river.",
+      "given": "take",
+      "acceptedAnswers": ["taking"],
+      "translation": "택시를 타는 대신, 그들은 강을 따라 집까지 걸어갔습니다.",
+      "hints": [
+        "빈칸 앞의 두 단어짜리 연결어가 절과 명사구 중 무엇을 이끄는지 확인하십시오.",
+        "전치사 성격의 표현 뒤에서는 동사가 명사 구실을 하는 형태로 바뀌어야 합니다."
+      ],
+      "explanation": "instead of는 전치사구이므로 본동사가 올 수 없습니다. take를 동명사 taking으로 바꾸면 taking a taxi가 명사구가 되어 목적어로 설 수 있습니다."
+    },
+    {
+      "id": "u08-c3-wf-003",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np"],
+      "stem": "Now that the stadium {{blank}} its new retractable roof, concerts continue even in heavy rain.",
+      "given": "have",
+      "acceptedAnswers": ["has"],
+      "translation": "이제 경기장에 새 개폐식 지붕이 있기 때문에, 콘서트는 폭우 속에서도 계속됩니다.",
+      "hints": [
+        "빈칸 앞의 두 단어 연결어가 절을 이끄는 표현인지 확인하십시오.",
+        "절을 이끄는 연결어 뒤에는 주어의 수에 맞춘 본동사가 필요합니다."
+      ],
+      "explanation": "now that는 절을 이끄는 구접속사이므로 본동사가 필요합니다. 주어 the stadium이 단수이고 '이제 ~을 갖추었으므로'라는 현재의 상황을 말하므로 has가 답입니다."
+    },
+    {
+      "id": "u08-c3-wf-004",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 2,
+      "trapTags": ["phrasal-preposition", "gerund-as-np"],
+      "stem": "Thanks to {{blank}} its delivery routes carefully, the small bakery cut fuel costs by a third.",
+      "given": "plan",
+      "acceptedAnswers": ["planning", "having planned"],
+      "translation": "배달 경로를 신중하게 계획한 덕분에, 그 작은 빵집은 연료비를 3분의 1 줄였습니다.",
+      "hints": [
+        "빈칸 앞의 연결어가 명사구만 이끄는 표현임을 확인하십시오.",
+        "전치사 성격의 표현 뒤에서는 동사를 명사 구실을 하는 형태로 바꿔야 목적어 자리에 설 수 있습니다."
+      ],
+      "explanation": "thanks to는 전치사구이므로 동명사 planning이 필요합니다. planning its delivery routes carefully 전체가 명사구가 되어 thanks to의 목적어가 됩니다."
+    },
+    {
+      "id": "u08-c3-wf-005",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np", "intervening-clause"],
+      "stem": "As long as the well that supplies the northern villages {{blank}} clean, the clinic expects few waterborne infections each summer.",
+      "given": "stay",
+      "acceptedAnswers": ["stays"],
+      "translation": "북쪽 마을들에 물을 공급하는 그 우물이 깨끗하게 유지되는 한, 그 진료소는 여름마다 수인성 감염이 거의 없을 것으로 예상합니다.",
+      "hints": [
+        "빈칸이 속한 절의 주어 핵을 찾고, 사이에 낀 관계사절은 괄호로 묶으십시오.",
+        "조건의 절을 이끄는 연결어 뒤에는 주어 핵의 수에 맞춘 현재시제 본동사가 필요합니다."
+      ],
+      "explanation": "as long as는 조건의 구접속사이므로 절의 본동사가 필요합니다. 주어 핵은 단수 명사 the well이고 that supplies the northern villages는 관계사절 수식어이며, 조건의 부사절이므로 현재시제 단수형 stays가 유일한 답입니다."
+    },
+    {
+      "id": "u08-c3-wf-006",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_FORM",
+      "difficulty": 3,
+      "trapTags": ["phrasal-preposition", "gerund-as-np", "intervening-clause"],
+      "stem": "Instead of {{blank}} the outdated turbines that had powered the plant for forty years, the utility redesigned the entire cooling system.",
+      "given": "replace",
+      "acceptedAnswers": ["replacing"],
+      "translation": "40년간 발전소에 동력을 공급해 온 노후 터빈들을 교체하는 대신, 그 전력 회사는 냉각 계통 전체를 재설계했습니다.",
+      "hints": [
+        "빈칸 뒤에 관계사절이 붙어 있어도, 빈칸 앞 연결어의 품사부터 판정하십시오.",
+        "전치사 성격의 표현 뒤 구조는 아무리 길어도 명사구여야 합니다."
+      ],
+      "explanation": "instead of는 전치사구이므로 동명사 replacing이 와야 합니다. 목적어 the outdated turbines에 관계사절 that had powered the plant for forty years가 붙어 길어 보여도, instead of 뒤 구조는 명사구여야 한다는 원칙은 그대로입니다."
+    },
+    {
+      "id": "u08-c3-wc-001",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["phrasal-preposition", "clause-vs-np"],
+      "sentence": "[[u:Thanks to]] the storm passed south of the island, the ferry kept its regular schedule.",
+      "wrong": "Thanks to",
+      "acceptedAnswers": ["Because", "Since", "As", "When", "After", "Once"],
+      "translation": "폭풍이 섬 남쪽으로 지나갔기 때문에, 여객선은 정기 운항 일정을 지켰습니다.",
+      "hints": [
+        "밑줄 뒤에서 '주어+동사' 짝이 있는지 확인하십시오.",
+        "절이 이어진다면 명사구만 이끄는 전치사 표현이 아니라 이유의 접속사가 필요합니다."
+      ],
+      "explanation": "thanks to는 전치사구인데 뒤에 주어 the storm과 동사 passed가 짝을 이룬 절이 왔습니다. 절을 이끌려면 이유의 접속사 Because로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c3-wc-002",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 2,
+      "trapTags": ["phrasal-conjunction", "despite-although", "clause-vs-np"],
+      "sentence": "The survey teams completed their fieldwork [[u:even though]] the constant interruptions from curious onlookers.",
+      "wrong": "even though",
+      "acceptedAnswers": ["despite", "in spite of", "notwithstanding", "regardless of"],
+      "translation": "호기심 많은 구경꾼들의 끊임없는 방해에도 불구하고, 조사팀들은 현장 조사를 끝마쳤습니다.",
+      "hints": [
+        "밑줄 뒤 표현에 본동사가 있는지 확인하십시오.",
+        "본동사 없는 명사구 앞에는 양보의 전치사 표현이 와야 합니다."
+      ],
+      "explanation": "even though는 절을 이끄는 구접속사인데, 뒤의 the constant interruptions from curious onlookers는 본동사 없는 명사구입니다. 명사구 앞에는 전치사 despite가 와야 합니다."
+    },
+    {
+      "id": "u08-c3-wc-003",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np", "long-np"],
+      "sentence": "[[u:Once]] the sudden resignation of the finance director, the board postponed every major spending decision.",
+      "wrong": "Once",
+      "acceptedAnswers": ["After", "Upon", "Following", "Because of", "Owing to", "Due to"],
+      "translation": "재무 이사가 갑작스럽게 사임한 후, 이사회는 모든 주요 지출 결정을 미뤘습니다.",
+      "hints": [
+        "밑줄 뒤의 긴 명사 표현에 본동사가 있는지 확인하십시오.",
+        "동사 없는 명사구를 이끌면서 시간의 전후 관계를 나타내는 전치사를 떠올려 보십시오."
+      ],
+      "explanation": "once는 '일단 ~하면'의 접속사이므로 절이 필요하지만, 뒤의 the sudden resignation of the finance director는 본동사 없는 명사구입니다. 명사구를 이끌면서 '~ 후에'의 뜻을 살리려면 전치사 After로 고쳐야 합니다."
+    },
+    {
+      "id": "u08-c3-wc-004",
+      "unitId": "u08",
+      "conceptId": "u08-c3",
+      "type": "WRITE_CORRECT",
+      "difficulty": 3,
+      "trapTags": ["phrasal-conjunction", "clause-vs-np", "long-np"],
+      "sentence": "[[u:Unless]] a dramatic change in voter turnout, the incumbent will keep her seat easily.",
+      "wrong": "Unless",
+      "acceptedAnswers": ["Without", "Barring", "Absent", "Failing", "Short of"],
+      "translation": "투표율에 극적인 변화가 없다면, 현직 의원이 무난히 의석을 지킬 것입니다.",
+      "hints": [
+        "밑줄 뒤 표현에서 '주어+동사' 짝이 완성되는지 확인하십시오.",
+        "동사 없는 명사구를 이끌면서 '~이 없다면'의 조건을 나타내는 전치사를 떠올려 보십시오."
+      ],
+      "explanation": "unless는 조건의 절을 이끄는 접속사인데, 뒤의 a dramatic change in voter turnout에는 본동사가 없습니다. '~이 없다면'의 뜻으로 명사구를 이끄는 전치사 Without으로 고쳐야 합니다."
+    }
+  ]
+}

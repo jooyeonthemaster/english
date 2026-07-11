@@ -66,12 +66,21 @@ export function buildAnswerSheet(examMap: ExamMap): AnswerSheetQuestion[] {
  *   (새 제출이 이전 부분점수를 무효화 — 확정 행은 위 불변식으로 이미 보호됨).
  * - choice/text 둘 다 빈 entry, examMap 에 없는 number 는 스킵(행 불변).
  * - 적용 행은 { source:"MANUAL", reviewed:false } — 정오표에서 '학생 제출' 하이라이트 재료.
+ * - missing: 전 문항 기입 강제(유저 결정 2) 재료 — 이번 제출에 유형별 유효 entry
+ *   (MC="1".."5", 서답형=비공백 text)가 없는 문항 번호를 order 순으로 수집한다.
+ *   reviewed 스킵 행도 유효 entry 였다면 기입으로 인정(학생이 채울 수 없는 값이 아님).
+ *   라우트는 missing 이 비어있지 않으면 저장 없이 400 으로 거절한다(클라 우회 방지).
  */
 export function applyAnswerSubmission(opts: {
   examMap: ExamMap;
   existing: StudentResponse[] | null;
   entries: AnswerSheetEntryInput[];
-}): { responses: StudentResponse[]; applied: number; skippedReviewed: string[] } {
+}): {
+  responses: StudentResponse[];
+  applied: number;
+  skippedReviewed: string[];
+  missing: string[];
+} {
   const { examMap, existing, entries } = opts;
 
   const base = normalizeResponses(examMap, existing);
@@ -80,6 +89,8 @@ export function applyAnswerSubmission(opts: {
 
   const responses = [...base];
   const skippedReviewed: string[] = [];
+  /** 유형별 형식을 충족한 entry 가 커버한 문항 키 — missing 산출 재료. */
+  const coveredKeys = new Set<string>();
   let applied = 0;
 
   for (const entry of entries) {
@@ -95,6 +106,8 @@ export function applyAnswerSubmission(opts: {
     const isMc = question.kind === "MC";
     // 빈 entry 는 스킵 — 기존 행을 건드리지 않는다(미입력=미제출, 삭제 의미 아님).
     if (isMc ? !CHOICE_RE.test(choice) : text.length === 0) continue;
+    // 형식 유효 entry — reviewed 스킵 여부와 무관하게 '기입됨'으로 인정한다.
+    coveredKeys.add(key);
 
     const prior = responses[idx];
     // 최고 불변식: 강사 확정 행은 학생 제출로 절대 덮지 않는다.
@@ -130,5 +143,11 @@ export function applyAnswerSubmission(opts: {
     applied += 1;
   }
 
-  return { responses, applied, skippedReviewed };
+  // 전 문항 기입 검증 — 유효 entry 가 커버하지 않은 문항을 order 순으로 수집.
+  const missing = [...examMap.questions]
+    .sort((a, b) => a.order - b.order)
+    .filter((q) => !coveredKeys.has(numberKey(q.number)))
+    .map((q) => q.number);
+
+  return { responses, applied, skippedReviewed, missing };
 }

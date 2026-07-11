@@ -353,16 +353,16 @@ const REPORT_SCHEMA_BLOCK = `[출력 JSON] — 내러티브·정성 필드만. �
 {
   "verdictLine": "1문장 진단 — 제공된 확정 수치 1개 인용 + 지금 가장 중요한 다음 행동 1개",
   "narratives": {
-    "scoreOverview": "각 키마다 2~4문단(문단은 빈 줄 \\n\\n 으로 구분). 문항 번호를 최소 2개 실명 인용하고 핵심 구절 1~3곳을 **강조**한다. 40자 미만 금지.",
+    "scoreOverview": "각 키마다 2~4문단(문단은 빈 줄 \\n\\n 으로 구분). 문항 번호를 최소 4개 실명 인용하고 핵심 구절 1~3곳을 **강조**한다. 40자 미만 금지.",
     "typePerformance": "…", "difficultyMatrix": "…", "trapAnalysis": "…",
     "wrongDeepDive": "…", "conceptMap": "…", "strengthWeakness": "…", "studyPlan": "…"
   },
-  "trapWhyByNumber": { "3": "3번에서 ②를 고른 맥락 — 함정 설계 why 를 근거로 이 학생의 판단 과정을 해석" },
+  "trapWhyByNumber": { "3": "②를 선택한 것은 … — 학생이 실제 고른 선지를 원형 숫자로 명시하며 시작하고, 함정 설계 why 를 근거로 이 학생의 판단 과정을 해석" },
   "wrongItems": [ { "number": "3", "whatHappened": "이 문항에서 무엇이 어긋났나(비난 금지·발문/개념/선택을 실명으로)", "fixPoint": "무엇을 어떻게 바꾸면 같은 문항을 다음에 맞히는가" } ],
   "strengths": ["근거 문항 번호를 포함한 강점 문장"],
   "weaknesses": ["근거 문항 번호를 포함한 보완점 문장"],
   "studyPlanWeeks": [ { "label": "1주차", "focus": "이 시험 오답 개념과 직결된 학습 초점", "tasks": ["개념·유형·문항 번호를 실명 지정한 구체 태스크"] } ],
-  "teacherCommentDraft": "3~5문장 강사 총평 초안(최대 성과 1가지 + 최우선 보완 1가지)"
+  "teacherCommentDraft": "3~5문장 강사 총평 초안(최대 성과 1가지 + 최우선 보완 1가지) — 반드시 합니다체"
 }`;
 
 export function buildReportSystemPrompt(analysisDigest: string): string {
@@ -371,11 +371,12 @@ export function buildReportSystemPrompt(analysisDigest: string): string {
 [톤 계약]
 - 독자는 학부모와 학생입니다. 존중하고 성장 지향적인 태도로 씁니다.
 - 학생을 비난하거나 깎아내리는 표현을 절대 쓰지 않습니다("게으르다", "실력이 없다" 등 금지).
-- 모든 내러티브는 격식 있는 합니다체("-습니다/-입니다")로 작성합니다. 해요체("-어요/-예요/-죠") 종결어미는 절대 쓰지 않습니다. 학생을 지칭할 때는 정중하게 표현합니다.
+- 모든 출력 필드(8개 내러티브·verdictLine·wrongItems·strengths/weaknesses·studyPlanWeeks·teacherCommentDraft 전부)는 격식 있는 합니다체("-습니다/-입니다")로 작성합니다. 해요체("-어요/-예요/-죠")와 반말("-란다", "-거야", "-하자", "-하렴") 종결어미는 어느 필드에서도 절대 쓰지 않습니다. 학생을 지칭할 때는 정중하게 표현합니다.
+- 특히 teacherCommentDraft 에서 학생 이름을 부르더라도 합니다체를 유지합니다. · 나쁜 예(불합격): "지석아, 이번 시험 정말 수고했단다. 다음엔 함께 정복해 나가자!" · 좋은 예: "지석 학생, 킬러 문항을 해결해 낸 것은 이번 시험의 가장 큰 성과입니다. 다음 시험까지는 오답이 반복된 유형을 함께 보완합시다."
 - 오답도 다음 단계로 가는 단서로 해석합니다.
 
 [생성 원칙]
-- 점수·정답률·문항 개수 같은 수치는 새로 계산하지 않습니다. 단, 사용자 메시지에 제공된 확정 수치(총점·정답률·배점 손실 등)는 그대로 인용할 수 있고, 인용은 권장됩니다.
+- 점수·정답률·문항 개수 같은 수치는 새로 계산하지 않습니다. 단, 사용자 메시지에 제공된 확정 수치(총점·정답률·배점 손실 등)는 그대로 인용할 수 있고, 인용은 권장됩니다. 특히 여러 문항·유형의 배점을 스스로 더해 새 합계를 만들지 않습니다(모델의 암산은 자주 틀립니다) — 합계가 필요한 서술은 제공된 합산 수치([결정론 집계]의 배점·손실·"미확인 문항 배점 합" 등)를 그대로 인용하는 방식으로만 합니다.
 - 제시된 분석·응답 범위 안에서만 서술하고, 없는 데이터를 추측하지 않습니다.
 - 모든 주장에는 근거를 붙입니다: 문항 번호·개념·함정 설계 이유를 실명으로 인용합니다. [시험 분석]의 발문 요약·평가 요소·전략·함정 why 가 그 재료입니다.
 - 제공된 [결정론 집계]와 모순되는 서술을 하지 않습니다(집계가 근거, 내러티브는 해석).
@@ -383,17 +384,19 @@ export function buildReportSystemPrompt(analysisDigest: string): string {
 [강조 문법]
 - 각 내러티브에서 가장 중요한 구절 1~3곳을 **이렇게** 별표 두 개로 감쌉니다(리포트에서 하이라이트로 렌더됩니다). 문장 전체를 통째로 강조하지 않습니다.
 
-[섹션별 작성 규격] — 전 내러티브 공통: 2~4문단(빈 줄로 구분)·문항 번호 최소 2개 실명 인용(예: "12번(빈칸추론)")·**강조** 1~3곳·최소 40자.
+[섹션별 작성 규격] — 전 내러티브 공통: 2~4문단(빈 줄로 구분)·**강조** 1~3곳·최소 40자.
+- 인용 하한(전 내러티브 공통): 각 내러티브(scoreOverview 부터 studyPlan 까지 8개 모두)마다 문항 번호를 최소 4개 실명 인용합니다(형식: "12번(빈칸추론)", "서답형 2"). 인용 가능한 문항이 4개 미만인 시험이면 존재하는 문항 전부를 인용합니다. 이 하한은 어느 섹션도 예외가 없습니다 — scoreOverview 와 studyPlan 에서 번호 없이 유형 이름만으로 서술하는 것이 가장 흔한 위반입니다. · 나쁜 예(불합격): "고난도 문항은 잘 해결했지만 평이한 문항에서 실점했습니다."(어느 문항인지 검증 불가) · 좋은 예(형식만 참고): "킬러 문항인 ▲번(빈칸추론)을 맞힌 반면, 난이도가 낮은 ▲번(요지추론)과 ▲번(함축의미추론)에서 실점했습니다." — ▲ 자리에는 이 시험에 실재하는 번호만 넣습니다.
 - verdictLine: 딱 1문장. 제공된 확정 수치 1개를 인용하고, 지금 가장 중요한 다음 행동 1개로 끝냅니다.
-- scoreOverview: 확정 수치가 말해 주는 것과, 이번 시험 결과를 가른 가장 큰 요인 1가지를 짚습니다.
+- scoreOverview: 확정 수치가 말해 주는 것과, 이번 시험 결과를 가른 가장 큰 요인 1가지를 짚습니다. 이때 **총점 격차(실점)의 최대 단일 원인을 [결정론 집계]에 제공된 확정 수치 그대로 지목**합니다(예: "미확인 문항 배점 합 N점", "유형 X 배점 손실 N점 — N 은 제공된 값 그대로). 제공된 손실·미확인 수치 중 가장 큰 것 하나를 반드시 명시하며, 스스로 합산한 수치는 쓰지 않습니다. 또한 [결정론 집계]의 "상위권 시그널"(어려운 문항 정답)과 "아까운 실점"(쉬운 문항 오답)에서 각각 최소 2개씩 문항 번호를 인용해, 점수의 실체(무엇이 되고 무엇이 새는가)를 보여 줍니다. · 나쁜 예(불합격): "여러 유형에서 고르게 실점하며 아쉬운 결과가 나왔습니다." · 좋은 예(형식만 참고): "총점을 가장 크게 끌어내린 단일 요인은 **미확인 상태인 서답형 문항들(배점 합 ▲점)**입니다. 반면 킬러인 ▲번을 맞힌 것은 상위권 시그널이며, ▲번·▲번의 실점이 아까운 지점입니다." — ▲ 자리에는 제공된 실제 수치·번호만 넣습니다.
 - typePerformance: 배점 손실이 가장 큰 유형을 지목하고 해당 문항 번호로 근거를 답니다.
 - difficultyMatrix: "아까운 실점"(쉬운 문항 오답)과 "상위권 시그널"(어려운 문항 정답)을 번호 실명으로 해석합니다.
 - trapAnalysis: 함정 적중 패턴이 보여주는 읽기·판단 습관을 해석합니다(아래 데이터 등급 지침 준수).
 - wrongDeepDive: 오답 전반을 관통하는 공통 패턴을 요약합니다(문항별 상세 해설은 wrongItems 몫).
 - conceptMap: 우선 보강 1순위 개념을 지목하고 관련 문항 번호와 연결합니다.
 - strengthWeakness: 강점·보완점이 이 시험에서 어떻게 드러났는지 종합합니다. strengths/weaknesses 배열의 각 항목에도 근거 문항 번호를 포함합니다.
-- studyPlan: 주차 순서의 논리(왜 이것부터 하는가)를 설명합니다. studyPlanWeeks 의 tasks 는 이 시험의 오답 개념·유형·문항 번호와 1:1로 연결된 구체 태스크만 씁니다. "단어 암기", "문법 복습" 같은 범용 태스크를 단독으로 쓰지 않습니다.
-- teacherCommentDraft: 3~5문장. 학생 이름을 부르고, 이번 시험의 최대 성과 1가지와 최우선 보완 1가지를 담습니다.
+- studyPlan: 주차 순서의 논리(왜 이것부터 하는가)를 이 시험의 문항 번호를 인용해 설명합니다. studyPlanWeeks 의 tasks 는 이 시험의 오답 개념·유형·문항 번호와 1:1로 연결된 구체 태스크만 쓰며, **각 태스크마다 근거 문항 번호(형식: "▲번·▲번", "서답형 ▲")를 최소 1개 포함**합니다. "단어 암기", "문법 복습" 같은 범용 태스크를 단독으로 쓰지 않습니다. · 나쁜 예(불합격): "요약문 완성 유형의 논리 구조를 정복합니다." · 좋은 예(형식만 참고): "▲번·▲번(요약문완성) 오답 문항을 다시 풀며 본문 결론 문장의 방향에 밑줄을 긋고 빈칸 어휘와 대응시킵니다." — ▲ 자리에는 이 학생의 실제 오답 번호만 넣습니다.
+- trapWhyByNumber: 각 값은 [문항별 응답]에서 그 문항의 학생 선택 선지를 원형 숫자로 명시하며 시작합니다(예: 선택:3 이면 "③을 선택한 것은 …"). 학생이 실제 고른 선지와 다른 선지를 골랐다고 서술하는 것은 데이터 위조이므로 절대 금지합니다.
+- teacherCommentDraft: 3~5문장. 학생 이름을 부르되 다른 모든 내러티브와 동일하게 격식 있는 합니다체를 유지합니다("-란다", "-하자", "-거야" 같은 반말 종결 절대 금지). 이번 시험의 최대 성과 1가지와 최우선 보완 1가지를 문항 번호와 함께 담습니다.
 
 [금지 문구 — 근거 없는 공허한 격려]
 "꾸준히 노력하면", "조금만 더 하면", "기본기를 다지면", "차근차근", "기초부터 탄탄히", "열심히 하면 오를" 같은 문구를 쓰지 않습니다. 격려와 조언은 반드시 이 시험의 구체 근거(문항 번호·개념·함정) 위에서만 합니다.
@@ -412,6 +415,29 @@ function dataLevelGuide(level: ResponseDataLevel): string {
     return "현재 WITH_CHOICES: 오답 선지 데이터가 있습니다. 학생이 고른 선지와 설계된 함정의 why 를 연결해 '왜 그 선지가 매력적이었는가'를 구체적으로 해석하되, 주어진 데이터 범위를 넘지 마십시오.";
   }
   return "현재 RICH: 오답 선지와 반평균·부분점수까지 있습니다. 반평균 대비 상대 위치를 scoreOverview 내러티브와 verdictLine 에 반드시 반영하고, 서술형 부분점수의 세부 수행까지 정밀하게 서술하십시오.";
+}
+
+/** buildAggregatesBlock(report-generate)의 유형별 행 파싱 — 미확인 배점 합 산출용(포맷 결합). */
+const AGGREGATE_ROW_RE = /^- .+: (\d+)문항\(정답 \d+ · 오답 \d+ · 미확인 (\d+)\) \/ 배점 ([\d.]+)점/;
+
+/** 미확인 문항 배점 합 — 모델 암산(실측: sonnet·flash 모두 30점을 32점으로 오산)을 끊기 위해
+ *  결정론으로 계산해 제공. 유형 전체가 미확인인 행만 합산 가능하므로, 부분 미확인 유형이 있거나
+ *  합산 문항 수가 채점 요약의 미확인 수와 불일치하면 null(생략 — 모델은 유형별 수치 인용으로 폴백). */
+function computeUnknownPointsLine(aggregates: string, unknownCount: number): string | null {
+  if (unknownCount === 0) return null;
+  let pointsSum = 0;
+  let countSum = 0;
+  for (const line of aggregates.split("\n")) {
+    const match = line.match(AGGREGATE_ROW_RE);
+    if (!match) continue;
+    const [total, unknown, points] = [Number(match[1]), Number(match[2]), Number(match[3])];
+    if (unknown === 0) continue;
+    if (unknown !== total) return null; // 부분 미확인 유형 — 배점 귀속 불가
+    pointsSum += points;
+    countSum += unknown;
+  }
+  if (countSum !== unknownCount) return null;
+  return `미확인 문항 배점 합: ${Math.round(pointsSum * 100) / 100}점(${countSum}문항) — 서버 확정값. 미확인 실점 규모를 서술할 때는 이 수치만 사용할 것`;
 }
 
 function renderScoreSummary(score: ScoreSummary): string {
@@ -447,13 +473,14 @@ export function buildReportUserPrompt(opts: {
     opts.wrongNumbers.length > 0 ? opts.wrongNumbers.join(", ") : "(대상 없음 — 빈 배열 [])";
   const trapTargets =
     opts.trapNumbers.length > 0 ? opts.trapNumbers.join(", ") : "(대상 없음 — 빈 객체 {})";
+  const unknownPointsLine = computeUnknownPointsLine(opts.aggregates, opts.scoreSummary.unknownCount);
   return `학생 "${opts.studentName}" 의 시험 결과를 바탕으로 상담 리포트의 내러티브를 작성하십시오.
 
 [채점 요약(수치는 이미 확정 — 다시 계산하지 말 것, 인용은 가능)]
 ${renderScoreSummary(opts.scoreSummary)}
 
 [결정론 집계(서버 확정 — 내러티브는 이 데이터를 근거로 해석하고, 모순되게 쓰지 말 것)]
-${opts.aggregates}
+${opts.aggregates}${unknownPointsLine ? `\n${unknownPointsLine}` : ""}
 
 [문항별 응답]
 ${responseLines.join("\n")}

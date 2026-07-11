@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   GraduationCap,
   Loader2,
@@ -14,11 +14,16 @@ import { toast } from "sonner";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { Pagination } from "@/components/workbench/shared/pagination";
 import type { ExamPassage, ExamPassagePick } from "@/lib/exam-passages/types";
+import type {
+  ExamPassageWebtoonAssetSummary,
+  ExamPassageWebtoonAvailabilityResponse,
+} from "@/lib/exam-passages/webtoon-assets";
 import { useExamPassageLibrary } from "./use-exam-passage-library";
 import { ExamFilterBar } from "./exam-filter-bar";
 import { ExamPassageCard } from "./exam-passage-card";
 import { ExamPaperCard } from "./exam-paper-card";
 import { ExamPassagePreviewModal } from "./exam-passage-preview-modal";
+import { ExamPassageWebtoonModal } from "./exam-passage-webtoon-modal";
 
 export interface ExamPassageLibraryProps {
   /**
@@ -32,6 +37,8 @@ export interface ExamPassageLibraryProps {
   busy?: boolean;
   /** 상단 안내 문구. */
   headerHint?: string;
+  /** 웹툰 생성 화면에서만: 승인된 기출 웹툰 미리보기/다운로드를 노출한다. */
+  enableWebtoonDownloads?: boolean;
   /**
    * 모바일(<lg)에서 하단 선택 바를 화면 맨 아래 고정한다(문제 생성 스텝 플로우).
    * 이때 호스트는 공용 스텝 네비를 숨겨야 중복되지 않는다. PC 는 영향 없음.
@@ -49,9 +56,14 @@ export function ExamPassageLibrary({
   pickLabel = "내 지문함에 담기",
   busy = false,
   mobileFixedFooter = false,
+  enableWebtoonDownloads = false,
 }: ExamPassageLibraryProps) {
   const api = useExamPassageLibrary();
   const [preview, setPreview] = useState<ExamPassage | null>(null);
+  const [webtoonPreview, setWebtoonPreview] = useState<ExamPassage | null>(null);
+  const [webtoonAssetsByPassageId, setWebtoonAssetsByPassageId] = useState<
+    Record<string, ExamPassageWebtoonAssetSummary[]>
+  >({});
   const [picking, setPicking] = useState(false);
   // 모바일 하단 고정 장바구니 펼침 상태(내 지문함·워크스페이스 장바구니와 동형).
   const [cartOpen, setCartOpen] = useState(false);
@@ -85,6 +97,46 @@ export function ExamPassageLibrary({
   };
 
   const working = picking || busy;
+
+  useEffect(() => {
+    if (!enableWebtoonDownloads || !api.browsingProblems || api.items.length === 0) {
+      if (!enableWebtoonDownloads) setWebtoonAssetsByPassageId({});
+      return;
+    }
+    const ids = api.items.map((item) => item.id).join(",");
+    let cancelled = false;
+    fetch(`/api/exam-passages/webtoons?ids=${encodeURIComponent(ids)}`, {
+      credentials: "include",
+      cache: "no-store",
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error("기출 웹툰 정보를 불러오지 못했습니다.");
+        return (await res.json()) as ExamPassageWebtoonAvailabilityResponse;
+      })
+      .then((data) => {
+        if (!cancelled && data.ok) {
+          setWebtoonAssetsByPassageId((prev) => ({ ...prev, ...data.byPassageId }));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setWebtoonAssetsByPassageId({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [enableWebtoonDownloads, api.browsingProblems, api.items]);
+
+  const handleAssetUpdated = (asset: ExamPassageWebtoonAssetSummary) => {
+    setWebtoonAssetsByPassageId((prev) => {
+      const current = prev[asset.examPassageId] ?? [];
+      const next = current.some((item) => item.id === asset.id)
+        ? current.map((item) => (item.id === asset.id ? asset : item))
+        : [...current, asset];
+      return { ...prev, [asset.examPassageId]: next };
+    });
+  };
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
@@ -149,6 +201,10 @@ export function ExamPassageLibrary({
                     selected={api.isSelected(p.id)}
                     onToggle={api.toggleSelect}
                     onPreview={setPreview}
+                    webtoonAssets={webtoonAssetsByPassageId[p.id] ?? []}
+                    onPreviewWebtoon={
+                      enableWebtoonDownloads ? setWebtoonPreview : undefined
+                    }
                   />
                 ))}
               </div>
@@ -342,6 +398,14 @@ export function ExamPassageLibrary({
         selected={preview ? api.isSelected(preview.id) : false}
         onToggleSelect={api.toggleSelect}
         onClose={() => setPreview(null)}
+      />
+      <ExamPassageWebtoonModal
+        passage={webtoonPreview}
+        assets={
+          webtoonPreview ? (webtoonAssetsByPassageId[webtoonPreview.id] ?? []) : []
+        }
+        onClose={() => setWebtoonPreview(null)}
+        onAssetUpdated={handleAssetUpdated}
       />
     </div>
   );

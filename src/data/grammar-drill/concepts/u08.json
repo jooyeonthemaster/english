@@ -1,0 +1,242 @@
+{
+  "unitId": "u08",
+  "concepts": [
+    {
+      "id": "u08-c1",
+      "unitId": "u08",
+      "order": 1,
+      "title": "절 vs 명사구 판별",
+      "oneLiner": "밑줄 바로 뒤에 '주어+동사'가 있으면 접속사, 명사(구)뿐이면 전치사입니다.",
+      "algorithm": [
+        "밑줄 친 연결어에서 멈추고, 해석하기 전에 바로 뒤의 구조부터 봅니다.",
+        "뒤에서 '주어+동사' 짝을 찾습니다 — 짝이 있으면 절이고, 절 앞자리는 접속사입니다.",
+        "동사 짝 없이 명사(구)만 이어지면 전치사 자리입니다.",
+        "-ing형이 보이면 본동사인지 동명사인지 확인합니다 — 앞에 주어가 없으면 동명사구, 즉 명사구입니다."
+      ],
+      "rules": [
+        {
+          "rule": "접속사 뒤에는 반드시 '주어+동사'를 갖춘 절이 옵니다.",
+          "examples": [
+            {
+              "en": "**Although** the experiment failed twice, the team refused to give up.",
+              "ko": "실험이 두 번 실패했지만, 그 팀은 포기하기를 거부했습니다.",
+              "note": "although 뒤에 주어(the experiment)+동사(failed) → 절 → 접속사 자리"
+            },
+            {
+              "en": "**While** the city slept, engineers repaired the damaged bridge.",
+              "ko": "도시가 잠든 동안, 기술자들이 손상된 다리를 수리했습니다.",
+              "note": "while 뒤 the city slept = 주어+동사 → 접속사"
+            }
+          ]
+        },
+        {
+          "rule": "전치사 뒤에는 동사 없는 명사(구)만 옵니다.",
+          "examples": [
+            {
+              "en": "**During** the long drought, farmers stored every drop of rain.",
+              "ko": "긴 가뭄 동안, 농부들은 빗방울 하나까지 저장했습니다.",
+              "note": "during 뒤 the long drought = 동사 없는 명사구 → 전치사"
+            },
+            {
+              "en": "**Despite** her fear of heights, she climbed the old tower.",
+              "ko": "높은 곳에 대한 두려움에도 불구하고, 그녀는 오래된 탑에 올랐습니다.",
+              "note": "despite 뒤 her fear of heights = 명사구 → 전치사"
+            }
+          ]
+        },
+        {
+          "rule": "동명사(-ing)구는 명사구이므로 전치사 뒤에 올 수 있습니다.",
+          "examples": [
+            {
+              "en": "**Despite** losing the first game, the players stayed calm and focused.",
+              "ko": "첫 경기에서 졌음에도 불구하고, 선수들은 침착하고 집중된 상태를 유지했습니다.",
+              "note": "losing the first game = 동명사구(주어·본동사 없음) = 명사구 → despite 가능"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "동명사구는 절이 아닙니다",
+          "body": "-ing가 보이면 동사가 있다고 착각해 접속사를 고르기 쉽습니다. 동명사구에는 주어와 본동사가 없으므로 통째로 명사구이고, 그 앞자리는 전치사입니다.",
+          "example": {
+            "en": "**Despite** practicing every day, the pianist still felt nervous on stage.",
+            "ko": "매일 연습했음에도 불구하고, 그 피아니스트는 무대에서 여전히 긴장했습니다.",
+            "note": "practicing은 본동사가 아니라 동명사 → 명사구 → 전치사 despite"
+          }
+        },
+        {
+          "title": "뒤가 길어도 구조는 그대로입니다",
+          "body": "명사구에 수식어가 길게 붙으면 절처럼 보입니다. 핵심은 본동사의 유무입니다 — 아무리 길어도 '주어+동사' 짝이 없으면 명사구이고, 전치사 자리입니다.",
+          "example": {
+            "en": "**During** the final weeks of the long election campaign, rumors spread quickly.",
+            "ko": "긴 선거 운동의 마지막 몇 주 동안, 소문이 빠르게 퍼졌습니다.",
+            "note": "during 뒤는 길지만 동사 없는 명사구 — 본동사는 뒤의 spread 하나뿐"
+          }
+        }
+      ],
+      "confusableWith": ["u08-c2", "u01-c3", "u07-c1"]
+    },
+    {
+      "id": "u08-c2",
+      "unitId": "u08",
+      "order": 2,
+      "title": "대표 짝 암기",
+      "oneLiner": "while/during, although/despite, because/because of — 짝으로 판단합니다.",
+      "algorithm": [
+        "밑줄 친 연결어가 어느 짝에 속하는지 확인합니다 — while/during, although·though/despite·in spite of, because/because of.",
+        "짝 안에서 접속사 쪽인지 전치사 쪽인지 표시합니다 — while·although·though·because는 접속사, during·despite·in spite of·because of는 전치사입니다.",
+        "밑줄 뒤 구조가 절인지 명사구인지 확인해 연결어의 품사와 대조합니다.",
+        "의미가 자연스러워도 구조가 어긋나면 틀린 것입니다 — 해석이 아니라 구조로 결정합니다."
+      ],
+      "rules": [
+        {
+          "rule": "while은 접속사, during은 전치사입니다 — 뜻은 같아도 뒤 구조가 다릅니다.",
+          "examples": [
+            {
+              "en": "**While** the musicians tuned their instruments, the hall slowly filled with people.",
+              "ko": "연주자들이 악기를 조율하는 동안, 공연장은 서서히 사람들로 가득 찼습니다.",
+              "note": "while+절(the musicians tuned ...) — 이 자리에 during은 불가"
+            },
+            {
+              "en": "**During** the winter months, many animals sleep beneath the frozen ground.",
+              "ko": "겨울철 동안, 많은 동물들이 얼어붙은 땅 밑에서 잠을 잡니다.",
+              "note": "during+명사구(the winter months) — 이 자리에 while은 불가"
+            }
+          ]
+        },
+        {
+          "rule": "although·though는 접속사, despite·in spite of는 전치사입니다.",
+          "examples": [
+            {
+              "en": "**Although** the bridge looked solid, engineers found cracks inside it.",
+              "ko": "그 다리는 튼튼해 보였지만, 기술자들은 내부에서 균열을 발견했습니다.",
+              "note": "although+절(the bridge looked ...)"
+            },
+            {
+              "en": "**In spite of** the heavy rain, the outdoor concert continued as planned.",
+              "ko": "폭우에도 불구하고, 야외 콘서트는 계획대로 계속되었습니다.",
+              "note": "in spite of+명사구(the heavy rain)"
+            }
+          ]
+        },
+        {
+          "rule": "because는 접속사, because of는 전치사입니다 — of 하나로 뒤 구조가 갈립니다.",
+          "examples": [
+            {
+              "en": "The flight was delayed **because** the airport lost electric power.",
+              "ko": "공항이 전력을 잃었기 때문에 비행기가 지연되었습니다.",
+              "note": "because+절(the airport lost ...)"
+            },
+            {
+              "en": "The flight was delayed **because of** a sudden electric power failure.",
+              "ko": "갑작스러운 정전 때문에 비행기가 지연되었습니다.",
+              "note": "because of+명사구(a sudden ... failure) — 같은 내용도 구조가 다름"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "despite of는 존재하지 않습니다",
+          "body": "in spite of에 이끌려 despite 뒤에도 of를 붙이기 쉽습니다. despite는 그 자체로 전치사이므로 of가 붙으면 틀립니다. despite = in spite of로 통째로 외워 둡니다.",
+          "example": {
+            "en": "**Despite** the noise outside, the students kept reading quietly.",
+            "ko": "바깥의 소음에도 불구하고, 학생들은 조용히 계속 책을 읽었습니다.",
+            "note": "despite 뒤에 of 없이 바로 명사구가 옴"
+          }
+        },
+        {
+          "title": "해석이 같아서 생기는 방심",
+          "body": "while과 during은 둘 다 '~동안'으로 해석되므로 해석만으로는 절대 구분되지 않습니다. 수능은 바로 이 지점을 노립니다 — 뜻이 아니라 뒤에 절이 오는지 명사구가 오는지로만 판단합니다.",
+          "example": {
+            "en": "**During** her stay in the small village, she learned local recipes.",
+            "ko": "작은 마을에 머무는 동안, 그녀는 현지 요리법을 배웠습니다.",
+            "note": "her stay = 명사구 — '동안'이라는 해석에 끌려 while을 쓰면 틀림"
+          }
+        }
+      ],
+      "confusableWith": ["u08-c1", "u08-c3"]
+    },
+    {
+      "id": "u08-c3",
+      "unitId": "u08",
+      "order": 3,
+      "title": "확장 짝과 구접속사",
+      "oneLiner": "unless·once·now that 등 절을 이끄는 표현과 전치사구를 구분합니다.",
+      "algorithm": [
+        "밑줄 친 표현이 절을 이끄는 접속사인지 확인합니다 — unless, once, now that, as long as, even though 등은 여러 단어여도 접속사입니다.",
+        "구접속사 뒤에서도 판단법은 같습니다 — '주어+동사' 짝이 따라오는지 확인합니다.",
+        "형태가 비슷한 전치사구와 대조합니다 — because of, instead of, thanks to 뒤에는 명사구만 옵니다."
+      ],
+      "rules": [
+        {
+          "rule": "unless·once 같은 한 단어 접속사는 조건·시간의 절을 이끕니다.",
+          "examples": [
+            {
+              "en": "**Unless** the weather improves soon, the school trip will be canceled.",
+              "ko": "날씨가 곧 좋아지지 않으면, 수학여행은 취소될 것입니다.",
+              "note": "unless+절(the weather improves) — '~하지 않으면'"
+            },
+            {
+              "en": "**Once** you understand the rule, the exercises become surprisingly easy.",
+              "ko": "일단 그 규칙을 이해하면, 연습 문제들이 놀라울 만큼 쉬워집니다.",
+              "note": "once+절(you understand ...) — '일단 ~하면'"
+            }
+          ]
+        },
+        {
+          "rule": "now that·as long as·even though처럼 여러 단어로 된 구접속사 뒤에도 절이 옵니다.",
+          "examples": [
+            {
+              "en": "**Now that** the library has longer hours, students study there every evening.",
+              "ko": "이제 도서관이 더 길게 문을 열기 때문에, 학생들은 매일 저녁 그곳에서 공부합니다.",
+              "note": "now that+절(the library has ...) — '이제 ~이므로'"
+            },
+            {
+              "en": "**As long as** the river stays clean, the fish will return each spring.",
+              "ko": "강이 깨끗하게 유지되는 한, 물고기들은 봄마다 돌아올 것입니다.",
+              "note": "as long as+절(the river stays ...) — '~하는 한'"
+            }
+          ]
+        },
+        {
+          "rule": "instead of·thanks to 같은 전치사구 뒤에는 명사구만 옵니다.",
+          "examples": [
+            {
+              "en": "**Instead of** a written test, the class prepared a group presentation.",
+              "ko": "필기시험 대신에, 그 학급은 조별 발표를 준비했습니다.",
+              "note": "instead of+명사구(a written test)"
+            },
+            {
+              "en": "**Thanks to** the new vaccine, the disease disappeared from the region.",
+              "ko": "새 백신 덕분에, 그 질병은 그 지역에서 사라졌습니다.",
+              "note": "thanks to+명사구(the new vaccine)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "여러 단어라고 전치사구가 아닙니다",
+          "body": "now that, as long as처럼 단어가 여러 개면 전치사구처럼 보여서 뒤에 명사구를 기대하기 쉽습니다. 단어 수는 기준이 아닙니다 — 표현별로 절을 이끄는지 명사구를 이끄는지 통째로 외우고, 반드시 뒤 구조로 확인합니다.",
+          "example": {
+            "en": "**Now that** the results are public, the debate has grown louder.",
+            "ko": "이제 결과가 공개되었기 때문에, 논쟁이 더 커졌습니다.",
+            "note": "now that는 두 단어지만 접속사 → 뒤에 절(the results are)"
+          }
+        },
+        {
+          "title": "that로 끝나면 절이 옵니다",
+          "body": "now that, in that, except that처럼 that로 끝나는 표현은 모두 절을 이끕니다. that 바로 뒤에서 '주어+동사'를 확인하면 판단이 끝납니다.",
+          "example": {
+            "en": "The plan is unusual **in that** it requires no extra budget.",
+            "ko": "그 계획은 추가 예산이 필요 없다는 점에서 특이합니다.",
+            "note": "in that+절(it requires ...) — '~라는 점에서'"
+          }
+        }
+      ],
+      "confusableWith": ["u08-c1", "u08-c2", "u06-c4"]
+    }
+  ]
+}

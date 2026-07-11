@@ -111,6 +111,26 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_SHOW_TUTOR_BILLING,
     true,
   ),
+
+  /**
+   * 26-07-09 시험지 배포·OMR 대개편: 자체 생성 시험지의 응시 학생 할당, 태블릿
+   * 시험 배포(/t/[token]), 결정론 즉시채점, 응시 현황 탭, 학생 응시 이력 탭을
+   * 게이트한다. SHOW_USER_RESULTS(PG 심사 대비 잠금 — 레거시 학생앱 표면)와
+   * 완전히 독립 — 이 플래그는 레거시를 되살리지 않는다.
+   */
+  ENABLE_EXAM_DEPLOYMENT: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_EXAM_DEPLOYMENT,
+    true,
+  ),
+
+  /**
+   * 26-07-10 모바일 어법 학습 툴(/g): 학생 코드 진입 어법 드릴 앱 +
+   * /director/grammar-lab 학생 분석 대시보드를 게이트한다.
+   */
+  ENABLE_GRAMMAR_DRILL: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_DRILL,
+    true,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

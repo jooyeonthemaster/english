@@ -1,0 +1,436 @@
+/* ============================================================================
+   어법 드릴 (/g) — 스코프 디자인 시스템 "시험지 × 계기판"
+   - 전역 body.smoat-large-ui 의 px 유틸 강제 확대를 피하기 위해 타이포는
+     전부 rem 기반 .gd-* 클래스로만 다룬다 (rem 은 html 16px 기준 — body 20px
+     오버라이드의 영향을 받지 않는다).
+   - 라이트 고정(시험지 표면). 다크 토글의 영향을 받지 않도록 리터럴 값 사용.
+   ============================================================================ */
+
+.gd-app {
+  /* 팔레트 */
+  --gd-paper: #f6f5f1; /* 지면 */
+  --gd-card: #ffffff;
+  --gd-line: #e5e3db; /* 헤어라인 */
+  --gd-line-strong: #d4d1c6;
+  --gd-ink: #16202e; /* 본문 잉크 */
+  --gd-ink-2: #5a6372;
+  --gd-ink-3: #98a0ad;
+  --gd-blue: #1d4ed8; /* 액션·진행 */
+  --gd-blue-soft: #eef2fe;
+  --gd-blue-line: #c7d4f8;
+  --gd-good: #047857; /* 정답 */
+  --gd-good-soft: #ecfdf5;
+  --gd-bad: #be123c; /* 오답 */
+  --gd-bad-soft: #fff1f2;
+  --gd-master: #0f766e; /* 마스터 배지 */
+
+  /* 타이포 (rem — 전역 오버라이드 무풍지대) */
+  --gd-fs-3xs: 0.625rem; /* 10 */
+  --gd-fs-2xs: 0.6875rem; /* 11 */
+  --gd-fs-xs: 0.75rem; /* 12 */
+  --gd-fs-sm: 0.8125rem; /* 13 */
+  --gd-fs-base: 0.875rem; /* 14 */
+  --gd-fs-md: 0.9375rem; /* 15 */
+  --gd-fs-lg: 1.0625rem; /* 17 */
+  --gd-fs-xl: 1.25rem; /* 20 */
+  --gd-fs-2xl: 1.5rem; /* 24 */
+
+  --gd-serif: Georgia, "Times New Roman", "Noto Serif", serif;
+
+  font-size: var(--gd-fs-base);
+  line-height: 1.5;
+  color: var(--gd-ink);
+  background: var(--gd-paper);
+  word-break: keep-all;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── 타이포 유틸 ── */
+.gd-t-3xs { font-size: var(--gd-fs-3xs); }
+.gd-t-2xs { font-size: var(--gd-fs-2xs); }
+.gd-t-xs { font-size: var(--gd-fs-xs); }
+.gd-t-sm { font-size: var(--gd-fs-sm); }
+.gd-t-base { font-size: var(--gd-fs-base); }
+.gd-t-md { font-size: var(--gd-fs-md); }
+.gd-t-lg { font-size: var(--gd-fs-lg); }
+.gd-t-xl { font-size: var(--gd-fs-xl); }
+.gd-t-2xl { font-size: var(--gd-fs-2xl); }
+
+/* 영어 지문 — 시험지 세리프 */
+.gd-en {
+  font-family: var(--gd-serif);
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.72;
+  letter-spacing: 0.001em;
+}
+
+/* 라벨(전각 소형 캡) */
+.gd-label {
+  font-size: var(--gd-fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gd-ink-3);
+}
+
+/* ── 표면 ── */
+.gd-card {
+  background: var(--gd-card);
+  border: 1px solid var(--gd-line);
+  border-radius: 0.875rem;
+}
+.gd-hairline-t { border-top: 1px solid var(--gd-line); }
+.gd-hairline-b { border-bottom: 1px solid var(--gd-line); }
+
+/* ── 버튼 ── */
+.gd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 2.75rem; /* 44px 터치 타깃 */
+  padding: 0 1rem;
+  border-radius: 0.75rem;
+  font-size: var(--gd-fs-sm);
+  font-weight: 600;
+  transition: transform 80ms ease, background 120ms ease, border-color 120ms ease;
+  user-select: none;
+}
+.gd-btn:active { transform: scale(0.98); }
+.gd-btn-primary {
+  background: var(--gd-blue);
+  color: #fff;
+}
+.gd-btn-primary:disabled {
+  background: #c3c9d6;
+  color: #fff;
+}
+.gd-btn-ghost {
+  background: transparent;
+  border: 1px solid var(--gd-line-strong);
+  color: var(--gd-ink-2);
+}
+.gd-btn-quiet {
+  background: transparent;
+  color: var(--gd-ink-2);
+}
+
+/* ── 선택지(택일·밑줄 후보) ── */
+.gd-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.625rem 0.875rem;
+  border: 1.5px solid var(--gd-line);
+  border-radius: 0.75rem;
+  background: var(--gd-card);
+  text-align: left;
+  transition: border-color 100ms ease, background 100ms ease;
+}
+.gd-option[data-state="selected"] {
+  border-color: var(--gd-blue);
+  background: var(--gd-blue-soft);
+}
+.gd-option[data-state="correct"] {
+  border-color: var(--gd-good);
+  background: var(--gd-good-soft);
+}
+.gd-option[data-state="wrong"] {
+  border-color: var(--gd-bad);
+  background: var(--gd-bad-soft);
+}
+.gd-option[data-state="dim"] { opacity: 0.55; }
+/* 밑줄 번호 택일 등 정사각 옵션 — width:100% 기본을 명시적으로 무효화 */
+.gd-option.gd-option-square {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* ── 지문 밑줄 ── */
+.gd-u {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gd-ink);
+  font-weight: 500;
+  border-radius: 0.25rem;
+  padding: 0.0625rem 0.125rem;
+  margin: -0.0625rem -0.03125rem;
+}
+button.gd-u {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.gd-u[data-state="selected"] {
+  background: var(--gd-blue-soft);
+  text-decoration-color: var(--gd-blue);
+  color: var(--gd-blue);
+}
+.gd-u[data-state="correct"] {
+  background: var(--gd-good-soft);
+  text-decoration-color: var(--gd-good);
+  color: var(--gd-good);
+}
+.gd-u[data-state="wrong"] {
+  background: var(--gd-bad-soft);
+  text-decoration-color: var(--gd-bad);
+  color: var(--gd-bad);
+}
+.gd-u-num {
+  font-family: var(--gd-serif);
+  font-size: 0.85em;
+  margin-right: 0.0625rem;
+}
+
+/* 빈칸 슬롯 */
+.gd-blank {
+  display: inline-block;
+  min-width: 3.5rem;
+  border-bottom: 1.5px solid var(--gd-ink);
+  text-align: center;
+  font-weight: 600;
+  color: var(--gd-blue);
+  padding: 0 0.25rem;
+}
+
+/* ── 진행/게이지 ── */
+.gd-meter {
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: var(--gd-line);
+  overflow: hidden;
+}
+.gd-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--gd-blue);
+  transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gd-meter[data-tone="good"] > span { background: var(--gd-good); }
+
+/* ── 시트(하단) ── */
+.gd-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(22, 32, 46, 0.42);
+  animation: gd-fade-in 160ms ease;
+}
+.gd-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 41;
+  margin: 0 auto;
+  max-width: 40rem;
+  max-height: 82dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--gd-card);
+  border: 1px solid var(--gd-line);
+  border-bottom: none;
+  border-radius: 1.25rem 1.25rem 0 0;
+  /* 콘텐츠가 max-height 를 뚫고 뷰포트 아래로 삐져나가는 것을 차단 —
+     내부 스크롤 영역(flex-1 + min-h-0)이 대신 줄어들어야 한다. */
+  overflow: hidden;
+  animation: gd-slide-up 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 -12px 40px rgba(22, 32, 46, 0.14);
+}
+.gd-sheet-grip {
+  width: 2.25rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: var(--gd-line-strong);
+  margin: 0.5rem auto 0;
+  flex-shrink: 0;
+}
+
+@keyframes gd-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes gd-slide-up {
+  from { transform: translateY(24px); opacity: 0.4; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes gd-pop {
+  0% { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.gd-pop { animation: gd-pop 180ms cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* 판정 배너 */
+.gd-verdict {
+  border-radius: 0.875rem;
+  border: 1px solid;
+  animation: gd-pop 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gd-verdict[data-tone="good"] {
+  border-color: #a7f3d0;
+  background: var(--gd-good-soft);
+}
+.gd-verdict[data-tone="bad"] {
+  border-color: #fecdd3;
+  background: var(--gd-bad-soft);
+}
+
+/* 스크롤 영역 공통 */
+.gd-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* 안전영역 하단 패딩 */
+.gd-safe-b { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+
+/* 숫자 계기판 */
+.gd-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 앱 셸(탭 루트 전용): 상단 헤더 + 하단 탭바 + 햄버거 사이드 시트 ──
+   드릴 플레이어·learn·q·w 등 몰입 화면은 셸 미적용(풀스크린 유지). */
+.gd-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(246, 245, 241, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--gd-line);
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 콘텐츠가 하단 고정 탭바 아래로 깔리지 않게 하는 여백 확보 */
+.gd-shell-main {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+.gd-tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 35;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--gd-line);
+}
+
+.gd-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1875rem;
+  padding-top: 0.5rem;
+  color: var(--gd-ink-3);
+  font-size: var(--gd-fs-3xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.gd-tab[data-active="true"] { color: var(--gd-blue); }
+
+/* 과제 탭 미완료 배지 */
+.gd-tab-badge {
+  position: absolute;
+  top: 0.125rem;
+  left: calc(50% + 0.4375rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  border-radius: 9999px;
+  background: var(--gd-bad);
+  color: #fff;
+  font-size: var(--gd-fs-3xs);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 우측 슬라이드 시트(햄버거 메뉴) — 백드롭은 .gd-sheet-backdrop 공용 */
+.gd-side-sheet {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  width: min(19rem, 84vw);
+  background: var(--gd-card);
+  border-left: 1px solid var(--gd-line);
+  padding-top: env(safe-area-inset-top);
+  box-shadow: -12px 0 40px rgba(22, 32, 46, 0.16);
+  animation: gd-slide-in-right 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+@keyframes gd-slide-in-right {
+  from { transform: translateX(2rem); opacity: 0.4; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.gd-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  font-size: var(--gd-fs-sm);
+  font-weight: 600;
+  color: var(--gd-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+.gd-menu-item[data-active="true"] {
+  color: var(--gd-blue);
+  background: var(--gd-blue-soft);
+}
+
+/* ── 상단 고정 배너(/g/tasks) — 셸 헤더(3.8125rem + safe-area) 바로 아래에
+   붙는다. 홈은 헤더 높이가 가변이라 일반 배치(이 클래스 미사용). ── */
+.gd-pin-banner {
+  position: sticky;
+  top: calc(3.8125rem + env(safe-area-inset-top) + 0.5rem);
+  z-index: 25;
+}
+
+/* ── 모션 최소화 — OS 설정 존중(진입 애니메이션·전환·펄스 전부 무효) ── */
+@media (prefers-reduced-motion: reduce) {
+  .gd-pop,
+  .gd-verdict,
+  .gd-sheet,
+  .gd-sheet-backdrop,
+  .gd-side-sheet {
+    animation: none;
+  }
+  .gd-meter > span,
+  .gd-btn,
+  .gd-option,
+  .gd-u {
+    transition: none;
+  }
+  .gd-btn:active {
+    transform: none;
+  }
+  .gd-app .animate-pulse {
+    animation: none;
+  }
+}

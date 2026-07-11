@@ -8,7 +8,7 @@
 //   워크스페이스 detail 폴링이 잇는다.
 // ============================================================================
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Link2, Link2Off, MoreHorizontal, Trash2, UserPlus, Users } from "lucide-react";
 import { toast } from "sonner";
@@ -108,6 +108,20 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
   const [deleteTarget, setDeleteTarget] = useState<ExamAnalysisStudentRow | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  // 외부 진입 관례(허브 보드 CTA 등): ?openAddStudent=1 로 들어오면 마운트 시
+  // 학생 추가 다이얼로그를 즉시 열고, 뒤로가기/새로고침에 재발화하지 않도록
+  // 쿼리를 URL 에서 제거한다. (useSearchParams 대신 window 조회 — Suspense 경계 불요)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("openAddStudent") !== "1") return;
+    setAddOpen(true);
+    params.delete("openAddStudent");
+    const qs = params.toString();
+    router.replace(`${window.location.pathname}${qs ? `?${qs}` : ""}`, {
+      scroll: false,
+    });
+  }, [router]);
+
   const students = detail.students;
   const studentHref = (sid: string) =>
     `${base}/workbench/exam-report/${detail.id}/students/${sid}`;
@@ -185,17 +199,19 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
         {students.length === 0 ? (
           <div className="px-6 py-16 text-center">
             <Users className="mx-auto mb-3 h-12 w-12 text-slate-200" />
-            <p className="font-medium text-slate-500">등록된 학생이 없습니다</p>
-            <p className="mt-1 text-sm text-slate-400">
-              학생을 등록하면 사진 판독·답안 링크·직접 입력으로 답안을 모아
-              채점하고 리포트를 생성할 수 있습니다.
+            <p className="font-medium text-slate-500">
+              학생을 추가해 답안을 모아보세요
             </p>
-            <div className="mt-4 flex items-center justify-center">
+            <p className="mx-auto mt-1 max-w-md text-sm text-slate-400">
+              학생을 추가하면 답안 링크를 발급해 학생이 직접 입력하게 하거나,
+              정오표에서 선생님이 직접 입력해 채점하고 리포트를 만들 수
+              있습니다.
+            </p>
+            <div className="mt-5 flex items-center justify-center">
               <Button
                 type="button"
-                size="sm"
                 onClick={() => setAddOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="h-10 bg-blue-600 px-5 text-[13.5px] font-semibold hover:bg-blue-700"
               >
                 <UserPlus className="h-4 w-4" />
                 학생 추가
@@ -233,12 +249,13 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="whitespace-nowrap text-xs text-slate-400">
-                            {s.sourceFileCount > 0
-                              ? `사진 ${s.sourceFileCount}장`
-                              : "사진 없음"}
-                          </span>
                           <Badge className={link.className}>{link.label}</Badge>
+                          {/* 하위호환: 과거 사진 판독으로 등록된 학생만 표기 */}
+                          {s.sourceFileCount > 0 && (
+                            <span className="whitespace-nowrap text-xs text-slate-400">
+                              사진 {s.sourceFileCount}장
+                            </span>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
@@ -354,7 +371,7 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
               {deleteTarget?.studentName} 학생을 삭제할까요?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              판독·채점 데이터와 생성된 리포트가 함께 보관 해제됩니다.
+              답안·채점 데이터와 생성된 리포트가 함께 보관 해제됩니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

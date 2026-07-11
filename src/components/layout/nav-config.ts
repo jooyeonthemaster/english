@@ -15,10 +15,12 @@ import {
   FileBarChart,
   Settings,
   Palette,
+  BookOpenText,
   Activity,
   LifeBuoy,
-  // 튜터 운영 홈·모바일 학습·배포 관리 임시 숨김으로 미사용. 복구 시 함께 주석 해제.
-  // Users,
+  Users,
+  // 모바일 학습·배포 관리 임시 숨김으로 미사용. 복구 시 함께 주석 해제.
+  // (Users 는 26-07-09 "학생 관리" 부활로 다시 활성 사용 중)
   // Smartphone,
   // Send,
   type LucideIcon,
@@ -124,6 +126,23 @@ function getKoreanNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "자료 추출", href: `${basePath}/korean/extraction` },
             { label: "자료 관리", href: `${basePath}/korean/extraction/jobs` },
+          ],
+        },
+      ],
+    },
+    {
+      title: "기출 자료",
+      items: [
+        {
+          label: "기출 지문",
+          icon: BookOpenText,
+          href: `${basePath}/korean/passage-library`,
+          children: [
+            { label: "기출 지문", href: `${basePath}/korean/passage-library` },
+            {
+              label: "수능완성 지문 분석",
+              href: `${basePath}/korean/suneung-wanseong`,
+            },
           ],
         },
       ],
@@ -243,24 +262,40 @@ export function getNavGroups(
             { label: "웹툰 관리", href: `${basePath}/workbench/webtoon/library` },
           ],
         },
-        {
-          // 원래 라벨 "학생 시험 리포트"는 chevron 과 폭 경쟁으로 최소 사이드바
-          // 폭(180px)에서 말줄임될 수 있어 축약 라벨을 유지한다.
-          // (BETA 배지는 26-07-07 사이드바 전체에서 제거 — beta 필드 인프라만 존치)
-          label: "시험 리포트",
-          icon: FileBarChart,
-          href: `${basePath}/workbench/exam-report`,
-          children: [
-            { label: "리포트 생성", href: `${basePath}/workbench/exam-report` },
-            { label: "리포트 관리", href: `${basePath}/workbench/exam-report/library` },
-          ],
-        },
+        // "시험 리포트"(exam-report) 항목은 26-07-11 IA 재편으로 운영 그룹
+        // "학생 관리" 하위(내신 시험 분석·리포트 관리)로 이동 — 웹툰만 남는다.
       ],
     },
     {
       title: "운영",
       directorOnly: true,
       items: [
+        // 26-07-11 IA 재편(설계 §5): "학생 관리"가 학생 데이터 전 표면(로스터·
+        // 과제·어법 훈련·내신 시험 분석·리포트)의 상위 계층이 된다. 구 단독
+        // "어법 훈련소" 항목과 AI 콘텐츠의 "시험 리포트" 항목은 이 아래로 흡수.
+        // ENABLE_EXAM_DEPLOYMENT(기본 true) 게이트 — SHOW_USER_RESULTS 와 무관.
+        ...(FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT
+          ? [
+              {
+                label: "학생 관리",
+                icon: Users,
+                href: `${basePath}/students`,
+                directorOnly: true,
+                children: [
+                  { label: "학생 목록", href: `${basePath}/students` },
+                  { label: "과제 관리", href: `${basePath}/students/assignments` },
+                  // 26-07-10 모바일 어법 학습 툴(/g) — 학생별 드릴 현황 대시보드.
+                  ...(FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL
+                    ? [{ label: "어법 훈련", href: `${basePath}/grammar-lab` }]
+                    : []),
+                  // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
+                  // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
+                  { label: "내신 시험 분석", href: `${basePath}/workbench/exam-report` },
+                  { label: "리포트 관리", href: `${basePath}/workbench/exam-report/library` },
+                ],
+              },
+            ]
+          : []),
         { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
         { label: "리워드", icon: Gift, href: `${basePath}/rewards`, directorOnly: true },
         // 튜터 운영 홈·모바일 학습·배포 관리 — 페이지는 살아있으나 좌측 메뉴에서만 임시 숨김.

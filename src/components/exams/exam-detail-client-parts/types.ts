@@ -60,6 +60,9 @@ export interface ExamDetail {
   title: string;
   type: string;
   status: string;
+  /** 과목 판별자 — "KOREAN"=국어(과제 배포 비활성). getExam(include)이 전 스칼라를
+   *  반환하므로 런타임에 항상 실려 오며, 구 DB(P2022 강등)에서는 undefined. */
+  subject?: string | null;
   examDate: string | Date | null;
   duration: number | null;
   totalPoints: number;

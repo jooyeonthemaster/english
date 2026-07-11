@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Pencil,
   Loader2,
+  Send,
   Trash2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -87,6 +88,8 @@ export function PassageFileCard({
   dupCount,
   onDelete,
   deleteBusy,
+  onAssign,
+  assignBusy,
 }: {
   passage: PassageItem;
   selected: boolean;
@@ -94,6 +97,11 @@ export function PassageFileCard({
   onViewDetail: (id: string) => void;
   /** "수정하기" — 상세 모달(편집 모드)을 연다. 미지정 시 onViewDetail 로 폴백. */
   onEdit?: (id: string) => void;
+  /** "학생에게 배포" — 과제 컴포저를 연다. 미지정이거나 PRIME 보고서가 없는
+   *  지문(레거시 분석만)은 버튼을 렌더하지 않는다. */
+  onAssign?: (id: string) => void;
+  /** 배포 준비(보고서 id 조회) 진행 중 — 버튼에 스피너. */
+  assignBusy?: boolean;
   /** 카드 우상단 휴지통 — 단건 삭제. 미지정 시 버튼을 숨긴다. */
   onDelete?: (id: string) => void;
   /** 삭제 진행 중(낙관적) — 휴지통에 스피너. */
@@ -399,6 +407,23 @@ export function PassageFileCard({
                 <span className="truncate">수정하기</span>
               </button>
             </div>
+            {/* 학생에게 배포 — PRIME 보고서(학습지)가 있는 지문만 (U6). */}
+            {onAssign && passage.reports?.[0] ? (
+              <CardDetailIconButton
+                icon={assignBusy ? Loader2 : Send}
+                title="학생에게 배포"
+                aria-label="학생에게 배포"
+                className="size-7 rounded-md"
+                iconClassName={
+                  assignBusy ? "size-3.5 animate-spin" : "size-3.5"
+                }
+                disabled={assignBusy}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAssign(passage.id);
+                }}
+              />
+            ) : null}
             <CardDetailIconButton
               className="size-7 rounded-md"
               iconClassName="size-3.5"

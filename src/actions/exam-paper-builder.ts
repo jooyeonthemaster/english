@@ -467,6 +467,10 @@ async function loadBuilderSurfacePage(
 // 초기 진입(SSR)은 1페이지 + 전체개수/총페이지/검수상태 개수만 내려주고, 이후 페이지/
 // 필터 변경은 클라이언트가 getExamPaperBuilderQuestionsPage 로 가져온다. 선택/미리보기는
 // ID 기반 작업세트(getExamPaperBuilderQuestionIds + ...QuestionsByIds)가 담당한다.
+// NOTE(E4): 이 로더는 문제은행(academyId 스코프)만 받고 특정 exam 을 조회하지 않는다.
+// 공유 QR 자기등록의 enrollToken/enrollEnabled 는 편집 페이지가 getExam 으로 받아
+// initialExam 으로 넘기고(빌더가 거기서 읽어 인쇄 QR 을 만든다), 이 함수에는 exam
+// 컨텍스트가 없으므로 enroll 필드를 여기서 반환하지 않는다(신규 생성 경로 무회귀).
 export async function getExamPaperBuilderData(
   academyId: string,
   opts?: {

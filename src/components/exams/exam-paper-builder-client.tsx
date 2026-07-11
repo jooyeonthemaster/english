@@ -6,6 +6,7 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { ChevronDown, ChevronLeft, ChevronRight, CirclePlay, Download, GripVertical, Loader2, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
 import { MobileStepHeader } from "@/components/workbench/mobile-step-flow";
 import { toast } from "sonner";
+import QRCode from "qrcode";
 import { type BuilderQuestion, type BuilderQuestionSetRender, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
 import { DEFAULT_INSTRUCTIONS, PAPER_SIZE_SPECS } from "./paper-builder/constants";
 import { buildGroups, formatDateInput } from "./paper-builder/paper-item-utils";
@@ -23,6 +24,7 @@ import { BlockFormatToolbar } from "./paper-builder/components/block-format-tool
 import { MobileBlockActionBar, MobileBlockEditSheet } from "./paper-builder/components/mobile-block-actions";
 import { QuestionLibraryPanel } from "./paper-builder/components/question-library-panel";
 import { TemplateSettingsPanel } from "./paper-builder/components/template-settings-panel";
+import { ExamDeployModal } from "./exam-deploy-modal";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
 import { PreviewToolbar } from "./exam-paper-builder-client-parts/preview-toolbar";
 import { PreviewZoomControls } from "./exam-paper-builder-client-parts/preview-zoom-controls";
@@ -58,6 +60,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUILDER_HEADER_HIDE_ZONE_PX, LEFT_PANEL_COLLAPSED_STORAGE_KEY, PANEL_DRAG_THRESHOLD, PANEL_MIN_CENTER, PANEL_TOGGLE_HANDLE_WIDTH, PANEL_WIDTH_STORAGE_KEY, PREVIEW_PAGE_GAP, RIGHT_PANEL_COLLAPSED_STORAGE_KEY, THUMBNAILS_COLLAPSED_STORAGE_KEY, THUMBNAILS_WIDTH_STORAGE_KEY } from "./exam-paper-builder-client-parts/builder-constants";
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
@@ -188,6 +191,23 @@ export function ExamPaperBuilderClient({
   );
   const [saveAsOpen, setSaveAsOpen] = useState(false);
   const [saveAsTitle, setSaveAsTitle] = useState("");
+  // 태블릿 시험 배포 모달(26-07-09 대개편 V1) — 저장된 시험지에서만 열린다.
+  const [deployOpen, setDeployOpen] = useState(false);
+  // 공유 QR 자기등록(E4) 인쇄 삽입 — getExam(include) 가 내려주는 enrollToken/
+  // enrollEnabled 를 읽는다(ExamDetail 타입엔 없어 좁은 캐스트, 런타임엔 존재).
+  // enrollEnabled && enrollToken 일 때만 /t/e/[token] QR data URI 를 만들어 첫
+  // 페이지 헤더에 인쇄한다. 미저장/미enable 이면 null(무회귀).
+  const initialEnroll = initialExam as
+    | {
+        enrollToken?: string | null;
+        enrollEnabled?: boolean | null;
+        subject?: string | null;
+      }
+    | null
+    | undefined;
+  const [examEnrollQrDataUrl, setExamEnrollQrDataUrl] = useState<string | null>(
+    null,
+  );
   const [subtitle, setSubtitle] = useState(
     initialHeader?.subtitle || "영어 내신 대비",
   );
@@ -374,6 +394,38 @@ export function ExamPaperBuilderClient({
   useEffect(() => {
     return () => setSidebarCollapseRequested(false);
   }, [setSidebarCollapseRequested]);
+
+  // 공유 QR 자기등록(E4) — enrollEnabled 이고 토큰이 있으면 /t/e/[enrollToken] 로
+  // 향하는 QR data URI 를 만들어 첫 페이지 헤더에 인쇄한다. 클라이언트에서 생성하므로
+  // origin 은 window.location.origin(폴백 NEXT_PUBLIC_SITE_URL). 미enable 이면 null.
+  // KOREAN 시험지는 자기등록 차단(절대 규칙) — enrollEnabled 은 E1 에서 이미 KOREAN
+  // 을 거부하지만, 인쇄 QR 도 subject 로 이중 방어한다(공유 빌더가 국어 경로도 담당).
+  const enrollEnabled =
+    Boolean(initialEnroll?.enrollEnabled) &&
+    initialEnroll?.subject !== "KOREAN";
+  const enrollToken = initialEnroll?.enrollToken ?? null;
+  useEffect(() => {
+    if (!enrollEnabled || !enrollToken) {
+      setExamEnrollQrDataUrl(null);
+      return;
+    }
+    const origin =
+      (typeof window !== "undefined" && window.location.origin) ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      "";
+    const enrollUrl = `${origin}/t/e/${enrollToken}`;
+    let cancelled = false;
+    void QRCode.toDataURL(enrollUrl, { margin: 1, width: 128 })
+      .then((url) => {
+        if (!cancelled) setExamEnrollQrDataUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setExamEnrollQrDataUrl(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [enrollEnabled, enrollToken]);
 
   // 미리보기/선택 작업세트용 풀 캐시 — 현재 페이지에 없는(다른 페이지·시드된) 문항을
   // getExamPaperBuilderQuestionsByIds 로 배치 로드해 보관한다. questionById 에 병합돼
@@ -1865,6 +1917,17 @@ export function ExamPaperBuilderClient({
     setSaveAsOpen(true);
   }
 
+  // 태블릿 시험 배포(V1) — 미저장 신규 초안은 배포 대상 examId 가 없어 안내만
+  // 한다(버튼은 활성 유지 — 사용자가 이유를 알 수 있게). 국어 시험지 비활성은
+  // deployDisabledReason 으로 툴바에서 처리.
+  function handleDeployClick() {
+    if (!savedExamId) {
+      toast.info("시험지를 먼저 저장해 주세요.");
+      return;
+    }
+    setDeployOpen(true);
+  }
+
   function handleSaveAsSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const trimmedTitle = saveAsTitle.trim();
@@ -2260,6 +2323,12 @@ export function ExamPaperBuilderClient({
             }
             onSave={handleSave}
             onSaveAs={savedExamId ? openSaveAsDialog : undefined}
+            onDeploy={
+              FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT ? handleDeployClick : undefined
+            }
+            deployDisabledReason={
+              subjectScope === "KOREAN" ? "국어 시험지는 곧 지원됩니다" : null
+            }
           />
 
           <div
@@ -2385,6 +2454,7 @@ export function ExamPaperBuilderClient({
                   singlePageHeight={singlePageHeight}
                   answerKey={answerKey}
                   forceMountAll={explanationPrint}
+                  examEnrollQrDataUrl={examEnrollQrDataUrl}
                   title={title}
                   paperSize={paperSize}
                   subtitle={subtitle}
@@ -2814,6 +2884,15 @@ export function ExamPaperBuilderClient({
           // 버전을 questionById 에서 끌어와 도착 즉시 모달에 반영한다.
           question={questionById.get(detailQuestion.id) ?? detailQuestion}
           onClose={() => setDetailQuestion(null)}
+        />
+      )}
+
+      {FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT && savedExamId && (
+        <ExamDeployModal
+          examId={savedExamId}
+          examTitle={title}
+          open={deployOpen}
+          onOpenChange={setDeployOpen}
         />
       )}
 

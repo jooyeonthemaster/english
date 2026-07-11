@@ -1,0 +1,489 @@
+{
+  "unitId": "u02",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u02-c1-mu-001",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["intervening-pp"],
+      "hints": [
+        "밑줄 친 동사들 각각의 주어를 문장 앞으로 되짚어 찾아 보십시오.",
+        "동사 바로 앞 명사가 전치사구 안에 있다면 수 판단에서 제외해야 합니다."
+      ],
+      "explanation": "주어 핵은 단수 명사 makeup이고 of these layers는 전치사구 수식어입니다. 괄호를 치면 the chemical makeup ___ how ...가 남으므로 단수 동사 reveals가 필요합니다. 동사 앞 복수 명사 layers에 끌린 reveal은 틀립니다.",
+      "text": "Ocean sediments [[1:deposited]] over millions of years preserve a record of ancient climates, and the chemical makeup of these layers [[2:reveal]] how sharply global temperatures once shifted, [[3:offering]] clues that no written archive could provide.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "reveals",
+      "rationales": [
+        "deposited는 Ocean sediments를 뒤에서 꾸미는 과거분사이므로 본동사 preserve와 충돌하지 않아 옳습니다.",
+        "주어 핵은 단수 the chemical makeup이고 of these layers는 전치사구 미끼이므로 단수 동사 reveals로 고쳐야 합니다.",
+        "앞 절에 본동사가 이미 있으므로 분사 offering이 부가 설명을 이끄는 것은 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c2-mu-002",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["each-every", "intervening-pp"],
+      "hints": [
+        "each가 이끄는 주어의 핵이 무엇인지 확인해 보십시오.",
+        "of 뒤에 복수 명사가 붙어 있어도 수를 정하는 것은 of 앞의 핵입니다."
+      ],
+      "explanation": "주어 핵은 Each이고 of the participants in the study는 수식어입니다. each는 언제나 단수 취급이므로 was asked가 되어야 합니다. 눈앞의 복수 명사 participants에 끌린 were는 틀립니다.",
+      "text": "Each of the participants in the study [[1:were]] asked to keep a sleep diary, and the researchers [[2:compared]] the daily entries [[3:submitted]] every morning.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "was",
+      "rationales": [
+        "주어 핵은 Each이므로 of the participants(복수)에 끌리지 말고 단수 동사 was로 고쳐야 합니다.",
+        "and 뒤 새 절의 주어 the researchers에 이어지는 본동사 과거형 compared는 옳습니다.",
+        "submitted는 the daily entries를 뒤에서 꾸미는 과거분사이므로 본동사가 아니어도 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c3-mu-003",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["the-number-of"],
+      "hints": [
+        "문장 뒤쪽의 수량 표현이 관사에 따라 뜻이 달라진다는 점을 떠올려 보십시오.",
+        "the number of는 '~의 수'라는 개념 하나를 가리키고, a number of는 many에 가깝습니다."
+      ],
+      "explanation": "the number of visitors는 '방문객의 수'라는 단수 개념 하나를 가리키므로 has doubled가 되어야 합니다. of 뒤 복수 명사 visitors는 미끼입니다. a number of였다면 복수 취급이지만 여기서는 관사가 the이므로 단수입니다.",
+      "text": "Park officials [[1:alarmed]] by overcrowding have begun to limit access to trails that [[2:pass]] through fragile terrain, because the number of visitors to the reserve [[3:have]] doubled within a single decade.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "has",
+      "rationales": [
+        "alarmed는 Park officials를 뒤에서 꾸미는 과거분사이므로 본동사 have begun과 충돌하지 않아 옳습니다.",
+        "관계대명사 that의 선행사가 복수 trails이므로 복수 동사 pass는 옳습니다.",
+        "the number of는 '~의 수'라는 단수 개념이므로 단수 동사 has로 고쳐야 합니다."
+      ]
+    },
+    {
+      "id": "u02-c4-mu-004",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "There로 시작하는 문장에서 진짜 주어가 어디에 있는지 찾아 보십시오.",
+        "There는 자리만 차지하는 유도부사이므로 동사 뒤 명사의 수에 일치시킵니다."
+      ],
+      "explanation": "There 구문의 진짜 주어는 동사 뒤의 evidence이고, growing은 그것을 꾸미는 분사입니다. evidence는 불가산 단수이므로 is가 되어야 합니다. There를 주어로 여기거나 -ing 수식어의 느낌에 끌리면 안 됩니다.",
+      "text": "There [[1:are]] growing evidence that regular exercise [[2:improves]] memory, yet many schools, [[3:pressed]] for instructional hours, continue to cut time for physical activity.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "is",
+      "rationales": [
+        "There 구문의 진짜 주어는 동사 뒤의 불가산 명사 evidence이므로 단수 동사 is로 고쳐야 합니다.",
+        "that절 안의 주어 regular exercise가 단수이므로 단수 동사 improves는 옳습니다.",
+        "pressed는 many schools를 꾸미는 삽입 과거분사이므로 본동사 continue와 충돌하지 않아 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c1-mu-005",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["intervening-clause"],
+      "hints": [
+        "각 동사의 주어 핵을 찾을 때, 주어를 꾸미는 관계사절을 통째로 괄호에 넣어 보십시오.",
+        "관계사절 안의 복수 명사는 바깥 절 동사의 수 판단에 영향을 주지 못합니다."
+      ],
+      "explanation": "본동사 자리의 주어 핵은 단수 The policy이고, that rewards teachers who raise average test scores는 주어를 꾸미는 관계사절입니다. 괄호를 치면 The policy ___ the quiet work가 남으므로 단수 동사 ignores가 필요합니다. 절 속 복수 명사 teachers·scores에 끌린 ignore는 틀립니다.",
+      "text": "The policy that rewards teachers who [[1:raise]] average test scores [[2:ignore]] the quiet work of building trust, a process [[3:documented]] in dozens of studies [[4:spanning]] three decades.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "ignores",
+      "rationales": [
+        "관계대명사 who의 선행사가 복수 teachers이므로 복수 동사 raise는 옳습니다.",
+        "주어 핵은 단수 The policy이고 that ... scores는 관계사절 미끼이므로 단수 동사 ignores로 고쳐야 합니다.",
+        "documented는 a process를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "spanning은 studies를 꾸미는 현재분사이므로 본동사가 아니어도 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c2-mu-006",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["gerund-subject"],
+      "hints": [
+        "-ing 덩어리가 주어 노릇을 하는 절이 있는지 살펴보십시오.",
+        "동명사구 주어는 안에 복수 명사가 있어도 덩어리 전체를 하나로 셉니다."
+      ],
+      "explanation": "④가 속한 that절의 주어는 reconstructing the original meanings라는 동명사구입니다. 동명사구 주어는 한 덩어리로 보아 단수 취급하므로 demands가 되어야 합니다. 덩어리 안 복수 명사 meanings에 끌린 demand는 틀립니다.",
+      "text": "Ancient statutes [[1:preserved]] in court archives contain terms that [[2:resist]] simple translation, and scholars [[3:trained]] in modern law often discover that reconstructing the original meanings [[4:demand]] years of patient comparison.",
+      "underlineCount": 4,
+      "answer": 4,
+      "correction": "demands",
+      "rationales": [
+        "preserved는 Ancient statutes를 뒤에서 꾸미는 과거분사이므로 본동사 contain과 충돌하지 않아 옳습니다.",
+        "관계대명사 that의 선행사가 복수 terms이므로 복수 동사 resist는 옳습니다.",
+        "trained는 scholars를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "that절 안 주어가 동명사구 reconstructing the original meanings 덩어리이므로 단수 동사 demands로 고쳐야 합니다."
+      ]
+    },
+    {
+      "id": "u02-c3-mu-007",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["one-of", "intervening-clause"],
+      "hints": [
+        "one of가 이끄는 주어에서 핵이 되는 단어를 짚어 보십시오.",
+        "of 뒤 복수 명사는 범위를 나타낼 뿐이고, 동사의 수는 그 앞의 핵이 정합니다."
+      ],
+      "explanation": "주어 핵은 One이고 of the strategies that the committee proposed early last spring은 전부 수식어입니다. one of+복수 명사는 그중 '하나'를 가리키므로 단수 동사 involves가 필요합니다. 복수 명사 strategies에 끌린 involve는 틀립니다.",
+      "text": "One of the strategies that the committee [[1:proposed]] early last spring [[2:involve]] shortening the workweek, an idea [[3:borrowed]] from firms whose profits [[4:depend]] on employee creativity.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "involves",
+      "rationales": [
+        "관계사절 안에서 주어 the committee에 이어지는 본동사 과거형 proposed는 옳습니다.",
+        "주어 핵은 One이고 of the strategies ... spring은 수식어이므로 단수 동사 involves로 고쳐야 합니다.",
+        "borrowed는 an idea를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "whose profits가 복수 주어이므로 복수 동사 depend는 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c4-mu-008",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "장소를 나타내는 어구로 문장이 시작되면 주어의 위치부터 다시 확인해 보십시오.",
+        "도치문에서는 동사 뒤 첫 명사구의 핵에 동사의 수를 일치시킵니다."
+      ],
+      "explanation": "Beneath the city's oldest streets가 문두로 나온 장소구 도치문이므로 진짜 주어는 동사 뒤의 a network입니다. 핵이 단수 network이므로 lies가 되어야 합니다. 문두의 복수 명사 streets나 of tunnels의 tunnels는 모두 미끼입니다.",
+      "text": "Beneath the city's oldest streets [[1:lie]] a network of tunnels [[2:dug]] by medieval merchants, and maps of the network [[3:remain]] incomplete because early surveys [[4:were]] never finished.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "lies",
+      "rationales": [
+        "장소구 도치문의 진짜 주어는 동사 뒤 단수 핵 a network이므로 단수 동사 lies로 고쳐야 합니다.",
+        "dug는 tunnels를 뒤에서 꾸미는 과거분사이므로 본동사가 아니어도 옳습니다.",
+        "주어 핵이 복수 maps이고 of the network는 전치사구 미끼이므로 복수 동사 remain은 옳습니다.",
+        "because절의 주어 early surveys가 복수이므로 were는 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c1-mu-009",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "intervening-participle"],
+      "hints": [
+        "각 동사 앞에 낀 전치사구와 분사구를 괄호로 묶고 주어 핵만 남겨 보십시오.",
+        "수식어가 두 겹이어도 원리는 같습니다 — 괄호 밖 주어 핵의 수가 동사를 정합니다."
+      ],
+      "explanation": "③의 주어 핵은 단수 명사 the stream입니다. of readings와 collected on each orbit는 겹쳐 붙은 수식어이므로 통째로 괄호에 넣으면 the stream ___ so quickly가 남습니다. 따라서 단수 동사 grows가 필요하며, readings에 끌린 grow는 틀립니다.",
+      "text": "Radiation levels that [[1:vary]] with solar activity are tracked by instruments [[2:mounted]] on the orbiter, and the stream of readings collected on each orbit [[3:grow]] so quickly that engineers [[4:struggle]] to process each day's archive.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "grows",
+      "rationales": [
+        "관계대명사 that의 선행사가 복수 Radiation levels이므로 복수 동사 vary는 옳습니다.",
+        "mounted는 instruments를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "주어 핵은 단수 the stream이고 of readings collected on each orbit는 두 겹 수식어이므로 단수 동사 grows로 고쳐야 합니다.",
+        "that절의 주어 engineers가 복수이므로 복수 동사 struggle은 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c3-mu-010",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["partitive", "gerund-subject"],
+      "hints": [
+        "percent of 같은 부분 표현이 이끄는 주어에서 of 뒤 명사의 성격을 확인해 보십시오.",
+        "부분 표현 자체에는 수가 없습니다 — of 뒤 명사가 가산 복수인지 불가산 단수인지가 동사를 정합니다."
+      ],
+      "explanation": "④의 주어는 nearly seventy percent of the plant's output이고, 부분 표현 percent of는 of 뒤 명사의 수를 따릅니다. output은 불가산 단수이므로 depends가 되어야 합니다. 앞뒤의 복수 명사들에 휩쓸린 depend는 틀립니다.",
+      "text": "The turbines that [[1:date]] back to the 1970s remain in service, and engineers [[2:tasked]] with replacing them concede that modernizing the oldest units [[3:has]] proved slow; meanwhile, nearly seventy percent of the plant's output [[4:depend]] on machinery whose parts [[5:are]] no longer manufactured.",
+      "underlineCount": 5,
+      "answer": 4,
+      "correction": "depends",
+      "rationales": [
+        "관계대명사 that의 선행사가 복수 The turbines이므로 복수 동사 date는 옳습니다.",
+        "tasked는 engineers를 뒤에서 꾸미는 과거분사이므로 본동사 concede와 충돌하지 않아 옳습니다.",
+        "that절 주어가 동명사구 modernizing the oldest units 덩어리이므로 단수 has는 옳습니다.",
+        "부분 표현 percent of는 of 뒤 명사를 따르는데 output이 불가산 단수이므로 단수 동사 depends로 고쳐야 합니다.",
+        "whose parts가 복수 주어이므로 복수 동사 are는 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c1-mu-011",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["intervening-participle", "intervening-clause"],
+      "hints": [
+        "that절 안과 밖에 각각 주어-동사 짝이 하나씩 있는지 나누어 확인해 보십시오.",
+        "각 절의 동사는 그 절 안의 주어 핵과 일치해야 하며, 분사 수식어는 괄호로 걷어냅니다."
+      ],
+      "explanation": "that절 안의 주어 핵은 복수 policies이고 designed to protect small farmers는 분사 수식어입니다. 절 안을 정리하면 policies ___ their gradual decline이 남으므로 복수 동사 accelerate가 필요합니다. 한편 문장 전체의 본동사 rests는 단수 주어 The argument와 일치한 옳은 형태이므로 혼동하면 안 됩니다.",
+      "text": "The argument that policies [[1:designed]] to protect small farmers actually [[2:accelerates]] their gradual decline [[3:rests]] on evidence few economists [[4:have]] examined, though the pattern it [[5:describes]] appears in several countries.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "accelerate",
+      "rationales": [
+        "designed는 policies를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "that절 안 주어 핵은 복수 policies이고 designed ... farmers는 분사 수식어이므로 복수 동사 accelerate로 고쳐야 합니다.",
+        "문장 전체의 주어 핵은 단수 The argument이므로 that절을 걷어내면 단수 동사 rests가 옳습니다.",
+        "목적격 관계대명사가 생략된 절의 주어 few economists가 복수이므로 have는 옳습니다.",
+        "it이 단수 주어이므로 단수 동사 describes는 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c4-mu-012",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["inverted-subject", "intervening-pp"],
+      "hints": [
+        "문두의 전치사구 뒤에서 주어와 동사의 순서가 어떻게 되는지 살펴보십시오.",
+        "도치된 문장의 동사는 앞에 나온 어구가 아니라 뒤에 오는 주어의 수를 따릅니다."
+      ],
+      "explanation": "Among the factors ... growth가 문두로 나온 도치문이므로 진짜 주어는 동사 뒤의 the willingness입니다. 핵이 단수 willingness이므로 is가 되어야 합니다. 문두 관계사절의 복수 동사 shape나 복수 명사 factors는 수 판단과 무관한 미끼입니다.",
+      "text": "Among the factors that [[1:shape]] a city's growth [[2:are]] the willingness of residents [[3:to accept]] change, and rarely [[4:does]] this willingness survive policies [[5:imposed]] without consultation.",
+      "underlineCount": 5,
+      "answer": 2,
+      "correction": "is",
+      "rationales": [
+        "관계대명사 that의 선행사가 복수 the factors이므로 복수 동사 shape는 옳습니다.",
+        "장소구 도치문의 진짜 주어는 동사 뒤 단수 핵 the willingness이므로 단수 동사 is로 고쳐야 합니다.",
+        "to accept는 the willingness를 꾸미는 to부정사이므로 본동사가 아니어도 옳습니다.",
+        "부정어 rarely 도치에서 조동사의 수는 뒤 주어 this willingness(단수)를 따르므로 does는 옳습니다.",
+        "imposed는 policies를 뒤에서 꾸미는 과거분사이므로 옳습니다."
+      ]
+    },
+    {
+      "id": "u02-c1-ps-001",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["intervening-pp", "gerund-subject"],
+      "hints": [
+        "밑줄 친 동사마다 주어 핵을 문장 앞에서 찾고, 사이에 낀 전치사구를 괄호로 묶어 보십시오.",
+        "동사 바로 앞 명사가 아니라 괄호 밖 주어 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "②의 주어 핵은 단수 명사 The mix이고, of species in each person's gut은 전치사구 수식어입니다. 괄호를 치면 The mix ___ from birth onward가 남으므로 단수 동사 varies가 필요합니다. 수식어 속 복수 명사 species에 끌린 vary는 틀립니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The vast community of bacteria [[1:housed]] in the human digestive tract has become one of the most active frontiers in biology. The mix of species in each person's gut [[2:vary]] from birth onward, shaped by diet, medication, and even the manner of delivery. Recent experiments suggest that signals from this hidden community [[3:reach]] the brain through the nervous system, [[4:influencing]] mood and appetite in ways researchers are only beginning to map. Understanding how such tiny organisms steer human health [[5:requires]] tools from genetics, chemistry, and computer science alike, and laboratories around the world are now racing to build them.",
+      "answer": 2,
+      "correction": "varies",
+      "rationales": [
+        "housed는 The vast community를 뒤에서 꾸미는 과거분사이므로 본동사 has become과 충돌하지 않아 옳습니다.",
+        "주어 핵은 단수 The mix이고 of species in each person's gut은 전치사구 미끼이므로 단수 동사 varies로 고쳐야 합니다.",
+        "주어 핵이 복수 signals이고 from this hidden community는 전치사구이므로 복수 동사 reach는 옳습니다.",
+        "앞에 본동사 reach가 있으므로 분사 influencing이 부가 상황을 이끄는 것은 옳습니다.",
+        "Understanding이 이끄는 동명사구 주어는 단수 덩어리이므로 단수 동사 requires는 옳습니다."
+      ],
+      "underlineUnits": ["u01", "u02", "u02", "u01", "u02"],
+      "gist": "장 속 미생물 군집이 인간의 건강과 기분에 영향을 미치는 방식을 이해하려는 연구가 활발히 진행되고 있습니다."
+    },
+    {
+      "id": "u02-c3-ps-002",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["the-number-of", "intervening-clause"],
+      "hints": [
+        "수량 표현이 이끄는 주어를 찾아 그 핵이 무엇인지 확인해 보십시오.",
+        "the number of와 a number of는 겉모습이 비슷하지만 동사의 수가 서로 다릅니다."
+      ],
+      "explanation": "④의 주어는 The number of drivers who admit to using a phone behind the wheel이고, the number of는 '~의 수'라는 단수 개념 하나를 가리킵니다. who admit ... wheel은 drivers를 꾸미는 관계사절이므로 괄호로 묶으면 The number ___ risen이 남아 단수 동사 has가 필요합니다. 복수 명사 drivers에 끌린 have는 틀립니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Psychologists have long questioned whether people can genuinely divide their attention between demanding tasks. In a series of driving-simulator studies, participants [[1:asked]] to hold a conversation while navigating heavy traffic [[2:were]] far slower to notice sudden hazards. What alarms researchers most is that confidence in one's own multitasking skill [[3:bears]] almost no relation to actual performance. The number of drivers who admit to using a phone behind the wheel [[4:have]] risen steadily, even as evidence of the risks accumulates. Reviewing dozens of such findings, several safety agencies now [[5:recommend]] treating attention as a strictly limited resource rather than a skill to be stretched.",
+      "answer": 4,
+      "correction": "has",
+      "rationales": [
+        "asked는 participants를 뒤에서 꾸미는 과거분사이므로 본동사로 착각하면 안 되며 어법상 옳습니다.",
+        "were의 주어 핵은 복수 participants이고 asked ... traffic은 분사 수식어이므로 복수 동사가 옳습니다.",
+        "주어 핵이 단수 confidence이고 in one's own multitasking skill은 전치사구이므로 단수 동사 bears는 옳습니다.",
+        "the number of는 단수 취급이므로 관계사절을 걷어내고 단수 동사 has로 고쳐야 합니다.",
+        "주어 several safety agencies가 복수이므로 복수 동사 recommend는 옳습니다."
+      ],
+      "underlineUnits": ["u01", "u02", "u02", "u02", "u02"],
+      "gist": "멀티태스킹 능력에 대한 자신감은 실제 수행과 거의 무관하며, 주의력은 엄격히 제한된 자원으로 다루어야 합니다."
+    },
+    {
+      "id": "u02-c2-ps-003",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["each-every", "intervening-clause", "partitive"],
+      "hints": [
+        "each가 이끄는 주어가 있는지 찾아보고, 뒤에 붙은 수식어를 괄호로 묶어 보십시오.",
+        "each of 뒤에는 언제나 복수 명사가 오지만 동사의 수를 정하는 것은 of 앞의 핵입니다."
+      ],
+      "explanation": "③의 주어 핵은 Each이고, of the groups they studied는 뒤에 붙은 수식어입니다. each는 언제나 단수 취급이므로 was struggling이 되어야 합니다. 눈앞의 복수 명사 groups에 끌린 were는 틀립니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Community life in modern cities depends on institutions that few residents ever notice. Public libraries, neighborhood councils, and volunteer fire brigades [[1:operate]] largely out of sight, yet they quietly hold local networks together. Sociologists [[2:observing]] these organizations report a worrying pattern. Each of the groups they studied [[3:were]] struggling to replace aging members, and the burden of unpaid work [[4:falls]] on an ever smaller circle of committed citizens. Because so much of a city's resilience [[5:rests]] on this invisible labor, researchers argue that supporting such groups deserves the same priority as repairing roads or bridges.",
+      "answer": 3,
+      "correction": "was",
+      "rationales": [
+        "and로 묶인 복수 명사들이 주어이므로 복수 동사 operate는 옳습니다.",
+        "observing은 Sociologists를 뒤에서 꾸미는 현재분사이고 본동사 report가 따로 있으므로 옳습니다.",
+        "주어 핵은 Each이고 of the groups they studied는 수식어이므로 단수 동사 was로 고쳐야 합니다.",
+        "주어 핵이 단수 the burden이고 of unpaid work는 전치사구이므로 단수 동사 falls는 옳습니다.",
+        "부분 표현 much of는 of 뒤 명사를 따르는데 resilience가 불가산 단수이므로 단수 동사 rests는 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u01", "u02", "u02", "u02"],
+      "gist": "도시 공동체의 회복력은 눈에 띄지 않는 자발적 단체들의 무급 노동에 기대고 있으며 이들에 대한 지원이 필요합니다."
+    },
+    {
+      "id": "u02-c4-ps-004",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["inverted-subject"],
+      "hints": [
+        "문장이 장소나 위치를 나타내는 어구로 시작하는 곳을 찾아 보십시오.",
+        "도치문에서는 동사 앞이 아니라 동사 뒤에서 진짜 주어를 찾아 그 수에 일치시킵니다."
+      ],
+      "explanation": "⑤는 Among the most valuable sources가 문두로 나온 장소구 도치문이며, 진짜 주어는 동사 뒤의 the letters입니다. letters가 복수이므로 동사는 are가 되어야 합니다. 도치문에서 주어를 동사 앞에서 찾으려 하면 이 자리를 놓치게 됩니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Historians reconstructing the medieval spice trade rely on records that merchants never intended as history. Port taxes, insurance contracts, and the diaries of ship captains [[1:reveal]] routes that official chronicles ignore. A single cargo list [[2:recovered]] from a sunken vessel can overturn assumptions [[3:held]] for generations. The prices recorded in this scattered paperwork [[4:show]] that pepper moved across continents faster than most scholars once believed. Among the most valuable sources [[5:is]] the letters exchanged between trading families, whose casual remarks about storms and pirates preserve details that no official ledger could.",
+      "answer": 5,
+      "correction": "are",
+      "rationales": [
+        "and로 묶인 복수 주어(Port taxes, insurance contracts, the diaries)이므로 복수 동사 reveal은 옳습니다.",
+        "recovered는 A single cargo list를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "held는 assumptions를 뒤에서 꾸미는 과거분사이므로 본동사가 아니어도 옳습니다.",
+        "주어 핵이 복수 The prices이고 recorded in this scattered paperwork는 분사 수식어이므로 복수 동사 show는 옳습니다.",
+        "장소구 도치문의 진짜 주어는 동사 뒤 복수 명사 the letters이므로 복수 동사 are로 고쳐야 합니다."
+      ],
+      "underlineUnits": ["u02", "u01", "u01", "u02", "u02"],
+      "gist": "중세 향신료 무역의 실상은 공식 연대기가 아니라 상인들이 남긴 일상 기록들에서 복원됩니다."
+    },
+    {
+      "id": "u02-c1-ps-005",
+      "unitId": "u02",
+      "conceptId": "u02-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["intervening-pp", "intervening-clause", "each-every"],
+      "hints": [
+        "첫 문장에서 주어 핵과 동사 사이에 낀 수식어가 몇 겹인지 세어 보십시오.",
+        "전치사구와 그 안에 겹친 절까지 전부 괄호로 묶으면 남는 주어 핵의 수가 동사를 결정합니다."
+      ],
+      "explanation": "①의 주어 핵은 단수 명사 The debate입니다. over how far restorers should go in repairing damaged paintings는 전치사구 안에 의문사절이 겹친 두 겹 수식어이므로 통째로 괄호에 넣습니다. 남는 구조는 The debate ___ divided이므로 단수 동사 has가 필요하고, 수식어 속 복수 명사들에 끌린 have는 틀립니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The debate over how far restorers should go in repairing damaged paintings [[1:have]] divided the art world for more than a century. Some conservators argue that every crack and faded patch [[2:carries]] historical information, and that removing later additions [[3:erases]] part of an object's biography. Others reply that a painting [[4:left]] beneath layers of grime cannot speak to viewers at all. Between these camps, museums have crafted uneasy compromises that [[5:vary]] from gallery to gallery, which is why two canvases by the same master can emerge from restoration looking strikingly different. Advances in imaging technology now allow restorers to preview their choices, yet the deeper question of how much intervention history can bear remains open.",
+      "answer": 1,
+      "correction": "has",
+      "rationales": [
+        "주어 핵은 단수 The debate이고 over how far ... paintings는 두 겹 수식어이므로 단수 동사 has로 고쳐야 합니다.",
+        "every가 and로 두 명사를 묶어도 주어는 단수 취급이므로 단수 동사 carries는 옳습니다.",
+        "동명사구 removing later additions가 단수 주어 덩어리이므로 단수 동사 erases는 옳습니다.",
+        "left는 a painting을 뒤에서 꾸미는 과거분사이므로 본동사로 착각하면 안 되며 옳습니다.",
+        "관계대명사 that의 선행사가 복수 compromises이므로 복수 동사 vary는 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u02", "u02", "u01", "u02"],
+      "gist": "손상된 회화를 어디까지 복원할 것인가를 둘러싼 논쟁이 한 세기 넘게 미술계를 갈라놓고 있습니다."
+    },
+    {
+      "id": "u02-c3-ps-006",
+      "unitId": "u02",
+      "conceptId": "u02-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["partitive", "intervening-clause", "clause-subject"],
+      "hints": [
+        "부분을 나타내는 수량 표현이 이끄는 주어에서 of 뒤 명사를 확인해 보십시오.",
+        "half of·percent of 같은 부분 표현은 그 자체에 수가 없고 of 뒤 명사의 수를 그대로 따릅니다."
+      ],
+      "explanation": "③의 주어는 Nearly half of the wetlands that existed a century ago이고, 부분 표현 half of는 of 뒤 명사의 수를 따릅니다. wetlands가 복수이므로 have already vanished가 되어야 합니다. that existed a century ago는 wetlands를 꾸미는 관계사절 미끼일 뿐 수 판단을 바꾸지 못합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coastal wetlands rank among the most productive ecosystems on the planet, yet they continue to disappear at an alarming rate. The grasses [[1:anchoring]] the mud absorb the force of incoming storms, and a single acre of marsh [[2:stores]] more carbon than most forests of comparable size. Nearly half of the wetlands that existed a century ago [[3:has]] already vanished, drained for farmland or buried under expanding ports. What makes the loss so difficult to reverse [[4:is]] the slow pace of natural recovery: once salt water intrudes, replanting programs [[5:take]] decades to restore even a fraction of the original habitat.",
+      "answer": 3,
+      "correction": "have",
+      "rationales": [
+        "anchoring은 The grasses를 뒤에서 꾸미는 현재분사이고 본동사 absorb가 따로 있으므로 옳습니다.",
+        "주어 핵이 단수 a single acre이고 of marsh는 전치사구이므로 단수 동사 stores는 옳습니다.",
+        "부분 표현 half of는 of 뒤 명사를 따르는데 wetlands가 복수이므로 복수 동사 have로 고쳐야 합니다.",
+        "What이 이끄는 명사절 주어는 단수 취급이므로 단수 동사 is는 옳습니다.",
+        "주어 replanting programs가 복수이므로 복수 동사 take는 옳습니다."
+      ],
+      "underlineUnits": ["u01", "u02", "u02", "u02", "u02"],
+      "gist": "연안 습지는 매우 생산적인 생태계이지만 빠르게 사라지고 있으며 한번 훼손되면 회복이 극히 더딥니다."
+    },
+    {
+      "id": "u02-c4-ps-007",
+      "unitId": "u02",
+      "conceptId": "u02-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["inverted-subject", "gerund-subject", "intervening-pp"],
+      "hints": [
+        "There나 장소 어구로 시작하는 문장들에서 진짜 주어의 위치를 확인해 보십시오.",
+        "도치문의 동사는 문두 어구가 아니라 동사 뒤 주어의 수를 따릅니다."
+      ],
+      "explanation": "④는 Behind the seemingly precise figures of national accounts가 문두로 나온 장소구 도치문입니다. 진짜 주어는 동사 뒤의 복수 명사구 countless judgment calls이므로 복수 동사 lie가 필요합니다. 도치된 문두 어구에 이끌려 단수 동사를 그대로 두면 안 됩니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Economists who measure national wealth have long struggled with activity that never appears in official statistics. Street vendors, family workshops, and unregistered repair shops [[1:generate]] a substantial share of income in many developing economies. The value created in these informal sectors [[2:escapes]] taxation, which weakens public budgets even as millions of households depend on it. There [[3:remains]] considerable disagreement about how such work should be counted, since surveys capture only what respondents choose to reveal. Behind the seemingly precise figures of national accounts [[4:lies]] countless judgment calls about what deserves to be included. Reforming the way output is measured [[5:has]] therefore become a quiet priority for international statistical agencies.",
+      "answer": 4,
+      "correction": "lie",
+      "rationales": [
+        "and로 묶인 세 복수 명사가 주어이므로 복수 동사 generate는 옳습니다.",
+        "주어 핵이 단수 The value이고 created in these informal sectors는 분사 수식어이므로 단수 동사 escapes는 옳습니다.",
+        "There 구문의 진짜 주어는 동사 뒤 불가산 명사 disagreement이므로 단수 동사 remains는 옳습니다.",
+        "장소구 도치문의 진짜 주어는 동사 뒤 복수 명사구 countless judgment calls이므로 복수 동사 lie로 고쳐야 합니다.",
+        "동명사구 Reforming the way output is measured가 단수 주어 덩어리이므로 단수 has는 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u02", "u02", "u02", "u02"],
+      "gist": "공식 통계에 잡히지 않는 비공식 경제가 국부 측정을 왜곡하며 산출 집계 방식의 개혁이 과제로 떠오르고 있습니다."
+    },
+    {
+      "id": "u02-c2-ps-008",
+      "unitId": "u02",
+      "conceptId": "u02-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["gerund-subject", "inverted-subject", "each-every"],
+      "hints": [
+        "동사 앞에 놓인 -ing 덩어리가 주어 노릇을 하는 문장을 찾아 보십시오.",
+        "동명사구 주어는 안에 복수 명사가 아무리 많아도 덩어리 전체를 하나로 세어 수를 정합니다."
+      ],
+      "explanation": "②의 주어는 Predicting what millions of users will click next라는 동명사구입니다. 동명사구 주어는 한 덩어리로 보아 단수 취급하므로 requires가 되어야 합니다. 덩어리 안의 복수 명사 millions·users에 끌린 require는 틀립니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Recommendation systems now shape what billions of people read, watch, and buy. Behind these effortless suggestions [[1:stands]] an elaborate model trained on billions of recorded clicks. Predicting what millions of users will click next [[2:require]] enormous computing power, and the systems [[3:designed]] to gather the necessary data record nearly every action we take online. Critics note that each of these engineering choices [[4:reflects]] commercial priorities rather than the wellbeing of users, and that the habits formed under constant algorithmic guidance [[5:are]] proving difficult to unlearn. As the technology spreads into education and healthcare, questions about who controls it grow harder to ignore.",
+      "answer": 2,
+      "correction": "requires",
+      "rationales": [
+        "도치문의 진짜 주어는 동사 뒤 단수 명사구 an elaborate model이므로 단수 동사 stands는 옳습니다.",
+        "Predicting이 이끄는 동명사구가 단수 주어 덩어리이므로 단수 동사 requires로 고쳐야 합니다.",
+        "designed는 the systems를 뒤에서 꾸미는 과거분사이고 본동사 record가 따로 있으므로 옳습니다.",
+        "each of 뒤 복수 명사와 상관없이 핵은 each이므로 단수 동사 reflects는 옳습니다.",
+        "주어 핵이 복수 the habits이고 formed ... guidance는 분사 수식어이므로 복수 동사 are는 옳습니다."
+      ],
+      "underlineUnits": ["u02", "u02", "u01", "u02", "u02"],
+      "gist": "추천 알고리즘은 방대한 행동 데이터로 사용자의 선택을 좌우하며 그 설계에는 상업적 우선순위가 반영되어 있습니다."
+    }
+  ]
+}

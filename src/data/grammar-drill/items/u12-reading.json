@@ -1,0 +1,485 @@
+{
+  "unitId": "u12",
+  "bank": "reading",
+  "items": [
+    {
+      "id": "u12-c1-mu-001",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["negative-inversion"],
+      "hints": [
+        "문장이 부정이나 제한을 뜻하는 부사로 시작하는지, 그렇다면 그 뒤의 어순이 어떤지 살펴보십시오.",
+        "부정이나 제한의 부사(구)가 문두에 오면 주어와 조동사가 자리를 바꿉니다."
+      ],
+      "explanation": "부정의 부사 Rarely가 문두에 왔으므로 주어와 조동사가 자리를 바꾸는 도치가 일어나야 합니다. 현재시제 일반동사 문장이므로 조동사 do를 세워 do coral reefs recover로 고쳐야 하며, coral reefs recover라는 정상 어순은 틀립니다. ②의 remain과 ③의 that은 각각 본동사와 주격 관계대명사로 옳습니다.",
+      "text": "Rarely [[1:coral reefs recover]] fully once bleaching has occurred, and marine biologists [[2:remain]] deeply concerned about the warming seas [[3:that]] surround the tropics.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "do coral reefs recover",
+      "rationales": [
+        "부정의 부사 Rarely가 문두에 왔으므로 조동사 do를 세워 do coral reefs recover로 도치해야 하며, 도치되지 않은 어순은 틀립니다.",
+        "복수 주어 marine biologists에 수일치한 이 절의 본동사이므로 remain이 옳습니다.",
+        "선행사 the warming seas를 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c2-mu-002",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["subjunctive"],
+      "hints": [
+        "if절의 동사 형태를 먼저 확인한 뒤 주절 동사의 형태와 짝이 맞는지 살펴보십시오.",
+        "if절이 과거형이면 주절은 조동사의 과거형에 원형이 이어져야 합니다."
+      ],
+      "explanation": "if절의 동사가 과거형(were)이므로 이 문장은 현재 사실의 반대를 가정하는 가정법 과거입니다. 그러므로 주절 동사는 would+원형이어야 하며, ②의 will pass는 틀렸고 would pass로 고쳐야 합니다. ①의 were와 ③의 would shrink는 가정법 과거의 짝을 지킨 옳은 형태입니다.",
+      "text": "If the tunnel [[1:were]] wider, freight trains [[2:will pass]] through it more easily, and delays at the border [[3:would shrink]] considerably.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "would pass",
+      "rationales": [
+        "현재 사실의 반대를 가정하는 가정법 과거이므로 if절의 be동사는 인칭과 무관하게 were가 옳습니다.",
+        "가정법 과거의 주절 동사는 would+원형이어야 하므로 will pass는 틀렸고 would pass로 고쳐야 합니다.",
+        "and로 연결된 또 하나의 주절 동사로 가정법 과거의 would+원형 형태를 지켰으므로 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c3-mu-003",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["as-as"],
+      "hints": [
+        "두 as 사이에 들어간 형용사나 부사의 형태를 확인해 보십시오.",
+        "동등 비교의 두 as 사이에는 비교급이 아니라 기본형이 들어갑니다."
+      ],
+      "explanation": "as ~ as 동등 비교의 두 as 사이에는 원급이 들어가야 합니다. ②의 as faster as는 비교급 faster를 넣어 틀렸으므로 원급을 써서 as fast as로 고쳐야 합니다. ①의 as small as는 원급을 지켰고, ③의 shaped는 명사 a trait를 수식하는 과거분사로 옳습니다.",
+      "text": "The desert fox is [[1:as small as]] a house cat but [[2:as faster as]] almost any predator on the dunes, a trait [[3:shaped]] by generations of hunting.",
+      "underlineCount": 3,
+      "answer": 2,
+      "correction": "as fast as",
+      "rationales": [
+        "as ~ as 동등 비교의 두 as 사이에는 원급이 들어가야 하며 small은 원급이므로 옳습니다.",
+        "as ~ as 사이에는 비교급이 아니라 원급이 와야 하므로 as faster as는 틀렸고 as fast as로 고쳐야 합니다.",
+        "특성은 형성되는 대상이므로 명사 a trait를 수식하는 과거분사 shaped가 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c4-mu-004",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 2,
+      "trapTags": ["indirect-question"],
+      "hints": [
+        "동사의 목적어로 쓰인 의문사절의 어순을 확인해 보십시오.",
+        "의문사절이 명사절로 쓰이면 의문사 뒤는 주어와 동사 순서를 지킵니다."
+      ],
+      "explanation": "동사 debate의 목적어로 쓰인 의문사절은 간접의문문이므로 의문사+주어+동사의 평서문 어순을 지켜야 합니다. ①의 how did the builders raise는 직접의문문의 도치를 그대로 두어 틀렸으므로 how the builders raised로 고쳐야 합니다. ②의 that은 완전한 절을 이끄는 접속사, ③의 were needed는 수동태로 옳습니다.",
+      "text": "Historians still debate [[1:how did the builders raise]] the giant stones, though most agree [[2:that]] thousands of workers [[3:were needed]].",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "how the builders raised",
+      "rationales": [
+        "동사 debate의 목적어인 간접의문문이므로 how+주어+동사 어순이어야 하며, how did the builders raise는 틀렸고 how the builders raised로 고쳐야 합니다.",
+        "뒤에 완전한 절이 이어지고 agree의 목적어절을 이끄는 접속사 that이므로 옳습니다.",
+        "수천 명의 인부는 필요해지는 대상이므로 수동태 were needed가 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c1-mu-005",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "hints": [
+        "제한을 뜻하는 부사구가 문두에 왔을 때 주절의 어순을 살펴보십시오.",
+        "제한의 부사구가 문두에 오면 주절에서 조동사와 주어가 자리를 바꿉니다."
+      ],
+      "explanation": "제한의 부사구 Only after ~가 문두에 왔으므로 주절에서 조동사와 주어가 자리를 바꾸는 도치가 일어나야 합니다. ①의 the rescue teams could reach는 정상 어순이라 틀렸으므로 could the rescue teams reach로 고쳐야 합니다. ②의 where, ③의 had waited, ④의 hoping은 각각 관계부사, 과거완료, 능동 분사구문으로 옳습니다.",
+      "text": "Only after the storm had finally passed [[1:the rescue teams could reach]] the flooded village, [[2:where]] dozens of families [[3:had waited]] on their rooftops, [[4:hoping]] for any sign of help.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "could the rescue teams reach",
+      "rationales": [
+        "제한의 부사구 Only after ~가 문두에 왔으므로 주절에서 조동사+주어 도치가 일어나야 하며, the rescue teams could reach는 틀렸고 could the rescue teams reach로 고쳐야 합니다.",
+        "선행사 the flooded village를 받아 뒤에 완전한 절이 이어지므로 관계부사 where가 옳습니다.",
+        "폭풍 이전부터 지붕에서 기다려 온 상황을 나타내는 과거완료이므로 옳습니다.",
+        "주절 주어 families가 도움을 바라는 주체이므로 능동의 분사구문 hoping이 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c2-mu-006",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["without-butfor", "subjunctive"],
+      "hints": [
+        "Without이 이끄는 조건과 주절 동사의 형태가 호응하는지 살펴보십시오.",
+        "Without은 '~이 없다면'의 가정 조건과 같아서 주절은 가정법 동사가 됩니다."
+      ],
+      "explanation": "Without antibiotics는 if it were not for antibiotics와 같은 현재 가정의 조건이므로 주절은 would+원형이어야 합니다. ①의 will threaten은 미래시제라 틀렸으므로 would threaten으로 고쳐야 합니다. ②의 that은 목적격 관계대명사, ③의 would remain은 같은 가정에 호응하는 주절 동사로 옳습니다.",
+      "text": "Without antibiotics, a simple infection [[1:will threaten]] a patient's life, and surgeries [[2:that]] we now consider routine [[3:would remain]] far too dangerous to attempt.",
+      "underlineCount": 3,
+      "answer": 1,
+      "correction": "would threaten",
+      "rationales": [
+        "Without antibiotics는 if it were not for antibiotics와 같은 가정의 조건이므로 주절은 would+원형이어야 하며, will threaten은 틀렸고 would threaten으로 고쳐야 합니다.",
+        "선행사 surgeries를 받아 consider의 목적어가 빠진 불완전한 절을 이끄는 목적격 관계대명사 that이므로 옳습니다.",
+        "Without 조건에 호응하는 또 하나의 주절 동사로 would+원형 형태를 지켰으므로 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c3-mu-007",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["the-comparative"],
+      "hints": [
+        "콤마 앞뒤 두 절이 같은 짜임으로 시작하는지 확인해 보십시오.",
+        "'~할수록 더 …하다'는 두 절이 모두 the와 비교급으로 시작해야 합니다."
+      ],
+      "explanation": "'~할수록 더 …하다'는 The 비교급 ~, the 비교급 ~ 구문으로 콤마 앞뒤 두 절이 모두 the+비교급으로 시작해야 합니다. ②의 the easy는 원급이라 틀렸으므로 the easier로 고쳐야 합니다. ①의 is documented, ③의 that, ④의 describe는 각각 수동태, 목적격 관계대명사, 복수 주어에 수일치한 동사로 옳습니다.",
+      "text": "The more carefully a rare language [[1:is documented]], [[2:the easy]] it becomes for scholars to revive it, a challenge [[3:that]] field linguists [[4:describe]] as a race against time.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "the easier",
+      "rationales": [
+        "언어는 기록되는 대상이므로 수동태 is documented가 옳습니다.",
+        "'~할수록 더 …하다'는 The 비교급 ~, the 비교급 ~ 구문이므로 뒤 절도 the+비교급이어야 하며, the easy는 틀렸고 the easier로 고쳐야 합니다.",
+        "선행사 a challenge를 받아 describe의 목적어가 빠진 불완전한 절을 이끄는 목적격 관계대명사 that이므로 옳습니다.",
+        "복수 주어 field linguists에 수일치한 관계절의 동사이므로 describe가 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c4-mu-008",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["enough-order", "indirect-question"],
+      "hints": [
+        "enough가 어떤 품사와 짝을 이루는지, 그 위치가 맞는지 확인해 보십시오.",
+        "enough는 형용사나 부사와 어울릴 때 그 뒤에, 명사와 어울릴 때 그 앞에 섭니다."
+      ],
+      "explanation": "enough는 형용사나 부사와 어울릴 때 그 뒤에 서야 합니다. ③의 enough durable은 형용사 앞에 enough를 두어 틀렸으므로 durable enough로 고쳐야 합니다. ①의 compact enough는 어순이 옳고, ②의 why the lens produced는 도치 없는 간접의문문으로 옳습니다.",
+      "text": "The new microscope was [[1:compact enough]] to sit on any desk, yet its inventor could not explain clearly [[2:why the lens produced]] such sharp images, or whether it was [[3:enough durable]] for classroom use.",
+      "underlineCount": 3,
+      "answer": 3,
+      "correction": "durable enough",
+      "rationales": [
+        "형용사 compact 뒤에 enough가 왔으므로 형용사+enough 어순을 지킨 옳은 표현입니다.",
+        "explain의 목적어로 쓰인 간접의문문이므로 why+주어+동사 어순이 옳으며 도치가 없어야 맞습니다.",
+        "enough는 형용사의 뒤에 서야 하므로 enough durable은 틀렸고 durable enough로 고쳐야 합니다."
+      ]
+    },
+    {
+      "id": "u12-c1-mu-009",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "hints": [
+        "Not until로 시작하는 문장에서 주절의 어순을 살펴보십시오.",
+        "Not until이 문두에 오면 도치는 종속절이 아니라 주절에서 일어납니다."
+      ],
+      "explanation": "Not until ~가 문두에 오면 도치는 종속절이 아니라 주절에서 일어납니다. ①의 the exhausted doctors allowed는 도치되지 않아 틀렸으므로 did the exhausted doctors allow로 고쳐야 합니다. ②의 did they realize는 only then 뒤의 옳은 도치, ③의 had recovered는 과거완료, ④의 that은 주격 관계대명사로 옳습니다.",
+      "text": "Not until the fever finally broke [[1:the exhausted doctors allowed]] themselves a moment of rest, and only then [[2:did they realize]] how many patients [[3:had recovered]] during the night [[4:that]] had seemed hopeless.",
+      "underlineCount": 4,
+      "answer": 1,
+      "correction": "did the exhausted doctors allow",
+      "rationales": [
+        "Not until ~가 문두에 오면 주절에서 조동사+주어 도치가 일어나야 하므로, the exhausted doctors allowed는 틀렸고 did the exhausted doctors allow로 고쳐야 합니다.",
+        "제한의 부사 only then이 문두에 왔으므로 did+주어의 도치가 일어난 옳은 어순입니다.",
+        "밤사이 이미 회복을 마친 상태를 나타내는 과거완료이므로 옳습니다.",
+        "선행사 the night를 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c2-mu-010",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["subjunctive"],
+      "hints": [
+        "문두의 Had가 이끄는 가정과 각 주절 동사의 형태가 맞는지 확인해 보십시오.",
+        "Had로 시작하는 도치 가정은 과거 사실의 반대이므로 주절은 조동사와 have와 과거분사가 이어집니다."
+      ],
+      "explanation": "문두의 Had가 이끄는 if 생략 도치는 과거 사실의 반대를 가정하고, 집을 잃은 것도 하룻밤 사이에 끝난 과거의 일이므로 주절 동사는 모두 would have p.p.여야 합니다. ③의 would not lose는 이 짝을 어겨 틀렸으므로 would not have lost로 고쳐야 합니다. ①의 lying은 자동사의 현재분사, ②의 would not have flooded는 옳은 주절, ④의 that은 목적격 관계대명사, ⑤의 reduced는 과거분사로 모두 옳습니다.",
+      "text": "Had the levees been reinforced before the hurricane season, the neighborhoods [[1:lying]] below sea level [[2:would not have flooded]], and thousands of residents [[3:would not lose]] the homes [[4:that]] they had struggled for years to buy, homes [[5:reduced]] to rubble in a single night.",
+      "underlineCount": 5,
+      "answer": 3,
+      "correction": "would not have lost",
+      "rationales": [
+        "저지대에 위치해 있는 상태를 나타내는 자동사 lie의 현재분사이므로, 명사 the neighborhoods를 수식하는 lying이 옳습니다.",
+        "Had가 이끄는 if 생략 도치는 과거 사실의 반대이므로 주절은 would have p.p.여야 하며, would not have flooded는 옳습니다.",
+        "같은 과거 가정에 호응하는 주절 동사이고 집을 잃은 것은 하룻밤 사이에 끝난 과거의 일이므로, would not lose는 틀렸고 would not have lost로 고쳐야 합니다.",
+        "선행사 the homes를 받아 buy의 목적어가 빠진 불완전한 절을 이끄는 목적격 관계대명사 that이므로 옳습니다.",
+        "집은 잔해로 변한 대상이므로 명사 homes를 수식하는 과거분사 reduced가 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c3-mu-011",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["comparative-intensifier", "as-as"],
+      "hints": [
+        "비교급 앞에 놓인 강조어가 비교급과 어울리는지 확인해 보십시오.",
+        "비교급을 강조하는 말은 정해져 있고, 원급 전용 강조어는 비교급 앞에 설 수 없습니다."
+      ],
+      "explanation": "very는 원급 전용 강조어라서 비교급 앞에 설 수 없습니다. ③의 very longer는 비교급 longer를 very로 강조해 틀렸으므로 much longer로 고쳐야 합니다. ①의 far more expensive와 ②의 three times as deep as는 옳은 비교 표현이고, ④의 those는 앞의 복수 명사 the sensors를 받는 대명사로 옳습니다.",
+      "text": "Although the deep-sea probe is [[1:far more expensive]] than earlier designs, it can dive [[2:three times as deep as]] any submarine now in service, and its sensors last [[3:very longer]] on a single charge than [[4:those]] of rival machines.",
+      "underlineCount": 4,
+      "answer": 3,
+      "correction": "much longer",
+      "rationales": [
+        "than이 뒤따르는 비교급 more expensive를 강조하는 far가 쓰였으므로 옳습니다.",
+        "'배수사+as+원급+as'의 어순을 지킨 three times as deep as는 옳은 배수 비교 표현입니다.",
+        "very는 원급 전용 강조어여서 비교급 longer 앞에 설 수 없으므로, very longer는 틀렸고 much longer로 고쳐야 합니다.",
+        "앞에 나온 복수 명사 the sensors를 대신하므로 복수형 대명사 those가 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c4-mu-012",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "MULTI_UNDERLINE",
+      "difficulty": 4,
+      "trapTags": ["indirect-question"],
+      "hints": [
+        "동사의 목적어로 쓰인 의문사절 안에 도치나 do가 남아 있는지 확인해 보십시오.",
+        "의문사절이 명사절로 쓰이면 do나 does나 did 없이 주어와 동사 순서를 지킵니다."
+      ],
+      "explanation": "동사 explains의 목적어로 쓰인 의문사절은 간접의문문이므로 do 없이 의문사+주어+동사 어순을 지켜야 합니다. ②의 why do investors abandon은 do-support로 도치되어 틀렸으므로 why investors abandon으로 고쳐야 합니다. ①의 what drives는 what이 주어인 옳은 간접의문문, ③의 that은 목적격 관계대명사, ④의 selling은 능동 분사구문으로 옳습니다.",
+      "text": "Economists have long debated [[1:what drives]] sudden market panics, but no theory fully explains [[2:why do investors abandon]] assets [[3:that]] they know to be sound, [[4:selling]] in hours what took years to build.",
+      "underlineCount": 4,
+      "answer": 2,
+      "correction": "why investors abandon",
+      "rationales": [
+        "debated의 목적어인 간접의문문에서 what이 주어 역할을 하므로 뒤에 바로 동사가 오는 what drives는 옳습니다.",
+        "간접의문문은 의문사+주어+동사 어순이어야 하므로 do-support로 도치된 why do investors abandon은 틀렸고 why investors abandon으로 고쳐야 합니다.",
+        "선행사 assets를 받아 know의 목적어가 빠진 불완전한 절을 이끄는 목적격 관계대명사 that이므로 옳습니다.",
+        "주절 주어 investors가 파는 주체이므로 능동의 분사구문 selling이 옳습니다."
+      ]
+    },
+    {
+      "id": "u12-c1-ps-001",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["negative-inversion"],
+      "hints": [
+        "부정이나 제한의 표현으로 시작하는 밑줄이 있으면 그 뒤의 주어와 동사 순서를 살펴보십시오.",
+        "부정의 부사(구)가 문두에 오면 조동사와 주어가 자리를 바꿉니다."
+      ],
+      "explanation": "부정의 부사구 Never before가 문두에 왔으므로 조동사와 주어가 자리를 바꾸는 도치가 일어나야 합니다. 따라서 ③의 humanity had measured는 틀렸고 had humanity measured로 고쳐야 합니다. ②의 did scholars begin은 Only in the seventeenth century 뒤의 옳은 도치라는 점에서, 도치 자체가 틀린 것이 아님에 주의합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Comets have fascinated sky watchers for thousands of years. Ancient astronomers, [[1:lacking]] telescopes, recorded their sudden appearances as omens of disaster. Only in the seventeenth century, after Newton had described the force of gravity, [[2:did scholars begin]] to treat comets as ordinary members of the solar system. Never before [[3:humanity had measured]] the path of so distant an object with real precision. Today, spacecraft can rendezvous with comets [[4:that]] loop far beyond the orbit of Neptune, collecting dust [[5:frozen]] since the birth of the planets. Each sample offers a rare glimpse of the material from which our own world was first assembled.",
+      "answer": 3,
+      "correction": "had humanity measured",
+      "rationales": [
+        "망원경이 없던 상황을 나타내는 분사구문으로, 주절 주어 astronomers가 lack의 주체이므로 능동의 현재분사 lacking이 옳습니다.",
+        "제한의 부사구 Only in the seventeenth century가 문두에 왔으므로 주절에서 did+주어의 도치가 일어난 옳은 어순입니다.",
+        "부정의 부사구 Never before가 문두에 왔으므로 조동사+주어 도치가 일어나야 하며, humanity had measured는 틀렸고 had humanity measured로 고쳐야 합니다.",
+        "선행사 comets를 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다.",
+        "먼지는 얼려진 대상이므로 명사 dust를 수식하는 과거분사 frozen이 옳습니다."
+      ],
+      "underlineUnits": ["u09", "u12", "u12", "u06", "u04"],
+      "gist": "혜성 관측의 오랜 역사와 오늘날 우주선을 통한 탐사를 소개합니다."
+    },
+    {
+      "id": "u12-c2-ps-002",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["subjunctive"],
+      "hints": [
+        "가정을 나타내는 절과 밑줄 친 주절 동사의 시제가 짝을 이루는지 확인해 보십시오.",
+        "과거 사실의 반대를 가정하면 주절은 조동사와 have와 과거분사가 이어집니다."
+      ],
+      "explanation": "④ 앞의 Had researchers not documented this effect는 if가 생략된 도치 가정법으로 과거 사실의 반대를 나타냅니다. 주절이 가정하는 대상도 1990년대 개혁이라는 과거 사건이므로 would have p.p.여야 하며, would come은 틀렸고 would have come으로 고쳐야 합니다. ①의 were는 가정법 과거의 be동사로 쓰인 옳은 미끼 밑줄입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Human memory is far less reliable than most people assume. When we recall an event, the brain does not replay a fixed recording; instead, it rebuilds the scene each time, filling gaps with expectation and belief. If this reconstruction [[1:were]] perfectly accurate, eyewitness testimony would be the strongest evidence in any courtroom. In reality, confident witnesses often describe details [[2:that]] never occurred. Psychologists have shown that a single misleading question can reshape a memory [[3:formed]] only minutes earlier. Had researchers not documented this effect so carefully, the reforms that reshaped police interviews in the 1990s [[4:would come]] far later, if at all. Today many legal systems train interviewers to ask neutral questions, precisely because a witness's certainty reveals surprisingly little about [[5:what]] truly happened.",
+      "answer": 4,
+      "correction": "would have come",
+      "rationales": [
+        "현재 사실의 반대를 가정하는 가정법 과거이므로 if절의 be동사는 인칭과 무관하게 were가 옳습니다.",
+        "선행사 details를 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다.",
+        "기억은 형성되는 대상이므로 명사 a memory를 수식하는 과거분사 formed가 옳습니다.",
+        "Had가 이끄는 if 생략 도치는 과거 사실의 반대이고 1990년대 개혁이라는 과거 사건을 가정하므로 주절은 would have p.p.여야 하며, would come은 틀렸고 would have come으로 고쳐야 합니다.",
+        "앞에 선행사가 없고 happen의 주어가 빠진 불완전한 절을 이끄는 관계대명사 what이므로 옳습니다."
+      ],
+      "underlineUnits": ["u12", "u06", "u04", "u12", "u06"],
+      "gist": "기억이 매번 재구성되며 왜곡될 수 있음을 보여 주는 심리학 연구를 다룹니다."
+    },
+    {
+      "id": "u12-c3-ps-003",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["as-as", "the-comparative"],
+      "hints": [
+        "비교를 나타내는 밑줄에서 as와 than이 뒤섞이지 않았는지 확인해 보십시오.",
+        "동등 비교는 앞뒤를 모두 as로 감싸야 하며 than과 섞을 수 없습니다."
+      ],
+      "explanation": "동등 비교는 as ~ as 구문으로 앞뒤를 모두 as로 감싸야 합니다. ②의 as efficient than은 as와 than을 뒤섞어 틀렸으므로 as efficient as로 고쳐야 합니다. ③의 the safer는 The 비교급 구문의 뒤 절을 이끄는 옳은 형태로, 비교 표현이라고 무조건 틀린 것은 아님에 주의합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "As cities grow, the way people move through them changes in surprising ways. A hundred years ago, streets were shared almost equally by pedestrians, carts, and the occasional automobile. Today the private car demands [[1:far more]] space than any other mode of transport, yet it often carries fewer passengers per trip. Planners have discovered that a wide road is not [[2:as efficient than]] a narrow one lined with shops and crossings. The busier a street becomes with walkers and cyclists, [[3:the safer]] it tends to be, since drivers slow down where life is visible. Cities [[4:that]] once widened every avenue are now reversing course, [[5:narrowing]] lanes and planting trees to invite people back onto the street.",
+      "answer": 2,
+      "correction": "as efficient as",
+      "rationales": [
+        "비교급 more를 강조하는 far가 쓰였고 뒤에 than이 이어지므로 far more는 옳습니다.",
+        "동등 비교는 as ~ as 구문을 써야 하므로 as efficient than은 틀렸고 as efficient as로 고쳐야 합니다.",
+        "'~할수록 더 …하다'의 The 비교급 ~, the 비교급 ~ 구문에서 뒤 절을 이끄는 the safer는 옳습니다.",
+        "선행사 Cities를 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다.",
+        "주절 주어 Cities가 차선을 좁히는 주체이므로 능동의 분사구문 narrowing이 옳습니다."
+      ],
+      "underlineUnits": ["u12", "u12", "u12", "u06", "u09"],
+      "gist": "자동차 중심 도로에서 보행자 중심 거리로 전환하는 도시 계획의 변화를 다룹니다."
+    },
+    {
+      "id": "u12-c4-ps-004",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "PASSAGE",
+      "difficulty": 3,
+      "trapTags": ["indirect-question", "enough-order"],
+      "hints": [
+        "의문사가 이끄는 절이 동사의 목적어로 쓰였는지, 그 안의 어순을 살펴보십시오.",
+        "명사절로 쓰인 의문사절은 do나 does나 did 없이 주어와 동사 순서를 지킵니다."
+      ],
+      "explanation": "동사 debate의 목적어로 쓰인 의문사절은 간접의문문이므로 의문사+주어+동사 어순을 지켜야 합니다. ⑤의 why did some societies abandon은 직접의문문의 도치를 그대로 두어 틀렸으므로 why some societies abandoned로 고쳐야 합니다. ④의 flexible enough는 형용사+enough 어순을 지킨 옳은 미끼 밑줄입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "The origins of writing remain one of history's great puzzles. Scholars generally agree [[1:that]] the earliest scripts developed not for poetry but for accounting, as growing cities needed to record grain, taxes, and debts. What they still cannot fully explain is how a picture-based system slowly turned into abstract signs [[2:able]] to capture speech itself. In several regions this change seems to have happened independently, a pattern [[3:that]] suggests the pressures of trade were widely shared. Once a script grew [[4:flexible enough]] to record spoken language, it could preserve laws, stories, and prayers across generations. Even today, historians debate [[5:why did some societies abandon]] writing entirely, only to reinvent it centuries later.",
+      "answer": 5,
+      "correction": "why some societies abandoned",
+      "rationales": [
+        "뒤에 완전한 절이 이어지고 agree의 목적어절을 이끄는 접속사 that이므로 옳습니다.",
+        "명사 abstract signs를 뒤에서 수식하는 형용사 able이 to부정사와 함께 쓰였으므로 옳습니다.",
+        "선행사 a pattern을 받아 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 that이므로 옳습니다.",
+        "형용사 flexible 뒤에 enough가 왔으므로 형용사+enough 어순을 지킨 옳은 표현입니다.",
+        "동사 debate의 목적어인 간접의문문이므로 why+주어+동사 어순이어야 하며, why did some societies abandon은 틀렸고 why some societies abandoned로 고쳐야 합니다."
+      ],
+      "underlineUnits": ["u06", "u10", "u06", "u12", "u12"],
+      "gist": "회계 목적에서 출발한 문자의 기원과 그 발전을 둘러싼 역사적 수수께끼를 다룹니다."
+    },
+    {
+      "id": "u12-c1-ps-005",
+      "unitId": "u12",
+      "conceptId": "u12-c1",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["negative-inversion", "as-as"],
+      "hints": [
+        "부정이나 제한의 표현으로 시작하는 밑줄이 있으면 그 뒤의 어순을 확인해 보십시오.",
+        "부정의 부사(구)가 문두에 오면 주어보다 조동사가 먼저 나옵니다."
+      ],
+      "explanation": "부정의 부사구 Rarely in the history of art가 문두에 왔으므로 조동사와 주어가 자리를 바꾸는 도치가 일어나야 합니다. 따라서 ①의 a single technique has changed는 틀렸고 has a single technique changed로 고쳐야 합니다. ③의 was the illusion은 보어 So convincing이 문두에 온 옳은 도치이므로, 도치처럼 보인다고 틀린 것이 아님에 주의합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Rarely in the history of art [[1:a single technique has changed]] the way people see as profoundly as linear perspective did. Before its discovery, medieval painters scaled figures by their spiritual rank, [[2:making]] kings and saints far larger than the common people around them. The rules worked out in fifteenth-century Florence let artists project a believable depth onto a flat panel, so that a painted corridor seemed to recede toward a single vanishing point. So convincing [[3:was the illusion]] that viewers occasionally mistook a fresco for an open doorway. Yet perspective was never [[4:as neutral as]] it appeared; by fixing one ideal viewpoint, it quietly told each observer exactly where to stand. Later movements rebelled against this discipline, [[5:seeking]] freedoms the Renaissance had deliberately surrendered.",
+      "answer": 1,
+      "correction": "has a single technique changed",
+      "rationales": [
+        "부정의 부사구 Rarely in the history of art가 문두에 왔으므로 조동사+주어 도치가 일어나야 하며, a single technique has changed는 틀렸고 has a single technique changed로 고쳐야 합니다.",
+        "주절 주어 medieval painters가 왕과 성인을 더 크게 그리는 행위의 주체이므로 능동의 분사구문 making이 옳습니다.",
+        "보어 So convincing이 문두에 왔으므로 be동사와 주어가 자리를 바꾼 도치로, was the illusion은 옳은 어순입니다.",
+        "as ~ as 동등 비교의 두 as 사이에 원급 neutral이 왔으므로 옳습니다.",
+        "주절 주어 Later movements가 자유를 추구하는 주체이므로 능동의 분사구문 seeking이 옳습니다."
+      ],
+      "underlineUnits": ["u12", "u09", "u12", "u12", "u09"],
+      "gist": "선원근법이 회화의 공간 표현을 혁신했으나 하나의 시점을 강요했다는 점을 다룹니다."
+    },
+    {
+      "id": "u12-c2-ps-006",
+      "unitId": "u12",
+      "conceptId": "u12-c2",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["subjunctive", "without-butfor"],
+      "hints": [
+        "가정을 나타내는 절과 밑줄 친 주절 동사의 형태가 호응하는지 확인해 보십시오.",
+        "현재 사실의 반대를 가정하면 주절은 조동사의 과거형에 원형이 이어집니다."
+      ],
+      "explanation": "③ 앞의 Were this partnership more tolerant of heat는 if가 생략된 도치 가정법으로 현재 사실의 반대를 나타냅니다. 그러므로 주절은 would+원형이어야 하며, will withstand는 틀렸고 would withstand로 고쳐야 합니다. ④의 would vanish는 without이 이끄는 같은 가정에 호응하는 옳은 주절 동사입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Coral reefs occupy less than one percent of the ocean floor, yet they shelter roughly a quarter of all marine species. This extraordinary richness depends on a fragile partnership between corals and the tiny algae [[1:living]] inside their tissues. When water grows too warm, the corals expel these algae and slowly starve, a process [[2:known]] as bleaching. Were this partnership more tolerant of heat, the reefs [[3:will withstand]] the warming seas far better than they now do. Scientists warn that without urgent limits on emissions, many reefs [[4:would vanish]] within a few decades, taking countless dependent species with them. Restoration projects offer some hope, breeding heat-resistant corals in laboratories, but no program can succeed [[5:unless]] the underlying warming is finally slowed.",
+      "answer": 3,
+      "correction": "would withstand",
+      "rationales": [
+        "산호 조직 안에 살고 있는 상태를 나타내는 자동사 live의 현재분사이므로, 명사 the tiny algae를 수식하는 living이 옳습니다.",
+        "과정은 백화라고 불리는 대상이므로 명사 a process를 수식하는 과거분사 known이 옳습니다.",
+        "Were가 이끄는 if 생략 도치는 현재 사실의 반대를 가정하는 가정법 과거이므로 주절은 would+원형이어야 하며, will withstand는 틀렸고 would withstand로 고쳐야 합니다.",
+        "without이 이끄는 조건은 if it were not for와 같은 가정이므로 주절의 would vanish는 옳습니다.",
+        "뒤에 주어와 동사를 갖춘 절이 이어지고 '~하지 않는 한'의 뜻으로 절을 이끄는 접속사 unless이므로 옳습니다."
+      ],
+      "underlineUnits": ["u04", "u04", "u12", "u12", "u08"],
+      "gist": "온난화로 백화 현상을 겪는 산호초의 취약성과 복원 노력을 다룹니다."
+    },
+    {
+      "id": "u12-c3-ps-007",
+      "unitId": "u12",
+      "conceptId": "u12-c3",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["as-as", "comparative-intensifier"],
+      "hints": [
+        "비교를 나타내는 밑줄에서 as로 시작한 표현이 무엇으로 끝나는지 확인해 보십시오.",
+        "동등 비교는 앞뒤를 모두 as로 감싸야 하며 than으로 끝낼 수 없습니다."
+      ],
+      "explanation": "동등 비교는 as ~ as 구문으로 앞뒤를 모두 as로 감싸야 합니다. ④의 as evenly than은 as로 시작해 than으로 끝나 틀렸으므로 as evenly as로 고쳐야 합니다. ②의 twice as cheaply as는 배수 표현의 어순을 지킨 옳은 미끼 밑줄입니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Economists have long argued that trade makes nations richer, but the reasoning is subtler than the slogan suggests. A country need not be better than its partners at producing anything in absolute terms; it need only be [[1:relatively]] more efficient at some goods than at others. By specializing where its disadvantage is smallest, even a poor nation can gain. Consider two countries: the first can make cloth [[2:twice as cheaply as]] the second, while the second makes wine [[3:far more efficiently]] than the first. If each concentrates on the good it makes best, total output rises, and both end up with more of everything than they could produce alone. The gains, however, are rarely distributed [[4:as evenly than]] optimists once predicted, which is [[5:why]] free trade remains politically divisive.",
+      "answer": 4,
+      "correction": "as evenly as",
+      "rationales": [
+        "비교급 more efficient를 수식하는 부사 relatively가 형용사 앞에서 정도를 나타내므로 옳습니다.",
+        "'배수사+as+원급+as'의 어순을 지킨 twice as cheaply as는 옳은 배수 비교 표현입니다.",
+        "than이 뒤따르는 비교급 more efficiently를 강조하는 far가 쓰였으므로 옳습니다.",
+        "동등 비교는 as ~ as 구문을 써야 하므로 as evenly than은 틀렸고 as evenly as로 고쳐야 합니다.",
+        "앞 내용을 받는 which와 결합해 이유를 이끄는 관계부사 why가 which is 뒤에서 옳게 쓰였습니다."
+      ],
+      "underlineUnits": ["u10", "u12", "u12", "u12", "u07"],
+      "gist": "비교우위에 따른 특화가 교역국 모두를 이롭게 하지만 이익 분배는 불균등함을 설명합니다."
+    },
+    {
+      "id": "u12-c4-ps-008",
+      "unitId": "u12",
+      "conceptId": "u12-c4",
+      "type": "PASSAGE",
+      "difficulty": 4,
+      "trapTags": ["indirect-question", "enough-order"],
+      "hints": [
+        "의문사가 이끄는 절이 동사나 be동사의 보어로 쓰였는지, 그 안에 도치가 있는지 살펴보십시오.",
+        "명사절로 쓰인 의문사절은 do나 does나 did 없이 주어와 동사 순서를 지킵니다."
+      ],
+      "explanation": "A deeper mystery is 뒤에 이어지는 의문사절은 보어로 쓰인 간접의문문이므로 do 없이 의문사+주어+동사 어순을 지켜야 합니다. ②의 how does a network decide는 do-support로 도치되어 틀렸으므로 how a network decides로 고쳐야 합니다. ①의 what makes는 what이 주어인 옳은 간접의문문이라는 점에 주의합니다.",
+      "directive": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+      "text": "Modern speech-recognition systems can now transcribe conversation almost as accurately as a human listener. Even so, engineers cannot fully explain [[1:what makes]] these systems stumble over simple words that any child would catch. A deeper mystery is [[2:how does a network decide]] which of countless features matter, since it learns from data sets [[3:that]] no person could read in a lifetime. Once a model has grown [[4:large enough]] to capture the patterns of a language, it can behave in ways its own designers never intended. This opacity troubles regulators, [[5:who]] increasingly ask whether a system nobody fully understands should be trusted with medical or legal decisions.",
+      "answer": 2,
+      "correction": "how a network decides",
+      "rationales": [
+        "explain의 목적어인 간접의문문에서 what이 주어 역할을 하므로 뒤에 바로 동사가 오는 what makes는 옳습니다.",
+        "보어로 쓰인 간접의문문은 의문사+주어+동사 어순이어야 하므로 do-support로 도치된 how does a network decide는 틀렸고 how a network decides로 고쳐야 합니다.",
+        "선행사 data sets를 받아 read의 목적어가 빠진 불완전한 절을 이끄는 목적격 관계대명사 that이므로 옳습니다.",
+        "형용사 large 뒤에 enough가 왔으므로 형용사+enough 어순을 지킨 옳은 표현입니다.",
+        "선행사 regulators를 받아 계속적으로 설명하는, 사람을 가리키는 주격 관계대명사 who이므로 옳습니다."
+      ],
+      "underlineUnits": ["u12", "u12", "u06", "u12", "u07"],
+      "gist": "높은 정확도에도 불구하고 판단 과정을 설명하기 어려운 음성 인식 인공지능의 불투명성을 다룹니다."
+    }
+  ]
+}

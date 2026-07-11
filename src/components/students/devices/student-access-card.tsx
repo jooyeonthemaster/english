@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Info, KeyRound, Loader2 } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getStudentRegisteredDevices,
@@ -46,10 +46,9 @@ export function StudentAccessCard({
   }, [studentId]);
 
   return (
-    <Card className="rounded-xl border-[#E5E8EB] shadow-none">
-      <CardHeader className="border-b border-[#F2F4F6] pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-bold text-[#191F28]">
-          <KeyRound className="size-4 text-[#3182F6]" />
+    <Card className="rounded-lg border-slate-200 bg-white shadow-none">
+      <CardHeader className="border-b border-slate-100 pb-4">
+        <CardTitle className="text-sm font-bold text-slate-900">
           학생 코드 &amp; 접속
         </CardTitle>
       </CardHeader>
@@ -61,18 +60,18 @@ export function StudentAccessCard({
         />
 
         {devices === null ? (
-          <div className="flex items-center justify-center py-8 text-[#8B95A1]">
+          <div className="flex items-center justify-center py-8 text-slate-400">
             <Loader2 className="size-5 animate-spin" />
           </div>
         ) : (
           <DeviceSlotGrid devices={devices} isDirector={isDirector} onRevoke={setRevokeTarget} />
         )}
 
-        <div className="flex items-start gap-2 border-t border-[#F2F4F6] pt-4 text-xs font-medium text-[#8B95A1]">
+        <div className="flex items-start gap-2 border-t border-slate-100 pt-4 text-xs font-medium text-slate-400">
           <Info className="mt-0.5 size-3.5 shrink-0" />
           <p>
-            웹 기반이라 완벽한 차단은 어려워요. 학생이 브라우저 데이터를 지우면 슬롯이 다시 비워질
-            수 있는 소프트 제한이에요.
+            웹 기반이라 완벽한 차단은 어렵습니다. 학생이 브라우저 데이터를 지우면 슬롯이 다시
+            비워질 수 있는 소프트 제한입니다.
           </p>
         </div>
       </CardContent>

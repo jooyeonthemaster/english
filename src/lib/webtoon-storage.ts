@@ -50,6 +50,17 @@ export function webtoonStoragePath(
   return `${academyId}/${webtoonId}.${extension}`;
 }
 
+export function examPassageWebtoonStoragePath(
+  assetId: string,
+  contentType: "image/jpeg" | "image/png" | "image/webp" = "image/jpeg",
+  version?: string,
+): string {
+  const extension =
+    contentType === "image/png" ? "png" : contentType === "image/webp" ? "webp" : "jpg";
+  const suffix = version ? `-${version.replace(/[^a-zA-Z0-9_-]/g, "")}` : "";
+  return `_exam-passages/${assetId}${suffix}.${extension}`;
+}
+
 /**
  * 이미지 제공사(AtlasCloud)의 결과물은 모델에 따라 서로 다른 OSS 버킷에 저장된다.
  * 일부 버킷(atlas-media)은 "referer 정책(핫링크 차단)"이 걸려 있어 특정 Referer 헤더가
@@ -115,6 +126,86 @@ export async function uploadRemoteImageToWebtoonBucket(opts: {
     publicUrl: pub.publicUrl,
     storagePath: path,
     contentType,
+    bytes,
+  };
+}
+
+export async function uploadRemoteImageToExamPassageWebtoonBucket(opts: {
+  remoteUrl: string;
+  assetId: string;
+  version?: string;
+}): Promise<{ publicUrl: string; storagePath: string; contentType: string; bytes: number }> {
+  await ensureWebtoonBucket();
+
+  const upstream = await fetchRemoteImage(opts.remoteUrl);
+
+  const rawContentType = upstream.headers.get("Content-Type") ?? "image/jpeg";
+  const contentType = normalizeImageContentType(rawContentType);
+  if (!contentType) {
+    throw new Error(`Remote URL did not return an image (got ${rawContentType})`);
+  }
+
+  const arrayBuffer = await upstream.arrayBuffer();
+  const bytes = arrayBuffer.byteLength;
+  const supabase = getServiceSupabase();
+  const path = examPassageWebtoonStoragePath(opts.assetId, contentType, opts.version);
+
+  const { error: uploadErr } = await supabase.storage
+    .from(WEBTOON_BUCKET)
+    .upload(path, new Uint8Array(arrayBuffer), {
+      contentType,
+      upsert: true,
+      cacheControl: "public, max-age=31536000, immutable",
+    });
+  if (uploadErr) {
+    throw new Error(`Supabase upload failed: ${uploadErr.message}`);
+  }
+
+  const { data: pub } = supabase.storage.from(WEBTOON_BUCKET).getPublicUrl(path);
+  if (!pub?.publicUrl) {
+    throw new Error("Failed to compute Supabase public URL for exam passage webtoon");
+  }
+
+  return {
+    publicUrl: pub.publicUrl,
+    storagePath: path,
+    contentType,
+    bytes,
+  };
+}
+
+export async function uploadImageBufferToExamPassageWebtoonBucket(opts: {
+  imageBuffer: Buffer | Uint8Array;
+  assetId: string;
+  contentType: "image/jpeg" | "image/png" | "image/webp";
+  version?: string;
+}): Promise<{ publicUrl: string; storagePath: string; contentType: string; bytes: number }> {
+  await ensureWebtoonBucket();
+
+  const bytes = opts.imageBuffer.byteLength;
+  const supabase = getServiceSupabase();
+  const path = examPassageWebtoonStoragePath(opts.assetId, opts.contentType, opts.version);
+
+  const { error: uploadErr } = await supabase.storage
+    .from(WEBTOON_BUCKET)
+    .upload(path, opts.imageBuffer, {
+      contentType: opts.contentType,
+      upsert: true,
+      cacheControl: "public, max-age=31536000, immutable",
+    });
+  if (uploadErr) {
+    throw new Error(`Supabase upload failed: ${uploadErr.message}`);
+  }
+
+  const { data: pub } = supabase.storage.from(WEBTOON_BUCKET).getPublicUrl(path);
+  if (!pub?.publicUrl) {
+    throw new Error("Failed to compute Supabase public URL for exam passage webtoon");
+  }
+
+  return {
+    publicUrl: pub.publicUrl,
+    storagePath: path,
+    contentType: opts.contentType,
     bytes,
   };
 }

@@ -15,6 +15,33 @@ const nextConfig: NextConfig = {
     return [{ source: "/ir", destination: "/ir/index.html" }];
   },
 
+  // 원장 홈(/director)은 사실상의 메인 = "문제 생성" 페이지로 보낸다. 예전에는
+  // src/app/(director)/director/page.tsx 에서 서버 컴포넌트 redirect()로 흘려보냈지만,
+  // Next 16의 클라이언트 Router 가 "페이지 레벨 redirect()"를 초기 하이드레이션할 때
+  // useMemo 훅 개수 불일치(React #310: "Rendered more hooks than during the previous
+  // render")로 크래시한다 — /director 를 브라우저 주소창 직접입력·새로고침·북마크로
+  // '풀 로드' 하면 HTTP 200 을 받은 뒤 클라이언트에서 "Application error: a client-side
+  // exception" 로 죽었다(클라이언트 <Link> 이동은 RSC redirect 라 살아남아 증상이
+  // 산발적으로 보였다). 라우팅 레이어에서 진짜 HTTP 307 로 처리하면 /director 의 React
+  // 트리 자체가 렌더되지 않아 버그를 원천 차단한다. source 는 정확히 "/director" 만
+  // 매칭(자식 경로 /director/... 는 영향 없음), destination 은 자기 자신이 아니므로 루프 없음.
+  async redirects() {
+    return [
+      {
+        source: "/director",
+        destination: "/director/workbench/questions/generate",
+        permanent: false,
+      },
+      // /director/korean 도 페이지 컴포넌트 redirect()를 거치면 같은 React #310이
+      // 발생한다. exact redirect로 자식 국어 라우트에는 영향을 주지 않고 우회한다.
+      {
+        source: "/director/korean",
+        destination: "/director/korean/generate",
+        permanent: false,
+      },
+    ];
+  },
+
   // 서버 액션(회원 CSV 내보내기)에서 CP949 인코딩에 쓰는 iconv-lite는
   // 동적 require가 있어 번들 대신 node_modules에서 직접 로드한다.
   serverExternalPackages: ["iconv-lite"],

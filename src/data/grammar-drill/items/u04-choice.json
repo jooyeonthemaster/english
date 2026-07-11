@@ -1,0 +1,822 @@
+{
+  "unitId": "u04",
+  "bank": "choice",
+  "items": [
+    {
+      "id": "u04-c1-ch-001",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["prenominal-participle"],
+      "stem": "Recycling crews collected the {{blank}} bottles from the beach.",
+      "options": ["discarded", "discarding"],
+      "answer": 0,
+      "translation": "재활용 수거반이 해변에서 버려진 병들을 수거했습니다.",
+      "hints": [
+        "빈칸의 분사가 꾸미는 명사를 찾아, 그 명사를 주어로 한 짧은 문장으로 되돌려 보십시오.",
+        "꾸며지는 명사가 동작을 하면 -ing, 동작을 당하면 p.p.를 고릅니다."
+      ],
+      "explanation": "빈칸은 명사 bottles를 앞에서 꾸미는 분사 자리입니다. 병을 주어로 되돌리면 '병이 버려진다'라는 수동 관계이므로 과거분사 discarded가 옳습니다. discarding을 고르면 병이 무언가를 버리는 주체가 되어 의미가 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-002",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["postnominal-participle"],
+      "stem": "The architect {{blank}} the renovation presented her plan to the city council.",
+      "options": ["overseen", "overseeing"],
+      "answer": 1,
+      "translation": "그 보수 공사를 감독하는 건축가가 시의회에 자신의 계획을 발표했습니다.",
+      "hints": [
+        "이 문장의 본동사가 무엇인지 먼저 확인한 뒤, 빈칸 뒤에 목적어가 있는지 보십시오.",
+        "분사 뒤 목적어는 능동의 단서이지만, 최종 판단은 꾸며지는 명사와의 의미 관계로 확정합니다."
+      ],
+      "explanation": "빈칸은 주어 The architect를 뒤에서 꾸미는 후치 수식 분사 자리이고, 본동사는 presented입니다. 건축가가 공사를 감독하는 주체이며 뒤에 목적어 the renovation이 남아 있으므로 현재분사 overseeing이 옳습니다. overseen을 고르면 건축가가 감독을 당한다는 뜻이 되어 목적어와도 의미와도 충돌합니다."
+    },
+    {
+      "id": "u04-c1-ch-003",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["prenominal-participle"],
+      "stem": "The {{blank}} windows let cold wind into the old classroom.",
+      "options": ["breaking", "broken"],
+      "answer": 1,
+      "translation": "깨진 창문들이 낡은 교실 안으로 찬 바람을 들였습니다.",
+      "hints": [
+        "빈칸이 꾸미는 명사가 바로 뒤에 있습니다 — 그 명사와 분사의 관계를 물으십시오.",
+        "명사가 동작을 직접 하면 -ing, 당한 결과라면 p.p.입니다."
+      ],
+      "explanation": "빈칸은 명사 windows를 앞에서 꾸미는 분사 자리입니다. 창문을 주어로 되돌리면 '창문이 깨진다'라는 수동 관계이므로 과거분사 broken이 옳습니다. breaking을 고르면 창문이 무언가를 깨뜨리는 주체가 되어 문맥과 맞지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-004",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["postnominal-participle", "ed-ambiguity"],
+      "stem": "The company {{blank}} these drones tests them in strong wind.",
+      "options": ["building", "built"],
+      "answer": 0,
+      "translation": "이 드론들을 제작하는 그 회사는 강풍 속에서 드론을 시험합니다.",
+      "hints": [
+        "이 문장에서 동사처럼 보이는 단어가 몇 개인지 세고, 진짜 본동사를 확정하십시오.",
+        "본동사가 이미 있다면 빈칸은 명사를 꾸미는 분사 자리이며, 명사가 하는 쪽인지 되는 쪽인지로 형태를 정합니다."
+      ],
+      "explanation": "본동사는 tests이고, 빈칸은 주어 The company를 꾸미는 후치 수식 분사 자리입니다. 회사가 드론을 만드는 주체이고 뒤에 목적어 these drones가 있으므로 현재분사 building이 옳습니다. built를 고르면 과거형 본동사로 읽혀 한 절에 동사가 두 개가 되거나, 회사가 만들어졌다는 뜻이 되어 어느 쪽으로도 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-005",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["postnominal-participle", "adjacent-noun-decoy"],
+      "stem": "The complaints {{blank}} to the housing office last month have finally received an official response.",
+      "options": ["submitting", "submitted"],
+      "answer": 1,
+      "translation": "지난달 주택 관리소에 제출된 민원들이 마침내 공식 답변을 받았습니다.",
+      "hints": [
+        "빈칸 바로 뒤의 명사는 전치사에 딸린 명사입니다 — 분사가 실제로 꾸미는 명사는 앞에 있습니다.",
+        "꾸며지는 명사가 동작을 하면 -ing, 당하면 p.p.입니다."
+      ],
+      "explanation": "본동사는 have received이고, 빈칸은 주어 The complaints를 뒤에서 꾸미는 후치 수식 분사 자리입니다. 민원은 제출되는 대상이므로 과거분사 submitted가 옳습니다. 빈칸 뒤의 the housing office는 전치사 to의 목적어일 뿐이므로, 이 명사에 끌려 능동 submitting을 고르면 안 됩니다."
+    },
+    {
+      "id": "u04-c1-ch-006",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["postnominal-participle", "intervening-pp"],
+      "stem": "The volunteers {{blank}} the trails in the national park every weekend receive free camping permits.",
+      "options": ["maintaining", "maintained"],
+      "answer": 0,
+      "translation": "주말마다 국립공원의 탐방로를 정비하는 자원봉사자들은 무료 야영 허가를 받습니다.",
+      "hints": [
+        "본동사를 먼저 찾고, 빈칸 뒤에 분사의 목적어가 있는지 확인하십시오.",
+        "후치 수식 분사는 앞의 명사와 짝입니다 — 그 명사가 하는 쪽인지 되는 쪽인지 물으십시오."
+      ],
+      "explanation": "본동사는 receive이고, 빈칸은 주어 The volunteers를 꾸미는 후치 수식 분사 자리입니다. 자원봉사자가 탐방로를 정비하는 주체이고 뒤에 목적어 the trails가 있으므로 현재분사 maintaining이 옳습니다. maintained를 고르면 봉사자가 정비된다는 수동 의미가 되어 뒤의 목적어와 충돌합니다."
+    },
+    {
+      "id": "u04-c1-ch-007",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["postnominal-participle", "adjacent-noun-decoy"],
+      "stem": "Tourists photographed the ancient murals {{blank}} during the recent restoration of the temple.",
+      "options": ["uncovered", "uncovering"],
+      "answer": 0,
+      "translation": "관광객들이 최근 사원 복원 중에 드러난 오래된 벽화들을 촬영했습니다.",
+      "hints": [
+        "빈칸의 분사가 꾸미는 명사는 바로 앞의 명사입니다 — 뒤의 전치사구에 흔들리지 마십시오.",
+        "명사를 주어로 되돌린 문장이 능동으로 자연스러운지, 수동으로 자연스러운지 검산하십시오."
+      ],
+      "explanation": "빈칸은 목적어 the ancient murals를 뒤에서 꾸미는 후치 수식 분사 자리입니다. 벽화는 복원 과정에서 드러나게 되는 대상이므로 과거분사 uncovered가 옳습니다. uncovering을 고르면 벽화가 스스로 무언가를 드러내는 주체가 되는데, 뒤에 목적어도 없어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-008",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["prenominal-participle", "intervening-pp"],
+      "stem": "The museum in the old city hall displayed a carefully {{blank}} collection of medieval coins.",
+      "options": ["preserving", "preserved"],
+      "answer": 1,
+      "translation": "옛 시청 건물에 있는 그 박물관은 정성스럽게 보존된 중세 동전 컬렉션을 전시했습니다.",
+      "hints": [
+        "부사를 걷어내고, 분사가 꾸미는 명사와 직접 짝을 지어 보십시오.",
+        "명사가 동작의 주체이면 -ing, 대상이면 p.p.입니다."
+      ],
+      "explanation": "빈칸은 명사 collection을 앞에서 꾸미는 분사 자리이고, 부사 carefully는 판단에 영향을 주지 않습니다. 컬렉션은 보존되는 대상이므로 과거분사 preserved가 옳습니다. preserving을 고르면 컬렉션이 무언가를 보존하는 주체가 되어 의미가 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-009",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["postnominal-participle", "adjacent-noun-decoy", "intervening-pp"],
+      "stem": "The instructions {{blank}} to every new employee during the first week of training explain how the safety equipment must be stored.",
+      "options": ["giving", "given"],
+      "answer": 1,
+      "translation": "교육 첫 주에 모든 신입 사원에게 주어지는 그 지침은 안전 장비를 어떻게 보관해야 하는지 설명합니다.",
+      "hints": [
+        "주어와 본동사를 먼저 확정하고, 빈칸 뒤 전치사구들은 괄호로 묶으십시오.",
+        "빈칸 뒤에 이어지는 명사들은 전치사의 목적어일 뿐입니다 — 판단의 짝은 문장 맨 앞의 주어 명사입니다."
+      ],
+      "explanation": "본동사는 explain이고, 빈칸은 주어 The instructions를 꾸미는 후치 수식 분사 자리입니다. 지침은 신입 사원에게 주어지는 대상이므로 과거분사 given이 옳습니다. 빈칸 뒤의 to every new employee와 during the first week of training은 모두 수식어이므로, 이 명사들에 끌려 giving을 고르면 안 됩니다."
+    },
+    {
+      "id": "u04-c1-ch-010",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["postnominal-participle", "adjacent-noun-decoy"],
+      "stem": "The committee {{blank}} applications for the research grant this year includes two economists and a historian from the national university.",
+      "options": ["reviewing", "reviewed"],
+      "answer": 0,
+      "translation": "올해 연구 지원금 신청서를 심사하는 그 위원회에는 경제학자 두 명과 국립대학 출신 역사학자 한 명이 포함되어 있습니다.",
+      "hints": [
+        "본동사를 먼저 찾고, 빈칸 뒤 명사가 분사의 목적어인지 확인하십시오.",
+        "'뒤 명사가 당하는 쪽'이라는 이유로 형태를 정하면 안 됩니다 — 분사의 짝은 꾸며지는 앞 명사입니다."
+      ],
+      "explanation": "본동사는 includes이고, 빈칸은 주어 The committee를 꾸미는 후치 수식 분사 자리입니다. 위원회가 신청서를 심사하는 주체이고 뒤에 목적어 applications가 남아 있으므로 현재분사 reviewing이 옳습니다. '신청서는 심사된다'라는 생각에 끌려 reviewed를 고르면, 정작 꾸며지는 명사인 위원회가 심사받는다는 뜻이 되어 틀립니다."
+    },
+    {
+      "id": "u04-c1-ch-011",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["postnominal-participle", "intervening-pp", "ed-ambiguity"],
+      "stem": "The figures {{blank}} in the appendix of the report contradict the claims that the ministry made at the press conference.",
+      "options": ["citing", "cited"],
+      "answer": 1,
+      "translation": "보고서 부록에 인용된 수치들은 그 부처가 기자회견에서 내놓은 주장과 모순됩니다.",
+      "hints": [
+        "동사처럼 보이는 단어를 모두 센 뒤, 이 문장의 진짜 본동사를 확정하십시오.",
+        "본동사가 따로 있으면 빈칸은 분사 수식이며, 꾸며지는 명사가 하는 쪽인지 되는 쪽인지로 정합니다."
+      ],
+      "explanation": "본동사는 contradict이고, 빈칸은 주어 The figures를 꾸미는 후치 수식 분사 자리입니다. 수치는 인용되는 대상이므로 과거분사 cited가 옳습니다. citing을 고르면 수치가 무언가를 인용하는 주체가 되는데 뒤에 목적어도 없어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c1-ch-012",
+      "unitId": "u04",
+      "conceptId": "u04-c1",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["postnominal-participle", "ed-ambiguity"],
+      "stem": "The journalist {{blank}} corruption in the regional shipping industry for the past two years has received several threats since her first article appeared.",
+      "options": ["investigating", "investigated"],
+      "answer": 0,
+      "translation": "지난 2년간 지역 해운업계의 부패를 취재해 온 그 기자는 첫 기사가 나간 뒤 여러 차례 협박을 받았습니다.",
+      "hints": [
+        "본동사가 어디 있는지 먼저 확인하고, 빈칸 뒤에 목적어가 있는지 보십시오.",
+        "과거형과 p.p.가 같은 모양인 동사는 본동사로 착각하기 쉽습니다 — 동사 개수부터 세십시오."
+      ],
+      "explanation": "본동사는 has received이고, 빈칸은 주어 The journalist를 꾸미는 후치 수식 분사 자리입니다. 기자가 부패를 취재하는 주체이고 뒤에 목적어 corruption이 있으므로 현재분사 investigating이 옳습니다. investigated를 고르면 과거형 본동사로 읽혀 한 문장에 동사가 두 개가 되거나 기자가 조사당한다는 뜻이 되어 어느 쪽으로도 틀립니다."
+    },
+    {
+      "id": "u04-c2-ch-001",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle"],
+      "stem": "The documentary about deep-sea creatures was truly {{blank}}.",
+      "options": ["fascinated", "fascinating"],
+      "answer": 1,
+      "translation": "심해 생물에 관한 그 다큐멘터리는 정말 매혹적이었습니다.",
+      "hints": [
+        "주어가 감정을 일으키는 원인인지, 감정을 느끼는 쪽인지 물으십시오.",
+        "감정을 일으키면 -ing, 느끼면 p.p.입니다."
+      ],
+      "explanation": "fascinate는 '매혹시키다'라는 감정동사이고, 주격 보어 자리의 분사는 주어와의 관계로 판단합니다. 주어 documentary는 감정을 일으키는 원인이므로 현재분사 fascinating이 옳습니다. fascinated를 고르면 다큐멘터리가 감정을 느낀다는 뜻이 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c2-ch-002",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle", "prenominal-participle"],
+      "stem": "The {{blank}} passengers waited three hours for any announcement.",
+      "options": ["frustrated", "frustrating"],
+      "answer": 0,
+      "translation": "답답함을 느낀 승객들은 어떤 안내 방송이라도 나오기를 세 시간 동안 기다렸습니다.",
+      "hints": [
+        "분사가 꾸미는 명사가 감정을 느끼는 쪽인지, 일으키는 원인인지 확인하십시오.",
+        "감정동사 분사는 '일으키는가, 느끼는가'가 유일한 기준입니다."
+      ],
+      "explanation": "빈칸은 명사 passengers를 꾸미는 감정동사 분사 자리입니다. 승객들은 안내가 없어 답답함을 느끼는 쪽이므로 과거분사 frustrated가 옳습니다. frustrating을 고르면 승객이 남을 답답하게 만드는 원인이라는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u04-c2-ch-003",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle", "prenominal-participle"],
+      "stem": "Scientists reported an {{blank}} rise in ocean temperatures last winter.",
+      "options": ["alarming", "alarmed"],
+      "answer": 0,
+      "translation": "과학자들은 지난겨울 해수 온도의 우려스러운 상승을 보고했습니다.",
+      "hints": [
+        "꾸며지는 명사가 사람이 아니라 현상임에 주목하십시오 — 그 현상이 감정을 만드는지 물으십시오.",
+        "감정을 일으키는 원인은 -ing, 느끼는 쪽은 p.p.로 표현합니다."
+      ],
+      "explanation": "빈칸은 명사 rise를 꾸미는 감정동사 분사 자리입니다. 온도 상승은 우려를 일으키는 원인이므로 현재분사 alarming이 옳습니다. alarmed를 고르면 상승 자체가 겁을 느낀다는 뜻이 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c2-ch-004",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["emotion-participle", "linking-verb"],
+      "stem": "After the twelve-hour shift, the nurses felt completely {{blank}}.",
+      "options": ["exhausting", "exhausted"],
+      "answer": 1,
+      "translation": "열두 시간 교대 근무가 끝난 뒤 간호사들은 완전히 지쳤다고 느꼈습니다.",
+      "hints": [
+        "보어가 설명하는 대상은 주어입니다 — 주어가 감정을 느끼는 상황인지 보십시오.",
+        "감정을 느끼는 쪽이면 p.p., 일으키는 원인이면 -ing입니다."
+      ],
+      "explanation": "felt 뒤의 주격 보어 자리이므로 주어 the nurses와의 관계로 판단합니다. 간호사들은 긴 근무로 피로를 느끼는 쪽이므로 과거분사 exhausted가 옳습니다. exhausting은 남을 지치게 만드는 원인에 붙이는 형태이므로 여기서는 맞지 않습니다."
+    },
+    {
+      "id": "u04-c2-ch-005",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "person-as-cause"],
+      "stem": "The {{blank}} tour guide kept the whole group laughing for two hours, though she herself never once smiled.",
+      "options": ["amusing", "amused"],
+      "answer": 0,
+      "translation": "그 재미있는 관광 가이드는 정작 자신은 한 번도 웃지 않으면서 두 시간 동안 일행 전체를 계속 웃게 했습니다.",
+      "hints": [
+        "콤마 뒤의 양보절이 이 인물 자신의 감정 상태에 대해 무엇을 말하는지 확인하십시오 — 웃게 만든 쪽은 누구입니까.",
+        "'사람이면 p.p.'라는 공식은 없습니다 — 사람도 감정을 일으키는 원인이 될 수 있습니다."
+      ],
+      "explanation": "빈칸은 사람 명사 tour guide를 꾸미는 감정동사 분사 자리입니다. 일행을 두 시간 동안 웃게 했으면서 정작 자신은 한 번도 웃지 않았다는 양보절이 있으므로, 가이드는 즐거움을 느끼는 쪽이 아니라 즐거움을 일으키는 원인입니다. 따라서 현재분사 amusing이 옳고, '사람이니까 과거분사'라는 공식으로 amused를 고르면 뒤의 양보절과 모순됩니다."
+    },
+    {
+      "id": "u04-c2-ch-006",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "postnominal-participle"],
+      "stem": "Travelers {{blank}} by the sudden change in the flight schedule crowded around the information desk.",
+      "options": ["confusing", "confused"],
+      "answer": 1,
+      "translation": "갑작스러운 운항 일정 변경에 혼란을 느낀 여행객들이 안내 데스크 주위로 몰려들었습니다.",
+      "hints": [
+        "빈칸 뒤의 by구가 무엇을 밝혀 주는지 확인하십시오.",
+        "감정의 원인이 by구로 따로 제시되어 있다면, 꾸며지는 명사는 그 감정을 느끼는 쪽입니다."
+      ],
+      "explanation": "빈칸은 주어 Travelers를 뒤에서 꾸미는 분사 자리이고, 본동사는 crowded입니다. 여행객들은 일정 변경 때문에 혼란을 느끼는 쪽이므로 과거분사 confused가 옳고, 뒤의 by구가 혼란의 원인을 밝혀 줍니다. confusing을 고르면 여행객이 남을 혼란스럽게 만드는 원인이 되어 by구와 충돌합니다."
+    },
+    {
+      "id": "u04-c2-ch-007",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "postnominal-participle"],
+      "stem": "The committee sat through a presentation {{blank}} everyone with its endless technical charts.",
+      "options": ["bored", "boring"],
+      "answer": 1,
+      "translation": "위원회는 끝없는 기술 도표로 모두를 지루하게 만든 발표를 끝까지 앉아서 들었습니다.",
+      "hints": [
+        "빈칸 뒤에 목적어가 있는지, 그리고 꾸며지는 명사가 무엇인지 확인하십시오.",
+        "감정을 일으키는 원인은 -ing로, 느끼는 쪽은 p.p.로 표현합니다."
+      ],
+      "explanation": "빈칸은 명사 presentation을 뒤에서 꾸미는 감정동사 분사 자리입니다. 발표가 모두에게 지루함을 일으키는 원인이고 뒤에 목적어 everyone이 있으므로 현재분사 boring이 옳습니다. bored를 고르면 발표가 지루함을 느낀다는 뜻이 되는 데다 뒤의 목적어를 설명할 수 없습니다."
+    },
+    {
+      "id": "u04-c2-ch-008",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["emotion-participle", "linking-verb"],
+      "stem": "Most first-time investors feel {{blank}} when the market drops sharply in a single day.",
+      "options": ["terrified", "terrifying"],
+      "answer": 0,
+      "translation": "처음 투자하는 사람들 대부분은 시장이 하루 만에 급락하면 겁에 질립니다.",
+      "hints": [
+        "보어의 짝은 주어입니다 — when절의 상황에서 주어가 어떤 처지인지 읽으십시오.",
+        "감정을 느끼는 쪽이면 p.p., 일으키는 원인이면 -ing입니다."
+      ],
+      "explanation": "feel 뒤의 주격 보어 자리이므로 주어 investors와의 관계로 판단합니다. 투자자들은 급락장에서 공포를 느끼는 쪽이므로 과거분사 terrified가 옳습니다. terrifying을 고르면 투자자가 남을 겁먹게 하는 원인이라는 뜻이 되어 문맥과 어긋납니다."
+    },
+    {
+      "id": "u04-c2-ch-009",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "person-as-cause", "postnominal-participle"],
+      "stem": "A lecturer {{blank}} the audience within the first five minutes rarely wins it back, no matter how solid the remaining argument is.",
+      "options": ["irritating", "irritated"],
+      "answer": 0,
+      "translation": "처음 오 분 안에 청중을 짜증 나게 만드는 강연자는 남은 논증이 아무리 탄탄해도 청중의 마음을 되찾기 어렵습니다.",
+      "hints": [
+        "본동사를 먼저 찾고, 빈칸 뒤 명사가 분사의 목적어인지 확인하십시오.",
+        "사람 명사라는 이유로 형태를 정하지 마십시오 — 감정을 일으키는가, 느끼는가만 물으십시오."
+      ],
+      "explanation": "빈칸은 사람 명사 A lecturer를 뒤에서 꾸미는 분사 자리이고, 본동사는 wins입니다. 강연자가 청중에게 짜증을 일으키는 원인이고 뒤에 목적어 the audience가 있으므로 현재분사 irritating이 옳습니다. 사람 명사라는 이유로 irritated를 고르면 목적어가 설 자리를 잃고, 강연자가 짜증을 느낀다는 뜻이 되어 문맥이 무너집니다."
+    },
+    {
+      "id": "u04-c2-ch-010",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "postnominal-participle"],
+      "stem": "The students, {{blank}} by the professor's habit of answering every question with another question, gradually stopped raising their hands in class.",
+      "options": ["puzzling", "puzzled"],
+      "answer": 1,
+      "translation": "모든 질문에 또 다른 질문으로 답하는 교수의 습관에 어리둥절해진 학생들은 수업 중에 점차 손을 들지 않게 되었습니다.",
+      "hints": [
+        "콤마 사이 분사구가 꾸미는 명사가 무엇인지, by구가 무엇을 제시하는지 확인하십시오.",
+        "감정의 원인이 따로 명시되어 있으면 꾸며지는 명사는 느끼는 쪽입니다."
+      ],
+      "explanation": "빈칸은 콤마 사이에서 주어 The students를 꾸미는 분사 자리이고, 본동사는 stopped입니다. 학생들은 교수의 습관에 어리둥절함을 느끼는 쪽이므로 과거분사 puzzled가 옳고, by구가 그 원인을 제시합니다. puzzling을 고르면 학생들이 남을 어리둥절하게 만드는 원인이 되어 by구와 충돌합니다."
+    },
+    {
+      "id": "u04-c2-ch-011",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "object-complement"],
+      "stem": "What made the negotiation so {{blank}} was that neither side would state its actual bottom line until the final hour.",
+      "options": ["discouraging", "discouraged"],
+      "answer": 0,
+      "translation": "그 협상을 그토록 맥 빠지게 만든 것은 어느 쪽도 마지막 순간까지 실제 마지노선을 밝히려 하지 않았다는 점이었습니다.",
+      "hints": [
+        "5형식 구조에서 보어가 설명하는 것은 목적어입니다 — 목적어가 감정을 만드는 쪽인지 물으십시오.",
+        "감정을 일으키는 원인은 -ing, 느끼는 쪽은 p.p.입니다."
+      ],
+      "explanation": "made the negotiation 뒤의 빈칸은 목적어 the negotiation을 설명하는 목적격 보어입니다. 협상은 사람들의 의욕을 꺾는 원인이므로 현재분사 discouraging이 옳습니다. discouraged를 고르면 협상 자체가 낙담을 느낀다는 뜻이 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c2-ch-012",
+      "unitId": "u04",
+      "conceptId": "u04-c2",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["emotion-participle", "linking-verb"],
+      "stem": "Visitors who had expected a quiet exhibition seemed genuinely {{blank}} when the gallery filled with drummers performing among the paintings.",
+      "options": ["astonishing", "astonished"],
+      "answer": 1,
+      "translation": "조용한 전시를 기대했던 관람객들은 그림들 사이에서 연주하는 북 연주자들로 전시장이 가득 차자 진심으로 놀란 듯 보였습니다.",
+      "hints": [
+        "보어의 짝은 주어입니다 — when절의 장면에서 주어가 원인인지 경험자인지 판단하십시오.",
+        "감정을 느끼는 쪽이면 p.p., 일으키는 원인이면 -ing입니다."
+      ],
+      "explanation": "seemed 뒤의 주격 보어 자리이므로 주어 Visitors와의 관계로 판단합니다. 관람객들은 예상 밖의 광경에 놀라움을 느끼는 쪽이므로 과거분사 astonished가 옳습니다. astonishing을 고르면 관람객이 남을 놀라게 하는 원인이라는 뜻이 되어 when절의 상황과 맞지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-001",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["linking-verb"],
+      "stem": "The library stayed {{blank}} during the national holiday week.",
+      "options": ["closed", "closing"],
+      "answer": 0,
+      "translation": "그 도서관은 연휴 주간 동안 닫힌 상태로 있었습니다.",
+      "hints": [
+        "동사 뒤 보어가 설명하는 대상은 주어입니다 — 주어와 분사의 관계를 물으십시오.",
+        "설명되는 대상이 동작을 하면 -ing, 당하면 p.p.입니다."
+      ],
+      "explanation": "stayed 뒤의 주격 보어 자리이므로 주어 The library와 분사의 능·수동 관계로 판단합니다. 도서관은 닫히는 대상이므로 과거분사 closed가 옳습니다. closing을 고르면 도서관이 무언가를 닫는 주체가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-002",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["object-complement"],
+      "stem": "We kept the old ceiling fan {{blank}} all night because of the summer heat.",
+      "options": ["spun", "spinning"],
+      "answer": 1,
+      "translation": "여름 더위 때문에 우리는 낡은 천장 선풍기를 밤새 돌아가게 두었습니다.",
+      "hints": [
+        "5형식 문장입니다 — 분사의 짝은 주어가 아니라 목적어입니다.",
+        "목적어가 동작을 스스로 하면 -ing, 당하면 p.p.를 고릅니다."
+      ],
+      "explanation": "kept 뒤의 빈칸은 목적어 fan을 설명하는 목적격 보어 자리입니다. 선풍기가 스스로 도는 주체이므로 현재분사 spinning이 옳습니다. '목적어 뒤니까 과거분사'라는 짐작으로 spun을 고르면 선풍기가 돌려지는 대상이라는 어색한 수동 의미가 되어 틀립니다."
+    },
+    {
+      "id": "u04-c3-ch-003",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["object-complement"],
+      "stem": "She found her office window {{blank}} after the weekend storm.",
+      "options": ["shattering", "shattered"],
+      "answer": 1,
+      "translation": "그녀는 주말 폭풍이 지나간 뒤 사무실 창문이 깨져 있는 것을 발견했습니다.",
+      "hints": [
+        "분사가 설명하는 것은 바로 앞의 목적어입니다.",
+        "목적어가 동작을 당한 상태라면 p.p., 하고 있는 중이라면 -ing입니다."
+      ],
+      "explanation": "found 뒤의 빈칸은 목적어 window를 설명하는 목적격 보어입니다. 창문은 깨지는 대상이므로 과거분사 shattered가 옳습니다. shattering을 고르면 창문이 무언가를 깨뜨리고 있다는 능동 의미가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-004",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["perception-complement"],
+      "stem": "I heard the anthem {{blank}} in three different languages.",
+      "options": ["sung", "singing"],
+      "answer": 0,
+      "translation": "저는 그 국가가 세 가지 다른 언어로 불리는 것을 들었습니다.",
+      "hints": [
+        "지각동사의 목적격 보어 자리입니다 — 목적어와 분사의 관계를 물으십시오.",
+        "목적어가 동작을 당하면 p.p., 스스로 하면 -ing입니다."
+      ],
+      "explanation": "지각동사 heard의 목적격 보어 자리이므로 목적어 the anthem과의 관계로 판단합니다. 국가는 사람들에 의해 불리는 대상이므로 과거분사 sung이 옳습니다. singing을 고르면 노래가 스스로 노래한다는 뜻이 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-005",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["linking-verb"],
+      "stem": "The ancient mosaic remained {{blank}} under the parking lot until workers began digging last spring.",
+      "options": ["burying", "buried"],
+      "answer": 1,
+      "translation": "그 고대 모자이크는 지난봄 인부들이 땅을 파기 시작할 때까지 주차장 밑에 묻힌 채로 있었습니다.",
+      "hints": [
+        "동사 뒤 보어의 짝은 주어입니다 — 주어가 하는 쪽인지 되는 쪽인지 물으십시오.",
+        "설명되는 대상이 동작을 당한 채 유지되면 p.p., 스스로 계속하면 -ing입니다."
+      ],
+      "explanation": "remained 뒤의 주격 보어 자리이므로 주어 The ancient mosaic과의 관계로 판단합니다. 모자이크는 묻히는 대상이므로 과거분사 buried가 옳습니다. burying을 고르면 모자이크가 무언가를 묻는 주체가 되어 의미가 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-006",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["object-complement", "adjacent-noun-decoy"],
+      "stem": "The sudden budget cuts left the renovation of the concert hall {{blank}} for nearly a decade.",
+      "options": ["suspended", "suspending"],
+      "answer": 0,
+      "translation": "갑작스러운 예산 삭감은 콘서트홀 보수 공사를 거의 십 년 동안 중단된 상태로 남겨 두었습니다.",
+      "hints": [
+        "목적어가 어디까지인지 먼저 확정하십시오 — 전치사구는 목적어를 꾸미는 수식어입니다.",
+        "분사의 짝은 목적어의 핵 명사입니다. 그 명사가 하는 쪽인지 되는 쪽인지 물으십시오."
+      ],
+      "explanation": "left 뒤의 빈칸은 목적어를 설명하는 목적격 보어이고, 분사의 짝은 목적어의 핵인 the renovation입니다. 보수 공사는 중단되는 대상이므로 과거분사 suspended가 옳습니다. 목적어 안의 the concert hall에 시선을 빼앗기지 말아야 하며, suspending을 고르면 공사가 무언가를 중단시키는 주체가 되어 틀립니다."
+    },
+    {
+      "id": "u04-c3-ch-007",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["perception-complement"],
+      "stem": "From the balcony, we watched the fishing boats {{blank}} back toward the harbor at sunset.",
+      "options": ["drifting", "drifted"],
+      "answer": 0,
+      "translation": "발코니에서 우리는 해 질 녘에 어선들이 항구 쪽으로 떠밀려 돌아가는 모습을 지켜보았습니다.",
+      "hints": [
+        "지각동사 뒤 목적어와 분사의 관계를 물으십시오.",
+        "목적어가 스스로 움직이는 장면이면 -ing, 남에 의해 처리되는 장면이면 p.p.입니다."
+      ],
+      "explanation": "지각동사 watched의 목적격 보어 자리이므로 목적어 the fishing boats와의 관계로 판단합니다. 배들이 항구 쪽으로 떠가는 동작의 주체이므로 현재분사 drifting이 옳습니다. drifted를 고르면 배가 누군가에 의해 옮겨졌다는 수동 의미가 되어, 스스로 떠가는 장면을 그리는 이 문맥과 맞지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-008",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["object-complement"],
+      "stem": "The security guard caught two men {{blank}} the lock on the warehouse gate.",
+      "options": ["tested", "testing"],
+      "answer": 1,
+      "translation": "경비원은 두 남자가 창고 정문의 자물쇠를 건드려 보고 있는 현장을 포착했습니다.",
+      "hints": [
+        "분사의 짝은 바로 앞의 목적어이고, 빈칸 뒤에는 또 다른 명사가 있습니다.",
+        "분사 뒤에 남은 명사가 목적어라면 능동의 단서입니다 — 최종 판단은 의미 관계로 확정하십시오."
+      ],
+      "explanation": "caught 뒤의 빈칸은 목적어 two men을 설명하는 목적격 보어입니다. 두 남자가 자물쇠를 살펴보는 동작의 주체이고 뒤에 목적어 the lock이 있으므로 현재분사 testing이 옳습니다. tested를 고르면 두 남자가 시험당하는 대상이 되어 뒤의 목적어를 설명할 수 없습니다."
+    },
+    {
+      "id": "u04-c3-ch-009",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["object-complement", "adjacent-noun-decoy", "intervening-pp"],
+      "stem": "The auditors found the records of every overseas transaction made before the merger {{blank}} in an unmarked cabinet behind the director's office.",
+      "options": ["hidden", "hiding"],
+      "answer": 0,
+      "translation": "감사관들은 합병 전에 이루어진 모든 해외 거래 기록이 이사장실 뒤편 표시 없는 캐비닛에 숨겨져 있는 것을 발견했습니다.",
+      "hints": [
+        "목적어의 핵 명사를 찾으십시오 — 뒤따르는 전치사구와 분사구는 모두 수식어입니다.",
+        "보어의 짝은 목적어의 핵입니다. 그 명사가 하는 쪽인지 되는 쪽인지 물으십시오."
+      ],
+      "explanation": "found의 목적어 핵은 the records이고, of every overseas transaction made before the merger는 전부 목적어를 꾸미는 수식어입니다. 기록은 숨겨지는 대상이므로 목적격 보어로 과거분사 hidden이 옳습니다. hiding을 고르면 기록이 스스로 숨는 주체가 되는데, 사물인 기록에는 성립하지 않는 독해입니다."
+    },
+    {
+      "id": "u04-c3-ch-010",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["perception-complement"],
+      "stem": "Halfway through the ceremony, the mayor heard her own words {{blank}} back to her by protesters gathered outside the hall.",
+      "options": ["shouting", "shouted"],
+      "answer": 1,
+      "translation": "기념식 도중에 시장은 자신의 말이 홀 밖에 모인 시위대에 의해 자신을 향해 되받아 외쳐지는 것을 들었습니다.",
+      "hints": [
+        "지각동사의 목적어가 무엇인지, 그리고 by구가 무엇을 밝히는지 확인하십시오.",
+        "행위자가 by구로 따로 제시되어 있다면 목적어는 동작을 받는 쪽입니다."
+      ],
+      "explanation": "지각동사 heard의 목적격 보어 자리이므로 목적어 her own words와의 관계로 판단합니다. 말은 시위대에 의해 외쳐지는 대상이고 by protesters가 행위자를 밝히므로 과거분사 shouted가 옳습니다. shouting을 고르면 말이 스스로 외친다는 뜻이 되어 by구와 충돌합니다."
+    },
+    {
+      "id": "u04-c3-ch-011",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["linking-verb", "intervening-clause"],
+      "stem": "The safety procedures that the airline introduced after the incident seem {{blank}} to address crew fatigue rather than mechanical failure.",
+      "options": ["designing", "designed"],
+      "answer": 1,
+      "translation": "그 사고 이후 항공사가 도입한 안전 절차는 기계 결함보다는 승무원 피로 문제를 겨냥해 설계된 것으로 보입니다.",
+      "hints": [
+        "주어를 꾸미는 that절을 괄호로 묶고, 보어의 짝인 주어 핵을 찾으십시오.",
+        "설명되는 대상이 동작을 하면 -ing, 당하면 p.p.입니다."
+      ],
+      "explanation": "seem 뒤의 주격 보어 자리이므로 주어 The safety procedures와의 관계로 판단합니다. that the airline introduced after the incident는 주어를 꾸미는 관계절이므로 걷어내고 보면, 절차는 설계되는 대상이어서 과거분사 designed가 옳습니다. designing을 고르면 절차가 무언가를 설계하는 주체가 되어 성립하지 않습니다."
+    },
+    {
+      "id": "u04-c3-ch-012",
+      "unitId": "u04",
+      "conceptId": "u04-c3",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["object-complement", "intervening-pp"],
+      "stem": "For three days the negotiators kept the channel between the two capitals {{blank}}, exchanging drafts long after midnight.",
+      "options": ["operating", "operated"],
+      "answer": 0,
+      "translation": "사흘 동안 협상단은 두 수도 사이의 소통 채널을 계속 가동되게 유지하며 자정이 훨씬 지나서까지 초안을 주고받았습니다.",
+      "hints": [
+        "목적어와 그 뒤 전치사구를 구분하십시오 — 분사의 짝은 목적어의 핵입니다.",
+        "목적어가 스스로 계속 움직이는 상태면 -ing, 남에 의해 처리된 상태면 p.p.입니다."
+      ],
+      "explanation": "kept 뒤의 빈칸은 목적격 보어이고, between the two capitals는 목적어 the channel을 꾸미는 전치사구입니다. 채널이 스스로 계속 작동하는 주체이므로 현재분사 operating이 옳습니다. operated를 고르면 채널이 남에 의해 조작된 상태라는 뜻이 되어, 소통을 계속 이어 갔다는 문맥과 맞지 않습니다."
+    },
+    {
+      "id": "u04-c4-ch-001",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "The {{blank}} dog kept the whole neighborhood awake last night.",
+      "options": ["howled", "howling"],
+      "answer": 1,
+      "translation": "울부짖는 개가 어젯밤 온 동네를 잠 못 들게 했습니다.",
+      "hints": [
+        "분사의 원형 동사가 목적어를 가질 수 있는 동사인지 먼저 확인하십시오.",
+        "자동사라면 능·수동이 아니라 '진행 중인가, 끝났는가'로 판단합니다."
+      ],
+      "explanation": "howl은 목적어를 갖지 않는 자동사이므로, 능·수동이 아니라 '진행 중인가, 끝났는가'로 판단합니다. 개가 지금 울부짖는 중이어서 동네가 잠을 못 잔 것이므로 현재분사 howling이 옳습니다. 자동사의 과거분사 수식은 굳어진 소수 동사에서만 가능하므로 howled는 명사를 꾸밀 수 없습니다."
+    },
+    {
+      "id": "u04-c4-ch-002",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "A {{blank}} tree had blocked the mountain road for six hours.",
+      "options": ["fallen", "falling"],
+      "answer": 0,
+      "translation": "쓰러진 나무 한 그루가 여섯 시간 동안 산길을 막고 있었습니다.",
+      "hints": [
+        "이 동사가 자동사임을 확인한 뒤, 나무의 상태가 진행인지 완료인지 문맥에서 찾으십시오.",
+        "자동사의 p.p. 수식은 수동이 아니라 완료된 결과 상태를 뜻합니다."
+      ],
+      "explanation": "fall은 자동사이므로 '진행 중인가, 완료된 결과 상태인가'로 판단합니다. 여섯 시간 동안 길을 막고 있었다는 것은 나무가 이미 쓰러진 결과 상태라는 뜻이므로 과거분사 fallen이 옳습니다. falling을 고르면 지금 쓰러지고 있는 중이라는 뜻이 되어 문맥과 맞지 않으며, fallen은 수동이 아니라 완료의 의미입니다."
+    },
+    {
+      "id": "u04-c4-ch-003",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "The doctor gently examined the patient's badly {{blank}} ankle.",
+      "options": ["swollen", "swelling"],
+      "answer": 0,
+      "translation": "의사는 환자의 심하게 부어오른 발목을 조심스럽게 살펴보았습니다.",
+      "hints": [
+        "분사의 원형이 자동사인지 확인하고, 발목의 상태가 과정인지 결과인지 물으십시오.",
+        "자동사는 '목적어가 없으면 p.p.'라는 공식의 적용 대상이 아닙니다 — 완료 여부로 판단합니다."
+      ],
+      "explanation": "swell은 자동사이므로 능·수동이 아니라 완료 여부로 판단합니다. 발목은 이미 부어오른 결과 상태이므로 과거분사 swollen이 옳고, 이는 '부어진'(수동)이 아니라 '부어오른'(완료)의 뜻입니다. swelling을 고르면 지금 부풀어 오르는 중이라는 과정의 의미가 되어, 정도 부사 badly와 어울리는 상태 묘사와 맞지 않습니다."
+    },
+    {
+      "id": "u04-c4-ch-004",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 1,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "Keepers moved quietly around the {{blank}} lions in the afternoon heat.",
+      "options": ["slept", "sleeping"],
+      "answer": 1,
+      "translation": "사육사들은 오후 더위 속에 잠들어 있는 사자들 주위로 조용히 움직였습니다.",
+      "hints": [
+        "이 동사가 목적어를 가질 수 없는 자동사임에 주목하십시오.",
+        "목적어가 없다는 이유만으로 형태를 정하지 마십시오 — 자동사는 진행이면 -ing, 완료면 p.p.입니다."
+      ],
+      "explanation": "sleep은 목적어를 가질 수 없는 자동사이므로 '목적어가 없으면 과거분사'라는 공식을 적용하면 안 됩니다. 사자들이 지금 잠들어 있는 진행 상태이므로 현재분사 sleeping이 옳습니다. slept는 수동 의미를 만들 수 없고, 명사를 꾸미는 용법도 없습니다."
+    },
+    {
+      "id": "u04-c4-ch-005",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "The {{blank}} prisoner was recaptured within a day, only two miles from the prison gate.",
+      "options": ["escaping", "escaped"],
+      "answer": 1,
+      "translation": "탈옥한 죄수는 하루 만에 교도소 정문에서 겨우 2마일 떨어진 곳에서 다시 붙잡혔습니다.",
+      "hints": [
+        "재검거 시점과 탈옥 시점의 선후 관계를 문맥에서 읽으십시오.",
+        "자동사의 분사는 진행이면 -ing, 이미 끝난 결과 상태면 p.p.입니다."
+      ],
+      "explanation": "escape는 자동사이므로 완료 여부로 판단합니다. 하루 뒤 2마일 밖에서 붙잡혔다는 것은 탈옥이 이미 완료된 뒤라는 뜻이므로, '이미 탈옥한'을 나타내는 과거분사 escaped가 옳습니다. escaping은 지금 빠져나가는 중이라는 진행의 뜻이므로 재검거 시점의 서술과 맞지 않습니다."
+    },
+    {
+      "id": "u04-c4-ch-006",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "Biologists tracked the {{blank}} geese with tiny radio transmitters attached to their legs.",
+      "options": ["migrating", "migrated"],
+      "answer": 0,
+      "translation": "생물학자들은 다리에 부착된 소형 무선 송신기로 이동 중인 기러기들을 추적했습니다.",
+      "hints": [
+        "분사의 원형이 자동사인지 확인하고, 추적 장면이 진행 중인지 물으십시오.",
+        "자동사의 p.p. 수식은 굳어진 소수 동사만 가능합니다 — 진행·완료 여부부터 판단하십시오."
+      ],
+      "explanation": "migrate는 자동사이므로 능·수동이 아니라 진행 여부로 판단합니다. 기러기들은 지금 이동 중인 상태로 추적당하는 것이므로 현재분사 migrating이 옳습니다. '목적어가 없으니 과거분사'라는 공식으로 migrated를 고르면 안 됩니다 — 자동사의 과거분사 수식은 굳어진 소수 동사에서만 가능합니다."
+    },
+    {
+      "id": "u04-c4-ch-007",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "Divers photographed the {{blank}} ferry lying on its side sixty meters below the surface.",
+      "options": ["sinking", "sunken"],
+      "answer": 1,
+      "translation": "잠수부들은 수면 아래 60미터 지점에 옆으로 누워 있는 침몰한 여객선을 촬영했습니다.",
+      "hints": [
+        "뒤에 이어지는 묘사가 배의 현재 상태를 어떻게 못 박는지 읽으십시오.",
+        "자동사의 분사는 능·수동이 아니라 '진행인가, 완료인가'로 가립니다."
+      ],
+      "explanation": "sink는 여기서 자동사이고, 배가 가라앉는 사건은 이미 끝났습니다. 수면 아래 60미터에 옆으로 누워 있다는 서술이 완료된 결과 상태를 못 박으므로 과거분사 sunken이 옳습니다. sinking을 고르면 지금 가라앉는 중이라는 뜻이 되어 뒤의 상황 묘사와 모순됩니다."
+    },
+    {
+      "id": "u04-c4-ch-008",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 2,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "The children pressed against the window to watch the slowly {{blank}} hot-air balloons above the festival field.",
+      "options": ["gliding", "glided"],
+      "answer": 0,
+      "translation": "아이들은 축제 마당 위로 천천히 미끄러지듯 떠가는 열기구들을 보려고 창문에 붙어 섰습니다.",
+      "hints": [
+        "부사가 꾸미는 동작이 지금 일어나는 중인지 확인하십시오.",
+        "자동사는 목적어가 없어도 진행 중이면 -ing가 될 수 있습니다 — 공식이 아니라 시간상으로 판단하십시오."
+      ],
+      "explanation": "glide는 자동사이므로 진행 여부로 판단합니다. 열기구들이 지금 하늘을 떠가는 중이고 부사 slowly가 그 진행 과정을 수식하므로 현재분사 gliding이 옳습니다. glided를 고르면 수동 또는 완료로 읽어야 하는데, 자동사 glide에는 수동이 성립하지 않고 완료 수식이 굳어진 동사도 아닙니다."
+    },
+    {
+      "id": "u04-c4-ch-009",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "Rescue teams struggled to reach the farms as the steadily {{blank}} floodwater turned every low road into a river.",
+      "options": ["rising", "risen"],
+      "answer": 0,
+      "translation": "꾸준히 불어나는 홍수가 낮은 도로마다 강으로 바꿔 놓는 동안 구조대는 농가에 접근하려고 애썼습니다.",
+      "hints": [
+        "부사와 뒤 절의 상황이 물의 상태를 진행으로 보여 주는지 완료로 보여 주는지 읽으십시오.",
+        "자동사의 분사는 진행이면 -ing, 완료된 결과면 p.p.입니다."
+      ],
+      "explanation": "rise는 자동사이므로 '진행 중인가, 끝났는가'로 판단합니다. 물이 지금도 꾸준히 불어나는 중임을 부사 steadily가 보여 주므로 현재분사 rising이 옳습니다. risen은 완료를 나타내는 형태여서 '꾸준히'라는 진행 수식과 충돌하며, 명사 앞 수식으로도 쓰이지 않습니다."
+    },
+    {
+      "id": "u04-c4-ch-010",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "The lecture series, organized by engineers {{blank}} from the shipyard more than a decade ago, attracts students who want practical stories rather than theory.",
+      "options": ["retiring", "retired"],
+      "answer": 1,
+      "translation": "십여 년 전 조선소에서 은퇴한 기술자들이 꾸리는 그 강연 시리즈는 이론보다 실무 이야기를 원하는 학생들을 끌어모읍니다.",
+      "hints": [
+        "시점을 나타내는 표현이 동작의 완료 여부를 어떻게 고정하는지 확인하십시오.",
+        "자동사의 p.p. 수식은 수동이 아니라 '이미 끝난' 상태를 뜻합니다."
+      ],
+      "explanation": "retire는 자동사이므로 완료 여부로 판단합니다. more than a decade ago라는 완료 시점 표현이 있으므로 '이미 은퇴한'을 뜻하는 과거분사 retired가 옳고, 이는 수동이 아니라 완료의 의미입니다. retiring을 고르면 지금 은퇴하는 중이라는 뜻이 되어 십여 년 전이라는 시점과 모순됩니다."
+    },
+    {
+      "id": "u04-c4-ch-011",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "perfect-participle"],
+      "stem": "Archaeologists have spent nearly thirty years assembling fragments of pottery that a long {{blank}} civilization left scattered along the dried riverbed.",
+      "options": ["vanished", "vanishing"],
+      "answer": 0,
+      "translation": "고고학자들은 오래전에 사라진 문명이 말라붙은 강바닥을 따라 흩어 놓은 도자기 파편들을 맞추는 데 거의 삼십 년을 보냈습니다.",
+      "hints": [
+        "빈칸 앞의 부사와 발굴 문맥이 이 문명의 상태를 어떻게 규정하는지 읽으십시오.",
+        "자동사의 분사는 진행이면 -ing, 이미 끝난 결과 상태면 p.p.입니다."
+      ],
+      "explanation": "vanish는 자동사이므로 완료 여부로 판단합니다. 강바닥이 말라붙고 고고학 발굴 대상이 되었다는 문맥과 '오래전에'를 뜻하는 long이 이미 사라진 결과 상태를 가리키므로 과거분사 vanished가 옳습니다. vanishing을 고르면 지금 사라지고 있는 중이라는 뜻이 되어 long과 충돌합니다."
+    },
+    {
+      "id": "u04-c4-ch-012",
+      "unitId": "u04",
+      "conceptId": "u04-c4",
+      "type": "CHOICE",
+      "difficulty": 3,
+      "trapTags": ["intransitive-participle", "no-object-decoy"],
+      "stem": "Residents of the valley, warned by sirens that the long-quiet volcano had begun to stir, watched columns of ash from the {{blank}} crater darken the morning sky.",
+      "options": ["erupted", "erupting"],
+      "answer": 1,
+      "translation": "오랫동안 잠잠하던 화산이 깨어나기 시작했다는 사이렌 경보를 들은 계곡 주민들은 분화 중인 분화구에서 솟은 화산재 기둥이 아침 하늘을 어둡게 만드는 것을 지켜보았습니다.",
+      "hints": [
+        "화산재가 지금 솟고 있는지, 분화가 끝난 뒤인지 장면에서 판단하십시오.",
+        "자동사는 능·수동 대신 진행·완료로 가립니다 — 목적어 유무 공식은 버리십시오."
+      ],
+      "explanation": "erupt는 자동사이므로 능·수동이 아니라 진행 여부로 판단합니다. 화산재 기둥이 지금 하늘을 어둡게 만들고 있으므로 분화가 진행 중이고, 따라서 현재분사 erupting이 옳습니다. erupted를 고르면 분화가 끝난 분화구라는 뜻이 되어 지금 치솟는 화산재와 모순됩니다."
+    }
+  ]
+}

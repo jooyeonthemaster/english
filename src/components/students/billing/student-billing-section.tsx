@@ -4,15 +4,24 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, Wallet } from "lucide-react";
 import { toast } from "sonner";
-import { cn, formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { StatusPill, type PillTone } from "@/components/layout/page-frame";
 import { getStudentInvoices, cancelInvoice } from "@/actions/billing";
 import { deriveInvoiceState, invoiceOutstanding } from "@/lib/billing-status";
-import { BillingStatusDot } from "@/app/(director)/director/tutor/_components/billing-status-dot";
 import { PaymentTimeline } from "./payment-timeline";
 import { IssueInvoiceDialog } from "./issue-invoice-dialog";
 import { RecordPaymentDialog } from "./record-payment-dialog";
 import type { StudentInvoice } from "./types";
+
+/** 수납 상태 → soft 3톤 (완납 emerald · 부분납 blue · 연체 rose · 그 외 slate) */
+const BILLING_TONE: Record<string, PillTone> = {
+  PAID: "emerald",
+  PARTIAL: "blue",
+  OVERDUE: "rose",
+  PENDING: "slate",
+  NONE: "slate",
+};
 
 function monthKey(d: Date | string) {
   const x = new Date(d);
@@ -55,68 +64,70 @@ export function StudentBillingSection({
 
   function handleCancel() {
     if (!current) return;
-    if (!confirm("이 청구서를 취소할까요?")) return;
+    if (!confirm("이 청구서를 취소하시겠습니까?")) return;
     startTransition(async () => {
       const result = await cancelInvoice(current.id);
       if (result.success) {
-        toast.success("청구서를 취소했어요.");
+        toast.success("청구서를 취소했습니다.");
         await load();
         router.refresh();
       } else {
-        toast.error(result.error || "취소에 실패했어요.");
+        toast.error(result.error || "취소에 실패했습니다.");
       }
     });
   }
 
   return (
-    <div className="space-y-5">
-      <div className="rounded-xl border border-[#E5E8EB] bg-white p-5">
-        <div className="flex items-center justify-between">
-          <p className="flex items-center gap-2 text-sm font-bold text-[#191F28]">
-            <Wallet className="size-4 text-[#3182F6]" />
+    <div className="space-y-4">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <p className="flex items-center gap-2 text-[13px] font-bold text-slate-900">
+            <Wallet className="size-4 text-blue-600" aria-hidden />
             이번 달 원비
           </p>
           {isDirector && (
             <Button
               onClick={() => setIssueOpen(true)}
-              className="h-9 rounded-lg bg-blue-600 text-sm font-bold text-white hover:bg-blue-700"
+              className="h-8 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white hover:bg-blue-700"
             >
-              <Plus className="size-4" />
+              <Plus className="size-3.5" aria-hidden />
               청구서 발행
             </Button>
           )}
         </div>
 
         {invoices === null ? (
-          <div className="flex items-center justify-center py-10 text-[#8B95A1]">
-            <Loader2 className="size-5 animate-spin" />
+          <div className="flex items-center justify-center py-10 text-slate-400">
+            <Loader2 className="size-5 animate-spin" aria-hidden />
           </div>
         ) : current && currentState ? (
-          <div className="mt-4 rounded-xl bg-[#F7F8FA] p-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[22px] font-black tracking-tight text-[#191F28]">
+          <div className="mt-4 rounded-lg bg-slate-50 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xl font-bold tracking-tight tabular-nums text-slate-900">
                   {formatCurrency(current.finalAmount)}
                 </p>
                 {outstanding > 0 && (
-                  <p className="mt-0.5 text-sm font-bold text-[#F04452]">
+                  <p className="mt-0.5 text-[13px] font-bold text-rose-600">
                     미납 {formatCurrency(outstanding)}
                   </p>
                 )}
-                <p className="mt-1 text-[13px] font-medium text-[#8B95A1]">
+                <p className="mt-1 text-[12.5px] font-medium text-slate-400">
                   {current.title} · 납부기한 {formatDate(current.dueDate)}
                   {currentState.daysOverdue > 0 && ` (${currentState.daysOverdue}일 지남)`}
                 </p>
               </div>
-              <BillingStatusDot state={currentState.state} label={currentState.label} />
+              <StatusPill tone={BILLING_TONE[currentState.state] ?? "slate"}>
+                {currentState.label}
+              </StatusPill>
             </div>
 
             {isDirector && (outstanding > 0 || canCancel) && (
-              <div className="mt-4 flex flex-wrap gap-2 border-t border-[#E5E8EB] pt-4">
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-200 pt-4">
                 {outstanding > 0 && (
                   <Button
                     onClick={() => setPayTarget(current)}
-                    className="h-9 rounded-lg bg-[#E8F3FF] text-sm font-bold text-[#3182F6] shadow-none hover:bg-[#D8EBFF]"
+                    className="h-8 rounded-md bg-blue-50 px-3 text-[12.5px] font-semibold text-blue-700 shadow-none hover:bg-blue-100"
                   >
                     완납 / 부분 납부
                   </Button>
@@ -126,9 +137,7 @@ export function StudentBillingSection({
                     onClick={handleCancel}
                     variant="outline"
                     disabled={isPending}
-                    className={cn(
-                      "h-9 rounded-lg border-[#E5E8EB] text-sm font-bold text-[#6B7684] hover:bg-[#F7F8FA]",
-                    )}
+                    className="h-8 rounded-md border-slate-200 bg-white px-3 text-[12.5px] font-semibold text-slate-600 hover:bg-slate-50"
                   >
                     청구 취소
                   </Button>
@@ -137,24 +146,28 @@ export function StudentBillingSection({
             )}
           </div>
         ) : (
-          <div className="mt-4 rounded-xl bg-[#F7F8FA] px-4 py-8 text-center">
-            <p className="text-sm font-bold text-[#6B7684]">이번 달 청구서가 없어요</p>
-            <p className="mt-1 text-xs font-medium text-[#8B95A1]">
-              {isDirector ? "청구서 발행으로 시작하세요." : "원장이 청구서를 발행하면 표시돼요."}
+          <div className="mt-4 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 px-4 py-8 text-center">
+            <p className="text-[13px] font-semibold text-slate-400">
+              이번 달 청구서가 없습니다
+            </p>
+            <p className="mt-1 text-[12px] font-medium text-slate-400">
+              {isDirector
+                ? "청구서 발행으로 시작해 주세요."
+                : "원장이 청구서를 발행하면 표시됩니다."}
             </p>
           </div>
         )}
 
-        <p className="mt-3 text-[12px] font-medium text-[#AEB5BC]">
+        <p className="mt-3 text-[11.5px] font-medium text-slate-400">
           실제 결제는 연동되지 않으며 수동으로 기록·관리합니다.
         </p>
       </div>
 
-      <div className="rounded-xl border border-[#E5E8EB] bg-white p-5">
-        <p className="mb-4 text-sm font-bold text-[#191F28]">납부 이력</p>
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="mb-4 text-[13px] font-bold text-slate-900">납부 이력</p>
         {invoices === null ? (
-          <div className="flex items-center justify-center py-6 text-[#8B95A1]">
-            <Loader2 className="size-5 animate-spin" />
+          <div className="flex items-center justify-center py-6 text-slate-400">
+            <Loader2 className="size-5 animate-spin" aria-hidden />
           </div>
         ) : (
           <PaymentTimeline invoices={invoices} />

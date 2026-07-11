@@ -27,10 +27,13 @@ interface ActionResult {
 // ---------------------------------------------------------------------------
 
 export async function getExamSubmissions(examId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
 
   const submissions = await prisma.examSubmission.findMany({
-    where: { examId },
+    // 교차 테넌트 가드(26-07-09 수리): examId 만으로 조회하면 다른 학원 시험지의
+    // 제출·학생 명단이 열람된다. 세션 학원 소속 시험지로 한정 — 타 학원 examId 는
+    // 빈 배열(정상 케이스 반환 형태 불변).
+    where: { examId, exam: { academyId: staff.academyId } },
     include: {
       student: { select: { id: true, name: true, studentCode: true } },
     },
@@ -58,6 +61,13 @@ export async function gradeSubmission(
     });
 
     if (!submission) {
+      return { success: false, error: "제출을 찾을 수 없습니다." };
+    }
+
+    // 교차 테넌트 가드(26-07-09 수리): submissionId 만으로 조회하므로, 다른 학원
+    // 시험지의 제출을 채점(점수·상태 변조)할 수 있었다. 시험지 소유 학원과 세션
+    // 학원을 대조 — 불일치면 존재 여부를 구분하지 않는 동일 오류로 거부한다.
+    if (submission.exam.academyId !== staff.academyId) {
       return { success: false, error: "제출을 찾을 수 없습니다." };
     }
 
@@ -116,10 +126,13 @@ export async function gradeSubmission(
 // ---------------------------------------------------------------------------
 
 export async function getExamAnalytics(examId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
 
-  const exam = await prisma.exam.findUnique({
-    where: { id: examId },
+  // 교차 테넌트 가드(26-07-09 수리): findUnique(id)만으로는 다른 학원 시험지의
+  // 성적 분포·문항 정오 통계가 열람된다. academyId 를 where 에 포함 — 타 학원
+  // examId 는 미존재와 동일하게 null 반환(정상 케이스 반환 형태 불변).
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId: staff.academyId },
     include: {
       questions: {
         where: { question: { deletedAt: null } },

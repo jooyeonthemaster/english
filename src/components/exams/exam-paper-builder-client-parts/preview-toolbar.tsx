@@ -7,6 +7,7 @@ import {
   Download,
   Eye,
   Loader2,
+  MonitorSmartphone,
   Printer,
   Redo2,
   Trash2,
@@ -120,6 +121,14 @@ interface PreviewToolbarProps {
   /** 미지정 시 저장 버튼을 숨긴다 — 읽기 전용 미리보기에서 사용. */
   onSave?: () => void;
   onSaveAs?: () => void;
+  /**
+   * 태블릿 시험 배포(26-07-09 대개편 V1) — 지정 시 템플릿 라벨 배지 자리에 배포
+   * 버튼을 렌더한다(유저 확정: 템플릿 인지는 설정 패널 그리드로 충분). 미지정
+   * (플래그 off·읽기 전용)이면 종전 배지 그대로 — 무회귀.
+   */
+  onDeploy?: () => void;
+  /** 배포 불가 사유(국어 시험지 등) — 지정 시 버튼 disabled + 툴팁으로 고지. */
+  deployDisabledReason?: string | null;
 }
 
 export function PreviewToolbar({
@@ -142,6 +151,8 @@ export function PreviewToolbar({
   onResetPaper,
   onSave,
   onSaveAs,
+  onDeploy,
+  deployDisabledReason,
 }: PreviewToolbarProps) {
   const [downloadOpen, setDownloadOpen] = useState(false);
   const [compactLabels, setCompactLabels] = useState(false);
@@ -202,13 +213,31 @@ export function PreviewToolbar({
         <span className="whitespace-nowrap text-[12px] font-bold text-slate-600">
           {compactLabels ? paperSize : `${paperSize} 미리보기`}
         </span>
-        <span
-          className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
-          title={templateLabel}
-          aria-label={templateLabel}
-        >
-          {compactLabels ? compactTemplateLabel : templateLabel}
-        </span>
+        {onDeploy ? (
+          // 태블릿 시험 배포 — 템플릿 배지 자리(유저 확정 교체). 저장 버튼(파란
+          // 채움)보다 낮은 위계의 테두리형이되 Toss 블루로 눈에 띄게.
+          <button
+            type="button"
+            onClick={onDeploy}
+            disabled={Boolean(deployDisabledReason)}
+            title={deployDisabledReason ?? "태블릿 시험 배포"}
+            aria-label={deployDisabledReason ?? "태블릿 시험 배포"}
+            className={`flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-[#3182F6]/45 bg-white text-[11px] font-bold text-[#3182F6] transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 disabled:hover:bg-white ${
+              compactLabels ? "w-8 px-0" : "px-2.5"
+            }`}
+          >
+            <MonitorSmartphone className="h-3.5 w-3.5" aria-hidden="true" />
+            {!compactLabels && <span>태블릿 시험 배포</span>}
+          </button>
+        ) : (
+          <span
+            className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
+            title={templateLabel}
+            aria-label={templateLabel}
+          >
+            {compactLabels ? compactTemplateLabel : templateLabel}
+          </span>
+        )}
       </div>
       <div className="no-print flex shrink-0 items-center gap-1">
         {dirty && (

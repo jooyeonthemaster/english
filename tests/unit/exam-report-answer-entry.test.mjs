@@ -153,6 +153,46 @@ const keyed = applyAnswerSubmission({
 });
 check("numberKey: 공백 제거 조인 + examMap 번호로 저장", byNum(keyed.responses, "서술형 1").studentAnswer === "공백 없는 표기");
 
+// ── 전 문항 기입 검증(missing) — 라우트 400 INCOMPLETE 재료 ──
+const fullEntries = applyAnswerSubmission({
+  examMap,
+  existing: null,
+  entries: [
+    { number: "1", choice: "3" },
+    { number: "2", choice: "5" },
+    { number: "3", choice: "4" },
+    { number: "서술형 1", text: "답" },
+    { number: "서술형2", text: "답" }, // numberKey 드리프트 표기도 기입 인정
+  ],
+});
+check("missing: 전 문항 유효 entry → 빈 배열", fullEntries.missing.length === 0);
+check("missing: 부분 제출 시 미기입 문항 order 순 수집", json(mc.missing) === json(["서술형 1", "서술형 2"]));
+const invalidEntries = applyAnswerSubmission({
+  examMap,
+  existing: null,
+  entries: [
+    { number: "1", choice: "6" },        // MC 비유효 선지 → 미기입
+    { number: "2", text: "MC에 text" },  // MC 에 text 만 → 미기입
+    { number: "3", choice: "1" },
+    { number: "서술형 1", text: "   " }, // 공백만 → 미기입
+    { number: "서술형 2", text: "답" },
+  ],
+});
+check("missing: 형식 비유효 entry 는 미기입 취급", json(invalidEntries.missing) === json(["1", "2", "서술형 1"]));
+const reviewedCovered = applyAnswerSubmission({
+  examMap,
+  existing: [reviewedRow],
+  entries: [
+    { number: "1", choice: "3" }, // reviewed 스킵 행 — 그래도 기입으로 인정
+    { number: "2", choice: "2" },
+    { number: "3", choice: "4" },
+    { number: "서술형 1", text: "답" },
+    { number: "서술형 2", text: "답" },
+  ],
+});
+check("missing: reviewed 스킵 행도 유효 entry 면 기입 인정", reviewedCovered.missing.length === 0);
+check("missing: reviewed 스킵과 병존(불변식 유지)", json(reviewedCovered.skippedReviewed) === json(["1"]));
+
 process.stdout.write(JSON.stringify({ passed, failed: failures.length, failures }));
 `;
 
@@ -181,5 +221,5 @@ const summary = runHarness();
 
 test("exam-report answer-entry: 답안 링크 순수 로직 계약", () => {
   assert.equal(summary.failed, 0, `answer-entry failures: ${JSON.stringify(summary.failures)}`);
-  assert.ok(summary.passed >= 28, `expected ≥28 checks, got ${summary.passed}`);
+  assert.ok(summary.passed >= 33, `expected ≥33 checks, got ${summary.passed}`);
 });

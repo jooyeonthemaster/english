@@ -1,0 +1,277 @@
+{
+  "unitId": "u03",
+  "concepts": [
+    {
+      "id": "u03-c1",
+      "unitId": "u03",
+      "order": 1,
+      "title": "능·수동 기본 판단",
+      "oneLiner": "주어가 동작을 하면 능동, 받으면 수동(be+p.p.)입니다.",
+      "algorithm": [
+        "밑줄 친 동사의 주어를 먼저 찾습니다.",
+        "주어가 그 동작을 직접 하는지, 아니면 당하는지 의미 관계를 따집니다.",
+        "주어가 하는 쪽이면 능동, 당하는 쪽이면 be+p.p. 수동을 고릅니다.",
+        "수동을 골랐다면 '누가 그 동작을 했는가'를 붙여 보아 말이 되는지 최종 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "주어가 동작의 주체이면 능동태 동사를 씁니다.",
+          "examples": [
+            {
+              "en": "The committee **approved** the new safety rules last week.",
+              "ko": "위원회는 지난주에 새 안전 규정을 승인했습니다.",
+              "note": "주어 The committee가 승인의 주체 → 능동"
+            }
+          ]
+        },
+        {
+          "rule": "주어가 동작을 받는 대상이면 be+p.p. 수동태를 씁니다.",
+          "examples": [
+            {
+              "en": "The new safety rules **were approved** by the committee last week.",
+              "ko": "새 안전 규정은 지난주에 위원회에 의해 승인되었습니다.",
+              "note": "주어 rules가 '승인되는' 대상 → be+p.p."
+            }
+          ]
+        },
+        {
+          "rule": "판단이 헷갈리면 '주어가 ~하다'와 '주어가 ~되다'를 각각 대입해 자연스러운 쪽을 고릅니다.",
+          "examples": [
+            {
+              "en": "This bridge **was built** more than a century ago.",
+              "ko": "이 다리는 백 년도 더 전에 지어졌습니다.",
+              "note": "다리는 '짓는' 주체가 아니라 '지어지는' 대상 → 수동"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "by 행위자가 없어도 수동은 성립합니다",
+          "body": "실제 수동태 문장의 대부분은 by 행위자를 생략합니다. by가 안 보인다는 이유로 능동을 고르면 안 되고, 주어와 동사의 의미 관계만으로 판단해야 합니다.",
+          "example": {
+            "en": "The results of the survey **were announced** without any explanation.",
+            "ko": "그 설문 조사의 결과는 아무 설명 없이 발표되었습니다.",
+            "note": "by 행위자 없음 — 그래도 주어가 '발표되는' 대상이므로 수동"
+          }
+        },
+        {
+          "title": "사물 주어라고 무조건 수동이 아닙니다",
+          "body": "'사물이 주어니까 수동'이라는 암기는 오답을 만듭니다. 사물 주어도 show·cause·provide처럼 동작의 주체가 될 수 있으므로, 반드시 주어와 동사의 의미 관계로 판단합니다.",
+          "example": {
+            "en": "The graph **shows** a steady rise in average temperature.",
+            "ko": "그 그래프는 평균 기온의 꾸준한 상승을 보여 줍니다.",
+            "note": "사물 주어 The graph가 '보여 주는' 주체 → 능동"
+          }
+        }
+      ],
+      "confusableWith": ["u03-c2", "u04-c1", "u09-c2"]
+    },
+    {
+      "id": "u03-c2",
+      "unitId": "u03",
+      "order": 2,
+      "title": "목적어 유무 판단법과 관계절 함정",
+      "oneLiner": "뒤에 목적어가 있으면 능동 — 단, 관계절에서 목적어가 앞으로 빠진 자리는 능동 유지입니다.",
+      "algorithm": [
+        "밑줄 동사 바로 뒤에 목적어(명사)가 있는지 확인합니다.",
+        "목적어가 있으면 능동, 없으면 일단 수동을 의심합니다.",
+        "목적어가 안 보이면, 여기가 관계절 안이고 목적어가 선행사로 앞에 빠져나간 자리는 아닌지 확인합니다.",
+        "선행사를 목적어 자리에 되돌려 넣어 말이 되면, 목적어가 안 보여도 능동을 유지합니다."
+      ],
+      "rules": [
+        {
+          "rule": "타동사 뒤에 목적어가 그대로 있으면 능동입니다.",
+          "examples": [
+            {
+              "en": "Ocean currents **carry** warm water toward the northern coast.",
+              "ko": "해류는 따뜻한 물을 북쪽 해안 쪽으로 실어 나릅니다.",
+              "note": "carry 뒤에 목적어 warm water가 있음 → 능동"
+            }
+          ]
+        },
+        {
+          "rule": "타동사인데 목적어가 없고 주어가 그 동작의 대상이면 수동입니다.",
+          "examples": [
+            {
+              "en": "Warm water **is carried** toward the coast by ocean currents.",
+              "ko": "따뜻한 물은 해류에 의해 해안 쪽으로 실려 갑니다.",
+              "note": "carried 뒤에 목적어 없음 + 주어가 대상 → 수동"
+            }
+          ]
+        },
+        {
+          "rule": "관계절에서는 목적어가 선행사로 빠져나가므로, 목적어가 안 보여도 능동을 유지합니다.",
+          "examples": [
+            {
+              "en": "The samples that the team **collected** last month support this claim.",
+              "ko": "그 팀이 지난달에 수집한 표본들은 이 주장을 뒷받침합니다.",
+              "note": "collected 뒤가 비어 보이지만 목적어는 선행사 The samples로 이동 → 능동 유지"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "관계절의 빈자리를 수동 신호로 착각",
+          "body": "that/which 뒤의 동사에 목적어가 안 보이면 수동으로 고치고 싶어집니다. 그러나 그 빈자리는 선행사가 빠져나간 자리입니다. 선행사를 목적어 자리에 되돌려 넣어 말이 되면 능동이 옳고, 수동으로 고치면 오히려 비문이 됩니다.",
+          "example": {
+            "en": "The theory that many scientists once **rejected** is now widely accepted.",
+            "ko": "많은 과학자들이 한때 거부했던 그 이론은 이제 널리 받아들여지고 있습니다.",
+            "note": "rejected의 목적어 = 선행사 The theory → were rejected로 고치면 비문"
+          }
+        },
+        {
+          "title": "수동 뒤에 명사가 남는 4형식·5형식",
+          "body": "give·offer처럼 목적어를 두 개 갖는 동사와 call·consider처럼 목적격 보어를 갖는 동사는 수동태 뒤에도 명사가 남습니다. '동사 뒤에 명사가 보이니 능동'이라고 속단하면 이 자리에서 틀립니다.",
+          "example": {
+            "en": "Each participant **was given** a short questionnaire before the interview.",
+            "ko": "각 참가자는 면접 전에 짧은 설문지를 받았습니다.",
+            "note": "4형식 수동 — was given 뒤에 명사 a short questionnaire가 남는 것이 정상"
+          }
+        },
+        {
+          "title": "선행사가 주어 자리로 빠진 관계절",
+          "body": "that/which 바로 뒤에 동사가 오면 선행사가 관계절의 주어 자리로 빠진 것입니다. 이때 관계절 동사의 태는 다시 선행사와 동사의 의미 관계(하는가, 당하는가)로 판단합니다.",
+          "example": {
+            "en": "The instructions that **were printed** on the box are easy to follow.",
+            "ko": "상자에 인쇄된 설명서는 따라 하기 쉽습니다.",
+            "note": "that 바로 뒤가 동사 → 선행사가 주어 자리, 설명서는 '인쇄되는' 대상 → 수동"
+          }
+        }
+      ],
+      "confusableWith": ["u03-c1", "u03-c3", "u07-c1"]
+    },
+    {
+      "id": "u03-c3",
+      "unitId": "u03",
+      "order": 3,
+      "title": "자동사는 수동 불가",
+      "oneLiner": "occur·happen·appear·arise·remain은 수동태로 쓸 수 없습니다.",
+      "algorithm": [
+        "밑줄 동사가 목적어를 갖지 않는 자동사인지 확인합니다.",
+        "occur·happen·appear·arise·remain 계열 자동사에 be+p.p.가 쓰였다면 즉시 틀린 것으로 판단합니다.",
+        "자동사가 능동으로 쓰인 밑줄은 '목적어가 없으니 수동 아닌가'라는 의심을 버리고 옳다고 판단합니다."
+      ],
+      "rules": [
+        {
+          "rule": "자동사는 목적어가 없으므로 수동태 자체가 성립하지 않습니다.",
+          "examples": [
+            {
+              "en": "Serious side effects rarely **occur** at such low doses.",
+              "ko": "그렇게 낮은 용량에서는 심각한 부작용이 거의 일어나지 않습니다.",
+              "note": "occur는 자동사 → are occurred는 비문"
+            }
+          ]
+        },
+        {
+          "rule": "자동사 뒤에 목적어가 없는 것은 수동의 신호가 아니라 자동사의 정상 형태입니다.",
+          "examples": [
+            {
+              "en": "A strange pattern **appeared** on the screen during the test.",
+              "ko": "실험 중에 화면에 이상한 무늬가 나타났습니다.",
+              "note": "appear 뒤 목적어 없음 = 정상 — 수동으로 고치면 비문"
+            }
+          ]
+        },
+        {
+          "rule": "대표 자동사 occur, happen, appear, disappear, arise, emerge, exist, remain을 한 묶음으로 외워 둡니다.",
+          "examples": [
+            {
+              "en": "Doubts about the plan **remained** even after the long discussion.",
+              "ko": "긴 논의가 끝난 뒤에도 그 계획에 대한 의심은 남아 있었습니다.",
+              "note": "remain은 자동사 → be remained 불가"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "실전 미끼는 '옳은 능동 자동사'입니다",
+          "body": "자동사를 수동으로 뒤집은 표면(be appeared 등)은 누구나 바로 걸러내므로 정답 자리로는 거의 나오지 않습니다. 실전에서는 반대로, 목적어 없이 능동으로 쓰인 자동사에 밑줄을 그어 틀려 보이게 만드는 미끼가 나옵니다. 목적어가 없다는 이유만으로 수동으로 고치려 하면 함정에 걸립니다.",
+          "example": {
+            "en": "Similar problems **arose** when the policy was first introduced.",
+            "ko": "그 정책이 처음 도입되었을 때에도 비슷한 문제들이 생겨났습니다.",
+            "note": "arose는 자동사의 옳은 능동 — were arisen으로 고치면 비문"
+          }
+        },
+        {
+          "title": "자동사·타동사 겸용 동사 주의",
+          "body": "increase·change·open처럼 자동사와 타동사로 모두 쓰이는 동사는 목록 암기만으로 판단할 수 없습니다. 문장 안에서 목적어 유무와 주어의 의미 관계를 함께 확인해야 합니다.",
+          "example": {
+            "en": "Housing prices **increased** sharply during the last decade.",
+            "ko": "주택 가격은 지난 십 년 동안 가파르게 상승했습니다.",
+            "note": "여기서 increase는 자동사 용법 → 능동이 자연스러움"
+          }
+        }
+      ],
+      "confusableWith": ["u03-c2", "u04-c4"]
+    },
+    {
+      "id": "u03-c4",
+      "unitId": "u03",
+      "order": 4,
+      "title": "복합 시제의 수동",
+      "oneLiner": "완료 수동은 have been p.p., 진행 수동은 be being p.p.입니다.",
+      "algorithm": [
+        "먼저 태를 판단합니다 — 주어가 동작을 받는 쪽인지 확인합니다.",
+        "다음으로 시제·상을 판단합니다 — 완료(have)인지 진행(be+-ing)인지 확인합니다.",
+        "두 판단을 결합합니다 — 완료 수동은 have been p.p., 진행 수동은 be being p.p.입니다.",
+        "조동사가 있으면 '조동사+be p.p.' 형태가 맞는지 확인합니다."
+      ],
+      "rules": [
+        {
+          "rule": "완료 수동은 have/has/had been p.p. 형태입니다.",
+          "examples": [
+            {
+              "en": "The ancient wall **has been restored** twice since its discovery.",
+              "ko": "그 오래된 성벽은 발견된 이후 두 차례 복원되어 왔습니다.",
+              "note": "완료(has)+수동(be p.p.) 결합 → has been restored"
+            }
+          ]
+        },
+        {
+          "rule": "진행 수동은 am/is/are/was/were being p.p. 형태입니다.",
+          "examples": [
+            {
+              "en": "The old bridge **is being repaired** and will reopen next month.",
+              "ko": "그 낡은 다리는 지금 수리되고 있으며 다음 달에 다시 개통될 예정입니다.",
+              "note": "진행(be+-ing)+수동(be p.p.) 결합 → is being repaired"
+            }
+          ]
+        },
+        {
+          "rule": "조동사 뒤의 수동은 '조동사+be p.p.'입니다.",
+          "examples": [
+            {
+              "en": "The final decision **will be made** by the entire board.",
+              "ko": "최종 결정은 이사회 전체에 의해 내려질 것입니다.",
+              "note": "조동사 will 뒤는 원형 be → will be made (been·being 불가)"
+            }
+          ]
+        }
+      ],
+      "traps": [
+        {
+          "title": "been과 being 뒤섞기",
+          "body": "have been p.p.와 be being p.p.에서 been과 being을 서로 바꿔 쓰게 만드는 함정이 자주 나옵니다. have 뒤에는 been, 진행의 be동사 뒤에는 being이 온다는 형태 공식을 고정해 둡니다.",
+          "example": {
+            "en": "New evidence **has been added** to the report every year.",
+            "ko": "새로운 증거가 매년 그 보고서에 추가되어 왔습니다.",
+            "note": "have 뒤는 been — has being added는 비문"
+          }
+        },
+        {
+          "title": "be used to 삼형제",
+          "body": "be used to-V는 '~하는 데 사용되다'(수동+용도), be used to V-ing는 '~에 익숙하다', used to-V는 '~하곤 했다'(과거 습관)입니다. be동사의 유무와 to 뒤의 형태(동사원형인가 동명사인가)로 셋을 구분합니다.",
+          "example": {
+            "en": "This sensor **is used to detect** small changes in air pressure.",
+            "ko": "이 센서는 기압의 작은 변화를 감지하는 데 사용됩니다.",
+            "note": "수동+용도 → be used to-V — detecting으로 바꾸면 '익숙하다'로 뜻이 변함"
+          }
+        }
+      ],
+      "confusableWith": ["u03-c1", "u11-c4"]
+    }
+  ]
+}
