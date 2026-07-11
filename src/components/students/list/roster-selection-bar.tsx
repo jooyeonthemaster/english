@@ -10,10 +10,17 @@
 // ============================================================================
 
 import { useState, useTransition } from "react";
-import { CheckSquare, ClipboardList, Loader2, UsersRound, X } from "lucide-react";
+import {
+  CheckSquare,
+  ClipboardList,
+  Loader2,
+  UserRoundMinus,
+  UsersRound,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { enrollStudentsToClass } from "@/actions/classes";
+import { enrollStudentsToClass, removeStudent } from "@/actions/classes";
 import type { HubClass } from "@/app/(director)/director/tutor/_components/types";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +30,7 @@ export function RosterSelectionBar({
   selected,
   classes,
   isDirector,
+  activeClass,
   onAssign,
   onClear,
   onEnrolled,
@@ -31,6 +39,8 @@ export function RosterSelectionBar({
   selected: ReadonlyMap<string, string>;
   classes: HubClass[];
   isDirector: boolean;
+  /** 반 필터가 실제 반일 때 — "이 반에서 제외" 액션 노출 */
+  activeClass?: { id: string; name: string } | null;
   /** 과제 배포 — AssignmentComposer 오픈(부모 소관) */
   onAssign: () => void;
   onClear: () => void;
@@ -42,6 +52,25 @@ export function RosterSelectionBar({
 
   const names = [...selected.values()];
   const activeClasses = classes.filter((c) => c.isActive);
+
+  // 반 필터 화면에서 선택 학생을 그 반에서 제외(DROPPED) — 학생 정보는 유지
+  function removeFromActiveClass() {
+    if (isPending || !activeClass) return;
+    const cls = activeClass;
+    startTransition(async () => {
+      let ok = 0;
+      for (const id of selected.keys()) {
+        const res = await removeStudent(cls.id, id);
+        if (res.success) ok += 1;
+      }
+      if (ok > 0) {
+        toast.success(`${ok}명을 ${cls.name} 반에서 제외했습니다.`);
+        onEnrolled();
+      } else {
+        toast.error("반에서 제외하지 못했습니다.");
+      }
+    });
+  }
 
   function enroll(classId: string, className: string) {
     if (isPending) return;
@@ -144,6 +173,23 @@ export function RosterSelectionBar({
               ) : null}
             </PopoverContent>
           </Popover>
+        ) : null}
+
+        {isDirector && activeClass ? (
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={removeFromActiveClass}
+            title={`선택한 학생을 ${activeClass.name} 반에서 제외합니다 (학생 정보는 유지)`}
+            className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-rose-200 bg-rose-50 px-3 text-[12.5px] font-semibold text-rose-700 transition-colors hover:bg-rose-100 disabled:opacity-50"
+          >
+            {isPending ? (
+              <Loader2 className="size-3.5 animate-spin" aria-hidden />
+            ) : (
+              <UserRoundMinus className="size-3.5" aria-hidden />
+            )}
+            이 반에서 제외
+          </button>
         ) : null}
 
         <button

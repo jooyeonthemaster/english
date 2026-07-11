@@ -17,13 +17,13 @@ import { useSearchDebounce } from "@/hooks/use-search-debounce";
 import { exportStudentsRosterCsv, type StudentFilters } from "@/actions/students";
 import { cn } from "@/lib/utils";
 import {
-  UNASSIGNED_CLASS_ID,
   type HubClass,
   type HubFilters,
   type HubSchool,
   type UpdateParams,
 } from "@/app/(director)/director/tutor/_components/types";
 import type { RosterSort } from "./roster-table";
+import { RosterClassChips } from "./roster-class-chips";
 
 const STATUS_TABS: { value: string; label: string }[] = [
   { value: "ALL", label: "전체" },
@@ -65,6 +65,7 @@ export function RosterToolbar({
   sort,
   isPending,
   dense,
+  isDirector,
   onToggleDense,
   updateParams,
   onRefresh,
@@ -76,6 +77,8 @@ export function RosterToolbar({
   /** 필터·페이지 전환 중 — 새로고침 아이콘 스핀으로 진행 피드백 */
   isPending: boolean;
   dense: boolean;
+  /** 반 생성·관리·드롭 편성은 원장 전용(서버에서도 검증) */
+  isDirector: boolean;
   onToggleDense: () => void;
   updateParams: UpdateParams;
   onRefresh: () => void;
@@ -108,8 +111,6 @@ export function RosterToolbar({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
-
-  const activeClasses = classes.filter((c) => c.isActive);
 
   async function handleExport() {
     if (exporting) return;
@@ -278,49 +279,14 @@ export function RosterToolbar({
         </div>
       </div>
 
-      {/* 반 칩 필터 */}
-      {activeClasses.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="mr-1 text-[11px] font-semibold text-slate-400">반</span>
-          <FilterChip
-            active={!filters.classId}
-            onClick={() => updateParams({ classId: undefined, page: undefined })}
-          >
-            전체 반
-          </FilterChip>
-          <FilterChip
-            active={filters.classId === UNASSIGNED_CLASS_ID}
-            onClick={() =>
-              updateParams({
-                classId:
-                  filters.classId === UNASSIGNED_CLASS_ID
-                    ? undefined
-                    : UNASSIGNED_CLASS_ID,
-                page: undefined,
-              })
-            }
-          >
-            미배정
-          </FilterChip>
-          {activeClasses.map((c) => (
-            <FilterChip
-              key={c.id}
-              active={filters.classId === c.id}
-              onClick={() =>
-                updateParams({
-                  classId: filters.classId === c.id ? undefined : c.id,
-                  page: undefined,
-                })
-              }
-            >
-              {c.name}
-              <span className="ml-1 text-[11px] tabular-nums opacity-70">
-                {c.enrolledCount}
-              </span>
-            </FilterChip>
-          ))}
-        </div>
-      ) : null}
+      {/* 반 칩 — 폴더 관리 문법(필터+생성+이름변경/삭제+드롭 편성) */}
+      <RosterClassChips
+        filters={filters}
+        classes={classes}
+        isDirector={isDirector}
+        updateParams={updateParams}
+        onMutated={onRefresh}
+      />
     </div>
   );
 }

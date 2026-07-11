@@ -11,7 +11,7 @@
 // (students-roster-client)가 페이지 전환에도 유지한다.
 // ============================================================================
 
-import type { MouseEvent } from "react";
+import type { DragEvent, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import type { StudentsResult } from "@/app/(director)/director/tutor/_components
 import { InlineBillingPopover } from "./inline-billing-popover";
 import { InlineDevicePopover } from "./inline-device-popover";
 import { InlineContactPopover } from "./inline-contact-popover";
+import { STUDENT_DRAG_MIME } from "./roster-class-chips";
 
 const STATUS_META: Record<string, { label: string; tone: PillTone }> = {
   ACTIVE: { label: "재원", tone: "emerald" },
@@ -92,6 +93,7 @@ export function RosterTable({
   sort,
   onSort,
   selected,
+  dragAssign = false,
   onToggleSelect,
   onTogglePage,
   onPage,
@@ -104,6 +106,8 @@ export function RosterTable({
   onSort: (key: "name" | "grade") => void;
   /** 벌크 선택 — id→이름(선택 바 이름 칩 표시용) */
   selected: ReadonlyMap<string, string>;
+  /** 행 드래그 → 반 칩 드롭 편성(원장 전용) */
+  dragAssign?: boolean;
   onToggleSelect: (id: string, name: string) => void;
   onTogglePage: (rows: { id: string; name: string }[], select: boolean) => void;
   onPage: (page: number) => void;
@@ -112,6 +116,17 @@ export function RosterTable({
   const { students, page, pageSize, total, totalPages } = studentsData;
 
   const goDetail = (id: string) => router.push(`/director/students/${id}`);
+
+  // 드래그 페이로드 — 끌린 행이 선택에 포함돼 있으면 선택 전체를 함께 나른다
+  const onRowDragStart = (e: DragEvent, student: { id: string; name: string }) => {
+    const rows =
+      selected.has(student.id) && selected.size > 1
+        ? [...selected.entries()].map(([id, name]) => ({ id, name }))
+        : [{ id: student.id, name: student.name }];
+    e.dataTransfer.setData(STUDENT_DRAG_MIME, JSON.stringify({ students: rows }));
+    e.dataTransfer.setData("text/plain", rows.map((r) => r.name).join(", "));
+    e.dataTransfer.effectAllowed = "copyMove";
+  };
 
   const headCell = "px-4 py-2.5 text-left text-[12px] font-semibold text-slate-500";
   const cellPad = dense ? "px-4 py-1.5" : "px-4 py-2.5";
@@ -186,6 +201,10 @@ export function RosterTable({
                   role="button"
                   tabIndex={0}
                   aria-label={`${student.name} 상세 보기`}
+                  draggable={dragAssign}
+                  onDragStart={
+                    dragAssign ? (e) => onRowDragStart(e, student) : undefined
+                  }
                   onClick={() => goDetail(student.id)}
                   onKeyDown={(e) => {
                     // 셀 안 팝오버 트리거에서의 Enter/Space가 행 이동으로

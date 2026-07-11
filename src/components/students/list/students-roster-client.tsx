@@ -324,6 +324,7 @@ export function StudentsRosterClient({
               sort={sort}
               isPending={isPending}
               dense={dense}
+              isDirector={isDirector}
               onToggleDense={toggleDense}
               updateParams={updateParams}
               onRefresh={refresh}
@@ -359,6 +360,7 @@ export function StudentsRosterClient({
                     updateParams({ sort: sort === key ? undefined : key })
                   }
                   selected={selected}
+                  dragAssign={isDirector}
                   onToggleSelect={toggleSelect}
                   onTogglePage={togglePage}
                   onPage={(page) => updateParams({ page: page.toString() })}
@@ -374,6 +376,11 @@ export function StudentsRosterClient({
         selected={selected}
         classes={classes}
         isDirector={isDirector}
+        activeClass={
+          filters.classId && filters.classId !== UNASSIGNED_CLASS_ID
+            ? (classes.find((c) => c.id === filters.classId) ?? null)
+            : null
+        }
         onAssign={() => setComposerOpen(true)}
         onClear={() => setSelected(new Map())}
         onEnrolled={() => {

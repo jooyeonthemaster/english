@@ -6,9 +6,17 @@
 
 import { useTransition } from "react";
 import Link from "next/link";
-import { Activity, ArrowLeft, ClipboardList, MessageSquarePlus, Phone, School } from "lucide-react";
+import {
+  Activity,
+  ArrowLeft,
+  ClipboardList,
+  ExternalLink,
+  MessageSquarePlus,
+  Phone,
+  School,
+} from "lucide-react";
 import { toast } from "sonner";
-import { updateStudentStatus } from "@/actions/students";
+import { openStudentAppSession, updateStudentStatus } from "@/actions/students";
 import { StatusPill, type PillTone } from "@/components/layout/page-frame";
 import { cn, formatRelativeTime } from "@/lib/utils";
 
@@ -76,7 +84,25 @@ export function StudentHubHeader({
   onGoTab: (tab: string) => void;
 }) {
   const [pending, startTransition] = useTransition();
+  const [appOpening, startAppOpen] = useTransition();
   const statusMeta = STATUS_META[student.status] ?? STATUS_META.ACTIVE;
+
+  // 이 학생의 /g 세션을 발급받아 새 탭으로 연다 — 팝업 차단 회피를 위해
+  // 클릭 시점에 창을 먼저 열고, 발급 성공 후 주소를 넣는다.
+  const openStudentApp = () => {
+    const win = window.open("about:blank", "_blank");
+    startAppOpen(async () => {
+      const res = await openStudentAppSession(student.id);
+      if (res.success) {
+        if (win) win.location.href = "/g/home";
+        else window.open("/g/home", "_blank");
+        toast.success(`${student.name} 학생으로 학생 앱을 열었습니다.`);
+      } else {
+        win?.close();
+        toast.error(res.error ?? "학생 앱을 열지 못했습니다.");
+      }
+    });
+  };
 
   const changeStatus = (status: string) => {
     if (status === student.status) return;
@@ -144,6 +170,18 @@ export function StudentHubHeader({
               <MessageSquarePlus className="size-3.5" aria-hidden />
               상담 기록
             </button>
+            {student.status === "ACTIVE" ? (
+              <button
+                type="button"
+                disabled={appOpening}
+                onClick={openStudentApp}
+                title={`${student.name} 학생 계정으로 모바일 학습 앱을 새 탭에서 엽니다`}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
+              >
+                <ExternalLink className="size-3.5" aria-hidden />
+                {appOpening ? "여는 중…" : "학생 앱 열기"}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={onOpenComposer}
