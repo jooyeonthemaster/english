@@ -60,22 +60,28 @@ export function useDemoPagination(sourceQuestions: BuilderQuestion[]) {
       ? pages.length * singlePageHeight + (pages.length - 1) * PREVIEW_PAGE_GAP
       : 0;
 
+  // 상태 업데이터 안에서 다른 setState 를 호출하지 않는다(불순 업데이터). Next dev 의
+  // React StrictMode 는 업데이터를 2번 호출하므로, setItems 안에서 setRemoved 를 부르면
+  // removed 에 같은 항목이 두 번 들어가 key 중복("두 자식이 동일 key") 에러가 난다.
+  // → target 은 커밋된 상태(closure)에서 찾고, 두 setState 를 각각 한 번씩만 호출한다.
   const removeItem = (localId: string) => {
-    setItems((prev) => {
-      const target = prev.find((item) => item.localId === localId);
-      if (!target) return prev;
-      setRemoved((r) => [...r, target]);
-      return reindexItems(prev.filter((item) => item.localId !== localId));
-    });
+    const target = items.find((item) => item.localId === localId);
+    if (!target) return;
+    setItems((prev) => reindexItems(prev.filter((item) => item.localId !== localId)));
+    setRemoved((prev) =>
+      prev.some((item) => item.localId === localId) ? prev : [...prev, target],
+    );
   };
 
   const restoreItem = (localId: string) => {
-    setRemoved((prev) => {
-      const target = prev.find((item) => item.localId === localId);
-      if (!target) return prev;
-      setItems((current) => reindexItems([...current, target]));
-      return prev.filter((item) => item.localId !== localId);
-    });
+    const target = removed.find((item) => item.localId === localId);
+    if (!target) return;
+    setRemoved((prev) => prev.filter((item) => item.localId !== localId));
+    setItems((prev) =>
+      prev.some((item) => item.localId === localId)
+        ? prev
+        : reindexItems([...prev, target]),
+    );
   };
 
   // 인라인 텍스트 편집(발문·선지·헤더 등) — 실제 빌더의 updateItem 계약을

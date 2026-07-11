@@ -316,7 +316,7 @@ export function AssignmentDetailFooter({
       <div className="flex flex-col gap-2">
         {/* 시작일 — 예약 배포 편집(updateStudyAssignment 가 마감과 교차검증) */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex w-14 items-center gap-1.5 text-[12px] font-semibold text-slate-500">
+          <span className="inline-flex w-16 shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] font-semibold text-slate-500">
             <CalendarDays className="size-3.5" aria-hidden />
             시작일
           </span>
@@ -338,7 +338,7 @@ export function AssignmentDetailFooter({
 
         {/* 마감일 + 연장 프리셋 + 저장(시작·마감 함께 저장) */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex w-14 items-center gap-1.5 text-[12px] font-semibold text-slate-500">
+          <span className="inline-flex w-16 shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] font-semibold text-slate-500">
             <CalendarClock className="size-3.5" aria-hidden />
             마감일
           </span>

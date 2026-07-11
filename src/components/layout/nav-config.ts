@@ -281,6 +281,7 @@ export function getNavGroups(
                 icon: Users,
                 href: `${basePath}/students`,
                 directorOnly: true,
+                beta: true,
                 children: [
                   { label: "학생 목록", href: `${basePath}/students` },
                   { label: "과제 관리", href: `${basePath}/students/assignments` },
