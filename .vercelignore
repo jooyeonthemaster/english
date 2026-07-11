@@ -73,3 +73,5 @@ scripts/_gate-fix-test.ts
 scripts/_nemo-relclause-probe.ts
 scripts/_reverify-analyze.mjs
 scripts/_sc-leak-test.ts
+# 로컬 실험 샌드박스 — 배포 컨텍스트 제외
+experiments
