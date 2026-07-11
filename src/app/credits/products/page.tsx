@@ -1,3 +1,4 @@
+import { LandingHeader } from "@/components/landing/landing-header";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -51,7 +52,8 @@ export default async function CreditProductsPage() {
   const costEntries = Object.entries(CREDIT_COSTS) as [OperationType, number][];
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-screen bg-slate-50 pt-20 text-slate-950">
+      <LandingHeader showNav={false} />
       {products.length > 0 && (
         <JsonLd
           id="ld-credit-products"

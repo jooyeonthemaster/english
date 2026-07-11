@@ -37,7 +37,7 @@ function DashboardSkeleton() {
   return (
     <div className="space-y-6">
       <Skeleton className="h-[92px] rounded-2xl" />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-[120px] rounded-2xl" />
         ))}
@@ -163,7 +163,7 @@ async function DashboardContent() {
       {/* ② 오늘의 맥박 */}
       <div>
         <h2 className="text-[13px] font-semibold text-gray-500 mb-3">오늘 현황</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           <PulseCard
             label="오늘 매출"
             value={formatCurrency(data.revenue.today)}
@@ -220,7 +220,7 @@ async function DashboardContent() {
       {/* ③ 이번 달 수익성 */}
       <div>
         <h2 className="text-[13px] font-semibold text-gray-500 mb-3">이번 달 수익성</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
             <span className="text-[12px] font-medium text-gray-400">이번 달 매출</span>
             <div className="mt-2 text-[26px] font-bold text-gray-900 leading-none">

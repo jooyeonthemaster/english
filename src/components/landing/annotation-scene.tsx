@@ -1,10 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, type ReactNode } from "react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { Minus, Square, X } from "lucide-react";
 import { HERO_PASSAGE, HERO_ANNOTATIONS, ANALYSIS_LINES } from "./shared/mock-data";
 import { MarkByKind, ANNOTATION_COLORS, ANNOTATION_LABEL } from "./shared/annotation-marks";
-import { useReducedMotionPref, useTypewriter } from "./shared/use-typewriter";
+import { Reveal } from "./shared/reveal";
+import { DemoGate } from "./demo/demo-gate";
+
+// 실제 분석 리포트 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드.
+// 모바일은 실제 학습지 1페이지 미리보기 창만 보여주고, 버튼 탭 시 데모를 연다.
+const Step2AnalysisDemo = dynamic(
+  () => import("./demo/step2-analysis/step2-analysis-demo"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full animate-pulse rounded-2xl border border-blue-100 bg-slate-50"
+        style={{ height: "max(400px, calc(100svh - 260px))" }}
+      />
+    ),
+  },
+);
 
 function buildAnnotated(text: string, activeCount: number): ReactNode[] {
   const slices = HERO_ANNOTATIONS.slice(0, activeCount).map((a) => ({
@@ -29,19 +48,9 @@ function buildAnnotated(text: string, activeCount: number): ReactNode[] {
   return nodes;
 }
 
-function AnalysisLine({ line, active, reduced }: { line: (typeof ANALYSIS_LINES)[number]; active: boolean; reduced: boolean; }) {
-  const { output, done } = useTypewriter(line.body, {
-    speed: reduced ? 0 : 14,
-    start: active,
-    startDelay: 120,
-  });
+function AnalysisLine({ line }: { line: (typeof ANALYSIS_LINES)[number] }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 12 }}
-      animate={{ opacity: active ? 1 : 0.4, x: active ? 0 : 12 }}
-      transition={{ duration: 0.4 }}
-      className="flex items-start gap-4 py-4 border-b border-blue-50 last:border-0"
-    >
+    <div className="flex items-start gap-4 py-2 border-b border-blue-50 last:border-0">
       <span
         className="w-[4px] h-5 rounded-sm shrink-0 mt-0.5"
         style={{ background: ANNOTATION_COLORS[line.kind] }}
@@ -57,61 +66,177 @@ function AnalysisLine({ line, active, reduced }: { line: (typeof ANALYSIS_LINES)
         )}
       </div>
       <div className="flex-1 text-[14px] font-mono leading-relaxed min-h-[24px] text-gray-700">
-        {active ? (
-          <>
-            {output}
-            {!done && <span className="inline-block w-[6px] h-[12px] bg-[#60A5FA] align-middle ml-[2px] animate-pulse" />}
-          </>
-        ) : (
-          <span className="text-gray-400 font-medium">— 딥다이브 분석 대기 중</span>
-        )}
+        {line.body}
+      </div>
+    </div>
+  );
+}
+
+// 시간차 마킹 연출을 없애고 처음부터 완성된 분석을 보여준다.
+const STEP = HERO_ANNOTATIONS.length;
+
+export function AnnotationScene() {
+  const ref = useRef<HTMLElement>(null);
+  const step = STEP;
+
+  return (
+    <section ref={ref} id="annotation" className="relative w-full border-t border-blue-100/50 bg-[#F8FAFC] py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28">
+      {/* PC(≥lg): 카피(좌) | 데모(우) 한 화면 배치. 모바일은 세로 스택 그대로. */}
+      <div className="mx-auto w-full max-w-[1480px] px-5 sm:px-6 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-8 lg:px-10 xl:px-16">
+        <div className="mb-4 max-w-[900px] lg:mb-0">
+          <Reveal className="mb-3 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:text-[13px] sm:tracking-[0.25em] justify-center lg:justify-start" y={16}>
+            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
+            Feature · 학습지 생성
+            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h2
+              className="text-[25px] font-extrabold leading-[1.2] text-gray-900 sm:text-[30px] lg:text-[34px] lg:leading-[1.3]"
+              style={{ wordBreak: "keep-all" }}
+            >
+              어떤 지문이든,
+              <br />
+              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">
+                바로 수업 가능한 학습지
+              </span>
+              가
+              <br />
+              1초만에 나옵니다.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="mt-3 max-w-3xl break-keep text-[14px] font-medium leading-[1.55] text-gray-600 sm:text-[15px] sm:leading-[1.7] lg:mt-4">
+              문장별 해석·구문 분석부터 학습문제까지,
+              <br />
+              <strong className="text-gray-900 font-bold">인쇄만 하면 수업이 시작되는 학습지</strong>가
+              한 번에 완성됩니다.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* PC: 실제 분석 리포트 문서 데모 / 모바일: 학습지 미리보기 + 풀스크린 시트 데모 */}
+        <DemoGate
+          minWidth="lg"
+          fallback={<AnnotationFallback step={step} />}
+          className="min-w-0"
+          mobileDemo={<Step2AnalysisDemo />}
+        >
+          <Step2AnalysisDemo />
+        </DemoGate>
+      </div>
+    </section>
+  );
+}
+
+function AnnotationFallback({ step }: { step: number }) {
+  return (
+    <>
+      <div className="lg:hidden">
+        <WorksheetWindowPreview />
+      </div>
+      <div className="hidden lg:block">
+        <AnnotationMock step={step} />
+      </div>
+    </>
+  );
+}
+
+/** 모바일 전용 실제 학습지 1페이지 미리보기. */
+function WorksheetWindowPreview() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex justify-center"
+    >
+      <div className="absolute -inset-6 rounded-full bg-blue-300/20 blur-[60px]" />
+      <div className="relative z-10 w-full max-w-[480px] overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-[0_0_0_1px_rgba(15,23,42,0.05),0_30px_60px_-12px_rgba(59,130,246,0.25)]">
+        <div className="flex h-8 items-center justify-between border-b border-slate-200 bg-[#f7f8fa] px-3 sm:h-9">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex size-4 shrink-0 items-center justify-center rounded-[4px] bg-[#2563eb] text-[8px] font-black text-white sm:size-[18px] sm:text-[9px]">
+              한
+            </span>
+            <span className="truncate text-[10.5px] font-bold text-slate-700 sm:text-[11.5px]">
+              SMOAT_분석학습지.hwpx - 한글
+            </span>
+          </div>
+          <div className="flex items-center gap-2.5 text-slate-400">
+            <Minus className="size-3.5" aria-hidden="true" />
+            <Square className="size-2.5" aria-hidden="true" />
+            <X className="size-3.5" aria-hidden="true" />
+          </div>
+        </div>
+
+        <div className="flex h-6 items-center gap-3 border-b border-slate-200 bg-white px-3 text-[10px] font-semibold text-slate-600 sm:h-7 sm:gap-3.5 sm:px-3.5 sm:text-[11px]">
+          {["파일", "편집", "보기", "입력", "서식", "쪽", "보안", "검토", "도구"].map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+
+        <div className="flex h-7 items-center gap-1.5 border-b border-slate-200 bg-[#fafbfc] px-3 sm:h-9">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className="size-4 rounded bg-slate-200/80 sm:size-5" />
+          ))}
+          <span className="mx-1 h-4 w-px bg-slate-200" />
+          <span className="flex h-5 items-center rounded border border-slate-200 bg-white px-2 text-[9.5px] font-semibold text-slate-600 sm:h-6 sm:text-[10.5px]">
+            함초롬바탕
+          </span>
+          <span className="flex h-5 items-center rounded border border-slate-200 bg-white px-2 text-[9.5px] font-semibold text-slate-600 sm:h-6 sm:text-[10.5px]">
+            10.0 pt
+          </span>
+        </div>
+
+        <div
+          className="h-3 border-b border-slate-200 bg-white sm:h-4"
+          style={{
+            backgroundImage: "repeating-linear-gradient(to right, #cbd5e1 0 1px, transparent 1px 24px)",
+            backgroundSize: "auto 7px",
+            backgroundPosition: "14px bottom",
+            backgroundRepeat: "repeat-x",
+          }}
+        />
+
+        <div className="flex h-[230px] justify-center overflow-hidden bg-[#e9edf2] px-4 pt-3 sm:h-[300px] sm:px-6 sm:pt-5">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full overflow-hidden bg-white"
+            style={{
+              aspectRatio: "210 / 297",
+              boxShadow: "0 1px 3px rgba(15,23,42,0.25), 0 0 0 1px rgba(15,23,42,0.04)",
+            }}
+          >
+            <Image
+              src="/landing/generated/actual-smoat-worksheet-page1.webp"
+              alt="SMOAT가 생성한 실제 분석 학습지 1페이지 미리보기"
+              fill
+              sizes="(max-width: 1024px) calc(100vw - 96px), 480px"
+              className="object-cover object-top"
+            />
+          </motion.div>
+        </div>
+
+        <div className="flex h-5 items-center justify-between border-t border-slate-200 bg-[#f7f8fa] px-3 text-[9.5px] font-semibold text-slate-500 sm:h-6 sm:text-[10px]">
+          <span>1쪽 1단 1줄 1칸 · 삽입</span>
+          <span>100%</span>
+        </div>
       </div>
     </motion.div>
   );
 }
 
-export function AnnotationScene() {
-  const reduced = useReducedMotionPref();
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.45 });
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduced) {
-      setStep(HERO_ANNOTATIONS.length);
-      return;
-    }
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    HERO_ANNOTATIONS.forEach((_, i) => {
-      timers.push(setTimeout(() => setStep(i + 1), 500 + i * 950));
-    });
-    return () => timers.forEach(clearTimeout);
-  }, [inView, reduced]);
-
+/** 기존 마킹→분석 목업 — PC 데모 로드 전 폴백으로 유지. */
+function AnnotationMock({ step }: { step: number }) {
   return (
-    <section ref={ref} id="annotation" className="relative w-full min-h-screen bg-[#F8FAFC] py-24 lg:py-32 border-t border-blue-100/50">
-      <div className="px-6 lg:px-16 max-w-[1480px] mx-auto">
-        <div className="mb-20 max-w-[900px]">
-          <div className="text-[13px] uppercase tracking-[0.25em] text-[#60A5FA] font-bold mb-4 flex items-center gap-3">
-            <span className="w-8 h-[2px] bg-[#60A5FA]" />
-            Step 1. AI 영어 지문 분석 · 딥다이브
-          </div>
-          <h2 className="font-extrabold text-gray-900 leading-[1.3]" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
-            AI가 아무거나 분석하는 것이 아닙니다. 선생님이 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">필기한 포인트</span>를 바탕으로 분석합니다.
-          </h2>
-          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl break-keep">
-            단순 텍스트 복붙으로 얻은 의미 없는 결과물은 이제 버리세요. 강사님이 지문에서 
-            <strong className="text-gray-900 font-bold"> 강조하고 마킹한 필기 </strong> 그 자체가 AI의 나침반이 됩니다. 
-            그 출제 의도와 포인트를 100% 이해하여, 가장 정확한 핵심 분석을 자동으로 도출합니다.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_80px_1fr] gap-6 lg:gap-10 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_56px_1fr] xl:grid-cols-[1fr_80px_1fr] gap-6 xl:gap-10 items-stretch">
           {/* Left — passage editor mock (Clean Light Mode) */}
-          <div className="rounded-2xl bg-white border border-blue-100/50 p-5 sm:p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative overflow-hidden">
+          <Reveal delay={0.1} className="rounded-2xl bg-white border border-blue-100/50 p-4 lg:p-5 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#60A5FA] to-transparent opacity-50" />
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-blue-50">
+            <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-blue-50">
               <span className="text-[13px] uppercase tracking-[0.15em] text-blue-400 font-bold">
                 선생님의 원문 마킹
               </span>
@@ -119,10 +244,20 @@ export function AnnotationScene() {
                 Live Input
               </span>
             </div>
-            <p className="text-[17px] leading-[2.1] text-gray-800 font-serif">
+            <div className="relative mb-3 h-[clamp(118px,18vw,178px)] overflow-hidden rounded-xl border border-blue-100 bg-slate-100 shadow-sm lg:[@media(max-height:820px)]:hidden">
+              <Image
+                src="/landing/generated/teacher-marked-passage.webp"
+                alt="선생님이 필기와 형광펜으로 표시한 영어 지문 자료"
+                fill
+                sizes="(max-width: 1024px) 100vw, 520px"
+                className="object-cover object-[center_42%]"
+              />
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white/85 to-transparent" />
+            </div>
+            <p className="text-[15px] leading-[1.75] text-gray-800 font-serif">
               {buildAnnotated(HERO_PASSAGE, step)}
             </p>
-            <div className="mt-10 pt-6 border-t border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <div className="mt-3 pt-3 border-t border-blue-50 flex items-center gap-2.5 flex-wrap">
               {HERO_ANNOTATIONS.map((a, i) => (
                 <div
                   key={a.kind}
@@ -141,7 +276,7 @@ export function AnnotationScene() {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
 
           {/* Middle — Flow indicator */}
           <div className="hidden lg:flex items-center justify-center relative">
@@ -163,9 +298,9 @@ export function AnnotationScene() {
           </div>
 
           {/* Right — analysis output */}
-          <div className="rounded-2xl bg-white border border-blue-100/50 p-5 sm:p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative">
+          <Reveal delay={0.22} className="rounded-2xl bg-white border border-blue-100/50 p-4 lg:p-5 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative">
             <div className="absolute top-0 right-0 w-1/2 h-1 bg-gradient-to-l from-[#60A5FA]/60 to-transparent" />
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-blue-50">
+            <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-blue-50">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <span className="block w-3 h-3 rounded-full bg-[#60A5FA]" />
@@ -178,18 +313,11 @@ export function AnnotationScene() {
               <span className="text-[12px] text-blue-400 font-mono tracking-widest font-bold">{step}/5 완료</span>
             </div>
             <div className="space-y-1">
-              {ANALYSIS_LINES.map((line, i) => (
-                <AnalysisLine
-                  key={line.label}
-                  line={line}
-                  active={i < step}
-                  reduced={reduced}
-                />
+              {ANALYSIS_LINES.map((line) => (
+                <AnalysisLine key={line.label} line={line} />
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
-      </div>
-    </section>
   );
 }

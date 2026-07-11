@@ -47,25 +47,31 @@ export const QUESTION_TYPES: Array<{
   name: string;
   category: QuestionCategory;
 }> = [
-  { no: "01", name: "빈칸추론", category: "객관식" },
-  { no: "02", name: "어법오류", category: "객관식" },
-  { no: "03", name: "어휘추론", category: "객관식" },
-  { no: "04", name: "순서배열", category: "객관식" },
-  { no: "05", name: "문장삽입", category: "객관식" },
-  { no: "06", name: "주제요지", category: "객관식" },
-  { no: "07", name: "제목", category: "객관식" },
-  { no: "08", name: "지시대상", category: "객관식" },
-  { no: "09", name: "일치불일치", category: "객관식" },
-  { no: "10", name: "무관한문장", category: "객관식" },
-  { no: "11", name: "조건영작", category: "서술형" },
-  { no: "12", name: "문장전환", category: "서술형" },
-  { no: "13", name: "핵심빈칸", category: "서술형" },
-  { no: "14", name: "요약완성", category: "서술형" },
-  { no: "15", name: "단어배열", category: "서술형" },
-  { no: "16", name: "문법교정", category: "서술형" },
-  { no: "17", name: "문맥의미", category: "어휘" },
-  { no: "18", name: "동의어", category: "어휘" },
-  { no: "19", name: "반의어", category: "어휘" },
+  { no: "01", name: "빈칸 추론", category: "객관식" },
+  { no: "02", name: "어법 판단", category: "객관식" },
+  { no: "03", name: "네모 어법", category: "객관식" },
+  { no: "04", name: "어휘 적절성", category: "객관식" },
+  { no: "05", name: "글의 순서", category: "객관식" },
+  { no: "06", name: "문장 삽입", category: "객관식" },
+  { no: "07", name: "주제 추론", category: "객관식" },
+  { no: "08", name: "요지/주장", category: "객관식" },
+  { no: "09", name: "제목 추론", category: "객관식" },
+  { no: "10", name: "함축 의미 추론", category: "객관식" },
+  { no: "11", name: "지칭 추론", category: "객관식" },
+  { no: "12", name: "내용 일치", category: "객관식" },
+  { no: "13", name: "요약문 완성(객관식)", category: "객관식" },
+  { no: "14", name: "무관한 문장", category: "객관식" },
+  { no: "15", name: "조건부 영작", category: "서술형" },
+  { no: "16", name: "문장 전환", category: "서술형" },
+  { no: "17", name: "핵심 표현 빈칸", category: "서술형" },
+  { no: "18", name: "요약문 완성", category: "서술형" },
+  { no: "19", name: "요약문 영작", category: "서술형" },
+  { no: "20", name: "배열 영작", category: "서술형" },
+  { no: "21", name: "주제문 영작", category: "서술형" },
+  { no: "22", name: "문법 오류 수정", category: "서술형" },
+  { no: "23", name: "문맥 속 의미", category: "어휘" },
+  { no: "24", name: "동의어", category: "어휘" },
+  { no: "25", name: "반의어", category: "어휘" },
 ];
 
 export const CATEGORY_TINT: Record<QuestionCategory, { bg: string; border: string; text: string }> = {
@@ -82,19 +88,19 @@ export const EXAM_QUESTIONS: Array<{
 }> = [
   {
     no: 1,
-    type: "빈칸추론",
+    type: "빈칸 추론",
     stem: "다음 빈칸에 들어갈 말로 가장 적절한 것은?\n   In the digital age, attention has become the most valuable ______.",
     options: ["resource", "currency", "obstacle", "memory", "tradition"],
   },
   {
     no: 2,
-    type: "어법오류",
+    type: "어법 판단",
     stem: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?\n   Every notification, every scroll, every swipe ① demand a fragment of our ② consciousness...",
     options: ["①", "②", "③", "④", "⑤"],
   },
   {
     no: 3,
-    type: "주제요지",
+    type: "요지/주장",
     stem: "다음 글의 요지로 가장 적절한 것은?",
     options: [
       "디지털 환경은 사고 구조를 형성한다.",
@@ -106,7 +112,7 @@ export const EXAM_QUESTIONS: Array<{
   },
   {
     no: 4,
-    type: "조건영작",
+    type: "조건부 영작",
     stem: "다음 우리말과 같은 뜻이 되도록, [조건]에 맞게 영작하시오.\n   우리가 무엇에 관여하기로 선택하느냐가 우리 사고의 구조를 형성한다.",
   },
 ];
@@ -123,7 +129,7 @@ export type FolderNode = {
 export const FOLDER_TREE: FolderNode[] = [
   {
     id: "school-1",
-    name: "한영고등학교",
+    name: "OO고등학교",
     kind: "folder",
     children: [
       {
@@ -142,7 +148,7 @@ export const FOLDER_TREE: FolderNode[] = [
                 kind: "folder",
                 children: [
                   { id: "doc-1", name: "빈칸추론_세트A", kind: "doc", meta: "15문항", accent: "객관식" },
-                  { id: "doc-2", name: "어법오류_세트B", kind: "doc", meta: "10문항", accent: "객관식" },
+                  { id: "doc-2", name: "어법판단_세트B", kind: "doc", meta: "10문항", accent: "객관식" },
                 ],
               },
               { id: "fin", name: "기말고사", kind: "folder" },
@@ -154,12 +160,12 @@ export const FOLDER_TREE: FolderNode[] = [
       { id: "y25-2", name: "2025학년도 2학기", kind: "folder" },
     ],
   },
-  { id: "school-2", name: "한영여자고등학교", kind: "folder" },
-  { id: "school-3", name: "청담고등학교", kind: "folder" },
+  { id: "school-2", name: "△△여자고등학교", kind: "folder" },
+  { id: "school-3", name: "□□고등학교", kind: "folder" },
 ];
 
 // ============================================================================
-// LIVE GENERATION THEATER — Sample content for each of the 19 question types
+// LIVE GENERATION THEATER — Sample content for each of the 25 question types
 // ============================================================================
 // Each entry drives the main-stage typewriter in <QuestionBurstScene />.
 // Stems are intentionally short (~40-60 chars) so they type within ~600ms.
@@ -200,7 +206,7 @@ export type QuestionSample = {
 export const QUESTION_SAMPLES: QuestionSample[] = [
   {
     no: "01",
-    name: "빈칸추론",
+    name: "빈칸 추론",
     category: "객관식",
     shape: "mcq",
     stem: "다음 빈칸에 들어갈 말로 가장 적절한 것은?",
@@ -211,7 +217,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
   },
   {
     no: "02",
-    name: "어법오류",
+    name: "어법 판단",
     category: "객관식",
     shape: "mcq",
     stem: "밑줄 친 부분 중, 어법상 틀린 것은?",
@@ -222,7 +228,24 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
   },
   {
     no: "03",
-    name: "어휘추론",
+    name: "네모 어법",
+    category: "객관식",
+    shape: "mcq",
+    stem: "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+    given: "Attention (A)[has become / became] the currency, and what we (B)[choose / chose] to engage with (C)[shape / shapes] us.",
+    options: [
+      "has become - choose - shapes",
+      "became - choose - shape",
+      "has become - chose - shape",
+      "became - chose - shapes",
+      "has become - choose - shape",
+    ],
+    answer: "①",
+    sourceTokens: ["has become", "what we choose to engage with"],
+  },
+  {
+    no: "04",
+    name: "어휘 적절성",
     category: "객관식",
     shape: "mcq",
     stem: "밑줄 친 낱말의 쓰임이 적절하지 않은 것은?",
@@ -232,8 +255,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["every swipe", "demands", "consciousness"],
   },
   {
-    no: "04",
-    name: "순서배열",
+    no: "05",
+    name: "글의 순서",
     category: "객관식",
     shape: "ordering",
     stem: "주어진 글 다음에 이어질 순서로 가장 적절한 것은?",
@@ -248,8 +271,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["In the digital age", "attention has become"],
   },
   {
-    no: "05",
-    name: "문장삽입",
+    no: "06",
+    name: "문장 삽입",
     category: "객관식",
     shape: "insert",
     stem: "주어진 문장이 들어가기에 가장 적절한 곳은?",
@@ -259,8 +282,24 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["Every notification", "demands a fragment"],
   },
   {
-    no: "06",
-    name: "주제요지",
+    no: "07",
+    name: "주제 추론",
+    category: "객관식",
+    shape: "mcq",
+    stem: "다음 글의 주제로 가장 적절한 것은?",
+    options: [
+      "the rising value of attention in the digital age",
+      "the complete history of smartphones",
+      "benefits of receiving constant alerts",
+      "why memory matters more than focus",
+      "the sudden decline of digital media",
+    ],
+    answer: "①",
+    sourceTokens: ["attention has become the most valuable currency"],
+  },
+  {
+    no: "08",
+    name: "요지/주장",
     category: "객관식",
     shape: "mcq",
     stem: "다음 글의 요지로 가장 적절한 것은?",
@@ -275,8 +314,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["shapes the architecture of our thinking"],
   },
   {
-    no: "07",
-    name: "제목",
+    no: "09",
+    name: "제목 추론",
     category: "객관식",
     shape: "mcq",
     stem: "다음 글의 제목으로 가장 적절한 것은?",
@@ -291,8 +330,25 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["attention", "the most valuable currency"],
   },
   {
-    no: "08",
-    name: "지시대상",
+    no: "10",
+    name: "함축 의미 추론",
+    category: "객관식",
+    shape: "mcq",
+    stem: "밑줄 친 the most valuable currency가 의미하는 바로 가장 적절한 것은?",
+    given: "Attention has become the most valuable currency of our time.",
+    options: [
+      "a resource everyone competes to win",
+      "a coin used in online stores",
+      "a habit that is easy to give up",
+      "a skill nobody needs anymore",
+      "a rule imposed by the market",
+    ],
+    answer: "①",
+    sourceTokens: ["the most valuable currency"],
+  },
+  {
+    no: "11",
+    name: "지칭 추론",
     category: "객관식",
     shape: "mcq",
     stem: "밑줄 친 it이 가리키는 대상으로 가장 적절한 것은?",
@@ -302,8 +358,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["what we choose to engage with"],
   },
   {
-    no: "09",
-    name: "일치불일치",
+    no: "12",
+    name: "내용 일치",
     category: "객관식",
     shape: "mcq",
     stem: "다음 글의 내용과 일치하지 않는 것은?",
@@ -318,8 +374,25 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["demands a fragment of our consciousness"],
   },
   {
-    no: "10",
-    name: "무관한문장",
+    no: "13",
+    name: "요약문 완성(객관식)",
+    category: "객관식",
+    shape: "mcq",
+    stem: "요약문의 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+    given: "What we (A)______ to focus on ultimately (B)______ our thinking.",
+    options: [
+      "(A) choose - (B) shapes",
+      "(A) refuse - (B) breaks",
+      "(A) forget - (B) blocks",
+      "(A) choose - (B) hides",
+      "(A) avoid - (B) shapes",
+    ],
+    answer: "①",
+    sourceTokens: ["what we choose to engage with shapes"],
+  },
+  {
+    no: "14",
+    name: "무관한 문장",
     category: "객관식",
     shape: "mcq",
     stem: "전체 흐름과 관계 없는 문장은?",
@@ -334,8 +407,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["the most valuable currency"],
   },
   {
-    no: "11",
-    name: "조건영작",
+    no: "15",
+    name: "조건부 영작",
     category: "서술형",
     shape: "write",
     stem: "[조건] however를 포함, 9~11단어로 영작하시오.",
@@ -344,8 +417,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["attention", "currency"],
   },
   {
-    no: "12",
-    name: "문장전환",
+    no: "16",
+    name: "문장 전환",
     category: "서술형",
     shape: "correct",
     stem: "주어진 문장을 수동태로 바꿔 쓰시오.",
@@ -354,8 +427,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["shapes the architecture"],
   },
   {
-    no: "13",
-    name: "핵심빈칸",
+    no: "17",
+    name: "핵심 표현 빈칸",
     category: "서술형",
     shape: "write",
     stem: "빈칸에 들어갈 한 단어를 본문에서 찾아 쓰시오.",
@@ -364,8 +437,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["the most valuable currency"],
   },
   {
-    no: "14",
-    name: "요약완성",
+    no: "18",
+    name: "요약문 완성",
     category: "서술형",
     shape: "blanks",
     stem: "요약문의 (A), (B)에 들어갈 말을 쓰시오.",
@@ -378,8 +451,18 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["what we choose to engage with shapes"],
   },
   {
-    no: "15",
-    name: "단어배열",
+    no: "19",
+    name: "요약문 영작",
+    category: "서술형",
+    shape: "write",
+    stem: "[조건] 본문의 내용을 한 문장으로 요약하여 영작하시오.",
+    prompt: "우리가 주의를 기울이기로 선택한 것이 우리의 사고를 형성한다.",
+    answer: "What we choose to attend to shapes our thinking.",
+    sourceTokens: ["what we choose to engage with shapes"],
+  },
+  {
+    no: "20",
+    name: "배열 영작",
     category: "서술형",
     shape: "arrange",
     stem: "주어진 단어를 바른 순서로 배열하시오.",
@@ -388,8 +471,18 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["attention has become the most valuable currency"],
   },
   {
-    no: "16",
-    name: "문법교정",
+    no: "21",
+    name: "주제문 영작",
+    category: "서술형",
+    shape: "write",
+    stem: "글의 주제문을 8~12단어의 영어로 쓰시오.",
+    prompt: "디지털 시대에 주의력은 가장 가치 있는 통화가 되었다.",
+    answer: "In the digital age, attention has become the most valuable currency.",
+    sourceTokens: ["In the digital age", "the most valuable currency"],
+  },
+  {
+    no: "22",
+    name: "문법 오류 수정",
     category: "서술형",
     shape: "correct",
     stem: "밑줄 친 부분을 어법에 맞게 고쳐 쓰시오.",
@@ -398,8 +491,8 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["Every notification", "demands"],
   },
   {
-    no: "17",
-    name: "문맥의미",
+    no: "23",
+    name: "문맥 속 의미",
     category: "어휘",
     shape: "mcq",
     stem: "밑줄 친 shape의 문맥상 의미로 가장 적절한 것은?",
@@ -409,7 +502,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["shapes the architecture"],
   },
   {
-    no: "18",
+    no: "24",
     name: "동의어",
     category: "어휘",
     shape: "mcq",
@@ -419,7 +512,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     sourceTokens: ["attention"],
   },
   {
-    no: "19",
+    no: "25",
     name: "반의어",
     category: "어휘",
     shape: "mcq",
@@ -437,8 +530,8 @@ export const FOLDER_DOCS: Array<{
   type: string;
 }> = [
   { title: "빈칸추론_세트A", meta: "15문항 · 4월 8일", accent: "객관식", type: "객관식" },
-  { title: "어법오류_세트B", meta: "10문항 · 4월 9일", accent: "객관식", type: "객관식" },
-  { title: "조건영작_세트C", meta: "8문항 · 4월 10일", accent: "서술형", type: "서술형" },
+  { title: "어법판단_세트B", meta: "10문항 · 4월 9일", accent: "객관식", type: "객관식" },
+  { title: "조건부영작_세트C", meta: "8문항 · 4월 10일", accent: "서술형", type: "서술형" },
   { title: "요약완성_세트D", meta: "6문항 · 4월 11일", accent: "서술형", type: "서술형" },
   { title: "동의어_세트E", meta: "20문항 · 4월 12일", accent: "어휘", type: "어휘" },
   { title: "문맥의미_세트F", meta: "12문항 · 4월 12일", accent: "어휘", type: "어휘" },

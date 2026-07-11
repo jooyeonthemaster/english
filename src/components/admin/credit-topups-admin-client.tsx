@@ -722,7 +722,7 @@ export function CreditTopUpsAdminClient({
       </div>
 
       {isPayments && (
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="오늘 결제"
           value={`${stats.todayRevenue.toLocaleString("ko-KR")}원`}

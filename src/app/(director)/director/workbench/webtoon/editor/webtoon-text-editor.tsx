@@ -762,7 +762,7 @@ export function WebtoonTextEditor({
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
         {/* left panel — recognized text list (학습지 편집창 좌측 패널 UI) */}
-        <aside className="flex max-h-[40vh] min-h-0 shrink-0 flex-col overflow-hidden border-b border-slate-200 bg-white lg:h-full lg:max-h-none lg:w-[300px] lg:border-b-0 lg:border-r">
+        <aside className="flex max-h-[40vh] min-h-0 shrink-0 flex-col overflow-hidden border-b border-slate-200 bg-white lg:h-full lg:max-h-none lg:w-[260px] xl:w-[300px] lg:border-b-0 lg:border-r">
           <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3.5">
             <div className="min-w-0">
               <p className="truncate text-[12px] font-black text-slate-800">인식된 텍스트</p>
@@ -838,7 +838,7 @@ export function WebtoonTextEditor({
         </div>
 
         {/* right panel — speech-bubble editor (학습지 편집창 우측 패널 UI) */}
-        <aside className="flex min-h-0 shrink-0 flex-col overflow-hidden border-t border-slate-200 bg-slate-50/80 lg:h-full lg:w-[320px] lg:border-t-0 lg:border-l">
+        <aside className="flex min-h-0 shrink-0 flex-col overflow-hidden border-t border-slate-200 bg-slate-50/80 lg:h-full lg:w-[280px] xl:w-[320px] lg:border-t-0 lg:border-l">
           <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
             <div className="min-w-0">
               <p className="truncate text-[12px] font-black text-slate-800">말풍선 편집</p>

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Grid2X2, Grid3X3, List } from "lucide-react";
+import { Grid2x2, Grid3x3, List } from "lucide-react";
 
 import {
   ViewModeCycleButton,
@@ -76,8 +76,8 @@ function FolderDropZone({ children, onDrop }: FolderDropZoneProps) {
 export type GridCols = "grid3" | "grid2" | "list";
 
 const DRAFT_GRID_OPTIONS = [
-  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
-  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "grid3", label: "3열 보기", Icon: Grid3x3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2x2 },
   { value: "list", label: "목록 보기", Icon: List },
 ] satisfies ReadonlyArray<ViewModeCycleOption<GridCols>>;
 

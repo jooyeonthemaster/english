@@ -1,68 +1,94 @@
 // 서버 컴포넌트. 자식 랜딩 씬은 각자 "use client" 경계를 가지므로
 // 여기서는 SEO 메타/JSON-LD를 SSR HTML 에 정적으로 실을 수 있다.
 import { HeroScene } from "@/components/landing/hero-scene";
+import { IntakeScene } from "@/components/landing/intake-scene";
 import { AnnotationScene } from "@/components/landing/annotation-scene";
 import { QuestionBurstScene } from "@/components/landing/question-burst-scene";
 import { ExamPaperScene } from "@/components/landing/exam-paper-scene";
+import { ReportScene } from "@/components/landing/report-scene";
+import { WebtoonScene } from "@/components/landing/webtoon-scene";
 import { FolderScene } from "@/components/landing/folder-scene";
+import { SampleScene } from "@/components/landing/sample-scene";
 import { CtaScene } from "@/components/landing/cta-scene";
 import { LandingHeader } from "@/components/landing/landing-header";
+import { LandingSnap } from "@/components/landing/landing-snap";
+import { ScrollToTopButton } from "@/components/landing/scroll-to-top-button";
+import { ScrollProgress } from "@/components/landing/scroll-progress";
+import { Reveal } from "@/components/landing/shared/reveal";
+import { LandingBannerStrip } from "@/components/landing/landing-banner-strip";
+import { LandingPopup } from "@/components/landing/landing-popup";
+import { SeminarPromoSection } from "@/components/landing/seminar-promo-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { softwareApplicationSchema } from "@/lib/seo/structured-data";
-import Link from "next/link";
+import { getActiveLandingBanner, getActiveLandingPopups } from "@/lib/platform-settings";
+import { getPublicGroupSeminars } from "@/actions/public-seminar";
 
-// 홈(/)에서 4개 기능 페이지로 가는 내부 링크. 기능 클러스터 고립을 막아
-// 링크 에쿼티를 전달한다. 라벨은 마케팅 헤더 정식 라벨과 통일.
-const FEATURE_LINKS: ReadonlyArray<{ href: string; label: string }> = [
-  { href: "/features/ai-question-generation", label: "AI 문제 생성" },
-  { href: "/features/exam-builder", label: "Word 시험지" },
-  { href: "/features/passage-analysis", label: "지문 분석" },
-  { href: "/features/academy-erp", label: "학원 올인원" },
-  { href: "/types", label: "유형백과" },
-  { href: "/guides", label: "제작 가이드" },
-  { href: "/resources", label: "무료자료실" },
-  { href: "/about", label: "스모트 소개" },
-];
-
-export default function RootPage() {
+export default async function RootPage() {
+  const [landingBanner, landingPopups, publicSeminars] = await Promise.all([
+    getActiveLandingBanner(),
+    getActiveLandingPopups(),
+    getPublicGroupSeminars(),
+  ]);
+  // 모집중(신청 가능)인 공개 세미나가 있으면 랜딩 상단에 프로모 배너로 노출.
+  const featuredSeminar =
+    publicSeminars.find((s) => s.registrationOpen) ??
+    publicSeminars.find((s) => s.status === "OPEN") ??
+    null;
   return (
-    <main className="w-full overflow-x-hidden bg-white text-gray-900 selection:bg-[#3B82F6] selection:text-white font-sans antialiased">
+    <main
+      data-landing-page
+      className={`w-full overflow-x-hidden bg-white text-gray-900 selection:bg-[#3B82F6] selection:text-white font-sans antialiased ${
+        landingBanner ? "pt-11" : ""
+      }`}
+    >
       <JsonLd id="ld-home-software" data={softwareApplicationSchema()} />
-      <LandingHeader />
-      <HeroScene />
-      <div id="section-annotation" className="w-full">
-        <AnnotationScene />
+      {landingBanner && <LandingBannerStrip banner={landingBanner} />}
+      <LandingHeader offsetTop={!!landingBanner} />
+      <LandingSnap />
+      <ScrollProgress />
+      <div data-snap className="lg:snap-start">
+        <HeroScene />
       </div>
-      <div id="section-question" className="w-full">
+      {featuredSeminar && (
+        <div
+          data-snap
+          data-landing-feature
+          className="w-full lg:snap-start lg:flex lg:min-h-[100svh] lg:flex-col lg:justify-center lg:pt-24 lg:pb-8"
+        >
+          <Reveal amount={0.2} y={40} className="w-full">
+            <SeminarPromoSection seminar={featuredSeminar} />
+          </Reveal>
+        </div>
+      )}
+      {landingPopups.length > 0 && <LandingPopup popups={landingPopups} />}
+      <div id="section-question" data-snap data-landing-feature className="w-full lg:snap-start">
         <QuestionBurstScene />
       </div>
-      <div id="section-exam" className="w-full">
+      <div id="section-annotation" data-snap data-landing-feature className="w-full lg:snap-start">
+        <AnnotationScene />
+      </div>
+      <div id="section-exam" data-snap data-landing-feature className="w-full lg:snap-start">
         <ExamPaperScene />
       </div>
-      <div id="section-folder" className="w-full">
+      <div id="section-intake" data-snap data-landing-feature className="w-full lg:snap-start">
+        <IntakeScene />
+      </div>
+      <div id="section-report" data-snap data-landing-feature className="w-full lg:snap-start">
+        <ReportScene />
+      </div>
+      <div id="section-webtoon" data-snap data-landing-feature className="w-full lg:snap-start">
+        <WebtoonScene />
+      </div>
+      <div id="section-folder" data-snap data-landing-feature className="w-full lg:snap-start">
         <FolderScene />
       </div>
-      <nav
-        aria-label="기능"
-        className="mx-auto w-full max-w-[1480px] px-5 py-10 sm:px-8"
-      >
-        <h2 className="text-[13px] font-black uppercase tracking-[0.18em] text-blue-600">
-          AI 영어 문제 생성·시험지 제작 기능
-        </h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">
-          {FEATURE_LINKS.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className="flex h-full items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[14px] font-black text-slate-800 transition hover:border-blue-200 hover:text-blue-700"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <CtaScene />
+      <div id="section-samples" data-snap data-landing-feature className="w-full lg:snap-start">
+        <SampleScene />
+      </div>
+      <div data-snap className="lg:snap-start">
+        <CtaScene />
+      </div>
+      <ScrollToTopButton />
     </main>
   );
 }

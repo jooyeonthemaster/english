@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" font-family="Apple SD Gothic Neo, Malgun Gothic, -apple-system, BlinkMacSystemFont, sans-serif">
+<rect width="1920" height="1080" fill="#f6f8fb"/>
+<rect x="0" y="0" width="1920" height="10" fill="url(#topGrad)"/>
+<defs>
+  <linearGradient id="topGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1f5df5"/>
+    <stop offset="0.47" stop-color="#12b886"/>
+    <stop offset="1" stop-color="#f59f00"/>
+  </linearGradient>
+  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="20" stdDeviation="26" flood-color="#1e293b" flood-opacity="0.14"/>
+  </filter>
+  <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#1e293b" flood-opacity="0.08"/>
+  </filter>
+</defs>
+<text x="84" y="88" font-size="28" font-weight="950" fill="#2f80ed">⑥ 시험 리포트 (BETA) · 팁</text>
+<text font-size="58" font-weight="950" fill="#111827" letter-spacing="0"><tspan x="84" y="164">작업 전에 기억할 포인트</tspan></text>
+
+<g><rect x="84.00" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="154.28" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="224.56" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="294.84" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="365.12" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="435.40" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="505.68" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="575.96" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="646.24" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="716.52" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="786.80" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="857.08" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="927.36" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="997.64" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1067.92" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1138.20" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1208.48" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1278.76" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1349.04" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1419.32" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1489.60" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1559.88" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1630.16" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1700.44" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="0.52"/><rect x="1770.72" y="1028" width="65.28" height="7" rx="3.5" fill="#2f80ed" opacity="1"/></g>
+<rect x="164" y="342" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="362" width="72" height="72" rx="8" fill="#eaf3ff"/>
+<text x="232" y="407" text-anchor="middle" font-size="24" font-weight="950" fill="#2f80ed">01</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="387">깨끗한 원본을 올리면 분석 정확도가 올라갑니다.</tspan></text><rect x="164" y="488" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="508" width="72" height="72" rx="8" fill="#eaf3ff"/>
+<text x="232" y="553" text-anchor="middle" font-size="24" font-weight="950" fill="#2f80ed">02</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="533">답안 수집은 사진 판독·학생 링크·직접 입력을 지원합니다.</tspan></text><rect x="164" y="634" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="654" width="72" height="72" rx="8" fill="#eaf3ff"/>
+<text x="232" y="699" text-anchor="middle" font-size="24" font-weight="950" fill="#2f80ed">03</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="679">리포트는 PC/모바일 보기 전환과 PDF 저장을 지원합니다.</tspan></text>
+<rect x="1558" y="150" width="240" height="54" rx="8" fill="#111827"/>
+<text x="1678" y="186" text-anchor="middle" font-size="24" font-weight="950" fill="#ffffff">팁 &amp; 주의사항</text>
+</svg>

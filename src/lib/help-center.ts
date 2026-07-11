@@ -64,6 +64,22 @@ export const SEMINAR_STATUSES: readonly StatusOption[] = [
   { value: "CANCELED", label: "취소", className: ROSE },
 ] as const;
 
+// 단체 세미나 클래스(운영자 개설)의 공개 상태.
+export const GROUP_SEMINAR_STATUSES: readonly StatusOption[] = [
+  { value: "DRAFT", label: "작성중", className: NEUTRAL },
+  { value: "OPEN", label: "모집중", className: BLUE },
+  { value: "CLOSED", label: "모집마감", className: AMBER },
+  { value: "ENDED", label: "종료", className: EMERALD },
+  { value: "CANCELED", label: "취소", className: ROSE },
+] as const;
+
+// 단체 세미나 신청(원장)의 상태.
+export const GROUP_SEMINAR_REG_STATUSES: readonly StatusOption[] = [
+  { value: "REGISTERED", label: "신청완료", className: BLUE },
+  { value: "ATTENDED", label: "참석완료", className: EMERALD },
+  { value: "CANCELED", label: "취소", className: ROSE },
+] as const;
+
 // ─── 세미나 신청 폼 옵션 ──────────────────────────────────────────────────────
 
 export const SEMINAR_CHANNELS: readonly LabeledOption[] = [
@@ -80,6 +96,9 @@ export const SEMINAR_TIME_SLOTS: readonly string[] = [
   "주말 오후",
 ] as const;
 
+/** 1:1 세미나 주간 상담 슬롯 정원 — 히어로의 "남은 상담 슬롯" 표시에 사용 */
+export const SEMINAR_WEEKLY_CAPACITY = 10;
+
 export const SEMINAR_TOPICS: readonly string[] = [
   "문제 생성",
   "시험지 생성",
@@ -88,6 +107,16 @@ export const SEMINAR_TOPICS: readonly string[] = [
   "전반 사용법",
   "기타",
 ] as const;
+
+// ─── 단체 세미나 딥링크 ───────────────────────────────────────────────────────
+// QR·공유 링크가 수렴하는 원장용 경로. 목록 페이지에서 seminar 쿼리로 해당 글을
+// 자동 스크롤·강조한다. (server: 로그인 콜백 구성, client: QR URL 생성 공용)
+
+export const GROUP_SEMINAR_BROWSE_PATH = "/director/help/group-seminar";
+
+export function groupSeminarBrowseLink(seminarId: string): string {
+  return `${GROUP_SEMINAR_BROWSE_PATH}?seminar=${encodeURIComponent(seminarId)}`;
+}
 
 // ─── 조회 헬퍼 ───────────────────────────────────────────────────────────────
 

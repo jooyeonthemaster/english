@@ -207,7 +207,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     }, 900);
   }, []);
 
-  // When a review drawer is open — or a workspace (e.g. 시험지 빌더) requests it
+  // When a review drawer is open — or a workspace (e.g. 시험지 생성) requests it
   // because both of its side panels are open — force-collapse the sidebar so the
   // main workspace has more room. On release we restore whatever the user had set
   // manually, so a manually-collapsed sidebar stays collapsed.
@@ -343,7 +343,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   if (!mounted) {
     return (
       <div className="flex h-screen bg-[#F4F6F9]">
-        <div className="hidden w-[220px] shrink-0 md:block" />
+        <div className="hidden w-[220px] shrink-0 md:block phone-landscape:hidden!" />
         <div className="flex-1" />
       </div>
     );
@@ -384,13 +384,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               sidebarHoverRef.current = true;
               if (!userMenuOpen) setPeekOpen(true);
             }}
-            className="fixed left-0 top-0 z-40 hidden h-screen w-1.5 md:block"
+            className="fixed left-0 top-0 z-40 hidden h-screen w-1.5 md:block phone-landscape:hidden!"
           />
         )}
         {/* ─── Sidebar ─── */}
         <div
           className={cn(
-            "sticky top-0 hidden h-screen self-start shrink-0 md:flex",
+            "sticky top-0 hidden h-screen self-start shrink-0 md:flex phone-landscape:hidden!",
             isPeeking ? "z-[60]" : collapsed ? "z-30" : null,
           )}
         >
@@ -585,7 +585,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           style={drawerOpen && drawerWidth > 0 ? { marginRight: drawerWidth } : undefined}
         >
-          <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-slate-200 bg-white/90 px-3 backdrop-blur-xl md:hidden">
+          <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-slate-200 bg-white/90 px-3 backdrop-blur-xl md:hidden phone-landscape:flex!">
             <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
               <SheetTrigger asChild>
                 <button
@@ -598,7 +598,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="w-[min(92vw,360px)] gap-0 border-r border-slate-200 bg-white p-0"
+                className="w-[min(92vw,360px)] gap-0 border-r border-slate-200 bg-white p-0 phone-landscape:overflow-y-auto"
               >
                 <SheetHeader className="border-b border-slate-100 px-4 py-4 text-left">
                   <SheetTitle className="flex items-center gap-2.5">
@@ -623,7 +623,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                   onNavClick={handleMobileNavClick}
                 />
 
-                <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-3" aria-label="모바일 메뉴">
+                <nav
+                  className="min-h-0 flex-1 overflow-y-auto px-3 py-3 phone-landscape:flex-none! phone-landscape:overflow-visible!"
+                  aria-label="모바일 메뉴"
+                >
                   {filteredGroups.map((group, gi) => (
                     <div key={gi} className={cn(gi > 0 && "mt-5")}>
                       {group.title ? (

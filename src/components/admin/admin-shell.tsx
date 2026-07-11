@@ -21,9 +21,11 @@ import {
   Banknote,
   Megaphone,
   Image,
+  Footprints,
   Package,
   Ticket,
   TicketCheck,
+  BookOpen,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -104,6 +106,7 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
       { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
       { label: "스모트 소식", icon: Megaphone, href: "/admin/announcements" },
       { label: "배너 관리", icon: Image, href: "/admin/banners" },
+      { label: "오프라인 홍보", icon: Footprints, href: "/admin/offline-marketing" },
       { label: "실물 쿠폰", icon: TicketCheck, href: "/admin/coupons" },
     ],
   },
@@ -111,9 +114,11 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
     // 헬프센터 — 고객(원장)이 작성한 신청·문의를 운영자가 관리.
     title: "고객지원",
     items: [
-      { label: "세미나 신청", icon: Presentation, href: "/admin/seminars" },
+      { label: "1:1 세미나", icon: Presentation, href: "/admin/seminars" },
+      { label: "단체 세미나", icon: Users, href: "/admin/group-seminars" },
       { label: "피드백", icon: MessageSquare, href: "/admin/feedback" },
       { label: "문의 게시판", icon: LifeBuoy, href: "/admin/support" },
+      { label: "사용 매뉴얼", icon: BookOpen, href: "/admin/manual" },
     ],
   },
 ];

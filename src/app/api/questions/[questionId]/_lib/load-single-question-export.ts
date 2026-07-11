@@ -3,7 +3,7 @@ import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-di
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
-// 단일 문항 다운로드(HWPX/DOCX)용 로더 — 시험지 빌더의 문서 빌더를 그대로 재사용하기 위해
+// 단일 문항 다운로드(HWPX/DOCX)용 로더 — 시험지 생성의 문서 빌더를 그대로 재사용하기 위해
 // 한 문항을 최소 exam 형태(orderNum=1)로 감싸 반환한다. 두 라우트(docx/hwpx)가 공유한다.
 export interface SingleQuestionExport {
   title: string;

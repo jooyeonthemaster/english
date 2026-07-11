@@ -1,5 +1,7 @@
 import { adminGetSeminarRequests } from "@/actions/admin-help-center";
+import { getSeminarHeroImageUrl } from "@/lib/platform-settings";
 import { AdminSeminarsClient } from "@/components/admin/help/admin-seminars-client";
+import { SeminarHeroImageCard } from "@/components/admin/help/seminar-hero-image-card";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +11,10 @@ export default async function AdminSeminarsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
-  const requests = await adminGetSeminarRequests({ status, page: 1 });
+  const [requests, heroImageUrl] = await Promise.all([
+    adminGetSeminarRequests({ status, page: 1 }),
+    getSeminarHeroImageUrl(),
+  ]);
   return (
     <div className="space-y-6">
       <div>
@@ -18,6 +23,7 @@ export default async function AdminSeminarsPage({
           신규 고객의 온보딩 세미나 신청을 접수하고 일정을 조율합니다
         </p>
       </div>
+      <SeminarHeroImageCard initialUrl={heroImageUrl} />
       <AdminSeminarsClient initialData={requests} initialStatus={status} />
     </div>
   );

@@ -12,6 +12,11 @@ import {
   verifyBankNotifySignature,
   verifyBankNotifyToken,
 } from "@/lib/bank-deposit";
+import {
+  grantSeminarDeposit,
+  matchSeminarDeposit,
+  SEMINAR_DEPOSIT_MATCH_WINDOW_MINUTES,
+} from "@/lib/seminar-deposit";
 
 export const dynamic = "force-dynamic";
 
@@ -227,6 +232,59 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         status: "AMBIGUOUS",
         candidates: outcome.candidateIds.length,
+      });
+    }
+
+    // 크레딧 주문에 안 잡히면 단체 세미나 참가 보증금(WAITING)에서도 매칭 시도.
+    // 보증금은 신청 후 늦게 입금될 수 있어 크레딧보다 넉넉한 시간창을 쓴다.
+    const semOutcome = await matchSeminarDeposit(
+      { amount, depositorName, occurredAt },
+      SEMINAR_DEPOSIT_MATCH_WINDOW_MINUTES,
+    );
+    if (semOutcome.status === "MATCHED") {
+      const grant = await grantSeminarDeposit(semOutcome.registrationId, {
+        amount,
+        externalId,
+      });
+      if (grant.confirmed) {
+        await prisma.bankDepositNotification.update({
+          where: { id: notification.id },
+          data: {
+            status: "MATCHED",
+            note: `단체 세미나 보증금 확정 (reg:${semOutcome.registrationId})`,
+            processedAt: new Date(),
+          },
+        });
+        return NextResponse.json({
+          status: "MATCHED",
+          kind: "SEMINAR_DEPOSIT",
+          registrationId: semOutcome.registrationId,
+        });
+      }
+      // 이미 확정된 신청 → 중복 입금 가능.
+      await prisma.bankDepositNotification.update({
+        where: { id: notification.id },
+        data: {
+          status: "AMBIGUOUS",
+          note: "세미나 보증금 신청이 이미 확정됨 — 중복 입금 가능. 관리자 확인 필요.",
+          processedAt: new Date(),
+        },
+      });
+      return NextResponse.json({ status: "AMBIGUOUS", kind: "SEMINAR_DEPOSIT" });
+    }
+    if (semOutcome.status === "AMBIGUOUS") {
+      await prisma.bankDepositNotification.update({
+        where: { id: notification.id },
+        data: {
+          status: "AMBIGUOUS",
+          note: `동일 금액·입금자명 세미나 보증금 대기 ${semOutcome.candidateIds.length}건 — 관리자 확인 필요.`,
+          processedAt: new Date(),
+        },
+      });
+      return NextResponse.json({
+        status: "AMBIGUOUS",
+        kind: "SEMINAR_DEPOSIT",
+        candidates: semOutcome.candidateIds.length,
       });
     }
 

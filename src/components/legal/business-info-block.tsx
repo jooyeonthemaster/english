@@ -25,6 +25,7 @@ export function BusinessInfoBlock({
         className,
       )}
       aria-label="사업자 정보"
+      data-business-info=""
     >
       <div className="mx-auto max-w-[1480px]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">

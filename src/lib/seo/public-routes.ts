@@ -30,6 +30,7 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { path: "/features/ai-question-generation", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/exam-builder", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/passage-analysis", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/features/exam-report", changeFrequency: "weekly", priority: 0.8 },
   { path: "/features/academy-erp", changeFrequency: "weekly", priority: 0.8 },
 
   // 콘텐츠 허브(유형백과·시험대비·교과서·가이드·FAQ·용어사전)

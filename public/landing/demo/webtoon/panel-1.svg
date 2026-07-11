@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FEF6E4"/>
+  <rect y="220" width="400" height="80" fill="#8B5E3C"/>
+  <rect x="60" y="150" width="280" height="80" rx="8" fill="#B07D4B"/>
+  <rect x="70" y="140" width="260" height="16" rx="6" fill="#C99666"/>
+  <circle cx="150" cy="120" r="34" fill="#F4C7A5"/>
+  <path d="M116 118 q-8 -52 34 -56 q42 -4 40 52 q-4 -30 -36 -30 q-34 0 -38 34z" fill="#7B4A2D"/>
+  <circle cx="140" cy="118" r="3.5" fill="#3B2A20"/><circle cx="162" cy="118" r="3.5" fill="#3B2A20"/>
+  <path d="M144 136 q8 6 16 0" stroke="#3B2A20" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <rect x="118" y="150" width="64" height="52" rx="14" fill="#7BA3C9"/>
+  <g fill="#F5C64F" stroke="#C89B2A" stroke-width="2">
+    <circle cx="220" cy="168" r="11"/><circle cx="246" cy="176" r="11"/><circle cx="232" cy="188" r="11"/>
+    <circle cx="272" cy="170" r="11"/><circle cx="262" cy="190" r="11"/><circle cx="292" cy="184" r="11"/>
+  </g>
+  <text x="232" y="172" font-size="10" font-weight="700" fill="#8A6A16" text-anchor="middle">$</text>
+</svg>

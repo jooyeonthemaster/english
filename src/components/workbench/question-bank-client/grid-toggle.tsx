@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { Grid2X2, Grid3X3, List } from "lucide-react";
+import { Grid2x2, Grid3x3, List } from "lucide-react";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -15,8 +15,8 @@ interface Props {
 }
 
 const GRID_TOGGLE_OPTIONS = [
-  { value: 2, label: "2열 보기", Icon: Grid2X2 },
-  { value: 3, label: "3열 보기", Icon: Grid3X3 },
+  { value: 2, label: "2열 보기", Icon: Grid2x2 },
+  { value: 3, label: "3열 보기", Icon: Grid3x3 },
   { value: "list", label: "목록 보기", Icon: List },
 ] satisfies ReadonlyArray<ViewModeCycleOption<QuestionGridCols>>;
 

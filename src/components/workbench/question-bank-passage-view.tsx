@@ -70,7 +70,7 @@ interface PassageGroupedViewProps {
   renderQuestion?: (question: any, index: number) => ReactNode;
   /** 카드 접힘(콤팩트) 모드 — fallback QuestionBankCard 로 그대로 전달. */
   collapsible?: boolean;
-  /** 시험지 빌더 좌측 라이브러리 전용 — 카드 크기 한 단계 축소. */
+  /** 시험지 생성 좌측 라이브러리 전용 — 카드 크기 한 단계 축소. */
   compact?: boolean;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (

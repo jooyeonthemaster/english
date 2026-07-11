@@ -1,3 +1,4 @@
+import { LandingHeader } from "@/components/landing/landing-header";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -167,7 +168,8 @@ export default async function RefundPolicyPage() {
   const costEntries = Object.entries(CREDIT_COSTS) as [OperationType, number][];
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-screen bg-slate-50 pt-20 text-slate-950">
+      <LandingHeader showNav={false} />
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
         <nav className="mb-8 flex items-center justify-between">
           <Link href="/" className="text-[14px] font-black tracking-widest">

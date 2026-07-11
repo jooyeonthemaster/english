@@ -189,7 +189,7 @@ function OverviewTab({
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
         <StatCard label="총 전환" value={stats.totalSignups} accent="slate" />
         <StatCard label="지급 완료" value={stats.granted} accent="emerald" />
         <StatCard label="보류" value={stats.held} accent="blue" />

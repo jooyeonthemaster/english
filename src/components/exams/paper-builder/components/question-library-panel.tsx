@@ -275,6 +275,10 @@ export function QuestionLibraryPanel({
 
   const applySelectedQuestionIds = useCallback(
     (nextSelectedIds: Set<string>) => {
+      // 마키(영역 드래그)가 세트 카드를 잡으면 "set:<setId>" 토큰이 섞여 들어온다.
+      // 토큰의 멤버 확장은 부모(exam-paper-builder-client)의 선택 reconcile 루프가
+      // 세트 캐시(ref)로 처리한다 — 패널의 setsById 상태는 드래그가 붙잡은 낡은
+      // 클로저일 수 있어 여기서 확장하면 세트가 조용히 버려지는 레이스가 있다.
       setSelectedQuestionIds(nextSelectedIds);
     },
     [setSelectedQuestionIds],

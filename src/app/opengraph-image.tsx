@@ -104,7 +104,7 @@ export default async function OpengraphImage() {
             color: "#CBD5F5",
           }}
         >
-          지문 분석 · 19유형 문제 생성 · Word 시험지·해설지 자동 조판
+          지문 분석 · 25유형 문제 생성 · Word·한글 시험지 · 시험 리포트
         </div>
 
         <div

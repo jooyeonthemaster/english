@@ -198,6 +198,46 @@ export const seminarRequestSchema = z.object({
   message: z.string().max(2000).optional(),
 });
 
+// 단체 세미나 클래스 — 운영자 개설/수정
+export const groupSeminarSchema = z.object({
+  title: z.string().min(1, "제목을 입력하세요").max(120),
+  summary: z.string().max(200).optional(),
+  description: z.string().max(5000).optional(),
+  benefit: z.string().max(500).optional(),
+  host: z.string().max(80).optional(),
+  target: z.string().max(120).optional(),
+  location: z.string().max(200).optional(),
+  mapUrl: z.string().max(500).optional(),
+  meetingUrl: z.string().max(500).optional(),
+  scheduledAt: z.string().optional().nullable(),
+  sessionDates: z.array(z.string()).max(20).optional(),
+  durationMin: z.number().int().min(0).max(24 * 60).optional().nullable(),
+  capacity: z.number().int().min(0).max(100000).optional().nullable(),
+  registerCloseDays: z.number().int().min(0).max(365).optional().nullable(),
+  depositAmount: z.number().int().min(0).max(10_000_000).optional().nullable(),
+  coverImageUrl: z.string().max(1000).optional(),
+  publicEnabled: z.boolean().optional(),
+  status: z.enum(["DRAFT", "OPEN", "CLOSED", "ENDED", "CANCELED"]).optional(),
+});
+
+// 단체 세미나 신청 — 원장
+export const groupSeminarRegistrationSchema = z.object({
+  applicantName: z.string().min(1, "이름을 입력하세요").max(50),
+  phone: z.string().min(1, "연락처를 입력하세요").max(30),
+  email: z.string().email("올바른 이메일을 입력하세요").optional().or(z.literal("")),
+  academyName: z.string().max(100).optional(),
+  headCount: z.number().int().min(1, "참석 인원은 1명 이상이어야 합니다").max(50).default(1),
+  selectedDate: z.string().optional().nullable(),
+  message: z.string().max(1000).optional(),
+  // 참가 보증금(계좌이체)이 있는 세미나에서만 요구
+  depositorName: z.string().max(60).optional(),
+  refundBankName: z.string().max(40).optional(),
+  refundAccountNumber: z.string().max(40).optional(),
+  refundAccountHolder: z.string().max(40).optional(),
+});
+
 export type HelpPostInput = z.infer<typeof helpPostSchema>;
 export type HelpReplyInput = z.infer<typeof helpReplySchema>;
 export type SeminarRequestInput = z.infer<typeof seminarRequestSchema>;
+export type GroupSeminarInput = z.infer<typeof groupSeminarSchema>;
+export type GroupSeminarRegistrationInput = z.infer<typeof groupSeminarRegistrationSchema>;

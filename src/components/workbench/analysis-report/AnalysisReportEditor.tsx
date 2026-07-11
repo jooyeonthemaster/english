@@ -1379,7 +1379,7 @@ export function AnalysisReportEditor({
 
   // Cmd/Ctrl+Z 실행취소, Cmd/Ctrl+Shift+Z·Cmd/Ctrl+Y 다시실행.
   // 인라인 텍스트 편집(contentEditable)·입력창·선택상자에 포커스가 있을 땐 가로채지 않아
-  // 브라우저 기본 텍스트 실행취소를 보존한다(엑셀·시험지 빌더와 동일한 규칙).
+  // 브라우저 기본 텍스트 실행취소를 보존한다(엑셀·시험지 생성와 동일한 규칙).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = document.activeElement as HTMLElement | null;
