@@ -1,11 +1,11 @@
 "use client";
 
-// 내 기록 — 숙달 히트맵(12유닛×개념) · 유형/난이도 정답률 · 14일 활동 계기판.
+// 내 기록 — 개념 숙달 지도(3파트×12유닛×47개념) · 유형/난이도 정답률 · 14일 활동.
 // GShell(내 기록 탭 활성) 안에서 렌더 — 뒤로가기 대신 하단 탭바로 이동한다.
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { MasteryMap } from "./mastery-map";
 
 interface MePayload {
   studentName: string;
@@ -36,15 +36,6 @@ const TYPE_LABEL: Record<string, string> = {
   WRITE_FORM: "서술형 변형",
   WRITE_CORRECT: "서술형 수정",
 };
-
-function heat(score: number, attempts: number): string {
-  if (attempts === 0) return "var(--gd-paper)";
-  if (score >= 85) return "#065f46";
-  if (score >= 70) return "#059669";
-  if (score >= 50) return "#6ee7b7";
-  if (score >= 30) return "#fda4af";
-  return "#e11d48";
-}
 
 export function MeClient() {
   const router = useRouter();
@@ -132,55 +123,8 @@ export function MeClient() {
         </div>
       </section>
 
-      {/* ── 숙달 히트맵 ── */}
-      <section className="mt-6">
-        <p className="gd-label mb-2">개념 숙달 지도</p>
-        <div className="gd-card p-3.5">
-          <div className="flex flex-col gap-1.5">
-            {me.grid.map((u) => (
-              <div key={u.unitId} className="flex items-center gap-2">
-                <span className="gd-mono gd-t-3xs w-7 shrink-0 font-bold" style={{ color: "var(--gd-ink-2)" }}>
-                  U{parseInt(u.unitId.slice(1), 10)}
-                </span>
-                <div className="flex flex-1 gap-1">
-                  {u.concepts.map((c) => (
-                    <Link
-                      key={c.conceptId}
-                      href={`/g/drill?mode=drill&unitId=${u.unitId}&conceptId=${c.conceptId}`}
-                      className="flex h-7 flex-1 items-center justify-center rounded-md"
-                      style={{
-                        background: heat(c.score, c.attempts),
-                        border: "1px solid var(--gd-line)",
-                      }}
-                      title={`${c.title} — 숙달 ${c.score} (${c.attempts}회)`}
-                    >
-                      {c.attempts > 0 && (
-                        <span
-                          className="gd-mono gd-t-3xs font-bold"
-                          style={{ color: c.score >= 50 && c.score < 70 ? "#065f46" : "#fff" }}
-                        >
-                          {c.score}
-                        </span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="gd-hairline-t mt-3 flex items-center justify-end gap-2 pt-2.5">
-            <span className="gd-t-3xs" style={{ color: "var(--gd-ink-3)" }}>
-              취약
-            </span>
-            {["#e11d48", "#fda4af", "#6ee7b7", "#059669", "#065f46"].map((c) => (
-              <span key={c} className="h-2.5 w-2.5 rounded-sm" style={{ background: c }} />
-            ))}
-            <span className="gd-t-3xs" style={{ color: "var(--gd-ink-3)" }}>
-              숙달
-            </span>
-          </div>
-        </div>
-      </section>
+      {/* ── 개념 숙달 지도 ── */}
+      <MasteryMap grid={me.grid} />
 
       {/* ── 유형별 정답률 ── */}
       <section className="mt-6">

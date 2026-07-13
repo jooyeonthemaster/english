@@ -300,6 +300,12 @@ button.gd-u {
   font-variant-numeric: tabular-nums;
 }
 
+/* 아코디언 셰브런 회전 — reduced-motion 존중 위해 클래스로 분리(인라인 transition은
+   아래 미디어쿼리에 안 잡힌다). 회전 각도는 인라인 transform 으로 상태 반영. */
+.gd-chev {
+  transition: transform 160ms ease;
+}
+
 /* ── 앱 셸(탭 루트 전용): 상단 헤더 + 하단 탭바 + 햄버거 사이드 시트 ──
    드릴 플레이어·learn·q·w 등 몰입 화면은 셸 미적용(풀스크린 유지). */
 .gd-shell-header {
@@ -424,7 +430,8 @@ button.gd-u {
   .gd-meter > span,
   .gd-btn,
   .gd-option,
-  .gd-u {
+  .gd-u,
+  .gd-chev {
     transition: none;
   }
   .gd-btn:active {
