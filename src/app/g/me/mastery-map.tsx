@@ -17,6 +17,7 @@ import {
   Circle,
   CircleDot,
   HelpCircle,
+  Lock,
   X,
 } from "lucide-react";
 import {
@@ -30,6 +31,7 @@ export interface MasteryGridUnit {
   unitId: string;
   title: string;
   part: number;
+  locked: boolean;
   concepts: {
     conceptId: string;
     title: string;
@@ -87,17 +89,24 @@ export function MasteryMap({ grid }: { grid: MasteryGridUnit[] }) {
   }, [legendOpen]);
 
   const flat = grid.flatMap((u) =>
-    u.concepts.map((c) => ({ ...c, unitId: u.unitId, unitTitle: u.title })),
+    u.concepts.map((c) => ({
+      ...c,
+      unitId: u.unitId,
+      unitTitle: u.title,
+      part: u.part,
+      locked: u.locked,
+    })),
   );
   const counts: Record<MKey, number> = { mastered: 0, learning: 0, weak: 0, new: 0 };
   for (const c of flat) counts[mkey(c.score, c.attempts)]++;
 
-  // 다음 행동 대상 선정 — (1) 시도했으나 미완성(취약·학습중)이 있으면 그중 최저점,
-  // (2) 없으면 커리큘럼 순서상 다음 미시작 개념, (3) 전부 완성이면 복습(최저점) 유도.
-  // 미시작을 후보에 넣지 않아 '완성한 개념을 약한 개념으로 오지목'하던 결함을 제거.
-  const attempted = flat.filter((c) => c.attempts > 0);
+  // 다음 행동 대상 선정 — 잠금 해제된(도달 가능한) 개념에서만 고른다. 잠긴 유닛의
+  // 개념을 '가장 약한 개념'·CTA로 유도하면 훈련 순차잠금을 우회하게 되므로 제외한다.
+  // (1) 시도했으나 미완성 최저점 → (2) 다음 미시작 개념 → (3) 전부 완성이면 복습 유도.
+  const reachable = flat.filter((c) => !c.locked);
+  const attempted = reachable.filter((c) => c.attempts > 0);
   const nonMastered = attempted.filter((c) => c.score < 85);
-  const firstNew = flat.find((c) => c.attempts === 0);
+  const firstNew = reachable.find((c) => c.attempts === 0);
   const allMastered = attempted.length > 0 && nonMastered.length === 0 && !firstNew;
 
   const hero = allMastered
@@ -105,22 +114,15 @@ export function MasteryMap({ grid }: { grid: MasteryGridUnit[] }) {
     : nonMastered.length
       ? { c: [...nonMastered].sort((a, b) => a.score - b.score)[0], label: "가장 약한 개념", cta: "이 개념부터 훈련하기" }
       : {
-          c: firstNew ?? flat[0],
+          c: firstNew ?? reachable[0] ?? flat[0],
           label: attempted.length ? "다음 개념" : "여기서 시작합니다",
           cta: attempted.length ? "다음 개념 시작하기" : "첫 개념 시작하기",
         };
   const heroC = hero.c;
   const heroSk = CONCEPT_SKELETON_BY_ID.get(heroC.conceptId);
 
-  // 자동 펼침 = 아직 완성 안 된 개념이 있는 첫 파트(신규생은 골격기).
-  const currentPart =
-    GRAMMAR_PARTS.find((p) =>
-      grid.some(
-        (u) =>
-          u.part === p.part &&
-          u.concepts.some((c) => mkey(c.score, c.attempts) !== "mastered"),
-      ),
-    )?.part ?? 1;
+  // 자동 펼침 = 다음 행동(히어로) 개념이 속한 파트 — 학생이 지금 실제로 진행하는 곳.
+  const currentPart = heroC.part;
   const effOpen = openPart ?? currentPart; // 0 = 전부 닫힘
 
   return (
@@ -256,59 +258,74 @@ export function MasteryMap({ grid }: { grid: MasteryGridUnit[] }) {
                 <div id={panelId} role="region" className="gd-hairline-t px-3.5 pb-2.5 pt-1">
                   {pUnits.map((u) => {
                     const freq = UNIT_FREQ.get(u.unitId) ?? 0;
+                    const uLocked = u.locked;
+                    // 유닛 헤더 내용 — 잠금 여부에 따라 Link/div 로 감싼다.
+                    const headInner = (
+                      <>
+                        <span
+                          className="gd-mono gd-t-3xs w-6 shrink-0 font-bold"
+                          style={{ color: "var(--gd-ink-2)" }}
+                        >
+                          U{unitNumber(u.unitId)}
+                        </span>
+                        <span
+                          className="gd-t-sm min-w-0 flex-1 truncate font-semibold"
+                          style={{ color: uLocked ? "var(--gd-ink-3)" : "var(--gd-ink)" }}
+                        >
+                          {u.title}
+                        </span>
+                        <span
+                          className="flex shrink-0 items-center gap-0.5"
+                          aria-label={`출제 빈도 ${freq}/5`}
+                        >
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <span
+                              key={n}
+                              className="h-1 w-1 rounded-full"
+                              style={{
+                                background: n <= freq ? "var(--gd-ink-2)" : "var(--gd-line)",
+                              }}
+                            />
+                          ))}
+                        </span>
+                        {uLocked ? (
+                          <Lock size={13} strokeWidth={2} style={{ color: "var(--gd-ink-3)" }} />
+                        ) : (
+                          <BookOpen size={14} strokeWidth={2} style={{ color: "var(--gd-ink-3)" }} />
+                        )}
+                      </>
+                    );
                     return (
                       <div key={u.unitId} className="mt-2">
-                        <Link
-                          href={`/g/unit/${u.unitId}`}
-                          className="flex min-h-[2.75rem] items-center gap-2 py-1"
-                        >
-                          <span
-                            className="gd-mono gd-t-3xs w-6 shrink-0 font-bold"
-                            style={{ color: "var(--gd-ink-2)" }}
+                        {uLocked ? (
+                          <div
+                            className="flex min-h-[2.75rem] items-center gap-2 py-1"
+                            aria-label={`${u.title} — 이전 유닛의 드릴을 마치면 열립니다`}
                           >
-                            U{unitNumber(u.unitId)}
-                          </span>
-                          <span
-                            className="gd-t-sm min-w-0 flex-1 truncate font-semibold"
-                            style={{ color: "var(--gd-ink)" }}
+                            {headInner}
+                          </div>
+                        ) : (
+                          <Link
+                            href={`/g/unit/${u.unitId}`}
+                            className="flex min-h-[2.75rem] items-center gap-2 py-1"
                           >
-                            {u.title}
-                          </span>
-                          <span
-                            className="flex shrink-0 items-center gap-0.5"
-                            aria-label={`출제 빈도 ${freq}/5`}
-                          >
-                            {[1, 2, 3, 4, 5].map((n) => (
-                              <span
-                                key={n}
-                                className="h-1 w-1 rounded-full"
-                                style={{
-                                  background:
-                                    n <= freq ? "var(--gd-ink-2)" : "var(--gd-line)",
-                                }}
-                              />
-                            ))}
-                          </span>
-                          <BookOpen
-                            size={14}
-                            strokeWidth={2}
-                            style={{ color: "var(--gd-ink-3)" }}
-                          />
-                        </Link>
+                            {headInner}
+                          </Link>
+                        )}
                         <div
                           className="ml-2 flex flex-col border-l pl-2.5"
-                          style={{ borderColor: "var(--gd-line)" }}
+                          style={{
+                            borderColor: "var(--gd-line)",
+                            opacity: uLocked ? 0.5 : 1,
+                          }}
                         >
                           {u.concepts.map((c) => {
                             const k = mkey(c.score, c.attempts);
                             const Ic = M[k].Icon;
                             const sk = CONCEPT_SKELETON_BY_ID.get(c.conceptId);
-                            return (
-                              <Link
-                                key={c.conceptId}
-                                href={`/g/drill?mode=drill&unitId=${u.unitId}&conceptId=${c.conceptId}`}
-                                className="flex min-h-[2.75rem] items-start gap-2 py-1.5"
-                              >
+                            // 개념 행 내용 — 잠긴 유닛은 드릴 링크 대신 비활성 div(우회 차단).
+                            const rowInner = (
+                              <>
                                 <Ic
                                   size={15}
                                   strokeWidth={2}
@@ -337,12 +354,37 @@ export function MasteryMap({ grid }: { grid: MasteryGridUnit[] }) {
                                 >
                                   {c.attempts ? c.score : "—"}
                                 </span>
-                                <ChevronRight
-                                  size={15}
-                                  strokeWidth={2}
-                                  className="mt-0.5 shrink-0"
-                                  style={{ color: "var(--gd-ink-3)" }}
-                                />
+                                {uLocked ? (
+                                  <Lock
+                                    size={13}
+                                    strokeWidth={2}
+                                    className="mt-0.5 shrink-0"
+                                    style={{ color: "var(--gd-ink-3)" }}
+                                  />
+                                ) : (
+                                  <ChevronRight
+                                    size={15}
+                                    strokeWidth={2}
+                                    className="mt-0.5 shrink-0"
+                                    style={{ color: "var(--gd-ink-3)" }}
+                                  />
+                                )}
+                              </>
+                            );
+                            return uLocked ? (
+                              <div
+                                key={c.conceptId}
+                                className="flex min-h-[2.75rem] items-start gap-2 py-1.5"
+                              >
+                                {rowInner}
+                              </div>
+                            ) : (
+                              <Link
+                                key={c.conceptId}
+                                href={`/g/drill?mode=drill&unitId=${u.unitId}&conceptId=${c.conceptId}`}
+                                className="flex min-h-[2.75rem] items-start gap-2 py-1.5"
+                              >
+                                {rowInner}
                               </Link>
                             );
                           })}

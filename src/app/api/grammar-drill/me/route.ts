@@ -7,6 +7,7 @@ import {
   CONCEPT_SKELETON_BY_ID,
 } from "@/lib/grammar-drill/curriculum";
 import { seoulDayStart } from "@/lib/grammar-drill/home";
+import { computeUnlockedUnits } from "@/lib/grammar-drill/engine";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +20,7 @@ export async function GET() {
   const { studentId } = session;
 
   const since = new Date(seoulDayStart().getTime() - 13 * 86_400_000);
-  const [masteries, attempts] = await Promise.all([
+  const [masteries, attempts, progresses] = await Promise.all([
     prisma.grammarDrillMastery.findMany({ where: { studentId } }),
     prisma.grammarDrillAttempt.findMany({
       where: { studentId },
@@ -34,12 +35,18 @@ export async function GET() {
         difficulty: true,
       },
     }),
+    prisma.grammarDrillUnitProgress.findMany({
+      where: { studentId },
+      select: { unitId: true, drillDoneAt: true },
+    }),
   ]);
+  const unlocked = computeUnlockedUnits(progresses);
 
   const grid = GRAMMAR_UNITS.map((u) => ({
     unitId: u.id,
     title: u.title,
     part: u.part,
+    locked: !unlocked.has(u.id),
     concepts: u.conceptIds.map((cid) => {
       const m = masteries.find((x) => x.conceptId === cid);
       return {

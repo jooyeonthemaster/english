@@ -13,6 +13,7 @@ interface MePayload {
     unitId: string;
     title: string;
     part: number;
+    locked: boolean;
     concepts: {
       conceptId: string;
       title: string;

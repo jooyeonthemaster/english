@@ -507,6 +507,25 @@ export async function buildQueue(
 ): Promise<QueueResponse | null> {
   const bundle = getGrammarBundle();
 
+  // 유닛 잠금 게이트 — 자기주도 유닛 모드는 잠긴 유닛의 문항을 서빙하지 않는다.
+  // 유닛 허브(/g/unit)는 진입을 막지만, /g/drill 직접 링크(내 기록 지도 등)나
+  // URL 직접 호출로 잠긴 유닛을 우회하는 것은 이 게이트에서만 차단된다.
+  // (과제 assignment·복합 mixed·전체 smart/review 모드는 유닛 순차잠금 대상 아님.)
+  if (
+    opts.unitId &&
+    (mode === "drill" ||
+      mode === "concept_check" ||
+      mode === "reading" ||
+      mode === "written" ||
+      mode === "test")
+  ) {
+    const progresses = await prisma.grammarDrillUnitProgress.findMany({
+      where: { studentId: ctx.studentId },
+      select: { unitId: true, drillDoneAt: true },
+    });
+    if (!computeUnlockedUnits(progresses).has(opts.unitId)) return null;
+  }
+
   if (mode === "drill" || mode === "concept_check") {
     const unitId = opts.unitId;
     if (!unitId || !UNIT_BY_ID.has(unitId)) return null;
