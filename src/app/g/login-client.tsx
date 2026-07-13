@@ -6,7 +6,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpenCheck, KeyRound, School } from "lucide-react";
+import { KeyRound, School } from "lucide-react";
 
 export function LoginClient({
   initialAcademyCode,
@@ -76,15 +76,17 @@ export function LoginClient({
     <div className="flex min-h-dvh flex-col items-center justify-center px-6">
       <div className="w-full max-w-[22rem]">
         <div className="mb-10 text-center">
-          <div
-            className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
-            style={{ background: "var(--gd-ink)" }}
-          >
-            <BookOpenCheck className="h-7 w-7 text-white" strokeWidth={1.75} />
+          <div className="mx-auto mb-5 h-14 w-14 overflow-hidden rounded-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/smoat-logo.png"
+              alt="SMOAT"
+              className="h-full w-full object-cover"
+            />
           </div>
-          <h1 className="gd-t-2xl font-bold tracking-tight">어법 드릴</h1>
+          <h1 className="gd-t-2xl font-bold tracking-tight">SMOAT 학습</h1>
           <p className="gd-t-sm mt-2" style={{ color: "var(--gd-ink-2)" }}>
-            수능 어법 12유닛 · 개념별 단계별 무한 훈련
+            스모트 모바일 학습 — 과제 · 시험 · 어법 훈련
           </p>
         </div>
 

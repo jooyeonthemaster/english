@@ -94,7 +94,7 @@ export function ReviewScreen({
 
   return (
     <div className="flex min-h-dvh flex-col bg-[#F7F8FA]">
-      <header className="border-b border-[#E5E8EB] bg-white px-4 py-3">
+      <header className="border-b border-[#E5E8EB] bg-white px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="mx-auto flex w-full max-w-3xl items-center gap-2">
           <button
             type="button"

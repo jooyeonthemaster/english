@@ -7,8 +7,8 @@ import type { Metadata, Viewport } from "next";
 import "./gd.css";
 
 export const metadata: Metadata = {
-  title: "어법 드릴 | SMOAT",
-  description: "SMOAT 모바일 어법 학습 — 개념별·난이도별 무한 드릴",
+  title: "SMOAT 학습 | 스모트 모바일 학습",
+  description: "스모트 모바일 학습 — 과제·시험·어법 훈련을 한곳에서",
   robots: { index: false, follow: false },
 };
 

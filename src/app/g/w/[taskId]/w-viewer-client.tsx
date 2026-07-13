@@ -220,19 +220,47 @@ export function WViewerClient({
     setUserZoom((z) => (z > 1.01 ? 1 : 2));
   }, []);
 
+  // 탭 정지성 가드 — touchstart 시작점을 기록해, 이동/지속이 큰 제스처(스크롤 플릭)를
+  // 더블탭 후보에서 배제한다. 과거: 빠른 다중 페이지 스크러빙에서 플릭 끝점이 '탭'으로
+  // 오염돼 1x↔2x 가 반복(확대↔축소 튕김)됐다. lastTouchAtRef 는 dblclick 가드용.
+  const tapStartRef = useRef<{ t: number; x: number; y: number } | null>(null);
+  const lastTouchAtRef = useRef(0);
+  const onTouchStart = useCallback((e: ReactTouchEvent<HTMLDivElement>) => {
+    lastTouchAtRef.current = Date.now();
+    tapStartRef.current =
+      e.touches.length === 1
+        ? { t: Date.now(), x: e.touches[0].clientX, y: e.touches[0].clientY }
+        : null; // 멀티터치(핀치)는 탭 후보 아님
+  }, []);
+
   const lastTapRef = useRef<{ t: number; x: number; y: number } | null>(null);
   const onTouchEnd = useCallback(
     (e: ReactTouchEvent<HTMLDivElement>) => {
+      lastTouchAtRef.current = Date.now();
       if (e.touches.length > 0 || e.changedTouches.length !== 1) {
         lastTapRef.current = null;
+        tapStartRef.current = null;
         return;
       }
       if (Date.now() - lastPinchEndRef.current < 400) {
         lastTapRef.current = null;
+        tapStartRef.current = null;
         return;
       }
       const t = e.changedTouches[0];
       const now = Date.now();
+      // 이 제스처가 '제자리 탭'이 아니라 스크롤/드래그였으면(이동>10px 또는 지속>300ms)
+      // 더블탭 후보로 시드하지 않는다 — 스크롤 플릭 오인 차단.
+      const start = tapStartRef.current;
+      tapStartRef.current = null;
+      if (
+        !start ||
+        now - start.t > 300 ||
+        Math.hypot(t.clientX - start.x, t.clientY - start.y) > 10
+      ) {
+        lastTapRef.current = null;
+        return;
+      }
       const last = lastTapRef.current;
       if (
         last &&
@@ -247,6 +275,13 @@ export function WViewerClient({
     },
     [toggleZoom],
   );
+
+  // 데스크톱 마우스 더블클릭만 통과 — WebView 가 터치 직후 합성하는 dblclick(관대한 slop)이
+  // 커스텀 더블탭과 이중 발화하던 경로를 차단한다(터치 더블탭은 onTouchEnd 가 담당).
+  const onDoubleClickGuarded = useCallback(() => {
+    if (Date.now() - lastTouchAtRef.current < 1000) return;
+    toggleZoom();
+  }, [toggleZoom]);
 
   // ── 인쇄 — 웹폰트 로드 완료 후(미로드 인쇄로 인한 준비 지연 방지) ──────────
   const handlePrint = useCallback(() => {
@@ -310,7 +345,7 @@ export function WViewerClient({
 
       {/* ── 상단 바 (고정) ── */}
       <header
-        className="gw-chrome flex shrink-0 items-center gap-1.5 px-2.5 py-2"
+        className="gw-chrome flex shrink-0 items-center gap-1.5 px-2.5 py-2 pt-[max(0.5rem,env(safe-area-inset-top))]"
         style={{ background: "var(--gd-card)", borderBottom: "1px solid var(--gd-line)" }}
       >
         <Link
@@ -429,8 +464,9 @@ export function WViewerClient({
         <div
           ref={scrollRef}
           className="gw-scroll h-full overflow-auto"
+          onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          onDoubleClick={toggleZoom}
+          onDoubleClick={onDoubleClickGuarded}
         >
           <div
             className="gw-canvas mx-auto flex w-max min-w-full flex-col items-center px-3 py-4"

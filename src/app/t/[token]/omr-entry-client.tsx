@@ -408,7 +408,7 @@ export function OmrEntryClient({
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="border-b border-slate-200 bg-white px-4 py-3">
+      <header className="border-b border-slate-200 bg-white px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="mx-auto w-full max-w-xl">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[11px] font-medium tracking-wide text-slate-400">
@@ -448,7 +448,7 @@ export function OmrEntryClient({
       </header>
 
       {/* sticky 진행 스트립 — 시험명·학생명·답함 n/총·저장 상태 */}
-      <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-2 backdrop-blur">
+      <div className="sticky top-[env(safe-area-inset-top)] z-20 border-b border-slate-200 bg-white/95 px-4 py-2 backdrop-blur">
         <div className="mx-auto w-full max-w-xl">
           <div className="flex items-center justify-between gap-2 text-xs">
             <span className="min-w-0 truncate text-slate-500">

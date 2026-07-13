@@ -152,7 +152,7 @@ export function TakingHeader({
   onExit?: (() => void) | null;
 }) {
   return (
-    <header className="shrink-0 border-b border-[#E5E8EB] bg-white">
+    <header className="shrink-0 border-b border-[#E5E8EB] bg-white pt-[env(safe-area-inset-top)]">
       <div className="mx-auto flex w-full max-w-3xl items-center gap-2 px-4 py-2">
         {onExit && (
           <button
