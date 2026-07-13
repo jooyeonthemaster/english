@@ -190,7 +190,7 @@ export function QPlayerClient({
     // 결과 화면에도 플레이어와 동일한 상단 바(뒤로 + 제목)를 유지한다.
     return (
       <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
-        <header className="shrink-0 px-4 pt-3">
+        <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
           <div className="flex h-10 items-center gap-2">
             <button
               type="button"

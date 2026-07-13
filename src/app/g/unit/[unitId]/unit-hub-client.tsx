@@ -105,7 +105,7 @@ export function UnitHubClient({
 
   return (
     <div className="mx-auto min-h-dvh max-w-md px-5 pb-10">
-      <header className="flex items-center gap-1 pt-4">
+      <header className="flex items-center gap-1 pt-[max(1rem,env(safe-area-inset-top))]">
         <button
           type="button"
           onClick={() => router.push("/g/home")}
