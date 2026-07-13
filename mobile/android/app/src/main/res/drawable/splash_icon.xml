@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12+ windowSplashScreenAnimatedIcon.
+    실제 SMOAT 로고(capacitor-assets 생성 foreground)를 지면색(#f6f5f1) 스플래시 배경 중앙에
+    표시한다. 런처 아이콘과 동일 마크로 브랜드 일관.
+-->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@mipmap/ic_launcher_foreground"
+    android:gravity="center" />

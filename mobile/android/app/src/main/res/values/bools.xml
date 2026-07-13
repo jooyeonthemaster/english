@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Default (phones): lock to portrait. MainActivity reads R.bool.portrait_only
+      in onCreate and calls setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT)
+      when true. Tablets override this to false in res/values-sw600dp/bools.xml.
+    -->
+    <bool name="portrait_only">true</bool>
+</resources>

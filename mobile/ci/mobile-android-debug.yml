@@ -1,0 +1,71 @@
+# SMOAT 학생 앱 — Android 디버그 APK 빌드 (CI 스테이징본)
+#
+# 이 파일은 mobile/ci/ 에 "스테이징" 되어 있습니다. GitHub Actions 는 .github/workflows/
+# 아래의 워크플로만 실행하므로, 활성화하려면 이 파일을 저장소 루트의 .github/workflows/
+# 로 복사해야 합니다(mobile/ci/README.md 참조). 경로(working-directory, paths, artifact path)는
+# 저장소 루트를 기준으로 작성되어 있어 복사만 하면 그대로 동작합니다.
+#
+# 검증 목표: google-services.json 이 없는 상태에서도 assembleDebug 가 그린이어야 합니다
+# (app/build.gradle 의 try/catch 가 파일 부재 시 gms 플러그인을 미적용).
+
+name: mobile-android-debug
+
+on:
+  push:
+    paths:
+      - 'mobile/**'
+  pull_request:
+    paths:
+      - 'mobile/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      # 순서 절대 준수: npm ci → npx cap sync android → ./gradlew assembleDebug
+      # android/.gitignore 가 capacitor-cordova-android-plugins/ 와
+      # app/src/main/assets/capacitor.config.json 을 무시하므로 신선 체크아웃엔 부재하고,
+      # settings.gradle 이 :capacitor-cordova-android-plugins 를 include 하므로
+      # cap sync 로 이 생성물을 먼저 재생성하지 않으면 Gradle 구성 자체가 실패합니다.
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      - name: Capacitor sync (android)
+        run: npx cap sync android
+
+      - name: Assemble debug APK
+        working-directory: mobile/android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

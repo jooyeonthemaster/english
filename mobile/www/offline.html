@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>연결이 필요합니다 — SMOAT 학습</title>
+  <!--
+    server.errorPath 로컬 폴백. 원격 /g 로드 실패(오프라인/서버 다운) 시 Capacitor 가 이 파일을 띄운다.
+    반드시 www/ 루트에 두어야 상대경로 'offline.html' 로 해석된다.
+    자기완결: 인라인 CSS/JS 만 사용하고 외부 폰트/CDN/이미지 요청이 0 이어야 한다(오프라인이므로).
+    디자인 토큰은 src/app/g/gd.css 실측값의 리터럴 미러(라이트 고정).
+  -->
+  <style>
+    :root {
+      --paper: #f6f5f1;   /* gd.css --gd-paper  지면 */
+      --card: #ffffff;    /* gd.css --gd-card */
+      --line: #e5e3db;    /* gd.css --gd-line   헤어라인 */
+      --ink: #16202e;     /* gd.css --gd-ink    본문 잉크 */
+      --ink-2: #5a6372;   /* gd.css --gd-ink-2 */
+      --ink-3: #98a0ad;   /* gd.css --gd-ink-3 */
+      --blue: #1d4ed8;    /* gd.css --gd-blue   액션·진행 */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--paper);
+      color: var(--ink);
+      /* 시스템 한글 폰트 스택 — 오프라인이라 Pretendard CDN 도달 불가 */
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+      line-height: 1.5;
+      word-break: keep-all;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* 안전영역 패딩(노치/제스처 바) */
+      padding:
+        calc(1.5rem + env(safe-area-inset-top))
+        calc(1.5rem + env(safe-area-inset-right))
+        calc(1.5rem + env(safe-area-inset-bottom))
+        calc(1.5rem + env(safe-area-inset-left));
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 22rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* 잉크 배경 라운드 박스 안 흰색 line-art 아이콘 */
+    .badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 1.5rem;
+      background: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    .badge svg {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: block;
+    }
+
+    h1 {
+      margin: 0 0 0.625rem;
+      font-size: 1.5rem;      /* gd-fs-2xl */
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .lead {
+      margin: 0 0 1.75rem;
+      font-size: 0.875rem;    /* gd-fs-base */
+      line-height: 1.65;
+      color: var(--ink-2);
+    }
+
+    /* 흰 카드 — 액션 + 인디케이터 + 상태문구 */
+    .card {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 0.875rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    /* [다시 시도] — gd-btn-primary 미러 */
+    .btn {
+      width: 100%;
+      min-height: 2.75rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: var(--blue);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 80ms ease, background 120ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+    /* gd-meter 식 무한 인디케이터 바(계기판 은유 — 스피너 금지) */
+    .probe {
+      position: relative;
+      height: 0.25rem;
+      border-radius: 9999px;
+      background: var(--line);
+      overflow: hidden;
+    }
+    .probe > span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 40%;
+      border-radius: 9999px;
+      background: var(--blue);
+      /* 유휴(능동 확인 중 아님): 정지 + 흐림으로 '대기 중'을 정직히 표현. */
+      transform: translateX(-100%);
+      opacity: 0.35;
+    }
+    /* 실제 프로빙 중에만 스윕 애니메이션 재생 — probing 상태와 시각을 일치시킨다. */
+    .probe.is-probing > span {
+      animation: gd-sweep 1.4s ease-in-out infinite;
+      opacity: 1;
+    }
+    @keyframes gd-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(250%); }
+    }
+
+    .status {
+      margin: 0;
+      font-size: 0.6875rem;   /* gd-fs-2xs */
+      line-height: 1.5;
+      color: var(--ink-3);
+    }
+
+    /* 모션 최소화 — OS 설정 존중 */
+    @media (prefers-reduced-motion: reduce) {
+      .probe > span,
+      .probe.is-probing > span { animation: none; width: 100%; opacity: 0.4; transform: none; }
+      .btn { transition: none; }
+      .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="badge">
+      <!-- line-art wifi-off(대각 슬래시 + 신호 호 + 하단 점). 이모지/Sparkles 금지 -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.75"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M1 1l22 22" />
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+        <line x1="12" y1="20" x2="12.01" y2="20" />
+      </svg>
+    </div>
+
+    <h1 id="title">연결이 필요합니다</h1>
+    <p id="lead" class="lead">스모트 학습은 인터넷에 연결된 상태에서 이용할 수 있습니다. 네트워크를 확인한 뒤 다시 시도해 주십시오.</p>
+
+    <div class="card">
+      <button id="retry" class="btn" type="button">다시 시도</button>
+      <div id="probe" class="probe" aria-hidden="true"><span></span></div>
+      <p id="status" class="status" role="status" aria-live="polite">연결되면 자동으로 다시 시도합니다.</p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var REMOTE = 'https://www.smoat.co.kr/g';
+      // 도달성 프로브는 정적 자산(favicon)이 아니라 실제 앱 문서(/g)를 향한다 —
+      // 정적 favicon은 서버가 5xx여도, 캡티브 포털에서도 200을 주어 도달로 오판시킨다.
+      // (no-cors라 상태코드 자체는 못 읽으므로 '서버는 살아있으나 5xx' 판별은
+      //  아래 bounce 카운터가 보완한다.)
+      var PROBE = REMOTE;
+
+      // 직전에 우리가 REMOTE로 이동했는데 짧은 시간 안에 이 오프라인 페이지가 다시 떴다면
+      // = 네트워크는 정상인데 /g가 5xx(서버 예외·배포 엣지)로 실패해 errorPath로 되돌아온
+      // 'bounce'다. errorPath는 https://localhost 로컬 오리진이라 sessionStorage가
+      // bounce 사이에 유지된다.
+      var ATTEMPT_KEY = 'smoat.offline.attemptAt';
+      var BOUNCE_KEY = 'smoat.offline.bounces';
+
+      var statusEl = document.getElementById('status');
+      var leadEl = document.getElementById('lead');
+      var titleEl = document.getElementById('title');
+      var retryBtn = document.getElementById('retry');
+      var probeEl = document.getElementById('probe');
+      var probing = false;
+      var timer = null;
+
+      function ss() { try { return window.sessionStorage; } catch (e) { return null; } }
+      function nowMs() { try { return Date.now(); } catch (e) { return 0; } }
+
+      function detectBounce() {
+        var store = ss();
+        if (!store) { return 0; }
+        var n = 0;
+        try {
+          var last = parseInt(store.getItem(ATTEMPT_KEY) || '0', 10);
+          if (last && (nowMs() - last) < 20000) {
+            n = (parseInt(store.getItem(BOUNCE_KEY) || '0', 10) || 0) + 1;
+            store.setItem(BOUNCE_KEY, String(n));
+          } else {
+            store.removeItem(BOUNCE_KEY);
+          }
+          store.removeItem(ATTEMPT_KEY);
+        } catch (e) { /* noop */ }
+        return n;
+      }
+
+      var bounces = detectBounce();
+      var serverErroring = bounces > 0;
+      // 백오프: 정상 오프라인은 5초 주기, bounce(서버 5xx) 반복 시 지수적으로 늘려 최대 60초.
+      // → 서버 인시던트 동안 ~5초 타이트 재로드 루프를 막는다.
+      var retryDelay = serverErroring ? Math.min(5000 * Math.pow(2, bounces), 60000) : 5000;
+
+      function setStatus(msg) {
+        if (statusEl) { statusEl.textContent = msg; }
+      }
+      function setProbing(on) {
+        probing = on;
+        if (probeEl) {
+          if (on) { probeEl.classList.add('is-probing'); }
+          else { probeEl.classList.remove('is-probing'); }
+        }
+      }
+
+      // bounce로 서버 5xx가 확인되면 '인터넷 연결 필요'가 아니라 '서버 점검 중'으로 문구 전환.
+      if (serverErroring) {
+        if (titleEl) { titleEl.textContent = '잠시 후 다시 시도해 주십시오'; }
+        if (leadEl) {
+          leadEl.textContent =
+            '스모트 학습 서버에 일시적으로 연결할 수 없습니다. 네트워크는 정상이며, 잠시 후 자동으로 다시 연결합니다.';
+        }
+        setStatus('서버 점검 중입니다. 잠시 후 자동으로 다시 시도합니다.');
+      }
+
+      // Capacitor Network 플러그인 — 네이티브 브리지가 주입했을 때만 존재한다.
+      // errorPath 로컬 페이지에선 브리지가 없을 수 있어 항상 방어적으로 접근하고
+      // navigator.onLine 으로 폴백한다.
+      function networkPlugin() {
+        try {
+          var cap = window.Capacitor;
+          if (cap && cap.Plugins && cap.Plugins.Network) { return cap.Plugins.Network; }
+        } catch (e) { /* noop */ }
+        return null;
+      }
+
+      // Promise<boolean> — 플러그인 getStatus 우선, 없으면 navigator.onLine.
+      function isOnline() {
+        var n = networkPlugin();
+        if (n && typeof n.getStatus === 'function') {
+          return n.getStatus().then(function (s) {
+            return !!(s && s.connected);
+          }, function () {
+            return navigator.onLine;
+          });
+        }
+        return Promise.resolve(navigator.onLine);
+      }
+
+      // 도달성 프로브 — opaque no-cors GET. 서버에 닿으면(상태코드 무관) resolve,
+      // 네트워크 실패면 reject. https(localhost)→https(smoat.co.kr) opaque 요청이라 정상.
+      // 4초 타임아웃으로 무한 대기(캡티브 포털 등)를 차단해 probing 고착을 막는다.
+      function reachable() {
+        var ctrl = ('AbortController' in window) ? new AbortController() : null;
+        var timer = null;
+        var opts = { mode: 'no-cors', cache: 'no-store' };
+        if (ctrl) {
+          opts.signal = ctrl.signal;
+          timer = setTimeout(function () { try { ctrl.abort(); } catch (e) {} }, 4000);
+        }
+        return fetch(PROBE, opts).then(function () {
+          if (timer) { clearTimeout(timer); }
+          return true;
+        }, function () {
+          if (timer) { clearTimeout(timer); }
+          return false;
+        });
+      }
+
+      function scheduleNext() {
+        if (timer) { clearTimeout(timer); }
+        timer = setTimeout(recover, retryDelay);
+      }
+
+      function recover() {
+        if (probing) { return; }
+        setProbing(true);
+        setStatus('연결 상태를 확인하고 있습니다…');
+        isOnline().then(function (online) {
+          if (!online) {
+            setProbing(false);
+            setStatus('네트워크에 연결되어 있지 않습니다. 연결되면 자동으로 다시 시도합니다.');
+            scheduleNext();
+            return;
+          }
+          return reachable().then(function (ok) {
+            if (ok) {
+              setStatus('연결되었습니다. 다시 불러옵니다…');
+              // 이번 이동 시각을 기록 — 되돌아오면(5xx bounce) detectBounce가 인지해
+              // 다음 로드에서 '서버 점검 중' 문구 + 백오프로 전환한다.
+              var store = ss();
+              if (store) { try { store.setItem(ATTEMPT_KEY, String(nowMs())); } catch (e) {} }
+              // 원격 자동복귀. allowNavigation 에 www.smoat.co.kr 포함이라 웹뷰 내에서 열린다.
+              location.href = REMOTE;
+            } else {
+              setProbing(false);
+              setStatus('아직 서버에 연결할 수 없습니다. 잠시 후 다시 시도합니다.');
+              scheduleNext();
+            }
+          });
+        }).catch(function () {
+          setProbing(false);
+          setStatus('다시 시도해 주십시오.');
+          scheduleNext();
+        });
+      }
+
+      // [다시 시도] 버튼 — 즉시 recover.
+      if (retryBtn) { retryBtn.addEventListener('click', recover); }
+
+      // ① 브라우저 online 이벤트
+      window.addEventListener('online', recover);
+
+      // ② Capacitor Network 리스너(플러그인 가용 시)
+      var np = networkPlugin();
+      if (np && typeof np.addListener === 'function') {
+        try {
+          np.addListener('networkStatusChange', function (s) {
+            if (s && s.connected) { recover(); }
+          });
+        } catch (e) { /* noop */ }
+      }
+
+      // ③ 자동 재시도 예약 — 정상 오프라인 5초, 서버 5xx bounce 시 지수 백오프(최대 60초).
+      scheduleNext();
+    })();
+  </script>
+</body>
+</html>

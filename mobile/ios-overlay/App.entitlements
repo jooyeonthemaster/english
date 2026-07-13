@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SMOAT 학생 앱 — iOS Entitlements (자리표시자 / '준비만')
+
+  CI 의 scripts/apply-ios-overlay.sh 가 이 파일을 에페메랄 ios/App/App/App.entitlements 로
+  복사합니다. 실제 서명·프로비저닝 발급 전까지는 값이 자리표시자입니다.
+
+  - aps-environment: 푸시 알림 준비(U6). v1 에서는 @capacitor/push-notifications 를 설치하지
+    않으므로 실제 푸시는 비활성이며, 활성화 시 development → production 으로 승격합니다.
+  - com.apple.developer.associated-domains: iOS Universal Links(App Links iOS 대응). 범위는
+    Android App Links autoVerify 와 동일하게 www.smoat.co.kr 로 한정합니다(경로 /g, /g/*).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>aps-environment</key>
+	<string>development</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:www.smoat.co.kr</string>
+	</array>
+</dict>
+</plist>

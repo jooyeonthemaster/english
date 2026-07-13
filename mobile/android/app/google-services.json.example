@@ -1,0 +1,51 @@
+// ============================================================================
+//  google-services.json.EXAMPLE  —  형태 참고용 더미 (PLACEHOLDER ONLY)
+// ----------------------------------------------------------------------------
+//  * 파일명이 반드시 ".example" 로 끝납니다. Android 빌드(gms 플러그인)는
+//    정확히 "google-services.json" 이라는 이름만 읽으므로, 이 .example 파일은
+//    빌드에 전혀 관여하지 않습니다(assembleDebug 그린 보존).
+//
+//  * 이 파일을 google-services.json 으로 복사/이름변경 하지 마십시오.
+//    - 여기에는 // 주석과 가짜 자리표시자 값이 들어 있어 그대로 쓰면
+//      gms 플러그인의 JSON 파서가 실패해 빌드가 깨집니다(의도된 방지턱).
+//    - 실제 google-services.json 은 Firebase 콘솔에서 직접 내려받아야 합니다.
+//      (PUSH-SETUP.md 3-1 단계 참고)
+//
+//  * 실 google-services.json 은 절대 커밋하지 마십시오. 저장소에 커밋되면
+//    build.gradle L47-54 의 try/catch 가 파일을 감지해 com.google.gms.google-services
+//    플러그인을 적용하고, 그 시점부터 키 검증 빌드 리스크가 생깁니다.
+//    (mobile/android/app/.gitignore 는 현재 이 파일을 무시하지 않으므로 주의)
+//
+//  아래 구조는 Firebase 콘솔이 발급하는 Android용 google-services.json 의
+//  최소 형태입니다. 대문자 REPLACE_* / 0 자리표시자를 실제 값으로 대체하되,
+//  package_name 은 실제 앱 패키지 "kr.co.smoat.student" 로 이미 맞춰 두었습니다.
+// ============================================================================
+{
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "REPLACE_WITH_FIREBASE_PROJECT_ID",
+    "storage_bucket": "REPLACE_WITH_FIREBASE_PROJECT_ID.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": {
+          "package_name": "kr.co.smoat.student"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIza_REPLACE_WITH_REAL_ANDROID_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,173 @@
+# SMOAT 학생 앱 — iOS 빌드 (CI 스테이징본)
+#
+# 스테이징본입니다. 활성화하려면 저장소 루트 .github/workflows/ 로 복사하십시오(README 참조).
+#
+# ios/ 는 에페메랄입니다: 러너에서 매 실행 `npx cap add ios` 로 새로 생성하며 저장소에 커밋하지
+# 않습니다. Windows 개발기에서는 CocoaPods/Xcode 미지원으로 `npx cap add ios` 실행·커밋을 금지합니다.
+# job1(unsigned) 은 서명 없이 시뮬레이터용 컴파일만 검증하고, job2(signed-archive) 는
+# repo variable IOS_SIGNING_ENABLED == 'true' 인 경우에만 아카이브/IPA 내보내기를 수행합니다.
+#
+# paths 필터로 mobile/** 변경에만 트리거해 웹 전용 푸시에서 macOS 러너 분당 과금을 차단합니다.
+
+name: mobile-ios
+
+on:
+  push:
+    paths:
+      - 'mobile/**'
+  pull_request:
+    paths:
+      - 'mobile/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios-unsigned-build:
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      # @capacitor/ios 는 저장소 package.json 에 커밋하지 않고 CI 에서만 에페메랄로 추가합니다.
+      # Capacitor 8 은 SPM(Swift Package Manager) 통합을 지원하므로 CocoaPods 없이 add 합니다.
+      - name: Add iOS platform (SPM, ephemeral)
+        run: |
+          npm i @capacitor/ios@8
+          npx cap add ios --packagemanager SPM
+
+      - name: Capacitor sync (ios)
+        run: npx cap sync ios
+
+      - name: Apply iOS overlay (Info.plist / entitlements)
+        run: bash scripts/apply-ios-overlay.sh
+
+      - name: Build (unsigned, simulator)
+        working-directory: mobile/ios/App
+        run: |
+          set -e
+          shopt -s nullglob
+          ws=(*.xcworkspace); proj=(*.xcodeproj)
+          if [ ${#ws[@]} -gt 0 ]; then
+            CONTAINER=(-workspace "${ws[0]}")
+          else
+            CONTAINER=(-project "${proj[0]}")
+          fi
+          xcodebuild "${CONTAINER[@]}" \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+  ios-signed-archive:
+    # 서명 활성화 게이트. Apple 계정/시크릿 미설정 시 잡 전체 스킵(그린 유지).
+    if: ${{ vars.IOS_SIGNING_ENABLED == 'true' }}
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      - name: Add iOS platform (SPM, ephemeral)
+        run: |
+          npm i @capacitor/ios@8
+          npx cap add ios --packagemanager SPM
+
+      - name: Capacitor sync (ios)
+        run: npx cap sync ios
+
+      - name: Apply iOS overlay (Info.plist / entitlements)
+        run: bash scripts/apply-ios-overlay.sh
+
+      - name: Import signing assets into a temporary keychain
+        env:
+          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set -e
+          CERT_PATH="$RUNNER_TEMP/certificate.p12"
+          PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
+          KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+
+          echo "$APPLE_CERTIFICATE_BASE64" | base64 --decode > "$CERT_PATH"
+          echo "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/"
+
+      - name: Archive (Release)
+        working-directory: mobile/ios/App
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -e
+          shopt -s nullglob
+          ws=(*.xcworkspace); proj=(*.xcodeproj)
+          if [ ${#ws[@]} -gt 0 ]; then
+            CONTAINER=(-workspace "${ws[0]}")
+          else
+            CONTAINER=(-project "${proj[0]}")
+          fi
+          xcodebuild "${CONTAINER[@]}" \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            archive
+
+      - name: Export IPA
+        working-directory: mobile/ios/App
+        run: |
+          set -e
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist "$GITHUB_WORKSPACE/mobile/ios-overlay/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-ios-ipa
+          path: ${{ runner.temp }}/export/*.ipa
+          if-no-files-found: error

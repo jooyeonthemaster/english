@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SMOAT 학습</string>
+    <string name="title_activity_main">SMOAT 학습</string>
+    <string name="package_name">kr.co.smoat.student</string>
+    <string name="custom_url_scheme">kr.co.smoat.student</string>
+</resources>

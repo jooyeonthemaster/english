@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.co.smoat.student",
+      "sha256_cert_fingerprints": [
+        "92:21:4B:25:E8:C5:FB:79:56:3C:CE:B4:12:ED:BD:09:2D:A9:A7:A2:F5:CB:18:B2:81:11:55:B4:4C:34:2A:90"
+      ]
+    }
+  }
+]

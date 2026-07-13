@@ -1,0 +1,31 @@
+# SMOAT 학생 앱 (Capacitor) — mobile/ 커밋 제외 규칙
+#
+# 주의: android/ 는 커밋 대상입니다. 별도의 android/.gitignore 가 그 안의 빌드 산출물
+# (*.apk, build/, .gradle/, capacitor-cordova-android-plugins/, 생성된 capacitor.config.json 등)을
+# 이미 무시하므로 여기서 android 전체를 무시하지 않습니다.
+#
+# ios/ 는 에페메랄입니다: CI(macOS)에서 `npx cap add ios` 로 매 실행 재생성하며 v1 에서는
+# 커밋하지 않습니다(Windows 개발기에서 생성 불가). 아래 항목은 나중에 ios/ 를 커밋 전환하더라도
+# 절대 커밋되면 안 되는 하위 산출물입니다(ci/README.md 의 'ios/ 커밋 전환 절차' 참조).
+
+# iOS 빌드/의존성 산출물
+ios/App/Pods/
+ios/**/build/
+ios/**/DerivedData/
+ios-dd/
+
+# Xcode 아카이브
+*.xcarchive
+
+# 서명 키 (절대 커밋 금지)
+*.keystore
+*.jks
+
+# Firebase 콘솔 발급 비밀 (푸시 활성화 시 배치 — 절대 커밋 금지, 히스토리 잔존 방지)
+# v1 은 실파일 없이 google-services.json.example 만 있으나, PUSH-SETUP.md 절차대로
+# 나중에 실파일을 mobile/android/app/ 에 두고 무심코 `git add mobile/` 하는 실수를 원천 차단.
+google-services.json
+GoogleService-Info.plist
+
+# macOS
+.DS_Store

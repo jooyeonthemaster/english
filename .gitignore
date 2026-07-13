@@ -164,3 +164,6 @@ docs/grammar_1000_analysis/
 /scripts/manual-screenshots.ts
 # 스크래치 관리자 점검 스크립트
 /scripts/_tmp-*
+
+# 모바일 앱 셸 종속물
+/mobile/node_modules

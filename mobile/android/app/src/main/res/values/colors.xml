@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      U3-branding: OS SplashScreen(Android 12+) 및 포스트-스플래시 윈도우 배경용 지면색.
+      src/app/g/gd.css 의 지면색 토큰 실측(#f6f5f1)과 일치 → 네이티브 스플래시·윈도우·WebView 배경 전 구간을
+      동일 지면색으로 맞춰 흰 플래시를 물리적으로 제거한다.
+      values-night/colors.xml 은 v1에서 생성 생략(다크 모드에서도 이 값으로 폴백 → 항상 종이, 브랜드 일관).
+      OLED 절전을 원하면 values-night/colors.xml 에 splash_background 를 #1A1A1A 로 다크 분기한다.
+      (참고) ic_launcher_background 색/이미지는 capacitor-assets 가 별도 관리한다
+      (values/ic_launcher_background.xml, mipmap-*/ic_launcher_background.png). 여기서는 splash_background 만 소유.
+    -->
+    <color name="splash_background">#F6F5F1</color>
+</resources>

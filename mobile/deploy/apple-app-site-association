@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["<TEAMID>.kr.co.smoat.student"],
+        "components": [
+          { "/": "/g" },
+          { "/": "/g/*" }
+        ]
+      }
+    ]
+  }
+}

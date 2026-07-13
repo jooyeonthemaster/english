@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SMOAT 학생 앱 — Xcode exportArchive 옵션 (자리표시자 / '준비만')
+
+  CI 의 mobile-ios.yml → 'Export IPA' 스텝이 -exportOptionsPlist 로 이 파일을 참조합니다.
+  Apple 개발자 계정 발급 후 아래 자리표시자를 실제 값으로 치환하십시오:
+    - teamID: 10자 Apple Team ID (예: ABCDE12345)
+    - provisioningProfiles: 번들 ID(kr.co.smoat.student) → 프로비저닝 프로파일 '이름' 매핑
+
+  method 는 App Store Connect 업로드용입니다. Xcode 16+ 는 'app-store-connect' 를 권장하며,
+  구버전 Xcode 는 'app-store' 를 사용합니다(러너 Xcode 버전에 맞춰 조정).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>teamID</key>
+	<string>TEAMID_PLACEHOLDER</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>uploadSymbols</key>
+	<true/>
+	<key>stripSwiftSymbols</key>
+	<true/>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>kr.co.smoat.student</key>
+		<string>SMOAT_STUDENT_APPSTORE_PROFILE_PLACEHOLDER</string>
+	</dict>
+</dict>
+</plist>
