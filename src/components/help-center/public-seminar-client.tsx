@@ -6,19 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { StatusBadge } from "@/components/help-center/status-badge";
 import { registerGuestGroupSeminar } from "@/actions/public-seminar";
 import type { GroupSeminarView } from "@/actions/help-center";
-import { GROUP_SEMINAR_STATUSES, statusOf } from "@/lib/help-center";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import {
+  SeminarHero,
+  InfoTiles,
+  ContentCards,
+  CopyAccountButton,
+  seminarMapUrl,
+  toExternalUrl,
+} from "@/components/help-center/group-seminar-display";
+import {
   Users,
-  CalendarClock,
-  MapPin,
   Gift,
   ExternalLink,
-  Presentation,
   CheckCircle2,
   X,
 } from "lucide-react";
@@ -28,33 +31,6 @@ interface BankAccount {
   bankName: string;
   accountNumber: string;
   accountHolder: string;
-}
-
-function toExternalUrl(url: string) {
-  const t = url.trim();
-  return /^https?:\/\//i.test(t) ? t : `https://${t}`;
-}
-function firstUrl(text: string | null): string | null {
-  if (!text) return null;
-  const m = text.match(/https?:\/\/[^\s]+/i);
-  return m ? m[0] : null;
-}
-
-function Cover({ seminar }: { seminar: GroupSeminarView }) {
-  if (seminar.coverImageUrl) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return (
-      <img src={seminar.coverImageUrl} alt={seminar.title} className="h-44 w-full object-cover" />
-    );
-  }
-  return (
-    <div className="flex h-44 w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 text-slate-300">
-      <Presentation className="size-8" strokeWidth={1.6} />
-      <span className="text-[12px] font-semibold tracking-wide text-slate-400">
-        SMOAT 단체 세미나
-      </span>
-    </div>
-  );
 }
 
 export function PublicSeminarClient({
@@ -73,7 +49,7 @@ export function PublicSeminarClient({
     <div className="min-h-screen bg-[#F4F6F9]">
       {/* 간단한 상단 바 */}
       <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6 lg:px-10">
           <Link href="/" className="text-lg font-bold tracking-tight text-slate-900">
             SMOAT
           </Link>
@@ -96,7 +72,7 @@ export function PublicSeminarClient({
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+      <main className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">단체 세미나 신청</h1>
           <p className="mt-1 text-sm text-slate-500">
@@ -110,7 +86,7 @@ export function PublicSeminarClient({
             <p className="mt-3 text-sm text-slate-400">현재 신청 가능한 단체 세미나가 없습니다.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {open.map((s) => (
               <SeminarCard
                 key={s.id}
@@ -138,6 +114,7 @@ export function PublicSeminarClient({
   );
 }
 
+// ─── 세미나 카드(회원용 히어로와 동일 레이아웃) ──────────────────────────────
 function SeminarCard({
   seminar,
   submitted,
@@ -147,97 +124,67 @@ function SeminarCard({
   submitted: boolean;
   onApply: () => void;
 }) {
-  const mapUrl =
-    seminar.mapUrl || firstUrl(seminar.location) || firstUrl(seminar.description);
   const canApply = seminar.registrationOpen && !submitted;
+  const mapUrl = seminarMapUrl(seminar);
 
   return (
+    /* 하나의 흰색 카드로 묶어 "같은 한 세미나"로 읽히게 한다(회원용과 동일 구조). */
     <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
-      <div className="relative">
-        <Cover seminar={seminar} />
-      </div>
-      <div className="space-y-3 p-5">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <StatusBadge status={statusOf(GROUP_SEMINAR_STATUSES, seminar.status)} />
-          {seminar.capacity != null && (
-            <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
-              선착순 {seminar.capacity}명
-            </span>
-          )}
-        </div>
-        <h2 className="text-lg font-bold leading-tight text-slate-900">{seminar.title}</h2>
-        {seminar.summary && <p className="text-sm text-slate-500">{seminar.summary}</p>}
-
-        {/* 핵심 정보 */}
-        <div className="space-y-1.5 text-sm text-slate-600">
-          <div className="flex items-start gap-2">
-            <CalendarClock className="mt-0.5 size-4 shrink-0 text-slate-400" />
-            <span>
-              {seminar.sessionDates.length > 0
-                ? seminar.sessionDates.map((d) => formatDateTime(new Date(d))).join(" / ")
-                : seminar.scheduledAt
-                  ? formatDateTime(new Date(seminar.scheduledAt))
-                  : "일정 조율 중"}
-              {seminar.sessionDates.length > 1 && (
-                <span className="text-slate-400"> · 하루 선택</span>
-              )}
-            </span>
-          </div>
-          {seminar.location && (
-            <div className="flex items-start gap-2">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-slate-400" />
-              <span>
-                {seminar.location.split("·")[0]?.trim()}
-                {mapUrl && (
-                  <a
-                    href={toExternalUrl(mapUrl)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-1.5 inline-flex items-center gap-0.5 text-[12px] font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    위치 확인 <ExternalLink className="size-3" />
-                  </a>
-                )}
+      <SeminarHero
+        seminar={seminar}
+        topSlot={
+          submitted ? (
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-[12px] font-bold text-emerald-700">
+                <CheckCircle2 className="size-3.5" />
+                신청 완료
               </span>
+              <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
+                신청이 접수되었습니다. 확인 후 개별적으로 안내드리겠습니다.
+              </p>
             </div>
-          )}
-        </div>
-
-        {seminar.benefit?.trim() && (
-          <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3">
-            <div className="mb-1 flex items-center gap-1.5 text-[12px] font-bold text-blue-700">
-              <Gift className="size-3.5" /> 참여자 혜택
+          ) : null
+        }
+        cta={
+          !submitted ? (
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:justify-start">
+              <Button
+                size="lg"
+                onClick={onApply}
+                disabled={!canApply}
+                className="h-12 w-full text-[15px] font-semibold sm:h-10 sm:w-auto sm:text-sm"
+              >
+                {canApply
+                  ? "세미나 신청하기"
+                  : seminar.eventPassed
+                    ? "종료된 세미나"
+                    : "신청이 마감되었습니다"}
+              </Button>
+              {mapUrl && (
+                <a
+                  href={toExternalUrl(mapUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
+                >
+                  지도에서 위치 확인하기
+                  <ExternalLink className="size-3" />
+                </a>
+              )}
             </div>
-            <p className="whitespace-pre-line text-[12.5px] leading-relaxed text-slate-600">
-              {seminar.benefit}
-            </p>
-          </div>
-        )}
-
-        {(seminar.depositAmount ?? 0) > 0 && (
-          <p className="text-[12px] text-amber-700">
-            참가 보증금 {seminar.depositAmount!.toLocaleString("ko-KR")}원 · 세미나 당일 환급
-          </p>
-        )}
-
-        {submitted ? (
-          <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-            <CheckCircle2 className="size-4" /> 신청이 접수되었습니다.
-          </div>
-        ) : (
-          <Button
-            size="lg"
-            className="h-12 w-full text-[15px] font-semibold sm:h-11"
-            onClick={onApply}
-            disabled={!canApply}
-          >
-            {canApply
-              ? "세미나 신청하기"
-              : seminar.eventPassed
-                ? "종료된 세미나"
-                : "신청이 마감되었습니다"}
-          </Button>
-        )}
+          ) : null
+        }
+      />
+      <div className="space-y-5 border-t border-slate-100 p-5 sm:p-6">
+        <InfoTiles seminar={seminar} />
+        <ContentCards
+          seminar={seminar}
+          support={{
+            href: "/login",
+            label: "로그인하고 문의하기",
+            description: "세미나 관련 문의는 로그인 후 고객센터를 이용해 주세요.",
+          }}
+        />
       </div>
     </div>
   );
@@ -355,160 +302,164 @@ function GuestApplyDialog({
 
         {/* 스크롤 본문 */}
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5">
-        <div
-          className={
-            hasDeposit ? "grid grid-cols-1 gap-3 lg:grid-cols-2" : "space-y-2.5"
-          }
-        >
-          {/* 좌: 참석 정보 */}
-          <div className="space-y-2.5">
-            {needsDateChoice && (
-              <div className="space-y-1.5 rounded-xl border border-blue-100 bg-blue-50/40 p-2.5">
-                <Label>참석 날짜 선택 (하루)</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {dateOptions.map((d) => {
-                    const info = seminar.sessions.find((x) => x.date === d);
-                    const closed = info?.registrationClosed ?? false;
-                    const full = info?.spotsLeft != null && info.spotsLeft <= 0;
-                    const disabled = closed || full;
-                    const active = selectedDate === d;
-                    return (
-                      <button
-                        type="button"
-                        key={d}
-                        disabled={disabled}
-                        onClick={() => setSelectedDate(d)}
-                        className={`flex flex-col items-center justify-center gap-0.5 rounded-xl border px-2 py-2.5 text-center text-[13px] transition-colors ${
-                          disabled
-                            ? "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-300"
-                            : active
-                              ? "border-blue-500 bg-blue-50 font-semibold text-blue-700"
-                              : "border-slate-200 bg-white text-slate-600 hover:border-blue-200"
-                        }`}
-                      >
-                        <span className="inline-flex items-center gap-1 font-medium leading-tight">
-                          {formatDateTime(new Date(d))}
-                          {active && !disabled && <CheckCircle2 className="size-3.5" />}
-                        </span>
-                        {(closed || full) && (
-                          <span className="text-[11px]">{closed ? "신청 마감" : "정원 마감"}</span>
-                        )}
-                      </button>
-                    );
-                  })}
+          <div className={hasDeposit ? "grid grid-cols-1 gap-3 lg:grid-cols-2" : "space-y-2.5"}>
+            {/* 좌: 참석 정보 */}
+            <div className="space-y-2.5">
+              {needsDateChoice && (
+                <div className="space-y-1.5 rounded-xl border border-blue-100 bg-blue-50/40 p-2.5">
+                  <Label>참석 날짜 선택 (하루)</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {dateOptions.map((d) => {
+                      const info = seminar.sessions.find((x) => x.date === d);
+                      const closed = info?.registrationClosed ?? false;
+                      const full = info?.spotsLeft != null && info.spotsLeft <= 0;
+                      const disabled = closed || full;
+                      const active = selectedDate === d;
+                      return (
+                        <button
+                          type="button"
+                          key={d}
+                          disabled={disabled}
+                          onClick={() => setSelectedDate(d)}
+                          className={`flex flex-col items-center justify-center gap-0.5 rounded-xl border px-2 py-2.5 text-center text-[13px] transition-colors ${
+                            disabled
+                              ? "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-300"
+                              : active
+                                ? "border-blue-500 bg-blue-50 font-semibold text-blue-700"
+                                : "border-slate-200 bg-white text-slate-600 hover:border-blue-200"
+                          }`}
+                        >
+                          <span className="inline-flex items-center gap-1 font-medium leading-tight">
+                            {formatDateTime(new Date(d))}
+                            {active && !disabled && <CheckCircle2 className="size-3.5" />}
+                          </span>
+                          {(closed || full) && (
+                            <span className="text-[11px]">
+                              {closed ? "신청 마감" : "정원 마감"}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="space-y-1">
+                  <Label htmlFor="g-name">이름</Label>
+                  <Input id="g-name" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="g-phone">연락처</Label>
+                  <Input
+                    id="g-phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="010-0000-0000"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="g-email">이메일 (선택)</Label>
+                  <Input id="g-email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="g-head">참석 인원</Label>
+                  <Input
+                    id="g-head"
+                    type="number"
+                    min={1}
+                    max={50}
+                    value={headCount}
+                    onChange={(e) => setHeadCount(Math.max(1, Number(e.target.value) || 1))}
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="g-academy">학원명 (선택)</Label>
+                <Input
+                  id="g-academy"
+                  value={academyName}
+                  onChange={(e) => setAcademyName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="g-msg">문의·요청 (선택)</Label>
+                <Textarea
+                  id="g-msg"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={2}
+                  className="resize-y"
+                  placeholder="전달할 내용이 있으면 적어 주세요"
+                />
+              </div>
+            </div>
+
+            {/* 우: 참가 보증금 */}
+            {hasDeposit && (
+              <div className="space-y-2.5 rounded-xl border border-amber-200 bg-amber-50/50 p-3">
+                <div className="flex items-center gap-2 rounded-lg bg-amber-100 px-3 py-2 text-[13px] font-bold text-amber-800">
+                  <Gift className="size-4 shrink-0" />
+                  세미나 당일에 환급해 드립니다.
+                </div>
+                <p className="text-[12.5px] leading-relaxed text-slate-600">
+                  참가 보증금{" "}
+                  <b className="text-slate-900">{depositAmount.toLocaleString("ko-KR")}원</b>을 아래
+                  계좌로 입금하시면 신청이 확정됩니다.
+                </p>
+                {bankAccount.enabled ? (
+                  <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px]">
+                    <div className="flex flex-wrap items-center gap-1.5 font-semibold text-slate-900">
+                      <span>
+                        {bankAccount.bankName} {bankAccount.accountNumber}
+                      </span>
+                      <CopyAccountButton
+                        bankName={bankAccount.bankName}
+                        accountNumber={bankAccount.accountNumber}
+                      />
+                    </div>
+                    <div className="text-[12px] text-slate-500">
+                      예금주 {bankAccount.accountHolder}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-[12px] text-slate-400">
+                    입금 계좌는 신청 후 개별 안내드립니다.
+                  </div>
+                )}
+                <div className="space-y-1">
+                  <Label htmlFor="g-depositor">입금자명 (이 이름으로 입금 · 자동 확인)</Label>
+                  <Input
+                    id="g-depositor"
+                    value={depositorName}
+                    onChange={(e) => setDepositorName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>환급받을 계좌</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Input
+                      placeholder="은행"
+                      value={refundBank}
+                      onChange={(e) => setRefundBank(e.target.value)}
+                    />
+                    <Input
+                      className="col-span-2"
+                      placeholder="계좌번호"
+                      value={refundAcct}
+                      onChange={(e) => setRefundAcct(e.target.value)}
+                    />
+                  </div>
+                  <Input
+                    placeholder="예금주"
+                    value={refundHolder}
+                    onChange={(e) => setRefundHolder(e.target.value)}
+                  />
                 </div>
               </div>
             )}
-
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="space-y-1">
-                <Label htmlFor="g-name">이름</Label>
-                <Input id="g-name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="g-phone">연락처</Label>
-                <Input
-                  id="g-phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="010-0000-0000"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="g-email">이메일 (선택)</Label>
-                <Input id="g-email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="g-head">참석 인원</Label>
-                <Input
-                  id="g-head"
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={headCount}
-                  onChange={(e) => setHeadCount(Math.max(1, Number(e.target.value) || 1))}
-                />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="g-academy">학원명 (선택)</Label>
-              <Input
-                id="g-academy"
-                value={academyName}
-                onChange={(e) => setAcademyName(e.target.value)}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="g-msg">문의·요청 (선택)</Label>
-              <Textarea
-                id="g-msg"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                rows={2}
-                className="resize-y"
-                placeholder="전달할 내용이 있으면 적어 주세요"
-              />
-            </div>
           </div>
-
-          {/* 우: 참가 보증금 */}
-          {hasDeposit && (
-            <div className="space-y-2.5 rounded-xl border border-amber-200 bg-amber-50/50 p-3">
-              <div className="flex items-center gap-2 rounded-lg bg-amber-100 px-3 py-2 text-[13px] font-bold text-amber-800">
-                <Gift className="size-4 shrink-0" />
-                세미나 당일에 환급해 드립니다.
-              </div>
-              <p className="text-[12.5px] leading-relaxed text-slate-600">
-                참가 보증금{" "}
-                <b className="text-slate-900">{depositAmount.toLocaleString("ko-KR")}원</b>을 아래
-                계좌로 입금하시면 신청이 확정됩니다.
-              </p>
-              {bankAccount.enabled ? (
-                <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px]">
-                  <div className="font-semibold text-slate-900">
-                    {bankAccount.bankName} {bankAccount.accountNumber}
-                  </div>
-                  <div className="text-[12px] text-slate-500">
-                    예금주 {bankAccount.accountHolder}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-[12px] text-slate-400">
-                  입금 계좌는 신청 후 개별 안내드립니다.
-                </div>
-              )}
-              <div className="space-y-1">
-                <Label htmlFor="g-depositor">입금자명 (이 이름으로 입금 · 자동 확인)</Label>
-                <Input
-                  id="g-depositor"
-                  value={depositorName}
-                  onChange={(e) => setDepositorName(e.target.value)}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label>환급받을 계좌</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  <Input
-                    placeholder="은행"
-                    value={refundBank}
-                    onChange={(e) => setRefundBank(e.target.value)}
-                  />
-                  <Input
-                    className="col-span-2"
-                    placeholder="계좌번호"
-                    value={refundAcct}
-                    onChange={(e) => setRefundAcct(e.target.value)}
-                  />
-                </div>
-                <Input
-                  placeholder="예금주"
-                  value={refundHolder}
-                  onChange={(e) => setRefundHolder(e.target.value)}
-                />
-              </div>
-            </div>
-          )}
-        </div>
         </div>
 
         {/* 하단 고정 액션 */}
