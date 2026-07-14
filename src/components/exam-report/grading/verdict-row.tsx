@@ -10,7 +10,7 @@
 // 순수 표시 — 상태 변경은 콜백으로 위임(불변 업데이트는 grading-shared).
 // ============================================================================
 
-import { RotateCcw } from "lucide-react";
+import { Eye, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type {
@@ -37,6 +37,8 @@ interface VerdictRowProps {
   onReset: (number: string) => void;
   /** MC 선지 직접 입력(①~⑤ 세그먼트) — 정오 자동 파생은 훅(markChoice)이 담당. */
   onSetChoice: (number: string, choice: string) => void;
+  /** 문항 상세보기 열기 — 미지정 시 상세 버튼 숨김(사진 리포트 등). */
+  onOpenDetail?: (number: string) => void;
 }
 
 const CONFIDENCE_STYLE: Record<Confidence, { label: string; className: string }> = {
@@ -62,6 +64,7 @@ export function VerdictRow({
   onSetPartial,
   onReset,
   onSetChoice,
+  onOpenDetail,
 }: VerdictRowProps) {
   const confidence = response.aiRead?.confidence;
   const isPartial = response.status === "PARTIAL";
@@ -193,7 +196,7 @@ export function VerdictRow({
         />
       </td>
 
-      {/* 신뢰도 + 초기화 */}
+      {/* 신뢰도 + 상세보기 + 초기화 */}
       <td className="px-3 py-2.5">
         <div className="flex items-center justify-end gap-1.5">
           {confidence ? (
@@ -207,6 +210,18 @@ export function VerdictRow({
             </span>
           ) : (
             <span className="whitespace-nowrap text-[10px] text-slate-300">수동</span>
+          )}
+          {onOpenDetail && (
+            <button
+              type="button"
+              title="문항 상세보기"
+              aria-label={`${entry.number}번 문항 상세보기`}
+              onClick={() => onOpenDetail(entry.number)}
+              className="flex h-6 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+            >
+              <Eye className="h-3 w-3" />
+              상세
+            </button>
           )}
           <button
             type="button"

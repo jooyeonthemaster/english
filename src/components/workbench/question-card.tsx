@@ -63,9 +63,12 @@ export function QuestionCard({
   showDetailIconButton = false,
   dragItemId,
   detailExtra,
+  answerReveal,
+  suppressPassageBlock = false,
+  passageDefaultOpen = false,
 }: QuestionCardProps) {
   const resolvedDragItemId = dragItemId === undefined ? q.id : dragItemId;
-  const [passageOpen, setPassageOpen] = useState(false);
+  const [passageOpen, setPassageOpen] = useState(passageDefaultOpen);
   const [explanationOpen, setExplanationOpen] = useState(false);
   const [compactExpanded, setCompactExpanded] = useState(false);
   const router = useRouter();
@@ -151,7 +154,10 @@ export function QuestionCard({
   const typeIncludesPassage = typeMeta?.includesPassage ?? false;
   const structuredRendererOwnsPassage =
     typeIncludesPassage || STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES.has(sub);
-  const hidePassageBlock = hasStructured && structuredRendererOwnsPassage;
+  // 지문을 바깥에서 별도 렌더하는 컨텍스트(정오표 상세보기 2-pane)는 suppressPassageBlock
+  // 으로 카드 내부 지문 블록을 강제로 숨긴다(중복 방지).
+  const hidePassageBlock =
+    suppressPassageBlock || (hasStructured && structuredRendererOwnsPassage);
   const showStructured = hasStructured && (!compact || compactExpanded);
   const flatDisplayQuestionText = structuredQuestionTextForCard(
     structuredData,
@@ -440,7 +446,7 @@ export function QuestionCard({
                 index={num - 1}
                 hideHeader
                 sourcePassageContent={q.passage?.content}
-                answerRevealMode={compact ? "show-all" : "default"}
+                answerRevealMode={answerReveal ?? (compact ? "show-all" : "default")}
               />
             </>
           ) : (
@@ -449,6 +455,7 @@ export function QuestionCard({
 
               {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
               {q.passage &&
+                !suppressPassageBlock &&
                 (!compact || compactExpanded) &&
                 !(q.structuredData && structuredRendererOwnsPassage) && (
                   <div className="bg-slate-50 rounded-md px-3 py-2">

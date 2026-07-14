@@ -62,7 +62,7 @@ export function NavItem({
           type="button"
           onClick={() => onToggleMenu(item.href)}
           className={cn(
-            "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200 w-full h-[38px] px-3",
+            "group/item relative flex items-center gap-2 rounded-xl text-[13px] font-medium transition-all duration-200 w-full h-[38px] px-3",
             active || childActive
               ? "text-blue-600"
               : "text-gray-400 hover:text-gray-700",
@@ -87,20 +87,24 @@ export function NavItem({
             strokeWidth={active || childActive ? 2 : 1.7}
           />
           <span className="truncate flex-1 min-w-0 text-left">{item.label}</span>
-          {item.beta ? (
-            <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
-              BETA
-            </span>
-          ) : null}
-          <ChevronDown
-            className={cn(
-              "size-3.5 shrink-0 transition-transform duration-200",
-              active || childActive
-                ? "text-blue-400"
-                : "text-gray-300 group-hover/item:text-gray-400",
-              isOpen ? "rotate-0" : "-rotate-90",
-            )}
-          />
+          {/* BETA 배지 + 펼침 화살표는 타이트한 클러스터로 묶어 라벨 공간을 최대한 확보
+              (BETA 가 붙어도 "학생 관리" 같은 라벨이 잘리지 않도록). */}
+          <span className="flex shrink-0 items-center gap-1">
+            {item.beta ? (
+              <span className="rounded border border-blue-200 bg-blue-50 px-[3px] py-px text-[8px] font-bold leading-none tracking-tight text-blue-500">
+                BETA
+              </span>
+            ) : null}
+            <ChevronDown
+              className={cn(
+                "size-3.5 transition-transform duration-200",
+                active || childActive
+                  ? "text-blue-400"
+                  : "text-gray-300 group-hover/item:text-gray-400",
+                isOpen ? "rotate-0" : "-rotate-90",
+              )}
+            />
+          </span>
         </button>
         {/* Sub-menu */}
         <div
@@ -136,7 +140,7 @@ export function NavItem({
                 >
                   <span className="truncate">{child.label}</span>
                   {child.beta ? (
-                    <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
+                    <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-[3px] py-px text-[8px] font-bold leading-none tracking-tight text-blue-500">
                       BETA
                     </span>
                   ) : null}
@@ -160,7 +164,7 @@ export function NavItem({
       href={item.href}
       onClick={(e) => onNavClick(item.href, e)}
       className={cn(
-        "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200",
+        "group/item relative flex items-center gap-2 rounded-xl text-[13px] font-medium transition-all duration-200",
         collapsed
           ? "justify-center h-10 w-10 mx-auto"
           : "h-[38px] px-3",
@@ -217,7 +221,7 @@ export function NavItem({
             <span className="size-2 shrink-0 rounded-full bg-red-500" />
           )}
           {item.beta && (
-            <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
+            <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-[3px] py-px text-[8px] font-bold leading-none tracking-tight text-blue-500">
               BETA
             </span>
           )}

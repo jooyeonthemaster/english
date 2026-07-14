@@ -84,7 +84,7 @@ export function ReportStep({
           <button
             type="button"
             onClick={onBack}
-            aria-label="정오표로 돌아가기"
+            aria-label="분석으로 돌아가기"
             className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -146,14 +146,14 @@ export function ReportStep({
         {!gradingConfirmed && (
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-blue-200 bg-blue-50/60 px-3 py-2.5">
             <p className="text-[12.5px] leading-relaxed text-blue-700">
-              정오표를 확정한 후에 리포트를 생성할 수 있습니다.
+              채점을 확정한 후에 리포트를 생성할 수 있습니다.
             </p>
             <button
               type="button"
               onClick={onGoVerdict}
               className="shrink-0 rounded-md border border-blue-300 bg-white px-2.5 py-1 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
             >
-              정오표로 이동
+              채점으로 이동
             </button>
           </div>
         )}

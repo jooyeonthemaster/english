@@ -90,10 +90,11 @@ function SummaryCards({ summary }: { summary: ExamHistorySummary }) {
 
 // ── 응시 테이블(최신 회차 먼저) ──────────────────────────────────────────────
 
-/** EXTERNAL 행의 리포트 워크스페이스 딥링크 — analysisId 미동봉(구 스냅샷)이면 null */
+/** EXTERNAL 행의 리포트 워크스페이스 딥링크 — analysisId 미동봉(구 스냅샷)이면 null.
+ *  분석 탭(?step=analysis)에 곧장 착지 — 채점 도구가 아니라 결과를 보러 가는 맥락. */
 function externalReportHref(sitting: TrendSitting): string | null {
   if (sitting.source !== "EXTERNAL" || !sitting.examAnalysisId) return null;
-  return `/director/workbench/exam-report/${sitting.examAnalysisId}/students/${sitting.refId}`;
+  return `/director/workbench/exam-report/${sitting.examAnalysisId}/students/${sitting.refId}?step=analysis`;
 }
 
 /** 정오 요약 — 미확인>0 이면 rose 강조 + "확정 필요" 마이크로 라벨(UNKNOWN 불변식 표출) */

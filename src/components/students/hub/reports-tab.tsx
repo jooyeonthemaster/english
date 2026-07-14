@@ -6,8 +6,9 @@
 // GENERATED 카드는 "미리보기"로 공유 여부와 무관하게 문서를 그 자리에서 확인한다.
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { ExternalLink, Eye, FileBarChart, PenLine } from "lucide-react";
+import { BarChart3, ExternalLink, Eye, FileBarChart, PenLine } from "lucide-react";
 import type { StudentExamReportRow } from "@/actions/students/exam-reports";
 import { StatusPill, type PillTone } from "@/components/layout/page-frame";
 import { formatRelativeTime } from "@/lib/utils";
@@ -26,6 +27,13 @@ const EXAM_TYPE_LABEL: Record<string, string> = {
   MOCK: "모의고사",
   OTHER: "기타",
 };
+
+// 카드 액션 2단 구조 — 주 액션 1개(전폭 솔리드) + 보조는 테두리 없는 고스트 행.
+// Link/button/a 가 섞여도 픽셀 동일(고정 높이·중앙정렬·무테두리).
+const ACTION_PRIMARY =
+  "flex h-9 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-blue-600 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700";
+const ACTION_GHOST =
+  "inline-flex h-7 items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 text-[12px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700";
 
 /** 채점만 끝난(reportStatus NONE) 카드의 정오 요약 칩 — scoreCounts 없으면 미렌더 */
 function VerdictChips({ counts }: { counts: NonNullable<StudentExamReportRow["scoreCounts"]> }) {
@@ -48,6 +56,12 @@ function VerdictChips({ counts }: { counts: NonNullable<StudentExamReportRow["sc
 
 export function StudentReportsTab({ reports }: { reports: StudentExamReportRow[] }) {
   const [preview, setPreview] = useState<StudentExamReportRow | null>(null);
+  const pathname = usePathname();
+  // 워크스페이스로 진입 시 뒤로가기가 exam-report 내부(허브/분석 워크스페이스)로
+  // 새지 않고 이 학생 상세(시험 리포트 탭)로 되돌아오도록 복귀 URL 을 실어 보낸다.
+  const fromParam = pathname
+    ? `&from=${encodeURIComponent(`${pathname}?tab=reports`)}`
+    : "";
 
   if (reports.length === 0) {
     return (
@@ -75,7 +89,9 @@ export function StudentReportsTab({ reports }: { reports: StudentExamReportRow[]
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {reports.map((r) => {
           const status = REPORT_STATUS[r.reportStatus] ?? REPORT_STATUS.NONE;
-          const workspaceHref = `/director/workbench/exam-report/${r.analysisId}/students/${r.reportStudentId}`;
+          const base = `/director/workbench/exam-report/${r.analysisId}/students/${r.reportStudentId}`;
+          const analysisHref = `${base}?step=analysis${fromParam}`;
+          const verdictHref = `${base}?step=verdict${fromParam}`;
           return (
             <div
               key={r.reportStudentId}
@@ -113,35 +129,55 @@ export function StudentReportsTab({ reports }: { reports: StudentExamReportRow[]
                 ) : null}
                 <span className="ml-auto">{formatRelativeTime(r.updatedAt)}</span>
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-1.5 border-t border-slate-50 pt-2.5">
-                <Link
-                  href={workspaceHref}
-                  className="inline-flex h-7 items-center gap-1 rounded-md border border-blue-200 bg-white px-2.5 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
-                >
-                  <PenLine className="size-3" aria-hidden />
-                  채점·리포트
-                </Link>
-                {r.reportStatus === "GENERATED" ? (
-                  <button
-                    type="button"
-                    onClick={() => setPreview(r)}
-                    className="inline-flex h-7 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-                  >
-                    <Eye className="size-3" aria-hidden />
-                    미리보기
-                  </button>
-                ) : null}
-                {r.sharePath ? (
-                  <a
-                    href={r.sharePath}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-7 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-500 transition-colors hover:bg-slate-50"
-                  >
-                    <ExternalLink className="size-3" aria-hidden />
-                    공개 리포트
-                  </a>
-                ) : null}
+              {/* 액션 — 2단: 주 액션 1개만 전폭 버튼, 나머지는 고스트 링크 행.
+                  채점(정오표)과 분석(AI 0콜 리포트)은 별개 도구 — 확정 전엔 채점이,
+                  확정 후엔 분석이 주 액션이 되도록 스왑한다. */}
+              <div className="mt-1 flex flex-col gap-1.5 border-t border-slate-50 pt-2.5">
+                {r.gradingConfirmed ? (
+                  <Link href={analysisHref} className={ACTION_PRIMARY}>
+                    <BarChart3 className="size-4" aria-hidden />
+                    분석 보기
+                  </Link>
+                ) : (
+                  <Link href={verdictHref} className={ACTION_PRIMARY}>
+                    <PenLine className="size-4" aria-hidden />
+                    채점하기
+                  </Link>
+                )}
+                <div className="flex items-center justify-center gap-1">
+                  {r.gradingConfirmed ? (
+                    <Link href={verdictHref} className={ACTION_GHOST}>
+                      <PenLine className="size-3.5" aria-hidden />
+                      채점
+                    </Link>
+                  ) : (
+                    <Link href={analysisHref} className={ACTION_GHOST}>
+                      <BarChart3 className="size-3.5" aria-hidden />
+                      분석
+                    </Link>
+                  )}
+                  {r.reportStatus === "GENERATED" ? (
+                    <button
+                      type="button"
+                      onClick={() => setPreview(r)}
+                      className={ACTION_GHOST}
+                    >
+                      <Eye className="size-3.5" aria-hidden />
+                      미리보기
+                    </button>
+                  ) : null}
+                  {r.sharePath ? (
+                    <a
+                      href={r.sharePath}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={ACTION_GHOST}
+                    >
+                      <ExternalLink className="size-3.5" aria-hidden />
+                      공유
+                    </a>
+                  ) : null}
+                </div>
               </div>
             </div>
           );

@@ -29,8 +29,8 @@ import type { StudentReportDoc } from "@/lib/exam-report/report-schema";
 /** 분석 워크스페이스 탭 2개(구조검수 폐기). */
 export type ExamWorkspaceStep = "analysis" | "students";
 
-/** 학생 워크스페이스 스테퍼 3단계. */
-export type ExamStudentStep = "read" | "verdict" | "report";
+/** 학생 워크스페이스 스테퍼 4단계(답안 수집 → 채점 → 분석 → AI 리포트). */
+export type ExamStudentStep = "read" | "verdict" | "analysis" | "report";
 
 // ── 상세 GET 응답 형태 ──────────────────────────────────────────────────────
 
@@ -98,6 +98,27 @@ export interface ExamAnalysisDetail {
 }
 
 /**
+ * INTERNAL(자체 시험지) 응시 메타 — 분석 탭 헤더의 "언제 봤고 언제까지였는지" 소스.
+ * ExamSubmission(응시 수명주기) + StudyAssignment(통합 과제 마감) 조인 결과.
+ * 사진 업로드 리포트 등 제출 링크가 없으면 null.
+ */
+export interface ExamSubmissionMeta {
+  submissionId: string;
+  /** "ASSIGNED" | "IN_PROGRESS" | "SUBMITTED" | "GRADED" */
+  status: string;
+  /** "TABLET"(웹 응시) | "OMR"(답안 입력) | null */
+  mode: string | null;
+  assignedAt: string | null;
+  startedAt: string | null;
+  submittedAt: string | null;
+  gradedAt: string | null;
+  /** 통합 과제 연결 시 마감(없으면 null — "마감 없음") */
+  dueAt: string | null;
+  /** 통합 과제 제목(연결 시) */
+  assignmentTitle: string | null;
+}
+
+/**
  * GET /api/exam-report/students/[studentId] 응답(`{ student }` 래핑)의 student 형태.
  * report 는 재생성 롤백 envelope 의 current 문서만(previous 슬롯은 서버 보관).
  */
@@ -125,9 +146,76 @@ export interface ExamStudentDetail {
   answerEnabled: boolean;
   /** 학생이 마지막으로 답안을 제출한 시각(ISO) — null = 미제출 */
   answerSubmittedAt: string | null;
+  /** INTERNAL 응시 메타(응시일·마감·과제) — 제출 링크 없으면 null */
+  submissionMeta: ExamSubmissionMeta | null;
   version: number;
   createdAt: string;
   updatedAt: string;
+}
+
+// ── 문항 원본 리뷰 페이로드(정오표 상세보기·필터·취약점 대시보드) ──────────
+//
+// v3 정오표는 채점 최소지도(ExamMap)만 갖는다. 서비스가 생성한 시험지(INTERNAL)는
+// ExamAnalysis.sourceExamId → Exam → Question 으로 문항 전문·선지·지문·해설을 AI 0콜로
+// 재조회할 수 있다. 아래 페이로드가 그 재조회 결과다(GET analyses/[id]/questions).
+// 사진 업로드(VISION 등 비INTERNAL) 리포트는 원본이 없어 detailAvailable:false 로 강등된다.
+
+export interface ExamReviewPassage {
+  id: string;
+  title: string;
+  content: string;
+  grade?: number | null;
+  semester?: string | null;
+  publisher?: string | null;
+}
+
+export interface ExamReviewExplanation {
+  /** Rich HTML 해설 본문 */
+  content?: string | null;
+  /** JSON string[] */
+  keyPoints?: string | null;
+  /** JSON {"1":"..."} 또는 [{label,explanation}] */
+  wrongOptionExplanations?: string | null;
+}
+
+/**
+ * 문항 1개 원본 — QuestionCard 에 그대로 주입 가능한 형태 + 조인/필터 축.
+ * number(=String(orderNum))가 examMap·responses·perQuestion 과 잇는 단일 조인키다.
+ */
+export interface ExamReviewQuestion {
+  number: string;
+  questionId: string;
+  type: string;
+  subType: string | null;
+  questionText: string;
+  /** JSON [{label,text}] */
+  options: string | null;
+  correctAnswer: string;
+  /** "BASIC" | "INTERMEDIATE" | "KILLER" */
+  difficulty: string;
+  /** JSON string[] */
+  tags: string | null;
+  aiGenerated: boolean;
+  approved: boolean;
+  /** ISO 문자열(직렬화). QuestionCard 는 Date|string 모두 수용. */
+  createdAt: string;
+  structuredData: unknown;
+  passageId: string | null;
+  passage: ExamReviewPassage | null;
+  explanation: ExamReviewExplanation | null;
+  setId: string | null;
+  setLabel: string | null;
+}
+
+/**
+ * GET /api/exam-report/analyses/[id]/questions 응답.
+ * INTERNAL 만 원본 재사용 가능(detailAvailable). 비INTERNAL/문항0 은 강등.
+ */
+export interface ExamReviewPayload {
+  source: "INTERNAL" | "OTHER";
+  detailAvailable: boolean;
+  /** number(String(orderNum)) → 문항 원본 */
+  items: Record<string, ExamReviewQuestion>;
 }
 
 // ── 스텝 컴포넌트 props (분석 워크스페이스) ─────────────────────────────────

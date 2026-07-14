@@ -81,7 +81,7 @@ export function ReadStep({
           <MethodTile
             icon={PencilLine}
             title="직접 입력"
-            description="선생님이 정오표에서 문항별 선지와 정오를 바로 입력합니다."
+            description="선생님이 채점 화면에서 문항별 선지와 정오를 바로 입력합니다."
           >
             <div className="flex h-full flex-col justify-between gap-2">
               <p className="text-[12px] leading-relaxed text-slate-500">
@@ -94,7 +94,7 @@ export function ReadStep({
                 disabled={!examMapReady}
                 className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white text-[12.5px] font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                정오표로 이동
+                채점으로 이동
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>

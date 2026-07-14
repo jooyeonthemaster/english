@@ -204,7 +204,7 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
             </p>
             <p className="mx-auto mt-1 max-w-md text-sm text-slate-400">
               학생을 추가하면 답안 링크를 발급해 학생이 직접 입력하게 하거나,
-              정오표에서 선생님이 직접 입력해 채점하고 리포트를 만들 수
+              채점 화면에서 선생님이 직접 입력해 채점하고 리포트를 만들 수
               있습니다.
             </p>
             <div className="mt-5 flex items-center justify-center">

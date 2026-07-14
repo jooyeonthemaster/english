@@ -40,12 +40,14 @@ import {
 import { cn } from "@/lib/utils";
 import { computeScoreSummary, round2 } from "@/lib/exam-report/grading";
 import type {
+  ExamAnalysisResult,
   ExamMap,
+  QuestionAnalysis,
   ReadUncertainty,
   ResponseStatus,
   StudentResponse,
 } from "@/lib/exam-report/types";
-import type { ExamSourceFile } from "../ui-contracts";
+import type { ExamReviewPayload, ExamSourceFile } from "../ui-contracts";
 import {
   STATUS_STYLE,
   autoUnreviewedCountOf,
@@ -58,6 +60,16 @@ import {
 import type { SaveState } from "./use-verdict-state";
 import { VerdictRow } from "./verdict-row";
 import { StudentSourceViewer } from "./student-source-viewer";
+import { QuestionDetailView } from "./question-detail-view";
+import { buildAnalysisRowMetas } from "./grading-weakness";
+import {
+  EMPTY_VERDICT_FILTER,
+  VerdictFilterBar,
+  buildVerdictFilterOptions,
+  isVerdictFilterActive,
+  matchesVerdictFilter,
+  type VerdictFilterState,
+} from "./verdict-filter-bar";
 
 interface VerdictBoardProps {
   examMap: ExamMap;
@@ -65,6 +77,15 @@ interface VerdictBoardProps {
   uncertainties: ReadUncertainty[];
   studentId: string;
   sourceFiles: ExamSourceFile[];
+  /** examAnalysis.analysis(perQuestion) — 상세보기 해설/함정·취약점 대시보드 재료(AI 0콜). */
+  analysis?: ExamAnalysisResult | null;
+  /** 원본 문항 재조회 페이로드(INTERNAL 전용). 상세보기·지문 필터/대시보드. */
+  reviewPayload?: ExamReviewPayload | null;
+  reviewLoading?: boolean;
+  /** 프리페치 실패(정상 강등 OTHER 과 구분해 재시도 안내). */
+  reviewError?: boolean;
+  /** 원본 재조회 재시도. */
+  onRetryReview?: () => void;
   saveState: SaveState;
   gradingConfirmed: boolean;
   confirming: boolean;
@@ -96,6 +117,11 @@ export function VerdictBoard({
   uncertainties,
   studentId,
   sourceFiles,
+  analysis,
+  reviewPayload,
+  reviewLoading = false,
+  reviewError = false,
+  onRetryReview,
   saveState,
   gradingConfirmed,
   confirming,
@@ -109,6 +135,8 @@ export function VerdictBoard({
   onBack,
 }: VerdictBoardProps) {
   const [warnOpen, setWarnOpen] = useState(false);
+  const [filter, setFilter] = useState<VerdictFilterState>(EMPTY_VERDICT_FILTER);
+  const [detailNumber, setDetailNumber] = useState<string | null>(null);
 
   const responseByNumber = useMemo(
     () => new Map(responses.map((r) => [r.number, r])),
@@ -142,6 +170,67 @@ export function VerdictBoard({
     }),
     [responses],
   );
+
+  // ── 상세보기·필터·대시보드 재료(전부 이미 로드/재조회된 데이터 — AI 0콜) ──
+  const reviewItems = reviewPayload?.items ?? null;
+  const detailAvailable = reviewPayload?.detailAvailable ?? false;
+  const perQuestionByNumber = useMemo(
+    () =>
+      new Map<string, QuestionAnalysis>(
+        (analysis?.perQuestion ?? []).map((p) => [numberKey(p.number), p]),
+      ),
+    [analysis],
+  );
+
+  // 필터 대상 행 메타(유형·정오·난이도·지문) — 분석 탭과 동일 빌더(축 정합).
+  const rowMetas = useMemo(
+    () =>
+      buildAnalysisRowMetas({
+        orderedEntries: ordered,
+        responses,
+        perQuestion: analysis?.perQuestion ?? null,
+        reviewItems,
+      }),
+    [ordered, responses, analysis, reviewItems],
+  );
+  const metaByNumber = useMemo(
+    () => new Map(rowMetas.map((m) => [m.number, m])),
+    [rowMetas],
+  );
+
+  const filterActive = isVerdictFilterActive(filter);
+  const filteredEntries = useMemo(
+    () =>
+      filterActive
+        ? ordered.filter((entry) => {
+            const meta = metaByNumber.get(entry.number);
+            return meta ? matchesVerdictFilter(meta, filter) : true;
+          })
+        : ordered,
+    [ordered, metaByNumber, filter, filterActive],
+  );
+
+  // 필터 옵션 + 상태 카운트 — 공용 조립기(분석 탭 그리드와 동일).
+  const filterOptions = useMemo(() => buildVerdictFilterOptions(rowMetas), [rowMetas]);
+
+  // 상세보기 대상 해소(전 문항 목록 기준 네비 — 필터/대시보드 점프 무관하게 동작).
+  const detailIndex = detailNumber
+    ? ordered.findIndex((e) => e.number === detailNumber)
+    : -1;
+  const detailEntry = detailIndex >= 0 ? ordered[detailIndex] : null;
+  const detailResponse: StudentResponse | null = detailEntry
+    ? responseByNumber.get(detailEntry.number) ??
+      ({
+        number: detailEntry.number,
+        status: "UNKNOWN",
+        source: "MANUAL",
+        reviewed: false,
+      } as StudentResponse)
+    : null;
+  const detailAnalysis = detailEntry
+    ? perQuestionByNumber.get(numberKey(detailEntry.number)) ?? null
+    : null;
+  const detailReview = detailEntry ? reviewItems?.[detailEntry.number] ?? null : null;
 
   async function handleConfirm() {
     setWarnOpen(false);
@@ -226,6 +315,19 @@ export function VerdictBoard({
             </div>
           </div>
 
+          {/* 강박적 필터바 — 유형·정오·난이도·지문(AI 0콜) */}
+          <VerdictFilterBar
+            filter={filter}
+            onChange={setFilter}
+            typeOptions={filterOptions.typeOptions}
+            difficultyOptions={filterOptions.difficultyOptions}
+            passageOptions={filterOptions.passageOptions}
+            statusCounts={filterOptions.statusCounts}
+            filteredCount={filteredEntries.length}
+            totalCount={ordered.length}
+            detailAvailable={detailAvailable}
+          />
+
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
               <thead>
@@ -240,7 +342,7 @@ export function VerdictBoard({
                 </tr>
               </thead>
               <tbody>
-                {ordered.map((entry) => {
+                {filteredEntries.map((entry) => {
                   const r =
                     responseByNumber.get(entry.number) ??
                     // 표시 전용 기본행 — normalizeResponses 발명행과 동일하게
@@ -270,12 +372,28 @@ export function VerdictBoard({
                       onSetPartial={onSetPartial}
                       onReset={onReset}
                       onSetChoice={onSetChoice}
+                      onOpenDetail={setDetailNumber}
                     />
                   );
                 })}
               </tbody>
             </table>
           </div>
+
+          {filterActive && filteredEntries.length === 0 && (
+            <div className="flex flex-col items-center justify-center gap-1 px-4 py-10 text-center">
+              <p className="text-[13px] font-semibold text-slate-500">
+                조건에 맞는 문항이 없습니다.
+              </p>
+              <button
+                type="button"
+                onClick={() => setFilter(EMPTY_VERDICT_FILTER)}
+                className="mt-1 text-[12px] font-semibold text-blue-600 hover:text-blue-700"
+              >
+                필터 초기화
+              </button>
+            </div>
+          )}
         </section>
 
         {/* 우: AI 확인 요청 + 원본 사진 */}
@@ -369,7 +487,7 @@ export function VerdictBoard({
             onClick={onProceed}
             className="flex h-10 items-center gap-1.5 rounded-lg bg-blue-600 px-4 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
           >
-            리포트로 이동
+            분석 보기
             <ArrowRight className="h-4 w-4" />
           </button>
         ) : (
@@ -410,6 +528,32 @@ export function VerdictBoard({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* 문항 상세보기 모달 */}
+      {detailEntry && detailResponse && (
+        <QuestionDetailView
+          entry={detailEntry}
+          response={detailResponse}
+          analysis={detailAnalysis}
+          review={detailReview}
+          reviewLoading={reviewLoading && reviewItems == null}
+          reviewSource={reviewPayload?.source ?? null}
+          reviewError={reviewError}
+          onRetry={onRetryReview}
+          position={{ index: detailIndex, total: ordered.length }}
+          hasPrev={detailIndex > 0}
+          hasNext={detailIndex >= 0 && detailIndex < ordered.length - 1}
+          onPrev={() =>
+            detailIndex > 0 && setDetailNumber(ordered[detailIndex - 1].number)
+          }
+          onNext={() =>
+            detailIndex >= 0 &&
+            detailIndex < ordered.length - 1 &&
+            setDetailNumber(ordered[detailIndex + 1].number)
+          }
+          onClose={() => setDetailNumber(null)}
+        />
+      )}
     </div>
   );
 }

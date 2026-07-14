@@ -79,4 +79,12 @@ export interface QuestionCardProps {
   /** 해설 보기 줄 왼쪽에 끼울 추가 액션(예: 동형 '분석 정보'). 카드 클릭으로 상세가 열리므로
    *  별도 '상세 보기' 버튼 없이 이 슬롯만 노출된다. 선택 — 미지정 시 표시 안 함. */
   detailExtra?: React.ReactNode;
+  /** 구조화 렌더러의 정답 노출 모드 강제(미지정 시 기존 동작: compact=show-all/else=default).
+   *  정오표 상세보기처럼 강사면에서 정답을 즉시 노출해야 할 때 "show-all" 을 넘긴다. */
+  answerReveal?: "default" | "show-all";
+  /** 카드 내부 원본 지문 블록을 강제로 숨긴다(지문을 바깥에서 별도로 렌더할 때).
+   *  구조화 렌더러가 지문을 자체 포함하는 유형은 원래도 숨겨지므로 무관하다. */
+  suppressPassageBlock?: boolean;
+  /** 접이식 원본 지문 블록을 처음부터 펼친 상태로 연다(상세보기 모달 등 전체 노출 컨텍스트). */
+  passageDefaultOpen?: boolean;
 }

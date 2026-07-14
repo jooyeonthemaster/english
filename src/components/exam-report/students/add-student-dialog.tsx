@@ -219,7 +219,7 @@ export function AddStudentDialog({
                     checked={mode === "teacher"}
                     onSelect={() => setMode("teacher")}
                     title="선생님이 직접 입력"
-                    description="시험지를 보고 정오표에서 문항별 선지를 선생님이 직접 입력합니다."
+                    description="시험지를 보고 채점 화면에서 문항별 선지를 선생님이 직접 입력합니다."
                     disabled={busy}
                   />
                 </div>
@@ -315,7 +315,7 @@ export function AddStudentDialog({
             <DialogHeader>
               <DialogTitle>{result.studentName} 학생을 추가했습니다</DialogTitle>
               <DialogDescription>
-                정오표에서 문항별 선지를 직접 입력해주세요. 입력한 답은 자동으로
+                채점 화면에서 문항별 선지를 직접 입력해주세요. 입력한 답은 자동으로
                 채점됩니다.
               </DialogDescription>
             </DialogHeader>
@@ -326,7 +326,7 @@ export function AddStudentDialog({
               className="h-11 w-full bg-blue-600 text-[13.5px] font-semibold hover:bg-blue-700"
             >
               <ClipboardList className="h-4 w-4" />
-              정오표에서 답안 입력
+              채점에서 답안 입력
             </Button>
 
             <DialogFooter>
