@@ -6,6 +6,7 @@
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
 import { DIFFICULTY_TONES, VOCAB_GENERATION_TYPE_IDS } from "./constants";
+import { resolvePointPickerMeta } from "./point-picker-config";
 import { renderLanguageSetting, renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { PearlIcon } from "@/components/icons/pearl-icon";
@@ -16,7 +17,7 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { QUESTION_GENERATION_PLANS, getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
 import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
-import { Cpu, FileText, Gem, Minus, Plus, Target } from "lucide-react";
+import { Cpu, Crosshair, FileText, Gem, Minus, Plus, Target } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
       return renderNumberSetting({
@@ -664,8 +665,7 @@ export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, pat
                 }`}
               />
             </button>
-          </div>
-        </div>
+          </div>        </div>
       );
     }
 
@@ -812,8 +812,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
                 }`}
               />
             </button>
-          </div>
-        </div>
+          </div>        </div>
       );
     }
 
@@ -927,8 +926,7 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
                 }`}
               />
             </button>
-          </div>
-        </div>
+          </div>        </div>
       );
     }
 
@@ -1185,8 +1183,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 }`}
               />
             </button>
-          </div>
-        </div>
+          </div>        </div>
       );
     }
 
@@ -1376,8 +1373,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
                 }`}
               />
             </button>
-          </div>
-        </div>
+          </div>        </div>
       );
     }
 
@@ -1455,6 +1451,45 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
     );
   }
 
+// 유형 타일 "포인트 짚어주기" 진입 컨트롤 (point-picker-design.md §4) —
+// POINT_PICKER_CONFIG 등재 유형 타일에 항상 렌더한다. 포인트가 없으면 과녁
+// 아이콘 버튼, 있으면 과녁+개수 배지 — 둘 다 클릭 시 그 유형의 픽커로 진입한다.
+// 콜백 없는 호출자(픽커 미배선 패널)·미등재 유형은 렌더하지 않는다(죽은 버튼 0).
+export function renderTypePointBadge({ typeId, pointCount, onOpenPointPicker, questionTypeSettings }) {
+      if (typeof onOpenPointPicker !== "function") return null;
+      if (!resolvePointPickerMeta(typeId, questionTypeSettings?.[typeId])) return null;
+      const count = Math.max(0, Math.round(Number(pointCount) || 0));
+      const open = (event) => {
+        event.stopPropagation();
+        onOpenPointPicker(typeId);
+      };
+      if (count <= 0) {
+        return (
+          <button
+            type="button"
+            onClick={open}
+            title="포인트 짚어주기 — 지문에서 출제 포인트를 직접 지정"
+            aria-label="포인트 짚어주기"
+            className="flex h-7 w-6 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          >
+            <Crosshair className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+        );
+      }
+      return (
+        <button
+          type="button"
+          onClick={open}
+          title="포인트 짚어주기 다시 열기"
+          aria-label={`포인트 ${count}개 — 포인트 짚어주기 다시 열기`}
+          className="inline-flex h-[22px] shrink-0 items-center gap-1 whitespace-nowrap rounded-md bg-blue-50 px-1.5 text-[10px] font-bold tabular-nums text-blue-700 transition-colors hover:bg-blue-100"
+        >
+          <Crosshair className="size-3 shrink-0" aria-hidden="true" />
+          포인트 {count}
+        </button>
+      );
+    }
+
 export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage }) {
     const numericContent = renderTypeNumericDetailContent(typeId);
     const languageScope = getQuestionLanguageToggleScope(typeId);
@@ -1516,7 +1551,9 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
         {numericContent}
         <div
           className={
-            numericContent ? "border-t border-slate-100 pt-1.5 lg:pt-3" : undefined
+            numericContent
+              ? "border-t border-slate-100 pt-1.5 lg:pt-3"
+              : undefined
           }
         >
           {renderLanguageSetting({

@@ -13,6 +13,7 @@ import {
   SimilarQuestionAnalysisModal,
   type QAnalysis,
 } from "@/app/(director)/director/workbench/questions/similar/similar-question-analysis-modal";
+import { TeacherPointsPassage } from "@/components/workbench/teacher-points-passage";
 
 type DetailQuestion = QuestionCardItem & {
   passage:
@@ -166,8 +167,13 @@ export function QuestionDetailDialog({
                           지문 본문
                         </span>
                       </div>
-                      <div className="whitespace-pre-wrap px-5 py-4 font-mono text-sm leading-[2] text-slate-800">
-                        {question.passage.content}
+                      <div className="px-5 py-4">
+                        {/* 포인트 짚어주기 문항이면 칩 레일 + 지문 하이라이트 재현 */}
+                        <TeacherPointsPassage
+                          content={question.passage.content}
+                          question={question}
+                          bodyClassName="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800"
+                        />
                       </div>
                     </div>
                   </div>

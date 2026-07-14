@@ -4,6 +4,7 @@ import {
   ReviewStatusStamp,
   type QuestionCardItem,
 } from "@/components/workbench/question-card";
+import { TeacherPointsPassage } from "@/components/workbench/teacher-points-passage";
 import type { BuilderQuestion } from "../types";
 
 interface QuestionDetailModalProps {
@@ -44,9 +45,12 @@ export function QuestionDetailModal({ question, onClose }: QuestionDetailModalPr
           <div className="overflow-y-auto border-r border-slate-200">
             {question.passage ? (
               <div className="px-6 py-5">
-                <div className="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800">
-                  {question.passage.content}
-                </div>
+                {/* 포인트 짚어주기 문항이면 칩 레일 + 지문 하이라이트 재현 */}
+                <TeacherPointsPassage
+                  content={question.passage.content}
+                  question={question}
+                  bodyClassName="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800"
+                />
               </div>
             ) : (
               <div className="flex h-full items-center justify-center text-sm text-slate-400">

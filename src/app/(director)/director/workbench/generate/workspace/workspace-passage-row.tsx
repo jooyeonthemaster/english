@@ -21,6 +21,7 @@ import {
   Loader2,
   Minus,
   MousePointer2,
+  PenLine,
   Plus,
   Redo2,
   RotateCcw,
@@ -66,6 +67,11 @@ import {
   type VariantAction,
 } from "./whole-passage-variant-controls";
 import { RowHistoryPopover } from "./row-history-popover";
+import {
+  WorkspaceSelectStage,
+  type StageAnchor,
+  type StageSelection,
+} from "./workspace-select-stage";
 import type { QueueItem } from "../generate-page-types";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
@@ -85,7 +91,8 @@ import {
 // AI가 추가/변형한 구간은 textarea 뒤 백드롭 레이어로 하이라이트한다.
 // ============================================================================
 
-const MIN_PARAPHRASE_CHARS = 12;
+/** 변형 선택 하한 — 단어 클릭 선택을 허용한다(서버 passage-transform 과 동일). */
+const MIN_PARAPHRASE_CHARS = 2;
 const MIN_RANGE_CHARS = 40;
 const PREPEND_COUNT_KEY = "smoat:generate:prepend-sentence-count";
 /** 드래그 모션 코치 — 한 번 직접 드래그/편집하면 다시 보지 않는다. */
@@ -173,71 +180,6 @@ async function requestTransform(body: {
 const SELECTION_POPUP_W = 320;
 const SELECTION_POPUP_H = 48;
 
-interface SelectionAnchor {
-  /** 에디터 relative 컨테이너 기준 px. 화살표가 가리킬 지점. */
-  x: number;
-  topY: number;
-  bottomY: number;
-  containerW: number;
-  containerH: number;
-}
-
-/**
- * textarea 선택 구간의 화면 좌표 측정 — textarea 는 DOM Range 가 없어
- * 동일 메트릭 미러 div 를 임시로 만들어 선택 span 의 ClientRects 를 잰다
- * (하이라이트 백드롭과 같은 원리). 학습지 필기 툴바와 동일한 앵커 규칙:
- * 같은 줄 선택 = 중앙, 여러 줄 = 끝 지점.
- */
-function measureSelectionAnchor(
-  el: HTMLTextAreaElement,
-  start: number,
-  end: number,
-): SelectionAnchor | null {
-  const host = el.parentElement;
-  if (!host) return null;
-  const cs = window.getComputedStyle(el);
-  const mirror = document.createElement("div");
-  mirror.setAttribute("aria-hidden", "true");
-  mirror.style.position = "absolute";
-  mirror.style.left = "0";
-  mirror.style.top = "0";
-  mirror.style.visibility = "hidden";
-  mirror.style.pointerEvents = "none";
-  mirror.style.boxSizing = "border-box";
-  mirror.style.width = `${el.clientWidth}px`;
-  mirror.style.whiteSpace = "pre-wrap";
-  mirror.style.overflowWrap = "break-word";
-  mirror.style.fontFamily = cs.fontFamily;
-  mirror.style.fontSize = cs.fontSize;
-  mirror.style.fontWeight = cs.fontWeight;
-  mirror.style.lineHeight = cs.lineHeight;
-  mirror.style.letterSpacing = cs.letterSpacing;
-  mirror.style.paddingTop = cs.paddingTop;
-  mirror.style.paddingRight = cs.paddingRight;
-  mirror.style.paddingBottom = cs.paddingBottom;
-  mirror.style.paddingLeft = cs.paddingLeft;
-  mirror.appendChild(document.createTextNode(el.value.slice(0, start)));
-  const marker = document.createElement("span");
-  marker.textContent = el.value.slice(start, end) || "​";
-  mirror.appendChild(marker);
-  mirror.appendChild(document.createTextNode(el.value.slice(end)));
-  host.appendChild(mirror);
-  const rects = Array.from(marker.getClientRects());
-  const hostRect = host.getBoundingClientRect();
-  mirror.remove();
-  if (rects.length === 0) return null;
-  const first = rects[0];
-  const last = rects[rects.length - 1];
-  const sameLine = Math.abs(first.top - last.top) < 4;
-  return {
-    x: (sameLine ? (first.left + last.right) / 2 : last.right) - hostRect.left,
-    topY: first.top - hostRect.top - el.scrollTop,
-    bottomY: last.bottom - hostRect.top - el.scrollTop,
-    containerW: host.clientWidth,
-    containerH: host.clientHeight,
-  };
-}
-
 /** 하이라이트 구간을 렌더 세그먼트로 변환 (겹침/범위 밖은 안전하게 클램프). */
 function buildHighlightSegments(
   content: string,
@@ -266,30 +208,6 @@ function buildHighlightSegments(
   }
   if (pos < content.length)
     segments.push({ text: content.slice(pos), kind: null });
-  return segments;
-}
-
-/**
- * 본문을 문장 단위 구간으로 쪼갠다 — 호버 하이라이트(드래그 유도)용.
- * 구간들은 content 를 빈틈없이 덮어, 백드롭에서 원문을 그대로 재구성한다
- * (종결부호 뒤 공백·줄바꿈은 앞 문장에 포함). 실제 선택은 드래그가 하고,
- * 이 하이라이트는 "문장 위에 올리면 강조"로 행동을 유도만 한다.
- */
-function buildSentenceSegments(
-  content: string,
-): { start: number; end: number }[] {
-  const segments: { start: number; end: number }[] = [];
-  const terminator = /[.!?]+[)"'’”\]]*/g;
-  let pos = 0;
-  let m: RegExpExecArray | null;
-  while ((m = terminator.exec(content)) !== null) {
-    let end = m.index + m[0].length;
-    while (end < content.length && /\s/.test(content[end])) end += 1;
-    if (end > pos) segments.push({ start: pos, end });
-    pos = end;
-    terminator.lastIndex = end;
-  }
-  if (pos < content.length) segments.push({ start: pos, end: content.length });
   return segments;
 }
 
@@ -387,15 +305,15 @@ export function WorkspacePassageRow({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const rangeBackdropRef = useRef<HTMLDivElement>(null);
-  const sentenceBackdropRef = useRef<HTMLDivElement>(null);
-  // 커서가 올라간 문장 구간 — 살짝 음영으로 강조해 드래그 선택을 유도한다.
-  const [hoverSentence, setHoverSentence] = useState<{
-    start: number;
-    end: number;
-  } | null>(null);
+  // 에디터 영역 래퍼 — 선택 무대/textarea 어느 쪽이 떠 있든 하이라이트 히트
+  // 테스트·툴팁 좌표의 공통 기준이 된다.
+  const editorAreaRef = useRef<HTMLDivElement>(null);
+  // 본문 편집 모드 — 기본은 '선택 무대'(포인트 짚어주기 제스처). 직접 타이핑은
+  // 도구 바의 '직접 편집' 토글로 textarea 를 연다.
+  const [editMode, setEditMode] = useState(false);
   const [selection, setSelection] = useState<SelectionState | null>(null);
-  const [selectionAnchor, setSelectionAnchor] =
-    useState<SelectionAnchor | null>(null);
+  // 선택 무대의 액션 팝오버 앵커 — 무대 콘텐츠(스크롤 내용) 기준 좌표.
+  const [stageAnchor, setStageAnchor] = useState<StageAnchor | null>(null);
   const [busy, setBusy] = useState<
     "paraphrase" | "prepend" | "restore" | "variant" | null
   >(null);
@@ -581,13 +499,7 @@ export function WorkspacePassageRow({
   const hasPrependHl = row.highlights.some((h) => h.kind === "prepend");
   const hasParaphraseHl = row.highlights.some((h) => h.kind === "paraphrase");
 
-  const sentenceSegments = useMemo(
-    () => buildSentenceSegments(row.content),
-    [row.content],
-  );
-
-  // textarea 는 글자 단위 hover 이벤트가 없으므로, 동일 메트릭으로 뒤에 깔린
-  // 앞 맥락(prepend) / 출제 범위(range) 하이라이트를 삭제·해제한다.
+  // 앞 맥락(prepend) / 출제 범위(range) 하이라이트 삭제·해제.
   // 영역 텍스트를 잘라내면 setContent 의 하이라이트 보정으로 그 표시도 사라진다.
   const handleDeleteHighlightRegion = useCallback(
     (start: number, end: number) => {
@@ -598,48 +510,12 @@ export function WorkspacePassageRow({
     [row.content, onPushHistory, onChangeContent],
   );
 
-  // textarea 는 글자 단위 hover 가 없으므로, 동일 메트릭의 문장 백드롭 span 들에
-  // 커서를 히트테스트해 "지금 올라간 문장"을 찾는다. 선택/잠금 중에는 끈다
-  // (드래그 유도가 목적이라 선택이 시작되면 더는 필요 없다).
-  const updateHoverSentence = useCallback(
-    (e: React.MouseEvent) => {
-      const container = textareaRef.current?.parentElement;
-      if (!container || editorLocked || selection) {
-        setHoverSentence(null);
-        return;
-      }
-      const spans =
-        container.querySelectorAll<HTMLElement>("span[data-sent-start]");
-      for (const span of spans) {
-        for (const rect of span.getClientRects()) {
-          if (
-            e.clientX >= rect.left &&
-            e.clientX <= rect.right &&
-            e.clientY >= rect.top &&
-            e.clientY <= rect.bottom
-          ) {
-            const start = Number(span.dataset.sentStart);
-            const end = Number(span.dataset.sentEnd);
-            setHoverSentence((prev) =>
-              prev && prev.start === start && prev.end === end
-                ? prev
-                : { start, end },
-            );
-            return;
-          }
-        }
-      }
-      setHoverSentence(null);
-    },
-    [editorLocked, selection],
-  );
-
-  // 백드롭의 하이라이트 mark 들에 마우스 좌표를 히트테스트한다. 변형(paraphrase)
-  // 은 원문 미리보기 툴팁, 앞 맥락/출제 범위는 삭제·해제 액션 메뉴를 띄운다.
+  // 하이라이트 mark 들에 마우스 좌표를 히트테스트한다. 변형(paraphrase)은 원문
+  // 미리보기 툴팁, 앞 맥락/출제 범위는 삭제·해제 액션 메뉴를 띄운다 — 선택
+  // 무대(mark 인라인)와 편집 모드(백드롭 mark) 양쪽에서 같은 로직이 돈다.
   const handleEditorMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      updateHoverSentence(e);
-      const container = textareaRef.current?.parentElement;
+      const container = editorAreaRef.current;
       if (!container) {
         setOriginalTip(null);
         scheduleHlHide();
@@ -703,41 +579,40 @@ export function WorkspacePassageRow({
       setOriginalTip(null);
       scheduleHlHide();
     },
-    [scheduleHlHide, cancelHlHide, updateHoverSentence],
+    [scheduleHlHide, cancelHlHide],
   );
 
   const syncBackdropScroll = useCallback(() => {
     const el = textareaRef.current;
-    const bd = backdropRef.current;
-    if (el && bd) {
+    if (!el) return;
+    // textarea 는 세로 스크롤바가 콘텐츠 폭을 잠식하지만 백드롭(overflow-hidden)
+    // 은 아니다 — 폭을 textarea 의 clientWidth 로 강제해 줄바꿈 지점을 일치시킨다.
+    // (이 폭이 어긋나면 하이라이트가 몇 줄씩 밀려 엉뚱한 곳에 칠해진다.)
+    const width = `${el.clientWidth}px`;
+    for (const bd of [backdropRef.current, rangeBackdropRef.current]) {
+      if (!bd) continue;
+      bd.style.width = width;
       bd.scrollTop = el.scrollTop;
       bd.scrollLeft = el.scrollLeft;
     }
-    const rbd = rangeBackdropRef.current;
-    if (el && rbd) {
-      rbd.scrollTop = el.scrollTop;
-      rbd.scrollLeft = el.scrollLeft;
-    }
-    const sbd = sentenceBackdropRef.current;
-    if (el && sbd) {
-      sbd.scrollTop = el.scrollTop;
-      sbd.scrollLeft = el.scrollLeft;
-    }
-    // 내부 스크롤 시 선택 팝오버 위치도 따라가야 한다.
-    if (el && selection) {
-      setSelectionAnchor(
-        measureSelectionAnchor(el, selection.start, selection.end),
-      );
-    }
-  }, [selection]);
+  }, []);
   useEffect(() => {
     syncBackdropScroll();
-  }, [row.content, row.highlights, row.range, syncBackdropScroll]);
+  }, [row.content, row.highlights, row.range, editMode, syncBackdropScroll]);
+  // 컨테이너 리사이즈 시에도 백드롭 폭·스크롤을 재동기화한다.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => syncBackdropScroll());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [editMode, syncBackdropScroll]);
 
   // 생성 시 변형본으로 리바인드되면(passageId 교체) 본문이 외부에서 바뀐다 —
   // 이전 본문 기준의 선택/미리보기 오프셋은 무효이므로 즉시 폐기한다.
   useEffect(() => {
     setSelection(null);
+    setStageAnchor(null);
     setPreview(null);
     setVariantPreview(null);
     avoidRef.current = [];
@@ -817,24 +692,38 @@ export function WorkspacePassageRow({
     }
   }, []);
 
-  // ── 텍스트 선택 추적 — 선택 좌표를 재서 액션 팝오버를 선택 근처에 띄운다 ──
-  const handleSelect = useCallback(() => {
-    const el = textareaRef.current;
-    // 변형 미리보기/생성 중에는 에디터가 잠겨 있으므로 선택 액션도 막는다.
-    if (!el || preview || variantPreview || busy) return;
-    const start = el.selectionStart ?? 0;
-    const end = el.selectionEnd ?? 0;
-    if (end - start >= MIN_PARAPHRASE_CHARS) {
-      setSelection({ start, end, text: row.content.slice(start, end) });
-      setSelectionAnchor(measureSelectionAnchor(el, start, end));
-      dispatchGenerateTourMilestone("workspace-text-selected");
-      // 직접 드래그에 성공했다 — 코치는 임무 완료, 영구 종료.
-      dismissDragCoach(true);
-    } else {
-      setSelection(null);
-      setSelectionAnchor(null);
-    }
-  }, [row.content, preview, variantPreview, busy, dismissDragCoach]);
+  const clearSelection = useCallback(() => {
+    setSelection(null);
+    setStageAnchor(null);
+  }, []);
+
+  // ── 선택 무대 커밋 — 문장 클릭/단어 스냅 드래그 결과 (포인트 픽커 제스처) ──
+  const handleStageSelect = useCallback(
+    (sel: StageSelection | null, anchor: StageAnchor | null) => {
+      // 변형 미리보기/생성 중에는 에디터가 잠겨 있으므로 선택 액션도 막는다.
+      if (preview || variantPreview || busy) return;
+      if (sel && sel.end - sel.start >= MIN_PARAPHRASE_CHARS) {
+        setSelection(sel);
+        setStageAnchor(anchor);
+        dispatchGenerateTourMilestone("workspace-text-selected");
+        // 직접 드래그/클릭에 성공했다 — 코치는 임무 완료, 영구 종료.
+        dismissDragCoach(true);
+      } else {
+        clearSelection();
+      }
+    },
+    [preview, variantPreview, busy, dismissDragCoach, clearSelection],
+  );
+
+  // Esc = 선택 해제 (팝오버 닫기).
+  useEffect(() => {
+    if (!selection) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") clearSelection();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selection, clearSelection]);
 
   // ── AI 문장 변형 ──
   const runParaphrase = useCallback(
@@ -895,7 +784,7 @@ export function WorkspacePassageRow({
       endTypingBurst();
       onPushHistory();
       onChangeContent(restoredText);
-      setSelection(null);
+      clearSelection();
       const changeCount = Array.isArray(data.changes) ? data.changes.length : 0;
       if (data.degraded) {
         toast.warning("AI 복원에 실패해 마커 제거만 적용했습니다.");
@@ -915,7 +804,7 @@ export function WorkspacePassageRow({
     } finally {
       setBusy(null);
     }
-  }, [row.content, endTypingBurst, onPushHistory, onChangeContent]);
+  }, [row.content, endTypingBurst, onPushHistory, onChangeContent, clearSelection]);
 
   const handleRestoreClick = useCallback(() => {
     if (locked || row.content.trim().length < 20) return;
@@ -1073,7 +962,7 @@ export function WorkspacePassageRow({
           "본문이 변경되어 변형을 적용할 수 없습니다. 문장을 다시 선택해주세요.",
         );
         setPreview(null);
-        setSelection(null);
+        clearSelection();
         return;
       }
       const next =
@@ -1097,12 +986,12 @@ export function WorkspacePassageRow({
       dispatchGenerateTourMilestone("workspace-prepend-applied");
     }
     setPreview(null);
-    setSelection(null);
+    clearSelection();
     avoidRef.current = [];
     toast.success(
       "변형이 적용됐습니다. 적용된 구간은 본문에 색으로 표시돼요 — 되돌리기(↶)로 취소할 수 있습니다.",
     );
-  }, [preview, disabled, row.content, onApplyAi, endTypingBurst]);
+  }, [preview, disabled, row.content, onApplyAi, endTypingBurst, clearSelection]);
 
   const handleCancelPreview = useCallback(() => {
     setPreview(null);
@@ -1113,16 +1002,16 @@ export function WorkspacePassageRow({
   const handleUndo = useCallback(() => {
     if (locked || row.past.length === 0) return;
     endTypingBurst();
-    setSelection(null);
+    clearSelection();
     onUndo();
-  }, [locked, row.past.length, endTypingBurst, onUndo]);
+  }, [locked, row.past.length, endTypingBurst, clearSelection, onUndo]);
 
   const handleRedo = useCallback(() => {
     if (locked || row.future.length === 0) return;
     endTypingBurst();
-    setSelection(null);
+    clearSelection();
     onRedo();
-  }, [locked, row.future.length, endTypingBurst, onRedo]);
+  }, [locked, row.future.length, endTypingBurst, clearSelection, onRedo]);
 
   // ── 출제 범위 ──
   const handleSetRangeFromSelection = useCallback(() => {
@@ -1133,9 +1022,9 @@ export function WorkspacePassageRow({
     }
     onSetRange({ start: selection.start, end: selection.end });
     dispatchGenerateTourMilestone("workspace-range-set");
-    setSelection(null);
+    clearSelection();
     toast.success("출제 범위가 지정됐습니다. 이 구간만으로 문제를 생성합니다.");
-  }, [selection, disabled, busy, preview, variantPreview, onSetRange]);
+  }, [selection, disabled, busy, preview, variantPreview, clearSelection, onSetRange]);
 
   const rangePreview = useMemo(() => {
     if (!row.range) return null;
@@ -1147,6 +1036,85 @@ export function WorkspacePassageRow({
     row.content.trim().slice(0, 60) +
     (row.content.trim().length > 60 ? "…" : "");
   const firstSentence = row.content.trim().split(/(?<=[.!?])\s+/)[0] || "";
+
+  // ── 선택 액션 팝오버 — 선택 무대 콘텐츠 좌표(stageAnchor)에 배치되어 본문과
+  // 함께 스크롤된다. 무대가 selectionPopover prop 으로 받아 내부에 렌더한다.
+  const stagePopover =
+    !editMode &&
+    selection &&
+    stageAnchor &&
+    !preview &&
+    !variantPreview &&
+    !busy &&
+    !disabled
+      ? (() => {
+          const below =
+            stageAnchor.bottomY + SELECTION_POPUP_H + 10 <=
+              stageAnchor.contentH ||
+            stageAnchor.topY - SELECTION_POPUP_H - 10 < 0;
+          const top = Math.max(
+            4,
+            below
+              ? stageAnchor.bottomY + 8
+              : stageAnchor.topY - 8 - SELECTION_POPUP_H,
+          );
+          const left = Math.max(
+            4,
+            Math.min(
+              stageAnchor.x - SELECTION_POPUP_W / 2,
+              stageAnchor.contentW - SELECTION_POPUP_W - 4,
+            ),
+          );
+          const arrowX = Math.max(
+            14,
+            Math.min(stageAnchor.x - left, SELECTION_POPUP_W - 14),
+          );
+          return (
+            <div
+              data-wss-pop=""
+              className="absolute z-[3]"
+              style={{ left, top }}
+            >
+              {below ? (
+                <div style={{ paddingLeft: arrowX - 4 }}>
+                  <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-blue-300 bg-white" />
+                </div>
+              ) : null}
+              <div className="flex items-center gap-1.5 rounded-lg border border-blue-300 bg-white p-1.5 shadow-lg shadow-blue-200/60 duration-150 animate-in fade-in zoom-in-95">
+                <button
+                  type="button"
+                  onClick={handleParaphraseClick}
+                  data-generate-tour="workspace-paraphrase-button"
+                  title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
+                  className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                >
+                  <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  AI 문장 변형
+                  <CreditCostChip
+                    amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                    className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+                  />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSetRangeFromSelection}
+                  data-generate-tour="workspace-range-button"
+                  title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
+                  className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                >
+                  <Scissors className="h-3.5 w-3.5" aria-hidden="true" />
+                  이 범위만 출제
+                </button>
+              </div>
+              {!below ? (
+                <div style={{ paddingLeft: arrowX - 4 }}>
+                  <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-blue-300 bg-white" />
+                </div>
+              ) : null}
+            </div>
+          );
+        })()
+      : null;
 
   return (
     // 행 아무 곳이나 누르면 우측 '유형·생성 설정'이 이 지문을 편집한다.
@@ -1328,7 +1296,9 @@ export function WorkspacePassageRow({
       </div>
 
       {!row.collapsed ? (
-        <div className="flex min-h-0 flex-1 flex-col space-y-2 px-2.5 py-2.5">
+        // overflow-y-auto: 미리보기 패널까지 겹쳐 공간이 모자라는 낮은 화면에서는
+        // 카드 본문이 스크롤된다 — 패널 액션 버튼이 잘려 못 누르는 상황 방지.
+        <div className="flex min-h-0 flex-1 flex-col space-y-2 overflow-y-auto px-2.5 py-2.5">
           {/* ── AI 도구 바 ── */}
           <div
             className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5"
@@ -1378,6 +1348,35 @@ export function WorkspacePassageRow({
                 </button>
               </span>
             ) : null}
+            <span className="min-w-0 flex-1" aria-hidden="true" />
+            {/* 본문 편집 모드 토글 — 기본은 선택 무대(클릭·드래그 선택),
+                타이핑 수정이 필요할 때만 textarea 를 연다. */}
+            <button
+              type="button"
+              onClick={() => {
+                clearSelection();
+                setEditMode((m) => !m);
+              }}
+              disabled={editorLocked || disabled}
+              title={
+                editMode
+                  ? "편집을 마치고 선택 모드(클릭·드래그로 문장 선택)로 돌아갑니다"
+                  : "본문을 직접 타이핑으로 수정합니다"
+              }
+              className={
+                "flex h-7 shrink-0 items-center gap-1 rounded-md border px-2 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+                (editMode
+                  ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700")
+              }
+            >
+              {editMode ? (
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : (
+                <PenLine className="h-3.5 w-3.5" aria-hidden="true" />
+              )}
+              {editMode ? "편집 완료" : "직접 편집"}
+            </button>
           </div>
 
           {/* ── 앞 문단 미리보기 ── */}
@@ -1415,7 +1414,9 @@ export function WorkspacePassageRow({
           <div
             data-generate-tour="workspace-editor"
             className={
-              "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border transition-colors " +
+              // min-h-[120px]: 변형 미리보기 패널이 열려도 지문이 몇 줄은 항상
+              // 보이게 바닥을 깐다 (패널 쪽은 shrink-0 + 내부 스크롤로 다이어트).
+              "flex min-h-[120px] flex-1 flex-col overflow-hidden rounded-lg border transition-colors " +
               (editorLocked
                 ? "border-slate-200 bg-slate-50"
                 : "border-slate-200 bg-white focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100")
@@ -1566,42 +1567,38 @@ export function WorkspacePassageRow({
               ) : null}
             </div>
 
-            <div className="relative flex min-h-0 flex-1 flex-col">
-              {/* 문장 호버 백드롭 — 커서가 올라간 문장만 살짝 음영으로 강조해
-                  드래그 선택을 유도한다. 가장 아래 레이어라 AI/출제 범위
-                  하이라이트가 위에 덮인다. 글자는 투명, 배경만 칠한다. */}
-              {row.content.length > 0 ? (
-                <div
-                  ref={sentenceBackdropRef}
-                  aria-hidden="true"
-                  style={editorTextStyle}
-                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
-                >
-                  {sentenceSegments.map((s) => {
-                    const hovered =
-                      hoverSentence !== null &&
-                      hoverSentence.start === s.start &&
-                      hoverSentence.end === s.end;
-                    return (
-                      <span
-                        key={s.start}
-                        data-sent-start={s.start}
-                        data-sent-end={s.end}
-                        className={
-                          hovered
-                            ? "rounded-[2px] bg-slate-200/70 transition-colors"
-                            : undefined
-                        }
-                      >
-                        {row.content.slice(s.start, s.end)}
-                      </span>
-                    );
-                  })}
-                </div>
+            <div
+              ref={editorAreaRef}
+              className="relative flex min-h-0 flex-1 flex-col"
+            >
+              {!editMode ? (
+                /* ── 선택 무대(기본) — 포인트 짚어주기와 동일한 제스처:
+                    단어 hover 틴트 · 클릭 = 문장 · 드래그 = 단어 스냅 구간.
+                    하이라이트·출제 범위는 실제 글자 위에 인라인으로 칠해져
+                    백드롭 줄바꿈 어긋남이 원천적으로 없다. */
+                <WorkspaceSelectStage
+                  content={row.content}
+                  highlights={row.highlights}
+                  range={row.range}
+                  locked={editorLocked || disabled}
+                  fontSize={String(editorTextStyle.fontSize)}
+                  selection={selection}
+                  onSelect={handleStageSelect}
+                  onMouseMove={handleEditorMouseMove}
+                  onMouseLeave={() => {
+                    setOriginalTip(null);
+                    scheduleHlHide();
+                  }}
+                  onScroll={() => {
+                    setOriginalTip(null);
+                    setHlMenu(null);
+                  }}
+                  selectionPopover={stagePopover}
+                />
               ) : null}
               {/* 출제 범위 백드롭 — 지정된 구간을 형광펜처럼 칠한다.
                   AI 하이라이트 백드롭과 같은 메트릭의 별도 레이어. */}
-              {row.range ? (
+              {editMode && row.range ? (
                 <div
                   ref={rangeBackdropRef}
                   aria-hidden="true"
@@ -1637,7 +1634,7 @@ export function WorkspacePassageRow({
               ) : null}
               {/* 하이라이트 백드롭 — textarea 와 동일 메트릭(px-3 py-2,
                   13px/relaxed)으로 뒤에 깔린다. 글자는 투명, 배경만 칠한다. */}
-              {row.highlights.length > 0 ? (
+              {editMode && row.highlights.length > 0 ? (
                 <div
                   ref={backdropRef}
                   aria-hidden="true"
@@ -1677,50 +1674,48 @@ export function WorkspacePassageRow({
                   })()}
                 </div>
               ) : null}
-              <Textarea
-                ref={textareaRef}
-                value={row.content}
-                onChange={(e) => {
-                  dismissDragCoach(true);
-                  if (row.range) {
-                    toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
+              {editMode ? (
+                <Textarea
+                  ref={textareaRef}
+                  value={row.content}
+                  autoFocus
+                  onChange={(e) => {
+                    if (row.range) {
+                      toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
+                    }
+                    // 연속 타이핑은 버스트 1개 = undo 1단계로 묶는다.
+                    if (typingTimerRef.current === null) {
+                      onPushHistory();
+                    } else {
+                      window.clearTimeout(typingTimerRef.current);
+                    }
+                    typingTimerRef.current = window.setTimeout(() => {
+                      typingTimerRef.current = null;
+                    }, TYPING_BURST_MS);
+                    onChangeContent(e.target.value);
+                    clearSelection();
+                  }}
+                  onScroll={() => {
+                    syncBackdropScroll();
+                    setOriginalTip(null);
+                    setHlMenu(null);
+                  }}
+                  onMouseMove={handleEditorMouseMove}
+                  onMouseLeave={() => {
+                    setOriginalTip(null);
+                    scheduleHlHide();
+                  }}
+                  readOnly={editorLocked}
+                  disabled={disabled}
+                  spellCheck={false}
+                  style={editorTextStyle}
+                  className={
+                    "relative h-full min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent py-2 pl-3 pr-16 shadow-none focus-visible:ring-0 " +
+                    (editorLocked ? "text-slate-500" : "")
                   }
-                  // 연속 타이핑은 버스트 1개 = undo 1단계로 묶는다.
-                  if (typingTimerRef.current === null) {
-                    onPushHistory();
-                  } else {
-                    window.clearTimeout(typingTimerRef.current);
-                  }
-                  typingTimerRef.current = window.setTimeout(() => {
-                    typingTimerRef.current = null;
-                  }, TYPING_BURST_MS);
-                  onChangeContent(e.target.value);
-                  setSelection(null);
-                  setHoverSentence(null);
-                }}
-                onSelect={handleSelect}
-                onScroll={() => {
-                  syncBackdropScroll();
-                  setOriginalTip(null);
-                  setHlMenu(null);
-                  setHoverSentence(null);
-                }}
-                onMouseMove={handleEditorMouseMove}
-                onMouseLeave={() => {
-                  setOriginalTip(null);
-                  scheduleHlHide();
-                  setHoverSentence(null);
-                }}
-                readOnly={editorLocked}
-                disabled={disabled}
-                spellCheck={false}
-                style={editorTextStyle}
-                className={
-                  "relative h-full min-h-[180px] flex-1 resize-none rounded-none border-0 bg-transparent py-2 pl-3 pr-16 shadow-none focus-visible:ring-0 " +
-                  (editorLocked ? "text-slate-500" : "")
-                }
-                placeholder="지문 본문"
-              />
+                  placeholder="지문 본문"
+                />
+              ) : null}
 
               {/* ── undo / redo — 입력창 우상단에 떠 있는 컨트롤. 본문은 pr-16
                   으로 우측 거터를 비워 글자가 줄바꿈돼 버튼에 가려지지 않는다. ── */}
@@ -1808,7 +1803,7 @@ export function WorkspacePassageRow({
 
               {/* ── 드래그 모션 코치 — 고스트 커서가 첫 줄을 쓸며 선택
                   하이라이트가 자라나는 루프. 실제 드래그/편집 시 영구 종료. ── */}
-              {dragCoachVisible && !editorLocked && !disabled ? (
+              {dragCoachVisible && !editMode && !editorLocked && !disabled ? (
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
@@ -1863,94 +1858,6 @@ export function WorkspacePassageRow({
                 </div>
               ) : null}
 
-              {/* ── 선택 액션 팝오버 — 드래그한 문장 바로 옆에 뜬다
-                  (학습지 필기 툴바와 동일한 앵커·클램프 규칙) ── */}
-              {selection &&
-              selectionAnchor &&
-              !preview &&
-              !variantPreview &&
-              !busy &&
-              !disabled
-                ? (() => {
-                    const fitsBelow =
-                      selectionAnchor.bottomY + SELECTION_POPUP_H + 10 <=
-                      selectionAnchor.containerH;
-                    const fitsAbove =
-                      selectionAnchor.topY - SELECTION_POPUP_H - 10 >= 0;
-                    const below = fitsBelow || !fitsAbove;
-                    // 선택 구간이 에디터 전체를 덮어 위·아래 모두 공간이 없으면
-                    // (긴 지문 전체 선택) 팝오버를 컨테이너 안으로 끌어와 잘림을
-                    // 막는다. 이때는 본문 위에 겹치므로 화살표를 생략한다.
-                    const clamped = !fitsBelow && !fitsAbove;
-                    const rawTop = below
-                      ? selectionAnchor.bottomY + 8
-                      : selectionAnchor.topY - 8 - SELECTION_POPUP_H;
-                    const top = Math.max(
-                      4,
-                      Math.min(
-                        rawTop,
-                        selectionAnchor.containerH - SELECTION_POPUP_H - 4,
-                      ),
-                    );
-                    const left = Math.max(
-                      4,
-                      Math.min(
-                        selectionAnchor.x - SELECTION_POPUP_W / 2,
-                        selectionAnchor.containerW - SELECTION_POPUP_W - 4,
-                      ),
-                    );
-                    const arrowX = Math.max(
-                      14,
-                      Math.min(
-                        selectionAnchor.x - left,
-                        SELECTION_POPUP_W - 14,
-                      ),
-                    );
-                    return (
-                      <div className="absolute z-[3]" style={{ left, top }}>
-                        {below && !clamped ? (
-                          <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-blue-300 bg-white" />
-                          </div>
-                        ) : null}
-                        <div className="flex items-center gap-1.5 rounded-lg border border-blue-300 bg-white p-1.5 shadow-lg shadow-blue-200/60 duration-150 animate-in fade-in zoom-in-95">
-                          <button
-                            type="button"
-                            onClick={handleParaphraseClick}
-                            data-generate-tour="workspace-paraphrase-button"
-                            title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
-                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
-                          >
-                            <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
-                            AI 문장 변형
-                            <CreditCostChip
-                              amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
-                              className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
-                            />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleSetRangeFromSelection}
-                            data-generate-tour="workspace-range-button"
-                            title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
-                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
-                          >
-                            <Scissors
-                              className="h-3.5 w-3.5"
-                              aria-hidden="true"
-                            />
-                            이 범위만 출제
-                          </button>
-                        </div>
-                        {!below && !clamped ? (
-                          <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-blue-300 bg-white" />
-                          </div>
-                        ) : null}
-                      </div>
-                    );
-                  })()
-                : null}
             </div>
 
             {/* 단어 수 — 입력창 우하단 푸터(본문 아래라 텍스트와 겹치지 않음) */}

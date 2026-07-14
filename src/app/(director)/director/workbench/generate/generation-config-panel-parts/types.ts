@@ -135,4 +135,17 @@ export interface GenerationConfigPanelProps {
    * 가리키는 유형 행(type-add-button 등)이 항상 보이게 한다.
    */
   tourActive?: boolean;
+
+  // 포인트 짚어주기 (point-picker-design.md §4)
+  /**
+   * 유형 세부설정의 "포인트 짚어주기" 진입 콜백 — POINT_PICKER_CONFIG 등재
+   * 유형에서 진입 버튼을 누르면 해당 typeId 로 호출된다. 미전달이면 진입 행
+   * 자체를 렌더하지 않는다(활성 지문이 없는 호출자 = 죽은 버튼 0).
+   */
+  onOpenPointPicker?: (typeId: string) => void;
+  /**
+   * 활성 지문의 유형별 교사 포인트 선택 수(typeId → count) — "포인트 N" 마이크로
+   * 배지 표시용. 상위(teacherPointsByPassage[passageId])가 계산해 내려준다.
+   */
+  teacherPointCounts?: Record<string, number>;
 }

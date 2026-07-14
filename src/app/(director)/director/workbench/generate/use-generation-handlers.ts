@@ -1,5 +1,21 @@
 "use client";
 
+// ============================================================================
+// 문제 생성 경로 지도 (26-07-14 정리) — 새 생성 경로를 만들면 이 지도를 갱신하고,
+// 반드시 mergeTeacherPointsIntoTypeSettings 로 "포인트 짚어주기"를 배선할 것.
+//
+// ① 워크스페이스/지문 모달 생성(주 경로): use-workspace-generation.ts
+//    - 카드 푸터 "다음으로" · 지문별 생성 모달 CTA · 워크스페이스 일괄 생성 전부.
+//    - teacherPoints 머지 배선됨(변형본 재바인딩 시 원본 id 폴백 포함).
+// ② 내 지문함 일괄 생성(보조 경로): 이 파일의 handleBatchGenerate
+//    - 워크스페이스 비활성 상태에서 지문 체크 → 우측 패널 하단 버튼.
+//    - teacherPoints 머지 배선됨.
+// ③ (구) handleGenerate 단일 지문 경로는 ①로 대체되어 26-07-14 제거됨.
+//
+// 이 파일은 경로 ②와, 모든 경로가 공유하는 유틸(createFastQuestionGenerationJob·
+// buildOptimisticItem·mergeTeacherPointsIntoTypeSettings 등)을 담는다.
+// ============================================================================
+
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +31,11 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { type QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  clampTeacherPoints,
+  type TeacherPoint,
+  type TeacherPointPayload,
+} from "./generation-config-panel-parts/point-picker-config";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import {
   nextGenerationRunToken,
@@ -44,6 +65,12 @@ interface UseGenerationHandlersParams {
   difficulty: string;
   customPrompt: string;
   questionTypeSettings: QuestionTypeGenerationSettings;
+  /**
+   * 지문별 "포인트 짚어주기" 선택(선택 주입) — passageId → typeId → TeacherPoint[].
+   * 있으면 생성 요청의 questionTypeSettings[typeId] 에 wire 형태(teacherPoints)로
+   * 머지된다(point-picker-design.md §2). 기존 호출부는 생략해도 동작 동일.
+   */
+  teacherPointsByPassage?: Record<string, Record<string, TeacherPoint[]>>;
   selectedPassage: PassageItem | null;
   analysisData: any;
   totalQuestions: number;
@@ -54,6 +81,34 @@ interface UseGenerationHandlersParams {
   onGenerationCompleted?: () => void;
   /** 검수 전 자료를 승격해 생성한 직후 '내 지문' 목록을 새로고침(선택). */
   loadPassages?: () => Promise<void> | void;
+}
+
+/**
+ * 교사 지정 포인트를 해당 유형의 세부설정에 wire 형태로 머지한다(스펙 §2).
+ * clampTeacherPoints(클라 캡 = 서버 클램프 단일 규칙)로 최대 12개까지 자른 뒤
+ * {text, unit, tag?, note?} 만 싣는다 — 오프셋(sentenceIndex/start/end)은
+ * 클라 전용·서버 미신뢰라 전송에서 제외한다. 포인트가 없거나 전부 드롭되면
+ * 원래 설정을 그대로 반환한다(요청 스키마 무변경).
+ */
+export function mergeTeacherPointsIntoTypeSettings(
+  typeId: string,
+  typeSettings: unknown,
+  points: readonly TeacherPoint[] | undefined,
+): unknown {
+  if (!points || points.length === 0) return typeSettings;
+  const clamped = clampTeacherPoints(typeId, typeSettings, points);
+  if (clamped.length === 0) return typeSettings;
+  const teacherPoints: TeacherPointPayload[] = clamped.map((point) => ({
+    text: point.text,
+    unit: point.unit,
+    ...(point.tag !== undefined ? { tag: point.tag } : {}),
+    ...(point.note !== undefined ? { note: point.note } : {}),
+  }));
+  const base =
+    typeSettings && typeof typeSettings === "object"
+      ? (typeSettings as Record<string, unknown>)
+      : {};
+  return { ...base, teacherPoints };
 }
 
 function readQuestionTags(rawTags: unknown): string[] {
@@ -295,9 +350,9 @@ export function useGenerationHandlers({
   difficulty,
   customPrompt,
   questionTypeSettings,
-  selectedPassage,
-  analysisData,
-  totalQuestions,
+  teacherPointsByPassage,
+  // selectedPassage·analysisData·totalQuestions 는 (구) handleGenerate 전용이었다.
+  // 인터페이스는 호출부 호환을 위해 유지하되 여기서는 더 이상 읽지 않는다.
   setSessionQueue,
   reviewItem,
   setReviewModalId,
@@ -503,18 +558,24 @@ export function useGenerationHandlers({
             0,
             Math.floor(Number(typeCounts[typeId]) || 0),
           );
+          // 교사 지정 포인트는 지문 스코프로 조회해 wire 형태로 머지(스펙 §2).
+          const unitTypeSettings = mergeTeacherPointsIntoTypeSettings(
+            typeId,
+            questionTypeSettings[typeId],
+            teacherPointsByPassage?.[p.id]?.[typeId],
+          );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
               questionType: typeId,
-              questionTypeSettings: questionTypeSettings[typeId],
+              questionTypeSettings: unitTypeSettings,
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
               variantIndex: Math.min(index, 99),
               variantCount: Math.min(repeatCount, 99),
               config: {
                 typeCounts: { [typeId]: 1 },
                 questionTypeSettings: {
-                  [typeId]: questionTypeSettings[typeId],
+                  [typeId]: unitTypeSettings,
                 },
                 difficulty,
                 prompt: customPrompt.trim(),
@@ -559,6 +620,7 @@ export function useGenerationHandlers({
     typeCounts,
     setTypeCounts,
     questionTypeSettings,
+    teacherPointsByPassage,
     difficulty,
     customPrompt,
     activeTypes,
@@ -573,90 +635,9 @@ export function useGenerationHandlers({
     onGenerationCompleted,
   ]);
 
-  const handleGenerate = useCallback(async () => {
-    if (!selectedPassage) return;
-    if (genMode === "manual" && totalQuestions === 0) return;
-
-    const baseConfig = {
-      typeCounts: genMode === "manual" ? { ...typeCounts } : {},
-      questionTypeSettings:
-        genMode === "manual" ? { ...questionTypeSettings } : {},
-      difficulty,
-      prompt: customPrompt.trim(),
-      mode: genMode,
-      generationPlan,
-    };
-
-    try {
-      if (genMode === "manual") {
-        const units: ManualGenerationUnit[] = [];
-        const runId = nextGenerationRunToken();
-
-        for (const typeId of activeTypes) {
-          const repeatCount = Math.max(
-            0,
-            Math.floor(Number(typeCounts[typeId]) || 0),
-          );
-          for (let index = 0; index < repeatCount; index += 1) {
-            units.push({
-              passage: selectedPassage,
-              questionType: typeId,
-              questionTypeSettings: questionTypeSettings[typeId],
-              tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
-              variantIndex: Math.min(index, 99),
-              variantCount: Math.min(repeatCount, 99),
-              config: {
-                ...baseConfig,
-                typeCounts: { [typeId]: 1 },
-                questionTypeSettings: {
-                  [typeId]: questionTypeSettings[typeId],
-                },
-              },
-            });
-          }
-        }
-
-        const { success, failed } = await runManualUnitsWithFastPath(units);
-        triggerRefresh();
-        if (success > 0) {
-          toast.success(
-            `${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
-          );
-        }
-        if (failed > 0) {
-          toast.error(
-            `${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`,
-          );
-        }
-        return;
-      }
-
-      // 자동 생성 모드 제거 — 단일 지문 생성은 '유형 지정'만 지원한다.
-      // 위 manual 분기에서 처리되며, 그 외 모드(set)는 워크스페이스 흐름 전용.
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
-      );
-    }
-  }, [
-    selectedPassage,
-    genMode,
-    generationPlan,
-    totalQuestions,
-    activeTypes,
-    typeCounts,
-    questionTypeSettings,
-    difficulty,
-    customPrompt,
-    analysisData,
-    enqueueJob,
-    setSessionQueue,
-    loadSavedQuestions,
-    refreshTaskQueueSoon,
-    runManualUnitsWithFastPath,
-    triggerRefresh,
-    onGenerationCompleted,
-  ]);
+  // (구) handleGenerate — 단일 선택 지문(selectedPassage) 생성 경로는 워크스페이스
+  // 흐름(useWorkspaceGeneration)으로 대체되어 호출부가 사라졌고, 26-07-14 포인트
+  // 배선 정리 때 죽은 코드로 확인되어 제거했다.
 
   const handleSaveQuestions = useCallback(
     async (questions: any[]) => {
@@ -836,7 +817,6 @@ export function useGenerationHandlers({
 
   return {
     handleBatchGenerate,
-    handleGenerate,
     handleSaveQuestions,
     retryGeneration,
   };

@@ -138,6 +138,10 @@ export function GenerationConfigPanel({
   workspaceGenerating = false,
   onWorkspaceGenerate,
   tourActive = false,
+  // 포인트 짚어주기(point-picker-design.md §4) — 진입 콜백·유형별 선택 수는 상위
+  // (generate-page-client/모달) 소유. 미전달이면 진입 행 자체를 렌더하지 않는다.
+  onOpenPointPicker,
+  teacherPointCounts,
 }: GenerationConfigPanelProps) {
   // ── 국어 지문 게이트 ─────────────────────────────────────────────────
   // passageSubject === "KOREAN" 이면 국어 유형 그룹만, 그 외(영어·null)면 기존
@@ -151,6 +155,16 @@ export function GenerationConfigPanel({
     : TYPE_ORDER_STORAGE_KEY;
 
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(null);
+  // 픽커 진입 콜백 통과 — 진입 직전에 세부설정 팝오버(expandedTypeId)를 닫는다.
+  // 픽커가 열리면 콘솔 폭이 440px 로 줄어 열려 있던 팝오버(trigger 폭 추종)가
+  // 세로 1글자로 붕괴하기 때문. (칩·배지 등 팝오버 밖 진입은 Radix 외부 클릭
+  // 닫힘이 이미 처리하고, 팝오버 안 진입 행은 이 래퍼가 닫는다.)
+  const openPointPicker = onOpenPointPicker
+    ? (typeId: string) => {
+        setExpandedTypeId(null);
+        onOpenPointPicker(typeId);
+      }
+    : undefined;
   // 카테고리 그룹 접힘 상태 — localStorage 영속(UI 취향). 투어 중엔 무시(강제 펼침).
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
@@ -919,8 +933,13 @@ export function GenerationConfigPanel({
                           <div className="p-2">
                             {/* 유형 타일 그리드 — 블록형 선택 UI. 모바일은 1열로 두어
                                 타일(=팝오버 트리거) 폭을 넓혀 세부설정 팝오버가 좁아서
-                                잘리거나 과도하게 줄바꿈되지 않게 한다. */}
-                            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+                                잘리거나 과도하게 줄바꿈되지 않게 한다.
+                                data-type-tile-grid: 픽커 모드(440px 콘솔)에서 모달이
+                                컨테이너 조건으로 1컬럼을 강제하는 데 쓰는 훅. */}
+                            <div
+                              className="grid grid-cols-1 gap-2 lg:grid-cols-2"
+                              data-type-tile-grid=""
+                            >
                               {group.items.map((item) => {
                                 const count = typeCounts[item.id] || 0;
                                 const active = count > 0;
@@ -1071,6 +1090,15 @@ export function GenerationConfigPanel({
                                         ) : null}
                                       </button>
                                     </PopoverTrigger>
+                                    {/* 포인트 짚어주기 진입 — 등재 유형 타일에 상주.
+                                        포인트 없으면 과녁 아이콘, 있으면 "포인트 N" 배지. */}
+                                    {TypeNumericDetail.renderTypePointBadge({
+                                      typeId: item.id,
+                                      pointCount:
+                                        teacherPointCounts?.[item.id] ?? 0,
+                                      onOpenPointPicker: openPointPicker,
+                                      questionTypeSettings,
+                                    })}
                                     {/* 문항 수 스테퍼 */}
                                     <div className="flex shrink-0 items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
                                       <button

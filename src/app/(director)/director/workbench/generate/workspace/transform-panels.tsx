@@ -98,8 +98,8 @@ export function ParaphrasePreviewPanel({
 }) {
   const tokens = diffWords(original, rewritten);
   return (
-    <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
-      <div className="flex items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-2">
+    <div className="shrink-0 overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
+      <div className="flex items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-1.5">
         <p className="text-[12px] font-bold text-blue-800">
           AI 문장 변형 결과{" "}
           <span className="font-medium text-blue-500">
@@ -107,8 +107,9 @@ export function ParaphrasePreviewPanel({
           </span>
         </p>
       </div>
-      <div className="space-y-2 px-3 py-2.5">
-        <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed text-slate-700">
+      <div className="space-y-2 px-3 py-2">
+        {/* 긴 문장은 패널이 아니라 이 박스 안에서 스크롤 — 지문 영역을 잠식하지 않는다. */}
+        <div className="max-h-28 overflow-y-auto rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed text-slate-700">
           {tokens.map((t, i) =>
             t.type === "same" ? (
               <span key={i}>{t.text} </span>
@@ -168,8 +169,8 @@ export function PrependPreviewPanel({
   onCancel: () => void;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
-      <div className="flex items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-2">
+    <div className="shrink-0 overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
+      <div className="flex items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-1.5">
         <p className="text-[12px] font-bold text-blue-800">
           생성된 앞 문단{" "}
           <span className="font-medium text-blue-500">
@@ -177,8 +178,9 @@ export function PrependPreviewPanel({
           </span>
         </p>
       </div>
-      <div className="space-y-2 px-3 py-2.5">
-        <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed">
+      <div className="space-y-2 px-3 py-2">
+        {/* 긴 문단은 패널이 아니라 이 박스 안에서 스크롤 — 지문 영역을 잠식하지 않는다. */}
+        <div className="max-h-28 overflow-y-auto rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed">
           <span className="rounded-sm bg-blue-100/80 px-0.5 font-medium text-blue-900">
             {paragraph}
           </span>{" "}

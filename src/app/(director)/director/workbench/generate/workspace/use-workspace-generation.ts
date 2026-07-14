@@ -22,8 +22,10 @@ import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   buildOptimisticItem,
   createFastQuestionGenerationJob,
+  mergeTeacherPointsIntoTypeSettings,
   replaceQueueItemInPlace,
 } from "../use-generation-handlers";
+import type { TeacherPoint } from "../generation-config-panel-parts/point-picker-config";
 import {
   getReservedVariantTitles,
   nextGenerationRunToken,
@@ -48,11 +50,15 @@ import {
 import type { WorkspaceRowsApi } from "./use-workspace-rows";
 
 // ============================================================================
-// 워크스페이스 생성 핸들러 — 불러온(편집된) 지문들로 문제 생성.
+// 워크스페이스 생성 핸들러 — 불러온(편집된) 지문들로 문제 생성. ★주 생성 경로★
+// (경로 지도: use-generation-handlers.ts 상단 주석 참조 — 카드 푸터 "다음으로"·
+//  지문별 생성 모달 CTA·워크스페이스 일괄 생성이 전부 여기를 탄다.)
 //
 // 1) 본문이 수정/범위 지정된 행은 먼저 "변형본"을 실제 Passage 로 저장한다
 //    (문제-지문 연결 정합성: 문제는 항상 자신이 출제된 본문과 연결).
 // 2) 행별 유형 오버라이드 → 없으면 우측 전체 설정을 따른다.
+//    "포인트 짚어주기"(teacherPointsByPassage)는 fast 유닛 조립 시 유형 설정에
+//    wire 형태로 머지된다 — 새 조립 지점을 추가하면 반드시 같이 배선할 것.
 // 3) 생성은 기존 fast/slow 경로를 그대로 재사용한다.
 // ============================================================================
 
@@ -189,6 +195,13 @@ interface UseWorkspaceGenerationParams {
   questionTypeSettings: QuestionTypeGenerationSettings;
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   customPrompt: string;
+  /**
+   * 지문별 "포인트 짚어주기" 선택 — passageId → typeId → TeacherPoint[].
+   * fast 유닛의 questionTypeSettings 에 wire 형태(teacherPoints)로 머지된다.
+   * 변형본 저장으로 행이 새 passageId 로 재바인딩된 경우 원본 id(variantOfId)
+   * 로 폴백해 찾는다(포인트는 픽커를 연 원본 id 아래에 저장돼 있으므로).
+   */
+  teacherPointsByPassage?: Record<string, Record<string, TeacherPoint[]>>;
   selectedIds?: Set<string>;
   setSelectedIds?: Dispatch<SetStateAction<Set<string>>>;
   setSessionQueue: Dispatch<SetStateAction<QueueItem[]>>;
@@ -221,6 +234,7 @@ export function useWorkspaceGeneration({
   questionTypeSettings,
   difficulty,
   customPrompt,
+  teacherPointsByPassage,
   selectedIds,
   setSelectedIds,
   setSessionQueue,
@@ -572,8 +586,18 @@ export function useWorkspaceGeneration({
         if (effTypeCounts) {
           for (const [typeId, rawCount] of Object.entries(effTypeCounts)) {
             const repeat = Math.max(0, Math.floor(Number(rawCount) || 0));
-            const effSettings =
-              rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId];
+            // "포인트 짚어주기" 주입 — 이 경로(워크스페이스/지문 모달 생성)가
+            // 실제 발사 경로다. 변형본 재바인딩 행은 원본 id 로 폴백해 찾는다.
+            const rowTeacherPoints =
+              teacherPointsByPassage?.[item.passageId]?.[typeId] ??
+              (item.kind === "workspace" && item.row.variantOfId
+                ? teacherPointsByPassage?.[item.row.variantOfId]?.[typeId]
+                : undefined);
+            const effSettings = mergeTeacherPointsIntoTypeSettings(
+              typeId,
+              rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId],
+              rowTeacherPoints,
+            );
             // 유형별 생성 플랜(일반/프리미엄)을 우선 반영 — 글로벌 셀렉터 제거 후
             // 플랜은 유형별 설정에서만 지정된다. 서버도 questionTypeSettings 의
             // generationPlan 을 effectiveGenerationPlan 으로 해석하므로,

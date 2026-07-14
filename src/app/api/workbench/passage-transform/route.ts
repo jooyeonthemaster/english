@@ -67,9 +67,11 @@ export async function POST(req: NextRequest) {
 
   if (mode === "PARAPHRASE") {
     const span = selectedText?.trim() || "";
-    if (span.length < 12) {
+    // 단어 하나만 골라 동의어로 바꾸는 흐름을 지원한다 — 워크스페이스 선택
+    // 무대가 단어 클릭 선택을 허용하므로 하한은 형식 검증 수준(2자)만 남긴다.
+    if (span.length < 2) {
       return NextResponse.json(
-        { error: "변형할 문장을 조금 더 길게 선택해주세요. (최소 12자)" },
+        { error: "변형할 단어·문장을 선택해주세요. (최소 2자)" },
         { status: 400 },
       );
     }
