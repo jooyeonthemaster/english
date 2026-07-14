@@ -59,6 +59,12 @@ export type GrammarGenerationCandidate = {
   tier: GrammarCandidateTier;
   priority: number;
   index: number;
+  /** 지문 내 문장 서수(1-기반, 원문 구두점 분할 기준) — 배치 결정론 힌트용. */
+  sentenceOrdinal: number;
+  /** 후보 시작 오프셋의 지문 내 상대 위치(0~1). */
+  relativePosition: number;
+  /** 첫문장(문장 3개 이상 지문)·지문 앞 20% 자리 — 정답(오류) 부적합, 미끼 전용 결정론 표기. */
+  earlyPositionDecoyOnly: boolean;
 };
 
 
@@ -455,12 +461,26 @@ function truncateGrammarExpressionAtWord(raw: string, maxChars: number): string 
   return cleanHead.trim();
 }
 
+// 원문 오프셋 기준 문장 경계 — passage-sentence-utils 의 분할 정규식을 원문에
+// 그대로 적용해 각 문장의 끝 오프셋을 얻는다(공백 정규화 없이 오프셋 보존).
+// 배치 결정론 힌트(26-07-14 round-1 ③: 첫문장/전반부 후보 = 미끼 전용)용.
+const GRAMMAR_SENTENCE_RANGE_RE = /[^.!?]+[.!?]+[”’'")\]]*(?=\s|$)/g;
+
+function computeGrammarSentenceEndOffsets(passage: string): number[] {
+  const ends: number[] = [];
+  for (const match of passage.matchAll(GRAMMAR_SENTENCE_RANGE_RE)) {
+    ends.push((match.index ?? 0) + match[0].length);
+  }
+  return ends.length ? ends : [passage.length];
+}
+
 export function findGrammarGenerationCandidates(
   passage: string,
   requestedDifficulty?: string,
 ): GrammarGenerationCandidate[] {
   const candidates: GrammarGenerationCandidate[] = [];
   const seen = new Set<string>();
+  const sentenceEnds = computeGrammarSentenceEndOffsets(passage);
 
   for (const rule of GRAMMAR_GENERATION_CANDIDATE_RULES) {
     for (const match of passage.matchAll(rule.pattern)) {
@@ -487,6 +507,20 @@ export function findGrammarGenerationCandidates(
       const key = `${rule.code}:${normalizeComparableText(expression).slice(0, 80)}`;
       if (seen.has(key)) continue;
       seen.add(key);
+      // 배치 결정론(26-07-14): 후보의 문장 서수·상대위치를 원문 오프셋으로 계산해
+      // 데이터에 심는다. 첫문장(스캔 즉답) 또는 지문 앞 20% 이전 후보는 정답
+      // 부적합(미끼 전용)으로 표기한다. 첫문장 규칙은 문장 3개 이상 지문에서만 —
+      // 1~2문장 지문에서 후보 풀 대부분을 표기하면 되레 혼선(실패 위험)이라 20%
+      // 규칙만 남긴다. 후보 제거가 아니라 표기라 실패율 영향 0.
+      const sentenceOrdinal = (() => {
+        for (let i = 0; i < sentenceEnds.length; i += 1) {
+          if (index < sentenceEnds[i]) return i + 1;
+        }
+        return sentenceEnds.length;
+      })();
+      const relativePosition = passage.length > 0 ? index / passage.length : 0;
+      const earlyPositionDecoyOnly =
+        relativePosition < 0.2 || (sentenceEnds.length >= 3 && sentenceOrdinal === 1);
       candidates.push({
         code: rule.code,
         expression,
@@ -497,14 +531,25 @@ export function findGrammarGenerationCandidates(
         tier: rule.tier,
         priority: rule.priority,
         index,
+        sentenceOrdinal,
+        relativePosition,
+        earlyPositionDecoyOnly,
       });
     }
   }
 
-  return candidates.sort((a, b) => (
-    grammarCandidateScore(b, requestedDifficulty) -
-    grammarCandidateScore(a, requestedDifficulty)
-  ));
+  return candidates.sort((a, b) => {
+    // 배치 결정론(26-07-14): 첫문장/전반부(앞 20%) 후보는 정답 부적합(미끼 전용)
+    // 이라 뒤로 보낸다 — KILLER STEP 1 이 목록 상단부터 정답 자리를 걷으므로
+    // 20% 이후 후보가 먼저 온다. 같은 그룹 안에서는 기존 점수순 유지.
+    if (a.earlyPositionDecoyOnly !== b.earlyPositionDecoyOnly) {
+      return a.earlyPositionDecoyOnly ? 1 : -1;
+    }
+    return (
+      grammarCandidateScore(b, requestedDifficulty) -
+      grammarCandidateScore(a, requestedDifficulty)
+    );
+  });
 }
 
 
@@ -594,6 +639,11 @@ export function buildGrammarSourceCandidateBlock(
     mode === "judgment"
       ? "- For GRAMMAR_ERROR, every marked expression must be a real decision point. A correct decoy is still a tested grammar frame, not a decorative word, lexical adjective, pronoun, comparative particle, or local auxiliary."
       : "",
+    // 배치 결정론(26-07-14): 첫문장/전반부 후보의 미끼 전용 표기를 읽는 법 —
+    // 후보 데이터(use=/position=)에 심긴 신호의 범례. 정답은 20% 이후 자리 우선.
+    mode === "judgment" && candidates.some((candidate) => candidate.earlyPositionDecoyOnly)
+      ? "- Position discipline: candidates marked 미끼 전용(정답 부적합: 첫문장/전반부) sit in the first sentence or the first 20% of the passage — a first-glance scan answer. Never place the answer (error) on them; use them only as correct decoys. Choose the answer among candidates at or beyond the 20% mark (the list is already sorted that way; see each candidate's position= field)."
+      : "",
     difficulty === "KILLER"
       ? "- KILLER priority: first try candidates tagged tier=killer. Single-token finite/nonfinite flips, adjacent subject-verb agreement, or obvious verb+s changes are rejected unless the surrounding span also contains a long-distance clause, modifier, relation, or parallel-structure check."
       : difficulty === "BASIC"
@@ -620,11 +670,21 @@ export function buildGrammarSourceCandidateBlock(
       return candidates.map((candidate, index) => {
       const info = GRAMMAR_POINT_CATALOG[candidate.code];
       const killerSeen = killerCodeSeen.get(candidate.code) ?? 0;
-      if (difficulty === "KILLER" && candidate.tier === "killer") {
+      // 배치 결정론(26-07-14): 첫문장/전반부 후보는 정답 부적합 — 미끼 전용 표기가
+      // answer-preferred 지정보다 우선한다(교정형은 밑줄 전부가 오류라 디코이
+      // 개념이 없으므로 judgment 만). answer-preferred 로 세지도 않아, 같은 코드의
+      // 후속 killer 후보가 정상적으로 answer-preferred 를 받는다.
+      const earlyDecoyOnly = mode === "judgment" && candidate.earlyPositionDecoyOnly;
+      if (difficulty === "KILLER" && candidate.tier === "killer" && !earlyDecoyOnly) {
         killerCodeSeen.set(candidate.code, killerSeen + 1);
       }
-      const preferredUse =
-        difficulty === "KILLER" && candidate.tier === "killer"
+      const preferredUse = earlyDecoyOnly
+        ? difficulty === "KILLER" && candidate.tier === "killer" && killerSeen > 0
+          // 미끼 전용이라도 정답과 같은 코드로 나란히 밑줄하면 answer-point-repeated
+          // 로 거부되는 것은 동일 — 두 신호를 함께 인쇄한다.
+          ? "decoy-only — 미끼 전용(정답 부적합: 첫문장/전반부) · never underline this as a decoy while the answer uses the same code"
+          : "decoy-only — 미끼 전용(정답 부적합: 첫문장/전반부)"
+        : difficulty === "KILLER" && candidate.tier === "killer"
           ? killerSeen > 0
             // 같은 코드의 killer 후보가 이미 answer-preferred 로 나열됐다면, 이
             // 후보를 정답과 나란히 디코이로 쓰는 순간 answer-point-repeated 로
@@ -638,10 +698,14 @@ export function buildGrammarSourceCandidateBlock(
         countWordsForQuality(candidate.expression) > 5
           ? `span="wide match — underline only ONE decision token inside this span, never the whole span"`
           : "";
+      // 문장 서수·상대위치를 후보 라인에 그대로 노출 — 분산·정답 배치 판단의
+      // 결정론 근거(모델 추정이 아니라 계산값).
+      const positionNote = `position="sentence ${candidate.sentenceOrdinal}, ~${Math.round(candidate.relativePosition * 100)}% into passage"`;
       return [
         `${index + 1}. code=(${candidate.code}) ${info.label}`,
         `tier=${candidate.tier}`,
         `use=${preferredUse}`,
+        positionNote,
         `expression="${escapePromptSnippet(candidate.expression)}"`,
         wideSpanNote,
         `trap="${escapePromptSnippet(candidate.trap)}"`,
@@ -700,6 +764,12 @@ function escapeGrammarCandidateRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+// 출하 게이트 isLinkingVerbComplementSite(validators/grammar/shared.ts 의
+// LINKING_VERB_BEFORE_TARGET) 미러 — 비공개 상수라 사전검사용 사본을 둔다.
+// 게이트 쪽 목록이 바뀌면 여기도 함께 갱신할 것(판정 불일치 = 모순① 재발).
+const GRAMMAR_PRECHECK_LINKING_VERB_BEFORE_TARGET =
+  /\b(?:seem|seems|seemed|seeming|appear|appears|appeared|appearing|become|becomes|became|becoming|remain|remains|remained|remaining|stay|stays|stayed|staying|prove|proves|proved|proven|proving|grow|grows|grew|grown|growing|turn|turns|turned|turning|feel|feels|felt|feeling|look|looks|looked|looking|sound|sounds|sounded|sounding|taste|tastes|tasted|tasting|smell|smells|smelled|smelling|get|gets|got|gotten|getting)\s+$/i;
+
 function classifyGrammarKillerAnswerBan(
   candidate: GrammarGenerationCandidate,
   passage: string,
@@ -717,6 +787,16 @@ function classifyGrammarKillerAnswerBan(
     (tokens.includes("that") || tokens.includes("what"))
   ) {
     return "that↔what 계열은 과훈련 반려 — 정답은 where↔which·전치사+관계대명사 방향으로";
+  }
+  // (2b) findGrammarKillerOverdrilledAnswer(a) 짝 — one/each/either/neither of +
+  // 복수명사의 동사 수 뒤집기는 장거리 여부와 무관하게 과훈련 전면 반려된다.
+  // (26-07-14 모순① 해소: 종전엔 of구가 (3)의 개입 수식어로 잡혀 '안전' 오표기 —
+  // 확정 반려 자리를 정답으로 고르도록 유도했다.)
+  if (
+    candidate.code === "d" &&
+    /\b(?:one|each|either|neither)\s+of\b/i.test(`${surface} ${candidate.surroundingText}`)
+  ) {
+    return "one/each/either/neither of + 복수명사 수일치 뒤집기 — 과훈련 전면 반려";
   }
   // (3) grammar-killer-thin-answer/인접 수일치 짝 — 동사 앞 같은 절에 실재 개입
   // 수식어가 없으면 수일치 정답은 thin 반려된다.
@@ -746,6 +826,41 @@ function classifyGrammarKillerAnswerBan(
     ).test(candidate.surroundingText);
     if (attributive && !coordinated) {
       return "명사 앞 관형 분사 단독 플립 — shallow 반려 (병렬 깨기로 쓸 때만 정답 가능)";
+    }
+  }
+  // (5) findGrammarKillerOverdrilledAnswer(b) 짝 — 형용사↔부사(-ly) 맞교환은
+  // 계사(seem/become/remain 등) 직후 보어 자리가 아니면 무조건 반려된다. f 후보의
+  // mutation 힌트는 사실상 전부 -ly 맞교환으로 흐르므로, 계사 직후 판단 토큰을
+  // 확인할 수 없는 f 자리는 반려 예고로 분류한다. 확인 경로 2가지:
+  //   (i) 표면이 계사로 시작하는 스팬("remain strict …") — 계사 바로 뒤 토큰이
+  //       게이트 통과 자리(그 토큰만 밑줄해야 함).
+  //   (ii) 단일 토큰 표면 — 주변문에서 그 토큰 직전이 계사인지 대조.
+  // (26-07-14 모순① 해소: 종전엔 f 후보 전부 '안전' 오표기. 게이트도 위치 확인
+  // 실패 시 반려하므로, 미확인=반려 예고가 게이트-보수 방향으로 일치한다.)
+  if (candidate.code === "f") {
+    const linkingComplement = (() => {
+      const firstToken = tokens[0] ?? "";
+      if (
+        tokens.length >= 2 &&
+        GRAMMAR_PRECHECK_LINKING_VERB_BEFORE_TARGET.test(`${firstToken} `)
+      ) {
+        return true;
+      }
+      const decisionToken = (tokens[tokens.length - 1] ?? "").replace(/\.{3}$/, "");
+      if (!decisionToken || !/^[a-z][a-z'-]*$/.test(decisionToken)) return false;
+      const site = normalizeText(candidate.surroundingText);
+      const match = site.match(
+        new RegExp(
+          `(^|[^A-Za-z'-])${escapeGrammarCandidateRegex(decisionToken)}(?![A-Za-z'-])`,
+          "i",
+        ),
+      );
+      if (!match || typeof match.index !== "number") return false;
+      const before = site.slice(0, match.index + match[1].length);
+      return GRAMMAR_PRECHECK_LINKING_VERB_BEFORE_TARGET.test(before);
+    })();
+    if (!linkingComplement) {
+      return "형용사↔부사(-ly) 맞교환은 반려 — 계사(seem/become/remain 등) 직후 보어 자리만 정답 허용";
     }
   }
   return null;
@@ -876,6 +991,11 @@ export function buildGrammarErrorCandidateBlock(
             const entry = `"${escapePromptSnippet(candidate.expression)}"(${candidate.code})`;
             if (ban) {
               if (banned.length < 8) banned.push(`${entry} → ${ban}`);
+            } else if (candidate.earlyPositionDecoyOnly) {
+              // 첫문장/전반부 후보는 게이트 반려 대상은 아니지만 정답 부적합
+              // (미끼 전용 표기)이라 '안전' 목록에 올리지 않는다 — 후보 라인의
+              // use=decoy-only 표기와 정합 (26-07-14 배치 결정론).
+              continue;
             } else if (safe.length < 8) {
               safe.push(entry);
             }
@@ -919,12 +1039,27 @@ export function buildGrammarErrorCandidateBlock(
     diversity?.diversityEnabled && sentences.length > 1
       ? (() => {
           const sentencePool = Math.min(sentences.length, 14);
+          // 배치 결정론(26-07-14): 첫문장·누적 20% 이전에서 시작하는 문장은 정답
+          // 호스트 로테이션에서 제외 — 후보 데이터의 미끼 전용(첫문장/전반부)
+          // 표기와 이 힌트가 서로 모순되지 않게 한다. 제외 후 풀이 비면(짧은
+          // 지문) 기존 전체 로테이션을 그대로 유지해 동작 불변.
+          const pooled = sentences.slice(0, sentencePool);
+          const totalLength = pooled.reduce((sum, sentence) => sum + sentence.length, 0);
+          const eligible: number[] = [];
+          let cumulative = 0;
+          pooled.forEach((sentence, i) => {
+            const startRatio = totalLength > 0 ? cumulative / totalLength : 0;
+            cumulative += sentence.length;
+            if (i >= 1 && startRatio >= 0.2) eligible.push(i + 1);
+          });
           const vi =
             typeof diversity.variantIndex === "number" &&
             Number.isFinite(diversity.variantIndex)
               ? Math.max(0, Math.floor(diversity.variantIndex))
               : Math.floor(Math.random() * sentencePool);
-          const target = (vi % sentencePool) + 1;
+          const target = eligible.length
+            ? eligible[vi % eligible.length]
+            : (vi % sentencePool) + 1;
           return `⭐ 다양성 보조 지시: 정답(오류) 밑줄은 되도록 아래 문장 목록의 문장 ${target}에 배치하세요. 지정 포인트의 문법 구조가 그 문장에 없으면 이 문장 힌트는 무시하고 포인트 지시를 따르되, 매번 같은 표현을 오류로 만들지 마세요.`;
         })()
       : "",

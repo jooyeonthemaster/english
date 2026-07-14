@@ -1253,3 +1253,86 @@ export function findGrammarMisplacedMarker(
   }
   return null;
 }
+
+/**
+ * 교정형 원형 노출 검출 (round-1 ①, 실측 round-0 q30): 정답 밑줄의 correction
+ * (교정형 = 올바른 원문 형태)이 학생이 보는 지문의 **다른** 위치에 그대로 남아
+ * 있으면("get __(A) that__ they want" vs 뒷문장 "to get what they want") 학생이
+ * 두 자리를 대조하는 것만으로 정답을 찾는다. 판정은 전부 단어 경계·대소문자 무시.
+ * 짧은 교정형은 기능어 오탐(is/are 는 어느 지문에나 있다)을 막기 위해 밑줄 이웃
+ * 단어 프레임까지 일치할 때만 노출로 본다:
+ *   - 3단어 이상: 교정형 단독 재출현으로 노출.
+ *   - 2단어: 앞이웃+교정형 또는 교정형+뒤이웃 재출현.
+ *   - 1단어: 앞이웃+교정형+뒤이웃(3토큰 프레임) 재출현.
+ * 탐색 대상은 마커 span 을 전부 경계 토큰으로 뗀 학생 표면(passageWithMarkers)
+ * — 정답 자리엔 오류형이 렌더되므로 남는 일치는 전부 "다른 위치"다. 이웃 단어를
+ * 못 찾으면 abstain(반려 유지 아님·통과)해 위양성을 만들지 않는다.
+ */
+export function findGrammarCorrectionFormExposed(
+  passageWithMarkers: string,
+  markedExpressions: Record<string, unknown>[],
+): { label: string; needle: string } | null {
+  const markers = findMarkers(passageWithMarkers);
+  if (markers.length === 0) return null;
+  const labelToMarker = new Map<string, { start: number; end: number }>();
+  for (const marker of markers) {
+    const label = marker.inner.match(/^\(([A-Ja-j])\)/)?.[1]?.toUpperCase();
+    if (label && !labelToMarker.has(label)) labelToMarker.set(label, marker);
+  }
+  // 마커 span 은 통째로 경계 토큰(U+0000)으로 치환 — 제거된 span 양옆 단어가
+  // 붙어 만드는 가짜 일치와 미끼 밑줄 내부 일치를 함께 배제한다.
+  const flattenTokens = (text: string): string =>
+    ` ${text
+      .toLowerCase()
+      .replace(/[^a-z0-9'\u0000-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()} `;
+  const visibleSurface = flattenTokens(
+    passageWithMarkers.replace(/__\([A-Ja-j]\)\s*[^_]*__/g, " \u0000 "),
+  );
+
+  for (const me of markedExpressions) {
+    if (me.isError !== true) continue;
+    const correction = normalizeText(me.correction) || normalizeText(me.expression);
+    const errorExpression = normalizeText(me.errorExpression);
+    if (!correction) continue;
+    // 오류 미주입(correction == 오류형)은 grammar-error-not-mutated 소관.
+    if (normalizeComparableText(correction) === normalizeComparableText(errorExpression)) {
+      continue;
+    }
+
+    const label = normalizeLabel(me.label).replace(/[()]/g, "").toUpperCase();
+    const marker = labelToMarker.get(label);
+    const correctionTokenCount = toLowerTokens(correction).length;
+    if (correctionTokenCount === 0) continue;
+
+    const needles: string[] = [];
+    if (correctionTokenCount >= 3) {
+      needles.push(flattenTokens(correction));
+    } else {
+      // 이웃 프레임: 렌더된 마커 바로 앞/뒤 단어. 마커를 못 찾으면 abstain.
+      if (!marker) continue;
+      const before = passageWithMarkers
+        .slice(Math.max(0, marker.start - 60), marker.start)
+        .match(/([A-Za-z][A-Za-z'-]*)\W*$/)?.[1];
+      const after = passageWithMarkers
+        .slice(marker.end, marker.end + 60)
+        .match(/^\W*([A-Za-z][A-Za-z'-]*)/)?.[1];
+      if (correctionTokenCount === 2) {
+        if (before) needles.push(flattenTokens(`${before} ${correction}`));
+        if (after) needles.push(flattenTokens(`${correction} ${after}`));
+      } else if (before && after) {
+        needles.push(flattenTokens(`${before} ${correction} ${after}`));
+      }
+    }
+    for (const needle of needles) {
+      if (needle.trim() && visibleSurface.includes(needle)) {
+        return {
+          label: me.label ? normalizeLabel(me.label) : `(${label})`,
+          needle: needle.trim(),
+        };
+      }
+    }
+  }
+  return null;
+}

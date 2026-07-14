@@ -14,10 +14,17 @@ export const FEATURE_FLAGS = {
   /**
    * Show the STANDARD/PREMIUM quality selector in question generation and
    * passage analysis flows. When false, all jobs use the standard quality
-   * path and the UI does not expose any generation quality choice.
+   * path and the UI does not expose any generation quality choice —
+   * `normalizeQuestionGenerationPlan` also clamps PREMIUM → STANDARD so saved
+   * settings and direct API calls cannot bill the 2x premium multiplier.
    *
-   * Backend PREMIUM wiring is preserved — flip this
-   * flag to true to restore the picker without any other changes.
+   * 26-07-14 잠정 중단 → 26-07-15 재개: 어법 PREMIUM 이 새 엔진(gemini-3.1-pro
+   * 3콜 사다리 — grammar-premium-ladder.ts, 실측 98원/문항·완화 0·E2E 채점
+   * 9/10·F0)으로 교체되어 속도·마진 문제가 해소됨. 이어서 26-07-14 유저 확정으로
+   * 비어법 PREMIUM "문제생성"도 gemini-3.1-pro-preview 로 전면 교체
+   * (ATLAS_PREMIUM_QGEN_MODEL_ID, env PREMIUM_QGEN_MODEL_ID 롤백 가능). 문제생성이
+   * 아닌 PREMIUM 소비자(지문분석·학습문제 텍스트 경로, exam-report, AI 문제수정,
+   * 동형분석)는 기존 Claude(ATLAS_PREMIUM_MODEL_ID) 그대로.
    */
   SHOW_MODEL_SELECTOR: publicBooleanFlag(
     process.env.NEXT_PUBLIC_SHOW_MODEL_SELECTOR,

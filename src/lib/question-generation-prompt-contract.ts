@@ -1,4 +1,38 @@
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { TeacherPointPayload } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
+
+// ── 교사 지정 출제 포인트 블록 (point-picker-design.md §2 서버 소비 4단계) ────
+// STANDARD(compact)·PREMIUM(prompts.ts) 두 생성 경로가 같은 블록을 공유한다.
+// AI 플랜 targetPoints("Required target points"/"분석 포인트")와는 별도 블록이며,
+// 지문 바로 다음·유형 프롬프트 앞에 배치된다.
+
+const TEACHER_POINT_UNIT_LABELS: Record<TeacherPointPayload["unit"], string> = {
+  word: "단어",
+  phrase: "구",
+  clause: "절",
+  sentence: "문장",
+};
+
+/**
+ * teacherPoints 를 "## 교사 지정 출제 포인트 (필수 반영)" 프롬프트 블록으로 만든다.
+ * 항목은 "N. \"축자 인용\" (단위, 태그?)" 형식(note 는 있으면 말미에 병기).
+ * 빈 배열이면 "" 를 반환해 기존 프롬프트와 바이트 동일을 보장한다.
+ */
+export function buildTeacherPointsPromptBlock(
+  teacherPoints: readonly TeacherPointPayload[],
+): string {
+  if (teacherPoints.length === 0) return "";
+  const lines = teacherPoints.map((point, index) => {
+    const unitLabel = TEACHER_POINT_UNIT_LABELS[point.unit] ?? point.unit;
+    const tag = point.tag?.trim();
+    const note = point.note?.trim();
+    const meta = tag ? `(${unitLabel}, ${tag})` : `(${unitLabel})`;
+    return `${index + 1}. "${point.text}" ${meta}${note ? ` — ${note}` : ""}`;
+  });
+  return `## 교사 지정 출제 포인트 (필수 반영)
+${lines.join("\n")}
+위 verbatim 구간을 이 유형의 정답 위치(밑줄/빈칸/오류 지점/근거 문장)로 반드시 사용하라. 유형 규칙상 불가한 항목만 최근접 대체하고 해설에 사유를 남겨라. 이 지시는 다양성 회피 목록보다 우선한다.`;
+}
 
 // GEMINI_QUESTION_QUALITY_CONTRACT 재구성(26-07-06): 전 유형 공유 단일 문자열을
 // 공통부(CONTRACT_COMMON)와 유형별 지시(CONTRACT_TYPE_SEGMENTS)로 분리한다. typeId 없이
@@ -156,6 +190,8 @@ interface GeminiCompactGenerationPromptInput {
   typeId?: string;
   finalChecklist?: string;
   customPrompt?: string;
+  /** 교사 지정 출제 포인트(포인트 짚어주기) — 지문 바로 다음 별도 블록으로 주입. */
+  teacherPoints?: readonly TeacherPointPayload[];
 }
 
 interface GeminiCompactPlanningPromptInput {
@@ -251,6 +287,7 @@ export function buildGeminiCompactGenerationPrompt({
   typeId,
   finalChecklist,
   customPrompt,
+  teacherPoints = [],
 }: GeminiCompactGenerationPromptInput): string {
   const analysisBlock = analysisContext?.trim()
     ? analysisContext
@@ -258,12 +295,15 @@ export function buildGeminiCompactGenerationPrompt({
   const targetPointBlock = targetPoints.length
     ? `\n\n## Required target points\n${targetPoints.map((point) => `- ${point}`).join("\n")}`
     : "";
+  // 교사 지정 포인트: 지문 바로 다음·유형 프롬프트 앞. 빈 배열이면 "" — 기존 바이트 동일.
+  const teacherPointsBlock = buildTeacherPointsPromptBlock(teacherPoints);
+  const teacherPointsSection = teacherPointsBlock ? `\n${teacherPointsBlock}` : "";
 
   return `You are a Korean high-school English exam item writer for ${schoolType} ${gradeInfo}.
 
 ## Passage
 ${passageContent}
-${targetCandidateBlock?.trim() ? `\n${targetCandidateBlock}` : ""}
+${teacherPointsSection}${targetCandidateBlock?.trim() ? `\n${targetCandidateBlock}` : ""}
 ${teacherIntentBlock?.trim() ? `\n\n## Teacher annotations\n${teacherIntentBlock}` : ""}
 
 ## Saved passage analysis

@@ -480,7 +480,12 @@ export function buildGrammarPointGuidance(
       ]
     : [];
 
-  const decoyLines = GRAMMAR_TOP_DECOY_CODES.slice(0, 4).map((code) => {
+  // 디코이 우선순위 카드 — 정답 지정(⭐) 코드와 겹치는 카드는 동적으로 제외.
+  // 지정 코드가 카드에 남으면 "정답 포인트를 디코이로 우선 배치"라는 지시가 되어
+  // KILLER answer-point-repeated 게이트와 상시 모순(round-0 실측 모순②).
+  const decoyLines = GRAMMAR_TOP_DECOY_CODES.filter(
+    (code) => !designated.includes(code),
+  ).slice(0, 4).map((code) => {
     const info = GRAMMAR_POINT_CATALOG[code];
     return `  · (${code}) ${info.label} — ${info.traps[Math.min(1, info.traps.length - 1)]}`;
   });
@@ -498,9 +503,13 @@ export function buildGrammarPointGuidance(
       : "",
     mode === "correction"
       ? "- (j) 가정법·법, (m) 비교구문은 수능 객관식 정답 빈도는 낮지만 1000제 내신형에서는 보조 포인트로 자주 보입니다. 단독 암기형 오류로 남발하지 말고, 지문에 if/as/than/법조동사 구조가 명확할 때만 서술형 수정 후보로 쓰세요."
-      : "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사도 정답보다는 디코이에 적합합니다.",
+      : "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사와 암기형 숙어·콜로케이션(make a point of 류) 자리도 정답으로 쓰지 말고 디코이로만 사용하세요.",
     buildGrammar1000AuditGuidance(requestedDifficulty),
     ...designatedLines,
+    // KILLER 정답 격 — round-0 실측: '한눈 비문' 정답이 KILLER 변별을 붕괴시킴.
+    mode === "judgment" && normalizeAuditDifficultyLevel(requestedDifficulty) === "상"
+      ? "- ⭐ KILLER 정답 격: 정답 자리는 구조 분석(수식어 건너뛰기·절 경계 파악·병렬 짝 찾기)을 해야만 판정되는 자리만 고르세요 — 주어 바로 옆 동사의 단순 수일치, 본동사 부재가 스캔만으로 보이는 자리 같은 '한눈 비문'은 정답으로 쓰지 마세요."
+      : "",
     "- 디코이(밑줄만 치고 어법상 옳게 두는 자리)는 최근 6년 학생 오답 선택률이 가장 높은 함정 카드를 우선 배치하세요:",
     ...decoyLines,
     // KILLER 분기 — 실측 26-07-06: "중복되면 정직하게 기재" 문구가 KILLER 하드
@@ -509,7 +518,7 @@ export function buildGrammarPointGuidance(
     // 단계**에서 정답 코드와의 충돌을 제거하도록 지시한다.
     mode === "judgment" && normalizeAuditDifficultyLevel(requestedDifficulty) === "상"
       ? "- 디코이는 서로 다른 문법 포인트의 자리를 고르세요. pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 하며, 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다. KILLER 에서는 한 걸음 더: **정답과 같은 코드가 되는 자리는 디코이로 아예 선택하지 마세요** — 코드 기재를 속이는 것이 아니라 밑줄 자리 자체를 다른 프레임으로 옮기는 것입니다(정답 코드가 디코이에 반복되면 문항 전체가 거부됩니다). 정답이 아닌 디코이끼리의 정직한 중복(최대 2회)은 허용됩니다. '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다."
-      : "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다.",
+      : "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). 각 디코이는 「학생이 X와 Y를 저울질한다」는 한 줄이 성립해야 하며, 성립하지 않는 자리(장식 필러, 판단거리 0인 '한눈에 옳음' 자리 — 병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 밑줄을 긋지 마세요. **정답과 같은 pointCode 의 디코이는 정답보다 어려운 자리일 때만** 허용됩니다(쉬운 자리면 정답이 가려집니다).",
     "- ⚠️ 원문 표현 자체가 표준 규범과 어긋나 보이거나 어법 논쟁이 있는 자리(예: 복수 주어 + 동격 each 뒤 동사의 수, 집합명사 수일치, 사용역에 따라 갈리는 변이형)는 정답으로도 디코이로도 밑줄을 긋지 마세요. 원문을 오류로 판정하지 말고, 의심스러운 자리는 피해서 다른 곳에 출제하세요.",
     "- 자기검증: 각 밑줄의 pointCode 는 그 밑줄의 해설(wrongOptionExplanations/explanation)이 설명하는 문법 범주와 일치해야 합니다. 분사구문 능수동이면 (c), 수일치면 (d), 명사절·관계절의 that/what 은 (b)입니다. 제출 전 5개 밑줄의 코드-해설 일치를 확인하세요.",
     mode === "judgment"

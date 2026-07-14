@@ -3,8 +3,10 @@ import {
   buildGeminiCompactGenerationPrompt,
   buildGeminiCompactPlanningPrompt,
   buildQuestionGenerationPromptContract,
+  buildTeacherPointsPromptBlock,
 } from "@/lib/question-generation-prompt-contract";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { TeacherPointPayload } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
 
 interface PlanningPromptInput {
   schoolType: string;
@@ -94,6 +96,11 @@ interface GenerationPromptInput {
   subType?: string;
   finalChecklist?: string;
   customPrompt?: string;
+  /**
+   * 교사 지정 출제 포인트(포인트 짚어주기, point-picker-design.md §2 4단계).
+   * AI 플랜 targetPoints 와 분리된 별도 블록으로, 지문 바로 다음에 주입된다.
+   */
+  teacherPoints?: readonly TeacherPointPayload[];
 }
 
 export function buildGenerationPrompt({
@@ -114,6 +121,7 @@ export function buildGenerationPrompt({
   subType,
   finalChecklist,
   customPrompt,
+  teacherPoints = [],
 }: GenerationPromptInput): { system?: string; prompt: string } {
   if (generationPlan === "STANDARD") {
     return {
@@ -133,6 +141,7 @@ export function buildGenerationPrompt({
         typeId: subType,
         finalChecklist,
         customPrompt,
+        teacherPoints,
       }),
     };
   }
@@ -152,6 +161,10 @@ export function buildGenerationPrompt({
       : "";
   const providerQualityContract =
     buildQuestionGenerationPromptContract(generationPlan, subType);
+  // 교사 지정 포인트 블록: targetContext(AI 플랜 분석 포인트)와 분리된 별도 블록.
+  // 지문 바로 다음에 배치하고, 빈 배열이면 "" 로 기존 프롬프트와 바이트 동일 유지.
+  const teacherPointsBlock = buildTeacherPointsPromptBlock(teacherPoints);
+  const teacherPointsSection = teacherPointsBlock ? `\n${teacherPointsBlock}\n` : "";
 
   // 정적 system 프리앰블: 유형 지시·루브릭·계약·고정 출력 규칙만. 학교급/학년·지문·
   // 분석·난이도 값 등 호출마다 바뀌는 것은 전부 user 프롬프트로 내려 prefix 를
@@ -190,7 +203,7 @@ ${providerQualityContract}
 
 ## 지문
 ${passageContent}
-${targetCandidateBlock ? `\n${targetCandidateBlock}\n` : ""}
+${teacherPointsSection}${targetCandidateBlock ? `\n${targetCandidateBlock}\n` : ""}
 ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisBlock}
 
 ## Source policy

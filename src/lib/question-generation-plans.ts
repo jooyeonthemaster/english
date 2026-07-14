@@ -1,3 +1,5 @@
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+
 export type QuestionGenerationPlan = "STANDARD" | "PREMIUM";
 
 export interface QuestionGenerationPlanConfig {
@@ -93,6 +95,10 @@ const AI_MODEL_DISCLOSURE_REPLACEMENTS = [
 ];
 
 export function normalizeQuestionGenerationPlan(value: unknown): QuestionGenerationPlan {
+  // 26-07-15 프리미엄 재개(어법 신 엔진 grammar-premium-ladder 검증 통과) —
+  // 잠정 중단용 서버 클램프는 유지하되, 플래그가 다시 꺼지면(잠금 시) 저장된
+  // 설정·직접 호출의 PREMIUM 도 STANDARD 로 강제해 2x 과금 구멍을 막는다.
+  if (!FEATURE_FLAGS.SHOW_MODEL_SELECTOR) return "STANDARD";
   return value === "PREMIUM" ? "PREMIUM" : "STANDARD";
 }
 

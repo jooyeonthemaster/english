@@ -5,6 +5,7 @@ import { KO_PASSAGE_KIND_LABELS, type KoPassageKind } from "@/lib/korean/core/pa
 import { shuffleKoMc5Options } from "@/lib/korean/core/shuffle";
 import { buildKoGenerationPrompt } from "@/lib/korean/prompts/generation";
 import { runKoSolverGate } from "@/lib/korean/quality/solver-gate";
+import { runGrammarSolverGate } from "./grammar-solver-gate";
 import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
 import { readKoResolvedSettings } from "@/lib/korean/settings";
 import { postProcessQuestion } from "@/lib/question-postprocess";
@@ -17,11 +18,23 @@ import { selectUsableGrammarCandidates } from "@/lib/question-quality/candidate-
 import { buildDiversityPromptBlock, shuffleQuestionOptionsForDiversity } from "@/lib/question-diversity";
 import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
 import { generateWithRetry } from "./generate-with-retry";
-import { repairQuestionCandidate } from "./question-repair";
+import { runGrammarPremiumLadder } from "./grammar-premium-ladder";
+import { isAdoptableDecoyOnlyRepairResidual, isDecoyOnlyRepairableGrammarIssue, repairQuestionCandidate } from "./question-repair";
 import { fallbackResponseSchema } from "./schemas";
 import { buildGenerationPrompt, STRUCTURED_OUTPUT_INSTRUCTIONS, UNSTRUCTURED_OUTPUT_INSTRUCTIONS } from "./prompts";
 import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
-import type { QualityMode, QuestionGenerationRejectionSummary, QuestionGenerationUsageEvent, RejectionRecorder, RunGenerationInput } from "./run-question-generation-types";
+import { ATLAS_PREMIUM_QGEN_MODEL_ID, isAtlasClaudeModel } from "@/lib/atlas-ai";
+import { anchorVerbatimText, tokenizePassage } from "@/lib/passage-point-tokenizer";
+import {
+  checkTeacherPointCompliance,
+  clampTeacherPoints,
+  POINT_PICKER_CONFIG,
+  TEACHER_POINT_UNITS,
+  TEACHER_POINTS_HARD_CAP,
+  type TeacherPointPayload,
+  type TeacherPointUnit,
+} from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
+import type { QualityMode, QuestionGenerationRejectionIssue, QuestionGenerationRejectionSummary, QuestionGenerationUsageEvent, RejectionRecorder, RunGenerationInput } from "./run-question-generation-types";
 import { RELAXED_BLOCKING_QUALITY_CODES, SALVAGE_RELAXABLE_CODES } from "./run-question-generation-constants";
 import { admitSalvageCandidatesFromPool, buildCorrectiveRetryFeedback, buildRejectionSample, buildRejectionSummary, buildSalvageNotice, formatIssuesForLog, getLargestGrammarAnswerCount, getLargestGrammarMarkerCount, getLargestIrrelevantSlotCount, hasBlankParaphraseAnswerSetting, hasDoubleNegativeBlankSetting, hasSingleBlankInferenceSetting, isRecord, mergeCustomPromptWithTypeSettings, recordRejectedCandidate, recordRejection, summarizeQualityIssues, trimGrammarDecoySurplus } from "./run-question-generation-helpers";
 
@@ -67,6 +80,14 @@ const GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR = new Set([
   "grammar-obvious-what-noun-prefix",
   "grammar-semantic-who-what-answer",
   "grammar-semantic-how-why-answer",
+  // 교정형 원형 노출(round-1 ①)은 정답 자리 자체를 옮겨야 해소된다 — 초안 보존
+  // 교정(repair)으로는 못 고치므로 린 교정 호출을 건너뛰고 재생성으로 보낸다.
+  "grammar-correction-form-exposed",
+  // 정답 오형이 비실존 어형(round-2 신설: 비단어·조동사+be 연쇄·명사 뒤 what
+  // 강제)도 정답 자리 재선정이 필요해 초안 보존 교정으로 못 고친다 — 재생성
+  // (+GRAMMAR_RETRY_DIRECTIVES 지시) 경로로 보낸다. strict 전용 차단이며
+  // SALVAGE_RELAXABLE 등재로 하드 실패는 불가(constants 참조).
+  "grammar-answer-nonword-forced",
 ]);
 
 // GRAMMAR_ERROR STANDARD/PREMIUM 1차 프롬프트 말단에 붙이는 '출력 직전' 자기검증 체크리스트.
@@ -82,6 +103,115 @@ const GRAMMAR_ERROR_FINAL_CHECKLIST = `## 출력 직전 최종 자기검증 (하
 6. 명사 뒤에 what 을 넣는 변형을 정답으로 쓰지 않았는가? (한눈에 비문 = 반려됨)
 7. keyPoints 3개가 각각 실제 밑줄 라벨로 시작하고 1번이 정답 라벨인가?`;
 
+// 재시도 피드백 보강(26-07-14 round-0 실측): correctiveActionForCode(helpers)가
+// 커버하지 않는 어법 주요 반려 코드는 원시 코드명+게이트 메시지만 전달돼 같은
+// 결함으로 연속 반려된다(q03: grammar-killer-overdrilled-answer 2연속). 코드명이
+// 아니라 "다음 시도에서 행동을 바꿀 수 있는" 한국어 1줄 지시가 가야 교정된다.
+// helpers 에 이미 Fix 문구가 있는 코드(예: grammar-killer-answer-point-repeated)는
+// 넣지 않는다 — 같은 지시가 두 번 실리면 프롬프트만 커진다.
+const GRAMMAR_RETRY_DIRECTIVES: Record<string, string> = {
+  "grammar-solver-mismatch":
+    "독립 솔버가 정답을 재현하지 못했다(답 없음/복수 정답/다른 답) — 심은 오형이 '명백한 비문'이 되는 자리로 정답을 재선정할 것. 특히 ①현대 표준 용법으로 방어 가능한 형태(singular they·형식 가정법 were·수동+양태부사) 금지 ②같은 문장의 정동사/분사 쌍을 동시에 밑줄하는 배치 금지(어느 쪽을 고쳐도 정문이 되는 동률 발생)",
+  "grammar-killer-overdrilled-answer":
+    "that↔what·전치사↔접속사처럼 과훈련된(기출 암기형) 변형을 정답으로 다시 쓰지 말 것 — 이 지문 고유 구조에서 다른 최소대립쌍(수식어구를 건너뛴 수일치·의미상 주어와 분사 관계·병렬 짝)을 정답 자리로 고를 것",
+  "grammar-correction-form-exposed":
+    "교정형(올바른 원문 형태)이 지문 다른 곳에 그대로 노출되지 않는 자리를 정답으로 고를 것 — 학생이 지문 대조만으로 답을 베낄 수 있으면 무효",
+  "grammar-obvious-local-agreement":
+    "주어 바로 옆 동사의 단순 수일치를 정답으로 쓰지 말 것 — 주어와 동사 사이에 긴 수식어구·관계절이 끼어 구조 파악이 필요한 자리로 옮길 것",
+  "grammar-answer-point-not-core":
+    "정답 pointCode 는 핵심 코드(a~i,k) 중에서만 고를 것 — 지엽·암기형 포인트를 정답 자리에 쓰지 말 것",
+  "grammar-pointcode-span-mismatch":
+    "각 밑줄의 pointCode 를 실제 밑줄 스팬의 문법 범주와 일치시킬 것 — 분사 자리에 관계사 코드를 붙이는 식의 오태깅 금지",
+  "grammar-killer-thin-relative-animacy":
+    "who↔which 선행사 유생성 단순 교체를 KILLER 정답으로 쓰지 말 것 — 절의 완전/불완전 구조까지 따져야 하는 관계사 자리나 다른 장거리 구조 자리로 바꿀 것",
+  "grammar-disputed-usage-target":
+    "문법성 판정이 갈릴 수 있는 표현은 밑줄 자리에서 제외할 것 — 정오가 논쟁 없이 확정되는 자리만 쓸 것",
+  "grammar-obvious-double-ing":
+    "진행형 뒤에 -ing 를 겹치는 식의 한눈 비문을 만들지 말 것 — 문맥 판단이 필요한 그럴듯한 오형으로 바꿀 것",
+  // 26-07-14 round-2 신설 코드 매핑 — 코드명이 아니라 "다음 시도에서 행동을
+  // 바꿀 수 있는" 지시로 번역한다(감독관 판정 ①②).
+  "grammar-answer-nonword-forced":
+    "오형(errorExpression)은 실존하는 영어 어형만 쓸 것: 비단어·조동사+be 연쇄·명사 뒤 what 삽입 금지 — 그 자리를 버리고 지문의 다른 자리에 오류를 재선정할 것",
+  "grammar-decoy-filler-span":
+    "장식 필러(only·given·지시사·단순 전치사 등) 미끼를 다시 쓰지 말 것 — 해당 미끼를 학생이 실제로 맞는지 틀리는지 저울질하는 구조적 문법 판단 자리로 교체할 것",
+};
+
+function grammarRetryDirectiveForCode(code: string): string | null {
+  const direct = GRAMMAR_RETRY_DIRECTIVES[code];
+  if (direct) return direct;
+  // round-1 신설 소스 정합 게이트(교정형 원형 노출)는 코드명 확정 전이라 exposed
+  // 계열 접미로도 매칭한다 — 오매칭해도 프롬프트 지시 1줄이라 실패율에 무해.
+  if (code.startsWith("grammar-") && code.includes("exposed")) {
+    return GRAMMAR_RETRY_DIRECTIVES["grammar-correction-form-exposed"];
+  }
+  return null;
+}
+
+// killer-overdrilled 반려 "이력" 지시 — round-1 실증(q05·q29): 과훈련 정형 정답으로
+// 반려돼도 재시도가 같은 pointCode 계열 정답으로 수렴했다. 누적 반려 이력에 이
+// 코드가 있으면(최근 1회분에 없더라도) 반려된 정답 pointCode 를 sample 에서 뽑아
+// "동일 계열 재선정 금지"를 재시도 피드백에 상시 주입한다(줄 1개 — 프롬프트 폭증 없음).
+function buildKillerOverdrilledHistoryDirective(
+  cumulativeIssues: QuestionGenerationRejectionIssue[],
+): string | null {
+  const rejectedAnswerCodes = new Set<string>();
+  let overdrilledSeen = false;
+  for (const issue of cumulativeIssues) {
+    if (issue.subType !== "GRAMMAR_ERROR") continue;
+    if (!issue.codes?.includes("grammar-killer-overdrilled-answer")) continue;
+    overdrilledSeen = true;
+    const marked = Array.isArray(issue.sample?.markedExpressions)
+      ? issue.sample.markedExpressions
+      : [];
+    for (const item of marked) {
+      if (!isRecord(item) || item.isError !== true) continue;
+      const code = String(item.pointCode ?? "").match(/[a-m]/i)?.[0]?.toLowerCase();
+      if (code) rejectedAnswerCodes.add(code);
+    }
+  }
+  if (!overdrilledSeen) return null;
+  const codeText = rejectedAnswerCodes.size
+    ? ` (반려된 정답 pointCode: ${[...rejectedAnswerCodes].sort().join(", ")})`
+    : "";
+  return `- 교정 지시 [grammar-killer-overdrilled-answer 이력]: 이전 시도가 과훈련 정형 정답으로 반려된 이력이 있음${codeText} — 반려된 정답과 동일 pointCode 계열을 다시 정답으로 선정하지 말 것. 정답 자리를 다른 핵심 코드 자리(수식어구를 건너뛴 수일치·의미상 주어와 분사 관계·병렬 짝·완전/불완전절 관계사 등)로 옮길 것`;
+}
+
+// 최근 시도 1회분의 어법 반려 코드 중 상위 3개만 한국어 행동 지시로 변환해 교정
+// 피드백 말미에 덧붙인다 — 프롬프트 폭증 방지(최대 3줄+이력 지시 1줄,
+// GRAMMAR_ERROR 반려에만 반응). 기존 buildCorrectiveRetryFeedback 출력은 그대로
+// 보존한다. cumulativeIssues 는 killer-overdrilled 이력 지시 전용(미전달 시
+// recentIssues 로 대체 — 기존 호출과 하위호환).
+function appendGrammarRetryDirectives(
+  baseFeedback: string | undefined,
+  recentIssues: QuestionGenerationRejectionIssue[],
+  cumulativeIssues?: QuestionGenerationRejectionIssue[],
+): string | undefined {
+  const counts = new Map<string, number>();
+  for (const issue of recentIssues) {
+    if (issue.subType !== "GRAMMAR_ERROR") continue;
+    for (const code of issue.codes ?? []) {
+      counts.set(code, (counts.get(code) ?? 0) + 1);
+    }
+  }
+  const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  const directives: string[] = [];
+  for (const [code] of ranked) {
+    const directive = grammarRetryDirectiveForCode(code);
+    if (!directive) continue;
+    directives.push(`- 교정 지시 [${code}]: ${directive}`);
+    if (directives.length >= 3) break;
+  }
+  const historyDirective = buildKillerOverdrilledHistoryDirective(
+    cumulativeIssues?.length ? cumulativeIssues : recentIssues,
+  );
+  if (historyDirective) directives.push(historyDirective);
+  if (directives.length === 0) return baseFeedback;
+  if (!baseFeedback) {
+    return ["## 직전 시도 반려 — 아래 지시를 반영해 다시 출제", ...directives].join("\n");
+  }
+  return [baseFeedback, ...directives].join("\n");
+}
+
 function isStandardGrammarKillerRequest(input: RunGenerationInput): boolean {
   if (input.generationPlan === "PREMIUM") return false;
   return input.plan.some(
@@ -95,28 +225,29 @@ function isStandardGrammarKillerRequest(input: RunGenerationInput): boolean {
   );
 }
 
-// 미끼(디코이)만 교체하면 해소되는 조합 위반 — 정답·설계는 무결하므로 전체
-// 재생성(~40k tok) 대신 린 교정 호출(~4k)이 정확한 처방이다 (26-07-06 스윕:
-// PREM-K 4/4런에서 answer-point-repeated 단독 반려가 전액 재생성을 유발).
-const GRAMMAR_DECOY_ONLY_REPAIRABLE_CODES = new Set([
-  "grammar-killer-answer-point-repeated",
-  "grammar-decoy-point-monotony",
-  "grammar-decoy-point-diversity",
-]);
+// 미끼(디코이)만 교체하면 해소되는 위반의 판정(GRAMMAR_DECOY_ONLY_REPAIRABLE_CODES
+// +adjacent-sv 미끼 발화 구분)은 question-repair.ts 의 단일 소스
+// isDecoyOnlyRepairableGrammarIssue 를 쓴다 — 발동 판정(여기)과 repair 프롬프트의
+// 범위 제한(저쪽)이 어긋나면 안 되기 때문. 정답·설계는 무결하므로 전체 재생성
+// (~40k tok) 대신 린 교정 호출(~4k)이 정확한 처방이다 (26-07-06 스윕: PREM-K
+// 4/4런에서 answer-point-repeated 단독 반려가 전액 재생성을 유발).
 
 function shouldAttemptCandidateRepair(
   subType: string,
   issues: QuestionQualityIssue[],
 ): boolean {
   if (subType !== "GRAMMAR_ERROR") return true;
-  const codes = issues.map((issue) => issue.code).filter(Boolean);
-  if (codes.length === 0) return true;
+  if (issues.length === 0) return true;
   // 디코이 전용 위반만 있으면 설계 보존 교정이 가능 — NOT_WORTH_REPAIR 에
-  // 앞서 허용한다 (rescue 코드셋 경유로 point-repeated 가 금지목록에 포함됨).
-  if (codes.every((code) => GRAMMAR_DECOY_ONLY_REPAIRABLE_CODES.has(code))) {
+  // 앞서 허용한다 (rescue 코드셋 경유로 point-repeated·adjacent-sv-agreement 가
+  // 금지목록에 포함됨). adjacent-sv-agreement 는 미끼 발화만 여기 해당하고
+  // 정답 발화는 아래 금지목록 검사로 떨어져 재생성 경로를 유지한다.
+  if (issues.every((issue) => isDecoyOnlyRepairableGrammarIssue(issue))) {
     return true;
   }
-  return !codes.every((code) => GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR.has(code));
+  return !issues.every((issue) =>
+    GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR.has(issue.code),
+  );
 }
 
 function shouldRunStandardGrammarKillerRescue(
@@ -164,6 +295,83 @@ function buildStandardGrammarKillerRescueInput(
       .join("\n\n"),
   };
 }
+// ─────────────────────────────────────────────────────────────────────────────
+// 교사 지정 출제 포인트("포인트 짚어주기") 서버 소비 — point-picker-design.md §2
+// 서버 소비 1~3단계. 유형별 생성 직전에 questionTypeSettings[subType].teacherPoints 를
+//   (1) 방어적 파싱: 배열 아님·하드캡(12) 초과 payload 는 통째로 무시(클라 계약
+//       위반 = 미신뢰), 항목 단위 형상 불량은 그 항목만 드롭.
+//   (2) 축자 재앵커링: 클라 오프셋은 신뢰하지 않고, 엔진 입구에서 정규화된
+//       passageContent 기준 indexOf(anchorVerbatimText)로 다시 찾는다. 실패
+//       항목은 드롭+로그(비차단 — 나머지 포인트는 계속 사용).
+//   (3) 유형 상한 클램프: clampTeacherPoints(point-picker-config 단일 소스) —
+//       미등재 유형·중복 text·상한 초과분이 여기서 정리된다.
+// 결과는 프롬프트 빌더의 `teacherPoints` 파라미터로만 전달한다. AI 플랜의
+// targetPoints(분석 포인트)와는 완전히 별개 채널이며 병존 가능하다.
+// ─────────────────────────────────────────────────────────────────────────────
+
+function isTeacherPointUnitValue(value: unknown): value is TeacherPointUnit {
+  return (TEACHER_POINT_UNITS as readonly unknown[]).includes(value);
+}
+
+/** 로그용 축약 — 재앵커링 실패 텍스트가 길면 앞 60자만 남긴다. */
+function previewTeacherPointText(text: string): string {
+  return text.length > 60 ? `${text.slice(0, 60)}…` : text;
+}
+
+function resolveTeacherPointsForType(
+  subType: string,
+  rawTypeSettings: unknown,
+  passageContent: string,
+): TeacherPointPayload[] {
+  const raw = isRecord(rawTypeSettings)
+    ? rawTypeSettings.teacherPoints
+    : undefined;
+  if (raw === undefined || raw === null) return [];
+  if (!Array.isArray(raw)) {
+    console.warn(
+      `[AUTO-GEN] ${subType} teacherPoints ignored: expected an array.`,
+    );
+    return [];
+  }
+  if (raw.length > TEACHER_POINTS_HARD_CAP) {
+    console.warn(
+      `[AUTO-GEN] ${subType} teacherPoints ignored: ${raw.length} items exceed the hard cap (${TEACHER_POINTS_HARD_CAP}).`,
+    );
+    return [];
+  }
+  const parsed: TeacherPointPayload[] = [];
+  for (const item of raw) {
+    if (!isRecord(item)) continue;
+    const { text, unit, tag, note } = item;
+    if (typeof text !== "string" || text.trim().length === 0) continue;
+    if (!isTeacherPointUnitValue(unit)) continue;
+    const payload: TeacherPointPayload = { text, unit };
+    if (typeof tag === "string" && tag.trim().length > 0) payload.tag = tag;
+    if (typeof note === "string" && note.trim().length > 0) payload.note = note;
+    parsed.push(payload);
+  }
+  if (parsed.length === 0) return [];
+  // 재앵커링은 원문 그대로 1차, 공백 접기 2차 — 엔진 입구 정규화(NBSP·연속 공백
+  // 접기)로 클라 선택 원문과 어긋난 항목을 구제한다. 단어 경계로 스냅된 지문 축자
+  // 슬라이스를 최종 text 로 써서 프롬프트 인용이 항상 지문에 실재함을 보장한다.
+  const tokenized = tokenizePassage(passageContent);
+  const anchored: TeacherPointPayload[] = [];
+  for (const point of parsed) {
+    const snapped =
+      anchorVerbatimText(tokenized, point.text) ??
+      anchorVerbatimText(tokenized, point.text.replace(/\s+/g, " ").trim());
+    if (!snapped) {
+      console.warn(
+        `[AUTO-GEN] ${subType} teacher point dropped (re-anchor failed): "${previewTeacherPointText(point.text)}"`,
+      );
+      continue;
+    }
+    anchored.push({ ...point, text: snapped.text });
+  }
+  if (anchored.length === 0) return [];
+  return clampTeacherPoints(subType, rawTypeSettings, anchored);
+}
+
 export async function runQuestionGeneration(
   {
     plan,
@@ -217,6 +425,22 @@ export async function runQuestionGeneration(
         rawTypeSettings,
         diffLabel,
       );
+      // difficulty 미전파 수정(26-07-14 round-1 ⑤): 정식 3티어(BASIC/INTERMEDIATE/
+      // KILLER) 밖의 요청 라벨(예: 실험 하니스의 ADVANCED)은 위 normalize 가
+      // INTERMEDIATE 로 접는다 — 프롬프트·게이트는 접힌 값으로 구동하는 게 맞지만,
+      // 저장 question.difficulty 까지 접혀 요청-저장 불일치(difficulty-mismatch
+      // warning 10건 실측)가 남았다. 저장 라벨만 요청 원문을 보존한다(정식 티어
+      // 요청은 두 값이 같아 기존 동작과 바이트 동일).
+      const requestedDiffRaw = String(
+        (isRecord(rawTypeSettings) && rawTypeSettings.difficulty !== undefined
+          ? rawTypeSettings.difficulty
+          : diffLabel) ?? "",
+      )
+        .trim()
+        .toUpperCase();
+      const storedDiffLabel = /^[A-Z][A-Z_]{2,23}$/.test(requestedDiffRaw)
+        ? requestedDiffRaw
+        : effectiveDiffLabel;
       const effectiveDiffInstruction =
         DIFF_DESCRIPTION[effectiveDiffLabel] || diffInstruction;
       const effectiveGenerationPlan = readQuestionTypeGenerationPlanSetting(
@@ -350,6 +574,20 @@ export async function runQuestionGeneration(
             sentenceOrderPointFocus,
         },
       );
+      // 교사 지정 출제 포인트(§2 1~3단계) — 파싱→축자 재앵커링→유형 클램프를
+      // 마친 목록. AI 플랜 targetPoints 와 혼동 금지: 서로 다른 채널이며, 프롬프트
+      // 빌더에는 별도 `teacherPoints` 파라미터로만 전달한다. 미지정(대부분의
+      // 요청)이면 빈 배열 → 프롬프트 바이트 동일(기존 동작 무영향).
+      const teacherPoints = resolveTeacherPointsForType(
+        subType,
+        rawTypeSettings,
+        passageContent,
+      );
+      if (teacherPoints.length > 0) {
+        console.log(
+          `[AUTO-GEN] ${subType}: ${teacherPoints.length} teacher point(s) anchored for prompt injection.`,
+        );
+      }
       // ── KO(국어) 유형 컨텍스트 — KO_ 게이트 전 지점이 공유한다 ─────────────
       // koMod: 레지스트리 모듈(셔플 exempt·솔버 게이트 판정), koResolved: examMode
       // 등 정규화 설정, koKind: 호출자가 전달한 지문 갈래. 영어 유형은 전부 null.
@@ -430,6 +668,9 @@ export async function runQuestionGeneration(
           subType,
           finalChecklist:
             subType === "GRAMMAR_ERROR" ? GRAMMAR_ERROR_FINAL_CHECKLIST : undefined,
+          // 교사 지정 출제 포인트 — targetPoints(AI 플랜)와 별개 파라미터.
+          // prompts.ts 가 "## 교사 지정 출제 포인트 (필수 반영)" 블록으로 소비.
+          teacherPoints,
           customPrompt: previousAttemptFeedback
             ? [mergedCustomPrompt, previousAttemptFeedback]
                 .filter(Boolean)
@@ -493,52 +734,22 @@ export async function runQuestionGeneration(
         // 스키마 8s vs SW/TSW 봉투 90s abort. STANDARD(Gemini)는 정상이므로
         // PREMIUM 만 프롬프트 인라인 JSON 모드로 직행한다(zod 클라이언트 검증 +
         // 하류 품질게이트 재검증 — grammar-too-large 폴백과 동일 계약).
+        // 26-07-14 모델 교체 반영: 위 전멸은 Anthropic strict json_schema 전용
+        // 결함이라, PREMIUM 문제생성 기본 모델이 gemini-3.1-pro-preview 로 바뀐
+        // 뒤에는 STANDARD(Gemini)와 동일하게 strict 구조화 출력을 그대로 쓴다.
+        // env(PREMIUM_QGEN_MODEL_ID)로 Claude 로 롤백한 경우에만 재발동한다 —
+        // 만에 하나 gemini 가 이 봉투를 거부해도 masked-400/grammar-too-large
+        // 오류 트리거 JSON 폴백이 기존대로 받아낸다.
         const premiumForceJsonFallback =
           effectiveGenerationPlan === "PREMIUM" &&
+          isAtlasClaudeModel(ATLAS_PREMIUM_QGEN_MODEL_ID) &&
           (subType === "SUMMARY_WRITING" ||
             subType === "TOPIC_SENTENCE_WRITING");
-        const object = await generateWithRetry(
-          responseSchema,
-          generationPrompt,
-          effectiveGenerationPlan,
-          effectiveGenerationMaxTokens,
-          undefined,
-          (result) => {
-            onModelUsage?.({
-              phase: "question_generation",
-              subType,
-              qualityMode,
-              difficulty: effectiveDiffLabel,
-              generationPlan: effectiveGenerationPlan,
-              usage: result.usage,
-              provider: result.provider,
-              modelId: result.modelId,
-              attempts: result.attempts,
-              durationMs: result.durationMs,
-            });
-          },
-          {
-            system: generationSystem,
-            deadlineAt,
-            forceJsonFallback: premiumForceJsonFallback,
-          },
-        );
-
-        const generatedQuestionsAll =
-          isRecord(object) && Array.isArray(object.questions)
-            ? object.questions.filter(isRecord)
-            : [];
-        if (generatedQuestionsAll.length !== expectedTypeCount) {
-          console.warn(
-            `[AUTO-GEN] ${subType} returned ${generatedQuestionsAll.length}/${expectedTypeCount} questions; trimming to requested count.`,
-          );
-        }
-        const generatedQuestions = generatedQuestionsAll.slice(0, expectedTypeCount);
-        const qs: Record<string, unknown>[] = [];
 
         // 후보 1개를 정규화→후처리→매핑→셔플→품질검증까지 끝내 "확정"한다. SHIP-FIRST
         // repair(교정 재생성)에서 재검증에 그대로 재사용하기 위해 인라인 함수로 추출한다
-        // (루프 스코프 변수 캡처). 동작은 추출 전과 동일.
+        // (루프 스코프 변수 캡처). 동작은 추출 전과 동일. 어법 프리미엄 사다리(P1)의
+        // finalize 콜백도 이 함수를 재사용한다 — 게이트 판정 단일 소스(계약서 §1·§3).
         const finalizeCandidate = (
           rawQ: Record<string, unknown>,
         ):
@@ -619,6 +830,10 @@ export async function runQuestionGeneration(
             _typeLabel: TYPE_LABELS[subType] || subType,
             _generationPlan: effectiveGenerationPlan,
             difficulty: effectiveDiffLabel,
+            // 교사 지정 출제 포인트 스탬프 — 이 문항이 어떤 포인트를 반영해
+            // 만들어졌는지 문제 상세에서 재현하기 위한 기록. structuredData 에
+            // 통째로 저장된다(미지정 대부분의 문항은 키 자체가 없어 무영향).
+            ...(teacherPoints.length > 0 ? { _teacherPoints: teacherPoints } : {}),
           };
 
           // 배열 영작: scrambledWords 가 정답 어순(modelAnswer)대로 읽히면 왼→오 읽기로 풀려
@@ -696,6 +911,32 @@ export async function runQuestionGeneration(
             contentMatchType,
             answerPolarity,
           });
+          // 교사 지정 출제 포인트 준수 게이트 — 프롬프트의 "필수 반영" 블록은
+          // 지시일 뿐 모델이 무시할 수 있다(26-07-14 실측: 포인트가 주입됐는데
+          // 빈칸이 엉뚱한 곳에 출제). 판정 규칙은 point-picker-config 의
+          // checkTeacherPointCompliance 단일 소스 — hard 9유형(어법 3종·빈칸·
+          // 어휘·반의어·문장삽입·무관문장·글의순서)은 모든 포인트가 유형 표면과
+          // 겹쳐야 통과, soft(요지/주제/제목)는 의미 판단이라 게이트 없음.
+          // strict 에서 반려→재시도(missing 포인트+promptRole 을 교정 지시로),
+          // relaxed/scarce 는 RELAXED_BLOCKING 미등재 코드라 경고로 강등된다
+          // (생성실패 절대금지 계약 유지).
+          if (teacherPoints.length > 0) {
+            const compliance = checkTeacherPointCompliance(
+              subType,
+              finalQuestion,
+              teacherPoints,
+            );
+            if (!compliance.ok) {
+              const role = POINT_PICKER_CONFIG[subType]?.promptRole ?? "";
+              qualityIssues.push({
+                severity: "error",
+                code: "teacher-point-ignored",
+                message: `교사 지정 출제 포인트가 문항에 반영되지 않았습니다: ${compliance.missing
+                  .map((point) => `"${previewTeacherPointText(point.text)}"`)
+                  .join(", ")}${role ? ` — ${role}` : ""}`,
+              });
+            }
+          }
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",
           );
@@ -722,6 +963,12 @@ export async function runQuestionGeneration(
                   .filter((issue) => !isBlockingInMode(issue))
                   .map((issue) => ({ ...issue, severity: "warning" as const }))
               : [];
+          // 요청 난이도 보존(round-1 ⑤) — 게이트 검증은 접힌 effectiveDiffLabel
+          // 기준으로 끝냈으므로, 저장 라벨만 여기서 요청 원문으로 되돌린다
+          // (정식 3티어 요청은 storedDiffLabel === effectiveDiffLabel 라 무동작).
+          if (storedDiffLabel !== effectiveDiffLabel) {
+            finalQuestion.difficulty = storedDiffLabel;
+          }
           return {
             ok: true,
             finalQuestion,
@@ -732,8 +979,219 @@ export async function runQuestionGeneration(
           };
         };
 
+        // ── 어법 프리미엄 사다리 (P1) — docs/grammar-premium-ladder-spec.md §2·§3 ──
+        // GRAMMAR_ERROR × PREMIUM(strict 레인)만 새 엔진(3콜 사다리)으로 교체한다.
+        // 사다리는 5밑줄/정답1 단건 형상 전용이며(결승 실측 형상 —
+        // grammar-premium-ladder.ts 계약), 교사 지정 채널(teacherPoints·
+        // 지문 주석 intent·customPrompt)은 미니멀 프롬프트가 소비할 수 없으므로
+        // 기존 경로를 유지한다. ⚠️pointFocus 는 제외 조건이 아니다 — 기본값 ON 인
+        // UI 토글이라 조건에 넣으면 사실상 전 요청이 사다리를 우회한다(26-07-15
+        // E2E 실측로 발견). 결승 실측도 pointFocus 무관 형상으로 검증됐고, 사다리의
+        // 미니멀 프롬프트는 pointFocus 를 소비하지 않되 결과 품질이 focus 취지
+        // (최빈출 포인트 중심)를 상회함이 채점으로 입증됨.
+        // relaxed/scarce(salvage) 레인도 기존 경로 그대로 —
+        // STANDARD 어법·비어법·비생성 경로는 이 분기에 진입하지 않아 바이트
+        // 동일(무회귀 §2-2). diversity 회피는 finalize 게이트(validateQuestionQuality
+        // 의 diversityUsedTargets)가 계속 강제하므로 사다리 대상에서 빼지 않는다.
+        // ⚠️ 배포: fast/큐/트리거 3경로 공통 코드 — vercel 과 trigger.dev 워커를
+        // 동시에 재배포해야 한다(§2-5).
+        const useGrammarPremiumLadder =
+          subType === "GRAMMAR_ERROR" &&
+          effectiveGenerationPlan === "PREMIUM" &&
+          qualityMode === "strict" &&
+          !koMod &&
+          expectedTypeCount === 1 &&
+          (grammarMarkerCount ?? 5) === 5 &&
+          (grammarAnswerCount ?? 1) === 1 &&
+          teacherPoints.length === 0 &&
+          !customPrompt?.trim() &&
+          !teacherIntentBlock.trim();
+        let ladderAcceptedQuestion: Record<string, unknown> | null = null;
+        // 사다리 finalize 콜백의 마지막 판정 전문 — 사다리 제어흐름상 마지막
+        // finalize 호출이 곧 최종 후보(수용본/give-up 보존본) 판정이므로, 수용
+        // 머신 합류·반려 풀 보존 시 재검증 없이 그대로 재사용한다. ref 컨테이너를
+        // 쓰는 이유: 클로저 내부 할당은 TS 외부 흐름분석이 추적하지 못해(캡처된
+        // let 변수) 사용처에서 null/never 로 잘못 좁혀지기 때문.
+        const ladderFinRef: {
+          current: ReturnType<typeof finalizeCandidate> | null;
+        } = { current: null };
+        if (useGrammarPremiumLadder) {
+          const ladderResult = await runGrammarPremiumLadder({
+            passageContent,
+            difficulty: effectiveDiffLabel,
+            difficultyInstruction: effectiveDiffInstruction,
+            deadlineAt,
+            qualityMode,
+            onModelUsage,
+            // 표적수리 미끼 재료 — 기존 후보 블록의 비어 있지 않은 줄(상위 15줄
+            // 절단은 사다리 쪽 캡이 수행).
+            repairCandidateLines: targetCandidateBlock
+              ? targetCandidateBlock
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+              : undefined,
+            // 게이트 판정 = 기존 finalizeCandidate 재사용(계약서 §1 "기존 결정론
+            // 게이트 전체"). positions/answerRelPos 는 미제공(선택 필드) — 배치
+            // 소프트 검사만 생략되고 나머지 사다리 정책은 동일하게 돈다.
+            finalize: (candidateAiQuestion) => {
+              const finResult = finalizeCandidate(candidateAiQuestion);
+              ladderFinRef.current = finResult;
+              if (!finResult.ok) {
+                return {
+                  ok: false,
+                  error: finResult.error,
+                  errors: [],
+                  warnings: [],
+                };
+              }
+              return {
+                ok: true,
+                question: finResult.finalQuestion,
+                errors: finResult.blockingErrors.map((issue) => issue.code),
+                warnings: finResult.allWarnings.map((issue) => issue.code),
+              };
+            },
+          });
+          // 사다리 이력 로그 — 재생성/수리 횟수·트리거·해소 코드·콜별 소요(실패
+          // 콜 포함)를 남긴다(§2-3 관측성, "시간 블랙홀" 재발 금지).
+          const ladderTrail = ladderResult.ladder
+            .map((event) =>
+              [
+                event.action,
+                event.trigger?.length ? `←${event.trigger.join("|")}` : "",
+                event.resolved?.length ? ` 해소:${event.resolved.join("|")}` : "",
+                event.remaining?.length ? ` 잔존:${event.remaining.join("|")}` : "",
+                event.error ? ` (${event.error})` : "",
+              ].join(""),
+            )
+            .join(" → ");
+          const ladderCallsLog = ladderResult.calls
+            .map(
+              (call) =>
+                `${call.purpose}=${call.ok ? "ok" : "FAIL"}/${(call.durationMs / 1000).toFixed(1)}s`,
+            )
+            .join(", ");
+          console.log(
+            `[AUTO-GEN] grammar-premium-ladder ${ladderResult.status} (model=${ladderResult.modelId}, regen=${ladderResult.regenerations}, repair=${ladderResult.repairs}, reasoningFallback=${ladderResult.reasoningFallback}) | trail: ${ladderTrail || "clean"} | calls: ${ladderCallsLog}`,
+          );
+          const ladderTriggerCodes = [
+            ...new Set(
+              ladderResult.ladder.flatMap((event) => event.trigger ?? []),
+            ),
+          ];
+          if (ladderResult.status === "accepted" && ladderResult.aiQuestion) {
+            ladderAcceptedQuestion = ladderResult.aiQuestion;
+            // 수용 전 내부 반려(재생성/수리 트리거) 이력도 rejectionRecorder 원장에
+            // 남긴다 — 기존 경로가 후보 반려마다 기록하던 관측성과 등가.
+            if (ladderResult.regenerations > 0 || ladderResult.repairs > 0) {
+              recordRejection(rejectionRecorder, {
+                phase: "quality",
+                qualityMode,
+                subType,
+                message: `grammar-premium-ladder internal rejections before accept | ${ladderTrail}`,
+                codes: ladderTriggerCodes,
+              });
+            }
+          } else {
+            const giveUpReason = ladderResult.giveUpReason ?? "unknown";
+            console.warn(
+              `[AUTO-GEN] grammar-premium-ladder gave up (${giveUpReason}); falling back to the legacy PREMIUM generation path (never-fail §2-1).`,
+            );
+            const bestFin = ladderResult.bestCandidate
+              ? ladderFinRef.current
+              : null;
+            if (bestFin?.ok) {
+              recordRejection(rejectionRecorder, {
+                phase: "quality",
+                qualityMode,
+                subType,
+                message: `grammar-premium-ladder give-up (${giveUpReason}) | ${ladderTrail} | ${summarizeQualityIssues(bestFin.blockingErrors)}`,
+                codes: bestFin.blockingErrors.map((issue) => issue.code),
+                sample: buildRejectionSample(subType, bestFin.finalQuestion),
+              });
+              // never-fail(§2-1): 사다리 최선 후보를 반려 풀에 보존 — 모든 재시도
+              // 소진 후 salvage 사다리가 재승인 후보로 쓴다(F급 코드 혼입 후보는
+              // admitSalvageCandidatesFromPool 이 걸러낸다).
+              recordRejectedCandidate(rejectionRecorder, {
+                subType,
+                qualityMode,
+                attemptIndex,
+                question: bestFin.finalQuestion,
+                blockingCodes: bestFin.blockingErrors.map((issue) => issue.code),
+                blockingIssues: bestFin.blockingErrors,
+                warnings: bestFin.allWarnings,
+              });
+            } else if (bestFin) {
+              recordRejection(rejectionRecorder, {
+                phase: "postprocess",
+                qualityMode,
+                subType,
+                message: `grammar-premium-ladder give-up (${giveUpReason}) | post-process failed: ${bestFin.error} | ${ladderTrail}`,
+                sample: buildRejectionSample(subType, bestFin.normalizedDraft),
+              });
+            } else {
+              recordRejection(rejectionRecorder, {
+                phase: "model",
+                qualityMode,
+                subType,
+                message: `grammar-premium-ladder give-up without candidate (${giveUpReason}) | ${ladderTrail}`,
+              });
+            }
+          }
+        }
+
+        // 사다리 수용본은 기존 생성 콜을 대체한다(계약서 §3 — generateWithRetry
+        // 대체). give-up/비대상 형상은 기존 PREMIUM/STANDARD 경로 그대로 진행
+        // (never-fail §2-1 폴백 — "사다리 도입 = 생성 실패"는 어떤 경로로도 불가).
+        const object = ladderAcceptedQuestion
+          ? { questions: [ladderAcceptedQuestion] }
+          : await generateWithRetry(
+              responseSchema,
+              generationPrompt,
+              effectiveGenerationPlan,
+              effectiveGenerationMaxTokens,
+              undefined,
+              (result) => {
+                onModelUsage?.({
+                  phase: "question_generation",
+                  subType,
+                  qualityMode,
+                  difficulty: effectiveDiffLabel,
+                  generationPlan: effectiveGenerationPlan,
+                  usage: result.usage,
+                  provider: result.provider,
+                  modelId: result.modelId,
+                  attempts: result.attempts,
+                  durationMs: result.durationMs,
+                });
+              },
+              {
+                system: generationSystem,
+                deadlineAt,
+                forceJsonFallback: premiumForceJsonFallback,
+              },
+            );
+
+        const generatedQuestionsAll =
+          isRecord(object) && Array.isArray(object.questions)
+            ? object.questions.filter(isRecord)
+            : [];
+        if (generatedQuestionsAll.length !== expectedTypeCount) {
+          console.warn(
+            `[AUTO-GEN] ${subType} returned ${generatedQuestionsAll.length}/${expectedTypeCount} questions; trimming to requested count.`,
+          );
+        }
+        const generatedQuestions = generatedQuestionsAll.slice(0, expectedTypeCount);
+        const qs: Record<string, unknown>[] = [];
+
         for (const q of generatedQuestions) {
-          let fin = finalizeCandidate(q);
+          // 사다리 수용 후보는 사다리의 마지막 finalize 판정을 그대로 재사용한다
+          // (finalizeCandidate 는 어법에서 결정론 — 재실행과 동치, 중복 계산만 절약).
+          let fin =
+            q === ladderAcceptedQuestion && ladderFinRef.current
+              ? ladderFinRef.current
+              : finalizeCandidate(q);
           if (!fin.ok) {
             console.warn(
               `[AUTO-GEN] Post-process failed for ${subType}: ${fin.error}`,
@@ -746,6 +1204,34 @@ export async function runQuestionGeneration(
               sample: buildRejectionSample(subType, fin.normalizedDraft),
             });
             continue;
+          }
+
+          // 사다리 수용 계약(계약서 §1): 소프트 잔존 error 는 "표적수리 1콜 후
+          // 수용 — 재생성 회송 금지"(결승 롤백 실측: 회송은 품질 델타 0에 원가만
+          // +45~130%)다. 잔존 코드를 경고로 강등해 기존 수용 머신(솔버게이트→
+          // 경고 부착→qs.push)에 합류시킨다. 하드블록(오류 미주입·마커 미렌더·
+          // nonword 등)은 사다리가 수용 전에 소거를 보장하므로 여기 남는 것은
+          // 소프트 코드뿐이며, blockingErrors=0 이 되므로 바로 아래 SHIP-FIRST
+          // repair 는 자동으로 건너뛴다(이중 수리 금지). 어법 솔버 게이트는 그대로
+          // 통과해야 출하된다(계약서 §1 "기존 솔버 게이트 재사용").
+          if (q === ladderAcceptedQuestion && fin.blockingErrors.length > 0) {
+            console.warn(
+              `[AUTO-GEN] grammar-premium-ladder residual soft codes demoted to warnings: ${formatIssuesForLog(
+                fin.blockingErrors,
+              )}`,
+            );
+            fin = {
+              ...fin,
+              blockingErrors: [],
+              allWarnings: [
+                ...fin.allWarnings,
+                ...fin.blockingErrors.map((issue) => ({
+                  ...issue,
+                  severity: "warning" as const,
+                })),
+              ],
+            };
+            fin.finalQuestion._reviewRecommended = true;
           }
 
           // SHIP-FIRST 부분 repair: A(차단) 결함이 적으면(<=3종) 문항 전체 재생성 전에
@@ -768,11 +1254,24 @@ export async function runQuestionGeneration(
             shouldAttemptCandidateRepair(subType, fin.blockingErrors) &&
             (!deadlineAt || Date.now() < deadlineAt)
           ) {
+            // 수리 채택 완화(26-07-14 round-3 ②)의 스코프 판정 — question-repair 의
+            // decoy-only 범위 제한 프롬프트와 같은 predicate 를 공유한다. fin 이
+            // 개선본으로 재할당되기 전에 원본 기준으로 고정해 둔다.
+            const decoyOnlyRepairScope =
+              subType === "GRAMMAR_ERROR" &&
+              fin.blockingErrors.every((issue) =>
+                isDecoyOnlyRepairableGrammarIssue(issue),
+              );
+            const originalBlockingErrors = fin.blockingErrors;
             const repaired = await repairQuestionCandidate({
               subType,
               draft: fin.normalizedDraft,
               blockingIssues: fin.blockingErrors,
               passageContent,
+              // 어법 decoy-only 수리의 교체 재료(26-07-14 round-3 ①) — 원 생성과
+              // 동일한 후보 블록을 재주입해 "무엇으로 바꿀지"를 준다(decoy-eligible
+              // 상위 후보 절단은 question-repair 쪽에서 수행).
+              targetCandidateBlock,
               responseSchema,
               generationPlan: effectiveGenerationPlan,
               perQuestionTokenFloor,
@@ -798,7 +1297,30 @@ export async function runQuestionGeneration(
               const repairedFin = finalizeCandidate(repaired);
               if (repairedFin.ok && repairedFin.blockingErrors.length === 0) {
                 console.log(
-                  `[AUTO-GEN] ${subType} candidate repaired (was: ${fin.blockingErrors
+                  `[AUTO-GEN] ${subType} candidate repaired (was: ${originalBlockingErrors
+                    .map((issue) => issue.code)
+                    .join(",")})`,
+                );
+                fin = repairedFin;
+              } else if (
+                repairedFin.ok &&
+                decoyOnlyRepairScope &&
+                isAdoptableDecoyOnlyRepairResidual(
+                  originalBlockingErrors,
+                  repairedFin.blockingErrors,
+                )
+              ) {
+                // 완화 채택(26-07-14 round-3 ②): decoy-only 수리에 한해 "표적 결함
+                // 일부 해소 + 새 error 미발생 + 기존 코드 비악화 + 잔존 전부
+                // decoy-only(정답 관련 코드 잔존 시 채택 금지)"면 blocking 0 이
+                // 아니어도 개선본을 채택한다. 잔존 blocking 이 있으므로 이 후보는
+                // 여전히 아래 반려 경로를 타지만, 반려 풀(salvage)·relaxed 출하가
+                // 원본 대신 개선본 기준이 된다 — round-3 실측 "수리 실패 시 원본
+                // relaxed 출하" 봉합. 출하 게이트 자체는 불변(하드 실패 영향 0).
+                console.log(
+                  `[AUTO-GEN] ${subType} candidate partially repaired (${originalBlockingErrors
+                    .map((issue) => issue.code)
+                    .join(",")} -> ${repairedFin.blockingErrors
                     .map((issue) => issue.code)
                     .join(",")})`,
                 );
@@ -880,6 +1402,49 @@ export async function runQuestionGeneration(
             }
             // 통과(또는 relaxed 생략) 후보는 검수 권장 배지 — HITL 라우팅.
             fin.finalQuestion._reviewRecommended = true;
+          }
+
+          // 어법 독립 솔버 게이트 (round-6) — 결정론 오형 봉인이 못 막는 "정문 심기"
+          // (형식가정법·수동+양태부사·동일문장 이중답 등)를 학생 시점 블라인드 풀이로
+          // 차단. strict+relaxed 두 레인 실행(F의 relaxed 출하 금지), scarce/salvage
+          // 최후 사다리는 생략 — never-fail 보존. 솔버 장애는 무판정 통과.
+          if (subType === "GRAMMAR_ERROR" && (qualityMode === "strict" || qualityMode === "relaxed")) {
+            const grammarSolverIssue = await runGrammarSolverGate({
+              question: fin.finalQuestion,
+              // 솔버는 항상 STANDARD(flash) — 6라운드+42구성 실측이 flash 솔버 기준이고,
+              // PREMIUM 플랜을 그대로 넘기면 Claude 콜(고가+strict 파싱실패 실측,
+              // 26-07-15 E2E)로 풀이하게 된다. 플랜과 무관한 독립 검증 콜.
+              generationPlan: "STANDARD",
+              deadlineAt,
+              onModelUsage: (result) => {
+                onModelUsage?.({
+                  phase: "question_generation",
+                  subType,
+                  qualityMode,
+                  difficulty: effectiveDiffLabel,
+                  generationPlan: effectiveGenerationPlan,
+                  usage: result.usage,
+                  provider: result.provider,
+                  modelId: result.modelId,
+                  attempts: result.attempts,
+                  durationMs: result.durationMs,
+                });
+              },
+            });
+            if (grammarSolverIssue) {
+              console.warn(
+                `[AUTO-GEN] grammar solver gate rejected ${subType}: ${grammarSolverIssue.message}`,
+              );
+              recordRejection(rejectionRecorder, {
+                phase: "quality",
+                qualityMode,
+                subType,
+                message: grammarSolverIssue.message,
+                codes: [grammarSolverIssue.code],
+                sample: buildRejectionSample(subType, fin.finalQuestion),
+              });
+              continue;
+            }
           }
 
           // SHIP-FIRST: 취향/난이도 경고(강등된 B 코드 포함)도 검수 UI 가시성을 위해
@@ -1210,10 +1775,20 @@ export async function runQuestionGenerationWithEmptyRetry(
       };
     }
     // 이번 시도에서 새로 기록된 거절 사유를 다음 시도 프롬프트에 교정 지시로
-    // 주입한다 (맹목 재시도 → 교정 재생성).
-    pendingFeedback = buildCorrectiveRetryFeedback(
-      rejectionRecorder.issues.slice(issueCountBeforeAttempt),
-      { cumulativeIssues: rejectionRecorder.issues },
+    // 주입한다 (맹목 재시도 → 교정 재생성). 어법은 helpers 매핑에 없는 주요
+    // 반려 코드를 한국어 행동 지시로 번역해 덧붙인다(최근 1회분·상위 3코드).
+    const issuesFromThisAttempt = rejectionRecorder.issues.slice(
+      issueCountBeforeAttempt,
+    );
+    pendingFeedback = appendGrammarRetryDirectives(
+      buildCorrectiveRetryFeedback(issuesFromThisAttempt, {
+        cumulativeIssues: rejectionRecorder.issues,
+      }),
+      issuesFromThisAttempt,
+      // killer-overdrilled 이력 지시는 누적 이력 기준 — 최근 시도에 그 코드가
+      // 없어도 반려 이력이 있으면 동일 pointCode 계열 재선정 금지를 주입한다
+      // (round-1 실증: q05·q29 가 반려 이력에도 같은 계열로 수렴).
+      rejectionRecorder.issues,
     );
     if (attempt === attempts) {
       break;

@@ -124,6 +124,20 @@ export const ATLAS_PREMIUM_MODEL_ID = resolveAtlasModel(
   CLAUDE_SONNET_MODEL,
 );
 
+/**
+ * 문제 생성(question generation) 전용 PREMIUM 모델 — 26-07-14 유저 확정 교체:
+ * anthropic/claude-sonnet-5 → google/gemini-3.1-pro-preview. preview 만료/롤백에
+ * 대비해 env PREMIUM_QGEN_MODEL_ID 로 오버라이드한다(어법 사다리의
+ * GRAMMAR_PREMIUM_MODEL_ID 와 동일 패턴 — 그쪽은 자체 env·자체 modelId 라 별개).
+ * 다른 PREMIUM 소비자(exam-report·question-ai-edit·similar-exam-generation·
+ * 지문분석 generateQuestionText 경로)는 ATLAS_PREMIUM_MODEL_ID(Claude)를 그대로
+ * 쓴다 — 이 상수는 generateQuestionObject 의 PREMIUM 플랜 매핑 전용이다.
+ */
+export const ATLAS_PREMIUM_QGEN_MODEL_ID = resolveAtlasModel(
+  ["PREMIUM_QGEN_MODEL_ID"],
+  "google/gemini-3.1-pro-preview",
+);
+
 export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_OCR_MODEL", "OPENROUTER_OCR_MODEL", "GEMINI_OCR_MODEL"],
   ATLAS_FREE_MODEL_ID,

@@ -40,8 +40,13 @@ import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { preflightQuestionFeasibility } from "@/lib/question-quality";
 import {
   buildQuestionDiversityContext,
+  normalizeDiversityComparable,
   type QuestionDiversityContext,
 } from "@/lib/question-diversity";
+import {
+  clampTeacherPoints,
+  type TeacherPointPayload,
+} from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
 import {
   readQuestionTypeDifficultySetting,
   readQuestionTypeGenerationPlanSetting,
@@ -159,6 +164,81 @@ async function recordCostSafely(input: {
   } catch (error) {
     console.warn("[workbench-fast-question] Failed to record API cost", error);
   }
+}
+
+// ── 교사 지정 포인트 × 다양성 자기모순 차단 (point-picker-design.md §2-⑤) ────
+// "포인트 짚어주기"로 교사가 지정한 quote 는 생성 프롬프트에서 "필수 반영" 대상인데,
+// 같은 표현이 최근 문항의 usedTargets(회피 목록)에 남아 있으면 "이 타깃을 피하라"와
+// "이 타깃을 반드시 쓰라"가 한 프롬프트에 동시에 주입되는 자기모순이 된다.
+// 아래 두 헬퍼는 회피 목록에서 교사 quote 와 부분 문자열 포함 관계(정규화 비교)로
+// 겹치는 항목만 제외한다. teacherPoints 가 없거나 형태가 어긋나면 diversity 를
+// 일절 손대지 않아 기존 동작과 바이트 동일하다.
+
+/**
+ * 요청 questionTypeSettings 에서 교사 지정 포인트 quote 들을 방어적으로 읽는다.
+ * - 클라 캡 = 서버 클램프 단일 규칙(point-picker-config clampTeacherPoints)을
+ *   그대로 재사용해, run-question-generation 이 실제 소비할 포인트 집합과 동일하게
+ *   자른다(미등재 유형 → []).
+ * - 재앵커링(§2-②, passage.content indexOf 축자 계약)에 실패할 quote 는 프롬프트에
+ *   실리지 않으므로 회피 제외 근거가 없다 — 지문에 축자 포함된 것만 반환한다.
+ */
+function readTeacherPointQuotes(
+  questionType: string | undefined,
+  typeSettings: unknown,
+  passageContent: string,
+): string[] {
+  if (!questionType) return [];
+  if (typeof typeSettings !== "object" || typeSettings === null) return [];
+  const raw = (typeSettings as Record<string, unknown>).teacherPoints;
+  if (!Array.isArray(raw) || raw.length === 0) return [];
+  const candidates = raw.filter(
+    (point): point is TeacherPointPayload =>
+      typeof point === "object" &&
+      point !== null &&
+      typeof (point as { text?: unknown }).text === "string",
+  );
+  if (candidates.length === 0) return [];
+  const clamped = clampTeacherPoints(questionType, typeSettings, candidates);
+  return clamped
+    .map((point) => point.text)
+    .filter(
+      (text) => text.trim().length > 0 && passageContent.includes(text),
+    );
+}
+
+/**
+ * diversity 회피 목록(usedTargets)에서 교사 quote 와 겹치는 항목을 제외한다.
+ * 겹침 = 정규화(normalizeDiversityComparable) 후 부분 문자열 포함 관계 양방향 —
+ * usedTargets 는 140자 절단("…")될 수 있어 prefix 포함도 잡아야 한다.
+ * usedAnswerLabels/usedPointCodes(위치 스티어링 채널)는 타깃 표현 회피가 아니므로
+ * 건드리지 않는다. 원본 객체는 불변 — 새 컨텍스트를 만들어 돌려준다.
+ */
+function excludeTeacherPointsFromDiversity(
+  diversity: QuestionDiversityContext,
+  quotes: string[],
+): QuestionDiversityContext {
+  const normalizedQuotes = quotes
+    .map((quote) => normalizeDiversityComparable(quote))
+    .filter((quote) => quote.length > 0);
+  if (normalizedQuotes.length === 0) return diversity;
+  const overlapsTeacherQuote = (target: string): boolean => {
+    const normalizedTarget = normalizeDiversityComparable(target);
+    if (!normalizedTarget) return false;
+    return normalizedQuotes.some(
+      (quote) =>
+        normalizedTarget.includes(quote) || quote.includes(normalizedTarget),
+    );
+  };
+  const bySubType: QuestionDiversityContext["bySubType"] = {};
+  for (const [subType, signals] of Object.entries(diversity.bySubType)) {
+    bySubType[subType] = {
+      ...signals,
+      usedTargets: signals.usedTargets.filter(
+        (target) => !overlapsTeacherQuote(target),
+      ),
+    };
+  }
+  return { ...diversity, bySubType };
 }
 
 export async function POST(req: NextRequest) {
@@ -399,6 +479,28 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.warn(
         "[workbench-fast-question] Failed to build diversity context",
+        error,
+      );
+    }
+
+    // §2-⑤ 교사 지정 포인트 자기모순 차단: 교사 quote 와 겹치는(부분 문자열 포함)
+    // 회피 항목을 usedTargets 에서 제외한다. teacherPoints 미지정이면 완전 no-op.
+    // 실패해도 생성 자체를 막지 않는다 (회피 목록이 조금 넓게 남을 뿐).
+    try {
+      const teacherPointQuotes = readTeacherPointQuotes(
+        config.questionType,
+        config.questionTypeSettings,
+        passage.content,
+      );
+      if (teacherPointQuotes.length > 0) {
+        diversity = excludeTeacherPointsFromDiversity(
+          diversity,
+          teacherPointQuotes,
+        );
+      }
+    } catch (error) {
+      console.warn(
+        "[workbench-fast-question] Failed to exclude teacher points from diversity",
         error,
       );
     }

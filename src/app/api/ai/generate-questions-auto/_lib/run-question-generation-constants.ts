@@ -485,6 +485,29 @@ export const SALVAGE_RELAXABLE_CODES = new Set<string>([
   "grammar-underline-too-long",
   "grammar-underline-punctuated-fragment",
   "grammar-decoy-point-diversity",
+  // 26-07-14 round-1 ① 신설(교정형 원형 노출) — RELAXED_BLOCKING 미등록이라
+  // relaxed 폴백은 이미 통과하지만, 사다리 최후의 salvage 풀 재승인(admitSalvage-
+  // CandidatesFromPool 은 이 셋 기준)까지 열어 둬야 "노출 1건 = 생성 실패"가
+  // 절대 되지 않는다. strict 에서만 차단해 재시도(정답 자리 이동)를 압박한다.
+  "grammar-correction-form-exposed",
+  // 26-07-14 round-2 신설 검출 등급 배선(연구노트 round-1 감독관 판정 — 하드 실패
+  // 유발 금지 헌법). 넷 다 RELAXED_BLOCKING 미등록이라 relaxed 폴백은 경고 강등
+  // 출하되고, 여기 등재해 strict 탈락 후보의 풀 재승인(admitSalvageCandidates-
+  // FromPool 은 이 셋 기준)까지 열어 둔다 — 어떤 경로로도 "신설 검출 = 생성 실패"
+  // 가 되지 않는다. strict 에서만 차단해 재시도·부분수리를 압박한다.
+  // ① 정답 오형이 실존 영어 어형이 아님(비단어·조동사+be 연쇄·명사 뒤 what 강제)
+  //    — 정답 재선정이 필요해 repair 무의미(NOT_WORTH_REPAIR 등재), 재생성+재시도
+  //    지시 경로로 흐른다.
+  "grammar-answer-nonword-forced",
+  // ② 장식 필러 미끼 스팬 — 미끼 1개만 교체하는 decoy-only repair 대상.
+  "grammar-decoy-filler-span",
+  // ③ pointCode-스팬 불일치(round-2 경고→차단 승격분) — 재태깅 repair 대상
+  //    (pointCode·keyPoints 명명만 정정, 문항 본체 무변경).
+  "grammar-pointcode-span-mismatch",
+  // ④ 해설 전용 린트(어투 혼용·수 모순 등) — 해설만 재작성하는 repair 대상.
+  //    ⚠️ 서브코드(grammar-explanation-lint-*)를 신설하면 여기에도 등재할 것 —
+  //    admitSalvage 는 정확 일치 Set 검사라 미등재 서브코드는 풀 재승인이 막힌다.
+  "grammar-explanation-lint",
   // 26-07-06 과엄격 적대검증 이동 7종 — 전부 형제 코드가 이미 craft 인 비일관
   // 잔류였다: gibberish/pos-change=obvious·쉬운변형 계열, fixed-that-is/mixed-as-it
   // =디코이(정문) 스팬 취향, explanation-typo=하드코딩 오탈자 미관, appear-pointcode

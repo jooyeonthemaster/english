@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   ATLAS_CLOUD_PROVIDER,
   ATLAS_PREMIUM_MODEL_ID,
+  ATLAS_PREMIUM_QGEN_MODEL_ID,
   ATLAS_STANDARD_MODEL_ID,
   atlasChatModel,
   atlasUsageWithCost,
@@ -23,6 +24,13 @@ const PREMIUM_QUESTION_TIMEOUT_MS = readNumberEnv(
   180_000,
 );
 
+// 문제 생성(구조화 출력 = generateQuestionObject) 플랜→모델 매핑.
+// PREMIUM 은 26-07-14 유저 확정으로 claude-sonnet-5 → gemini-3.1-pro-preview 전면
+// 교체(env PREMIUM_QGEN_MODEL_ID 오버라이드 — preview 만료 대비). 이 함수의
+// 호출자는 전원 문제 생성 파이프라인이다(AUTO-GEN/AUTO-GEN-PLAN/SINGLE-GEN·
+// KO-SOLVER·GRAMMAR-SOLVER). 문제 생성이 아닌 PREMIUM 소비자는 텍스트 경로
+// (generateQuestionText: ANALYSIS 지문분석·LEARNING-GEN 학습문제)뿐이라 아래
+// TEXT_GENERATION_MODEL_CONFIGS 로 분리해 기존 Claude 를 불변 유지한다.
 const QUESTION_GENERATION_MODEL_CONFIGS: Record<
   QuestionGenerationPlan,
   { provider: QuestionGenerationProvider; modelId: string; timeoutMs: number }
@@ -34,6 +42,23 @@ const QUESTION_GENERATION_MODEL_CONFIGS: Record<
   },
   PREMIUM: {
     provider: ATLAS_CLOUD_PROVIDER,
+    modelId: ATLAS_PREMIUM_QGEN_MODEL_ID,
+    timeoutMs: PREMIUM_QUESTION_TIMEOUT_MS,
+  },
+};
+
+// generateQuestionText 전용 플랜 매핑 — PREMIUM 을 실제로 쓰는 텍스트 호출자는
+// 지문분석(run-full-analysis, logPrefix=ANALYSIS)과 학습문제 생성
+// (generate-learning-question, logPrefix=LEARNING-GEN)이며 둘 다 문제 생성 모델
+// 교체 범위 밖이다 — 기존 Claude(ATLAS_PREMIUM_MODEL_ID) 라우팅을 그대로 둔다.
+// (passage-report 계열 3소비자는 STANDARD 고정이라 어느 매핑이든 동일.)
+const TEXT_GENERATION_MODEL_CONFIGS: Record<
+  QuestionGenerationPlan,
+  { provider: QuestionGenerationProvider; modelId: string; timeoutMs: number }
+> = {
+  STANDARD: QUESTION_GENERATION_MODEL_CONFIGS.STANDARD,
+  PREMIUM: {
+    provider: ATLAS_CLOUD_PROVIDER,
     modelId: ATLAS_PREMIUM_MODEL_ID,
     timeoutMs: PREMIUM_QUESTION_TIMEOUT_MS,
   },
@@ -43,7 +68,11 @@ function getQuestionGenerationModelConfig(plan: QuestionGenerationPlan) {
   return QUESTION_GENERATION_MODEL_CONFIGS[plan];
 }
 
-// PREMIUM(Claude) 문제생성 reasoning 제어 — OpenRouter 는 claude-sonnet-5 에
+function getTextGenerationModelConfig(plan: QuestionGenerationPlan) {
+  return TEXT_GENERATION_MODEL_CONFIGS[plan];
+}
+
+// Claude 계열 reasoning 제어 — OpenRouter 는 claude-sonnet-5 에
 // reasoning 파라미터를 안 보내면 thinking 을 기본 활성화한다(26-07-04 실측:
 // 동일 프롬프트 default 31s·completion 2.9k(본문 ~0.8k, 숨은 사고 ~1.8k) vs
 // reasoning off 13s·1.1k — 출력 품질 길이 동일). 실전 프롬프트에선 사고 토큰이
@@ -51,6 +80,10 @@ function getQuestionGenerationModelConfig(plan: QuestionGenerationPlan) {
 // 연쇄의 주범이었다. 우리 스키마는 errorDesign 설계 필드로 계획을 출력 안에서
 // 수행시키므로 숨은 thinking 은 기본 비활성. 품질 회귀 시 env 로 예산을
 // 재부여할 수 있다(≥1024 = Anthropic thinking budget tokens).
+// 26-07-14 PREMIUM 문제생성이 gemini-3.1-pro-preview 로 교체된 뒤에는 이 옵션이
+// isAtlasClaudeModel 게이트로 no-op 이 되고(오버라이드로 Claude 를 지정한 경우에만
+// 발동), gemini reasoning 은 atlas-ai.ts transformRequestBody 가 어법 사다리 P1 과
+// 동일하게 제어한다(기본 disable, env OPENROUTER_GEMINI_REASONING_EFFORT).
 const PREMIUM_QGEN_REASONING_TOKENS = readNumberEnv(
   "ATLASCLOUD_PREMIUM_QGEN_REASONING_TOKENS",
   0,
@@ -71,6 +104,13 @@ interface GenerateQuestionObjectArgs<T> {
   schema: z.ZodType<T>;
   prompt: string;
   generationPlan: QuestionGenerationPlan;
+  /**
+   * 모델 오버라이드(어법 프리미엄 사다리 계약 §3): 지정 시 generationPlan 의
+   * 플랜→모델 매핑 대신 이 modelId 로 호출한다(같은 Atlas/OpenRouter provider).
+   * provider·timeout·재시도·비재시도 오류 분류·usage 원가 병합은 기존 그대로
+   * 동작하며, 미지정 시 기존 경로와 완전 동일하다(무회귀 계약).
+   */
+  modelId?: string;
   logPrefix?: string;
   maxRetries?: number;
   maxTokens?: number;
@@ -92,6 +132,8 @@ interface GenerateQuestionObjectArgs<T> {
 interface GenerateQuestionTextArgs {
   prompt: string;
   generationPlan: QuestionGenerationPlan;
+  /** 모델 오버라이드 — GenerateQuestionObjectArgs.modelId 와 동일 계약. */
+  modelId?: string;
   logPrefix?: string;
   maxRetries?: number;
   maxTokens?: number;
@@ -193,6 +235,7 @@ export async function generateQuestionObject<T>({
   schema,
   prompt,
   generationPlan,
+  modelId: modelIdOverride,
   logPrefix = "QUESTION-GEN",
   maxRetries = GEMINI_QUESTION_MAX_RETRIES,
   maxTokens = 8192,
@@ -201,7 +244,12 @@ export async function generateQuestionObject<T>({
   deadlineAt,
   forceJsonFallback = false,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
-  const config = getQuestionGenerationModelConfig(generationPlan);
+  const planConfig = getQuestionGenerationModelConfig(generationPlan);
+  // 오버라이드는 modelId 만 치환 — provider/timeout 등 나머지는 플랜 매핑 유지.
+  // 미지정이면 플랜 config 객체를 그대로 사용해 기존 동작과 완전 동일하다.
+  const config = modelIdOverride
+    ? { ...planConfig, modelId: modelIdOverride }
+    : planConfig;
   let lastError: unknown;
   const operationStartedAt = Date.now();
 
@@ -752,6 +800,7 @@ async function repairPremiumJsonOutput({
 export async function generateQuestionText({
   prompt,
   generationPlan,
+  modelId: modelIdOverride,
   logPrefix = "TEXT-GEN",
   maxRetries = GEMINI_QUESTION_MAX_RETRIES,
   maxTokens = 8192,
@@ -762,7 +811,10 @@ export async function generateQuestionText({
   timeoutMs,
   temperature = 0.35,
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
-  const config = getQuestionGenerationModelConfig(generationPlan);
+  const planConfig = getTextGenerationModelConfig(generationPlan);
+  const config = modelIdOverride
+    ? { ...planConfig, modelId: modelIdOverride }
+    : planConfig;
   let lastError: unknown;
   const operationStartedAt = Date.now();
   void thinkingBudget;

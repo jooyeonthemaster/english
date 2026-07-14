@@ -13,8 +13,10 @@ import { validateMultiBlankInferenceQuestion } from "./validators/blank/multi";
 import { validateContentMatchAnswerConsistency, validateContentMatchPolarity } from "./validators/content-match";
 import { isDisputableTenseToggle, validateGrammarChoiceComboQuestion } from "./validators/grammar/combo";
 import { validateGrammarCorrectionQuestion } from "./validators/grammar/correction";
+import { collectGrammarExplanationLintFindings } from "./validators/grammar/explanation-lint";
 import { validateMarkedText } from "./validators/grammar/marked";
-import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarKeypointChoiceMismatch, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findNonstandardGrammarTerminology, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
+import { findGrammarAnswerForcedNonword, findGrammarDecoyFillerSpan } from "./validators/grammar/nonword-filler";
+import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarCorrectionFormExposed, findGrammarKeypointChoiceMismatch, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findNonstandardGrammarTerminology, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
 import { validateImpliedMeaningQuestion } from "./validators/implied";
 import { validateIrrelevantQuestion } from "./validators/irrelevant";
 import { validateKillerBar, validateTypeSignature } from "./validators/misc";
@@ -1273,6 +1275,25 @@ export function validateTypeSpecific(
         );
       }
     }
+    // 교정형 원형 노출 검출 (round-1 ①): 정답 밑줄의 correction(교정형)이 학생이
+    // 보는 지문의 다른 위치에 그대로 남아 있으면(대소문자 무시·단어 경계) 두 자리
+    // 대조만으로 정답이 노출된다 — round-0 q30 실측("get __(A) that__ they want"
+    // vs 뒷문장 "to get what they want"). 짧은 교정형은 이웃 단어 프레임까지
+    // 일치할 때만 발화(기능어 오탐 방지). strict 전용(RELAXED 미포함)이라 완전
+    // 실패는 유발하지 않고 재시도 압박만 한다 — salvage 풀 재승인도 허용.
+    if (passageWithMarkers) {
+      const exposed = findGrammarCorrectionFormExposed(
+        passageWithMarkers,
+        markedExpressions,
+      );
+      if (exposed) {
+        add(
+          "error",
+          "grammar-correction-form-exposed",
+          `The corrected form of answer ${exposed.label} is echoed verbatim elsewhere in the passage ("${exposed.needle}") — students can find the answer by direct comparison. Choose an answer spot whose corrected form is not repeated elsewhere in the passage.`,
+        );
+      }
+    }
     // 생성 플로우 전용 '오류 미도입' 검출: 마커를 벗긴 지문이 원문과 동일하면
     // 모든 isError 자리가 원문 그대로라는 뜻 — 원문을 오류로 판정했거나 치환이
     // 빗나간 문항(정답 무효/복수정답 실측 critical). 지문에 오류가 인쇄된
@@ -1355,6 +1376,20 @@ export function validateTypeSpecific(
           normalizeText(markedExpression.surroundingText),
         )) {
           add("error", qIssue.code, qIssue.message);
+        }
+      }
+      // 확정 비문 오형 게이트 (round-2 감독관 판정 ①): do/does/did+be 연쇄·
+      // 불규칙PP+ly 비단어·명사 뒤 what 삽입 — 학생이 보자마자 비문임을 아는
+      // 즉답 오형이라 '오형 재선정' 재시도를 지시한다. 등급 상수 미등재라
+      // relaxed 폴백에선 경고로 강등되어 하드 실패를 만들지 않는다.
+      if (errorExpression) {
+        const forcedNonword = findGrammarAnswerForcedNonword(
+          expression,
+          errorExpression,
+          normalizeText(markedExpression.surroundingText),
+        );
+        if (forcedNonword) {
+          add("error", "grammar-answer-nonword-forced", forcedNonword);
         }
       }
       if (correction && expression && correction !== expression) {
@@ -1979,6 +2014,21 @@ export function validateTypeSpecific(
       if (markedExpression.isError === true) continue;
       const expression = normalizeText(markedExpression.expression);
       const surroundingText = normalizeText(markedExpression.surroundingText);
+      // 필러 미끼 스팬 게이트 (round-2 감독관 판정 ②): 단독 전치사·조동사/to 뒤
+      // 원형 1토큰·의문사+to-V 프레임·통짜 NP·문두 등위접속사 — 지우고 읽어도
+      // 판단이 없는 장식 필러. decoy-only 부분수리(repairQuestionCandidate)가
+      // 이 미끼 1개만 교체하도록 라벨을 메시지에 싣는다(하드 반려 아님).
+      {
+        const fillerReason = findGrammarDecoyFillerSpan(expression, surroundingText);
+        if (fillerReason) {
+          const fillerLabel = normalizeText(markedExpression.label) || "(?)";
+          add(
+            "error",
+            "grammar-decoy-filler-span",
+            `Decoy underline ${fillerLabel} is a decorative filler span — ${fillerReason} Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct.`,
+          );
+        }
+      }
       if (isDebatableWhoObjectTarget(expression, surroundingText)) {
         add(
           "error",
@@ -2110,8 +2160,10 @@ export function validateTypeSpecific(
         );
       }
       if (surfacePointCode && grammarPointCodeSurfaceMismatch(surfacePointCode, surface)) {
+        // 26-07-14 round-2: warning→error 승격 — 재태깅 전용 repair(문항 본체 무변경) 라우팅.
+        // SALVAGE_RELAXABLE 등재·RELAXED_BLOCKING 미등재 = strict에서만 차단, 하드 실패 불가.
         add(
-          "warning",
+          "error",
           "grammar-pointcode-span-mismatch",
           `Underline ${markerLabel} is tagged pointCode (${surfacePointCode}) but its surface "${surface.slice(0, 50)}" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real ${surfacePointCode}-token or fix the code.`,
         );
@@ -2375,6 +2427,14 @@ export function validateTypeSpecific(
         "grammar-explanation-too-long",
         "Grammar explanation exceeds the 200-450 character contract; tighten it to the 4-step structure (sentence skeleton, verdict, correction, trap).",
       );
+    }
+    // round-2 ④ 해설 결정론 린트 — 어투 혼용(해라체 첫문장+합니다체 혼재)·수 모순
+    // ("복수 명사인 a child"류)·keyPoints 라벨 중복·한글-영단어 붙임 오타
+    // ("동사encouraged가"류). 26-07-14 승격: error 로 발행해야 해설 전용 repair
+    // 분기(explanationOnlyGrammarRepair — 문항 본체 무변경, 해설만 재작성)가 발동한다.
+    // SALVAGE_RELAXABLE 등재·RELAXED_BLOCKING 미등재 = strict에서만 차단, 하드 실패 불가.
+    for (const lintFinding of collectGrammarExplanationLintFindings(question)) {
+      add("error", "grammar-explanation-lint", lintFinding);
     }
   }
 
