@@ -27,7 +27,6 @@ export function useCreditsController() {
   const [topUpTotal, setTopUpTotal] = useState(0);
   const [topUpPage, setTopUpPage] = useState(0);
   const [topUpProducts, setTopUpProducts] = useState<CreditTopUpProduct[]>([]);
-  const [cardEnabled, setCardEnabled] = useState(false);
   const [subscriptionBilling, setSubscriptionBilling] =
     useState<SubscriptionBillingOverview | null>(null);
   const [subscriptionConsent, setSubscriptionConsent] = useState(false);
@@ -122,7 +121,6 @@ export function useCreditsController() {
       if (res.ok) {
         const data = await res.json();
         setTopUpProducts(data.products);
-        setCardEnabled(Boolean(data.cardEnabled));
       }
     } catch {
       /* ignore */
@@ -668,7 +666,6 @@ export function useCreditsController() {
     bankDepositCompleted,
     bankDepositGuide,
     cancelSubscriptionBilling,
-    cardEnabled,
     clearBankDepositGuide: () => {
       setBankDepositGuide(null);
       setBankDepositCompleted(false);

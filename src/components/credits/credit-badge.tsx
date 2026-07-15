@@ -240,20 +240,13 @@ function CreditBadgeContent({
 
         {/* Stats */}
         <div className="px-4 pb-3 grid grid-cols-2 gap-2">
-          <div className="relative bg-gray-50 rounded-lg px-3 py-2 overflow-hidden select-none" aria-disabled>
-            <div className="pointer-events-none opacity-40 grayscale">
-              <span className="text-[10px] text-gray-400 font-medium block">
-                월간 배정
-              </span>
-              <span className="text-[14px] font-bold text-gray-700 tabular-nums">
-                {summary.monthlyAllocation.toLocaleString()}
-              </span>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center bg-white/30 backdrop-blur-[1px]">
-              <span className="inline-flex items-center rounded-full border border-gray-200 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-gray-500 shadow-sm">
-                준비중
-              </span>
-            </div>
+          <div className="bg-gray-50 rounded-lg px-3 py-2">
+            <span className="text-[10px] text-gray-400 font-medium block">
+              월간 배정
+            </span>
+            <span className="text-[14px] font-bold text-gray-700 tabular-nums">
+              {summary.monthlyAllocation.toLocaleString()}
+            </span>
           </div>
           <div className="bg-gray-50 rounded-lg px-3 py-2">
             <span className="text-[10px] text-gray-400 font-medium block">

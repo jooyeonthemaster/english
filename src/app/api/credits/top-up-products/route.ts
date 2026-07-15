@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaffAuth } from "@/lib/auth";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
-import { isCardTopUpAllowed } from "@/lib/card-topup-access";
 import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 
 export async function GET(req: NextRequest) {
@@ -12,11 +11,7 @@ export async function GET(req: NextRequest) {
     const products = await getCreditTopUpProducts({
       ctx: { academyId: staff.academyId, linkTokens },
     });
-    const cardEnabled = isCardTopUpAllowed({
-      academyId: staff.academyId,
-      email: staff.email,
-    });
-    return NextResponse.json({ products, cardEnabled });
+    return NextResponse.json({ products });
   } catch (err) {
     if (err instanceof Error && err.message === "Unauthorized") {
       return NextResponse.json(

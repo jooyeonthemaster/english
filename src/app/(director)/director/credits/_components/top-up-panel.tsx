@@ -2,7 +2,6 @@
 
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Banknote, Check, CheckCircle2, Clock, Coins, Copy, CreditCard, Flame, Landmark, MessageSquare, ReceiptText, Sparkles, Smartphone, WalletCards } from "lucide-react";
 import { OPERATION_COLORS, OPERATION_ICONS } from "./credit-overview";
@@ -632,7 +631,6 @@ export function TopUpMethodDialog({
   depositorName,
   onDepositorNameChange,
   payingCredits,
-  cardEnabled,
   heldCoupons = [],
   selectedCouponId = null,
   onSelectCoupon,
@@ -647,7 +645,6 @@ export function TopUpMethodDialog({
   depositorName: string;
   onDepositorNameChange: (name: string) => void;
   payingCredits: number | null;
-  cardEnabled: boolean;
   heldCoupons?: HeldCoupon[];
   selectedCouponId?: string | null;
   onSelectCoupon?: (couponId: string | null) => void;
@@ -657,15 +654,6 @@ export function TopUpMethodDialog({
   const isBank = payMethod === "BANK_TRANSFER";
   const bankNeedsName = isBank && depositorName.trim().length === 0;
   const loading = payingCredits !== null;
-  // 카드(PG) = BANK_TRANSFER 외 결제수단. 허용 계정이 아니면 비활성화한다.
-  const payMethodDisabled = payMethod !== "BANK_TRANSFER" && !cardEnabled;
-
-  // 카드가 비활성화된 계정에서 모달이 열리면 무통장입금으로 자동 선택.
-  useEffect(() => {
-    if (product && !cardEnabled && payMethod !== "BANK_TRANSFER") {
-      onPayMethodChange("BANK_TRANSFER");
-    }
-  }, [product, cardEnabled, payMethod, onPayMethodChange]);
 
   return (
     <Dialog
@@ -693,27 +681,16 @@ export function TopUpMethodDialog({
             {VISIBLE_PAY_METHOD_OPTIONS.map((option) => {
               const Icon = option.icon;
               const active = payMethod === option.value;
-              const optDisabled = option.value !== "BANK_TRANSFER" && !cardEnabled;
               return (
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => {
-                    if (optDisabled) {
-                      toast.info(
-                        "해당 기능은 현재 준비중입니다. 준비가 완료될 때까지 무통장입금을 사용해주세요.",
-                      );
-                      return;
-                    }
-                    onPayMethodChange(option.value);
-                  }}
+                  onClick={() => onPayMethodChange(option.value)}
                   className={cn(
                     "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-semibold transition",
-                    optDisabled
-                      ? "border-gray-100 bg-gray-50 text-gray-300 hover:bg-gray-100"
-                      : active
-                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-gray-200 bg-white text-gray-500 hover:border-blue-200 hover:text-blue-600",
+                    active
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-blue-200 hover:text-blue-600",
                   )}
                 >
                   <Icon className="size-4" strokeWidth={2} />
@@ -812,7 +789,7 @@ export function TopUpMethodDialog({
           </button>
           <button
             type="button"
-            disabled={loading || bankNeedsName || payMethodDisabled}
+            disabled={loading || bankNeedsName}
             onClick={onConfirm}
             className="inline-flex h-10 items-center justify-center gap-1 rounded-xl bg-blue-600 px-4 text-[13px] font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >

@@ -148,7 +148,6 @@ export default function CreditsPage() {
     bankDepositCompleted,
     bankDepositGuide,
     cancelSubscriptionBilling,
-    cardEnabled,
     clearBankDepositGuide,
     confirmSelectedTopUp,
     costEntries,
@@ -284,7 +283,6 @@ export default function CreditsPage() {
         depositorName={depositorName}
         onDepositorNameChange={setDepositorName}
         payingCredits={payingCredits}
-        cardEnabled={cardEnabled}
         heldCoupons={heldCoupons}
         selectedCouponId={selectedCouponId}
         onSelectCoupon={setSelectedCouponId}
@@ -402,7 +400,6 @@ export default function CreditsPage() {
             value={summary.monthlyAllocation}
             icon={Calendar}
             accent="blue"
-            comingSoon
           />
           <OverviewCard
             label="보너스"

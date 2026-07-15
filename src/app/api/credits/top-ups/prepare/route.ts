@@ -15,7 +15,6 @@ import {
   type PortOneTopUpPayMethod,
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
-import { isCardTopUpAllowed } from "@/lib/card-topup-access";
 import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
 import { resolveCouponVsPromo } from "@/lib/printable-coupon-discount";
@@ -104,17 +103,6 @@ type PaymentRequest = PortOneV2PaymentRequest | DanalLegacyPaymentRequest;
 export async function POST(request: NextRequest) {
   try {
     const staff = await requireStaffAuth("DIRECTOR");
-
-    // 카드(PG) 결제는 허용된 계정만 사용 가능. 그 외에는 무통장입금만 안내.
-    if (!isCardTopUpAllowed({ academyId: staff.academyId, email: staff.email })) {
-      return NextResponse.json(
-        {
-          error:
-            "현재 계정은 카드 결제를 사용할 수 없습니다. 무통장입금으로 충전해주세요.",
-        },
-        { status: 403 },
-      );
-    }
 
     const body = await request.json().catch(() => null);
     const parsed = prepareSchema.safeParse(body);
