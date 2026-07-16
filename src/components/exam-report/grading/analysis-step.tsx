@@ -16,6 +16,8 @@ import { useMemo, useState } from "react";
 import { ArrowRight, FileText, Loader2, PenLine } from "lucide-react";
 
 import { computeScoreSummary } from "@/lib/exam-report/grading";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import type { StudentResponse } from "@/lib/exam-report/types";
 import type {
   ExamAnalysisDetail,
@@ -443,9 +445,11 @@ function ReportGatewayCard({
               className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-blue-600 px-4 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
             >
               {status === "FAILED" ? "리포트 다시 만들기" : "AI 리포트 만들기"}
-              <span className="rounded bg-white/20 px-1.5 py-0.5 text-[11px] font-bold">
-                5 크레딧
-              </span>
+              {/* 과금 표기 — 생성 CTA 공통 CreditCostChip(bg-white/20 pill) */}
+              <CreditCostChip
+                amount={CREDIT_COSTS.EXAM_STUDENT_REPORT}
+                className="ml-1 shrink-0 gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] text-white"
+              />
             </button>
           ) : (
             <>

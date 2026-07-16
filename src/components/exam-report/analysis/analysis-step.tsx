@@ -21,6 +21,9 @@ import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowRight, CheckCheck, Play } from "lucide-react";
 import type { AnalysisStepProps, ExamAnalysisDetail } from "../ui-contracts";
+import { EXAM_ANALYSIS_MIN_CREDITS } from "@/lib/exam-report/types";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { startAdaptivePoll } from "@/lib/adaptive-poll";
 import { Button } from "@/components/ui/button";
 import { QuestionAnalysisCard } from "./question-analysis-card";
@@ -343,8 +346,18 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
               <Play className="h-4 w-4" />
               시험 분석 시작
             </Button>
-            <p className="text-xs text-slate-400">
-              문항당 1크레딧(최소 15크레딧)이 사용됩니다.
+            {/* 과금 안내 — CreditCostChip 표준 표기(◈·"N 크레딧" 텍스트 금지). */}
+            <p className="flex items-center justify-center gap-1 text-xs text-slate-400">
+              분석 비용: 문항당
+              <CreditCostChip
+                amount={CREDIT_COSTS.EXAM_ANALYSIS}
+                className="text-slate-500"
+              />
+              · 최소
+              <CreditCostChip
+                amount={EXAM_ANALYSIS_MIN_CREDITS}
+                className="text-slate-500"
+              />
             </p>
           </div>
         </section>
@@ -402,23 +415,28 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
         {/* 좌: 문항 분석 카드 리스트 */}
         <section className="flex min-w-0 flex-1 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-            <p className="text-sm text-slate-500">
-              문항 분석 검수{" "}
-              <span className="font-medium text-slate-700">
-                {confirmedCount}/{okList.length}
+            {/* 섹션 헤더 — 워크벤치 표준(볼드 타이틀 + slate-400 보조) 톤 */}
+            <div className="flex items-center gap-2">
+              <h3 className="text-[14px] font-bold text-slate-900">문항 분석 검수</h3>
+              <span className="text-xs text-slate-400">
+                <span className="font-semibold tabular-nums text-slate-600">
+                  {confirmedCount}/{okList.length}
+                </span>
               </span>
               {detail.aiMeta.failedNumbers && detail.aiMeta.failedNumbers.length > 0 && (
-                <span className="ml-2 text-rose-500">
-                  · 실패 {detail.aiMeta.failedNumbers.length}
+                <span className="inline-flex items-center whitespace-nowrap rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-700">
+                  실패 {detail.aiMeta.failedNumbers.length}
                 </span>
               )}
-            </p>
+            </div>
+            {/* 검수 버튼 = 초록(워크벤치 버튼 색 규칙) */}
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={handleConfirmAll}
               disabled={locked || okList.length === 0}
+              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
             >
               <CheckCheck className="h-3.5 w-3.5" />
               전체 검수 완료

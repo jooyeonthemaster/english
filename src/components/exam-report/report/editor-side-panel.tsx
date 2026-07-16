@@ -19,6 +19,8 @@ import {
   type ReportThemeId,
 } from "@/lib/exam-report/report-schema";
 import type { ExamStudentDetail } from "../ui-contracts";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { resolveReportTheme } from "./report-themes";
 import { ThemePicker } from "./theme-picker";
 import { ReportFontPicker } from "./report-font-picker";
@@ -238,7 +240,12 @@ export function EditorSidePanel({
               <AlertDialogTitle>리포트를 다시 생성할까요?</AlertDialogTitle>
               <AlertDialogDescription>
                 강사가 수정한 총평·테마·숨김 설정은 유지되고 나머지 본문이 새로
-                생성됩니다 · 5크레딧
+                생성됩니다. 재생성 시{" "}
+                <CreditCostChip
+                  amount={CREDIT_COSTS.EXAM_STUDENT_REPORT}
+                  className="align-middle text-slate-600"
+                />
+                이 소모됩니다.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

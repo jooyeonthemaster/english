@@ -4,8 +4,9 @@ import { useRef } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight, Camera, FileText, ScanText, Sparkles } from "lucide-react";
+import { Check, ArrowDown, ArrowRight, Camera, FileText, ScanText, Sparkles } from "lucide-react";
 import { Item, Reveal, Stagger } from "./shared/reveal";
+import { Accent, GRID_INK, SceneGhost, SceneKicker } from "./shared/scene-ui";
 import { DemoGate } from "./demo/demo-gate";
 
 // 인터랙티브 크롭 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드(ssr:false).
@@ -38,25 +39,26 @@ export function IntakeScene() {
     <section
       ref={ref}
       id="intake"
-      className="relative w-full border-t border-blue-50 bg-white py-7 sm:py-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10"
+      className={`relative w-full bg-[#F8FAFC] pt-7 pb-7 sm:pt-10 sm:pb-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10 ${GRID_INK}`}
     >
       {/* PC(≥lg): 카피(좌) | 데모(우) 한 화면 배치. 모바일은 세로 스택 그대로. */}
       <div className="mx-auto grid w-full max-w-[1480px] grid-cols-1 items-center gap-5 px-5 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8 lg:px-16">
         {/* Left — copy */}
-        <div className="max-w-[600px]">
-          <Reveal className="mb-2 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:mb-4 sm:text-[13px] sm:tracking-[0.25em] justify-center lg:justify-start" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 자료 추출
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+        <div className="relative max-w-[600px]">
+          <SceneGhost n="04" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
+          <Reveal className="relative mb-2 sm:mb-4" y={16}>
+            <SceneKicker className="justify-center lg:justify-start">
+              FEATURE · 자료 추출
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
             <h2
-              className="text-[25px] font-extrabold leading-[1.18] text-gray-900 sm:text-[30px] sm:leading-[1.25] lg:text-[34px] lg:leading-[1.3]"
+              className="relative text-[25px] font-black leading-[1.18] text-slate-900 sm:text-[30px] sm:leading-[1.25] lg:text-[38px] lg:leading-[1.24]"
               style={{ wordBreak: "keep-all" }}
             >
               교재를 찍어 올리면,
               <br />
-              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-[3px] underline-offset-[3px] sm:decoration-4 sm:underline-offset-[5px] lg:underline-offset-[7px]">지문이 텍스트로</span> 들어옵니다.
+              <Accent>지문이 텍스트로</Accent> 들어옵니다.
             </h2>
           </Reveal>
           <Reveal delay={0.16}>
@@ -66,15 +68,20 @@ export function IntakeScene() {
             </p>
           </Reveal>
 
-          <Stagger className="mt-3 grid grid-cols-3 gap-2 sm:mt-6 sm:flex sm:flex-col sm:gap-4 sm:border-l-[3px] sm:border-[#BFDBFE] sm:pl-6" delay={0.25}>
+          <Stagger className="mt-3 grid grid-cols-3 gap-2 sm:mt-6 sm:flex sm:flex-col sm:gap-4" delay={0.25}>
             {[
               { k: "사진 · PDF 자동 추출", v: "휴대폰으로 찍은 교재 사진도 OK" },
               { k: "잘린 지문 AI 복원", v: "페이지 경계에서 끊긴 문장 자동 복원" },
               { k: "텍스트 추출은 무료", v: "OCR에는 크레딧이 들지 않습니다" },
             ].map((row) => (
-              <Item key={row.k} className="flex min-h-[52px] flex-col justify-center rounded-xl border border-blue-100 bg-blue-50/45 px-2.5 py-2 sm:min-h-0 sm:justify-start sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0" y={18}>
-                <div className="text-center text-[11.5px] font-extrabold leading-tight text-gray-900 sm:text-left sm:text-[15px] sm:tracking-wide">{row.k}</div>
-                <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+              <Item key={row.k} className="flex min-h-[52px] flex-col justify-center rounded-xl border border-blue-100 bg-blue-50/45 px-2.5 py-2 sm:min-h-0 sm:flex-row sm:items-start sm:justify-start sm:gap-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0" y={18}>
+                <span className="mt-0.5 hidden size-[22px] shrink-0 items-center justify-center rounded-full bg-blue-600 text-white sm:flex" aria-hidden>
+                  <Check className="size-3" strokeWidth={3.5} />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-center text-[11.5px] font-extrabold leading-tight text-gray-900 sm:text-left sm:text-[15px] sm:tracking-wide">{row.k}</div>
+                  <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+                </div>
               </Item>
             ))}
           </Stagger>

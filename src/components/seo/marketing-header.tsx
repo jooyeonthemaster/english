@@ -33,6 +33,8 @@ const SHEET_GROUPS: ReadonlyArray<{
       { href: "/features/exam-builder", label: "Word·한글 시험지 제작", description: "실전 시험지 조판을 클릭 몇 번으로" },
       { href: "/features/passage-analysis", label: "지문 분석", description: "구문·해석·어휘 분석 자료 자동 생성" },
       { href: "/features/exam-report", label: "시험 리포트", description: "학생별 성적·오답 분석 리포트 자동 생성" },
+      { href: "/features/question-extraction", label: "자료 추출", description: "PDF·스캔 문제를 편집 가능한 문항으로" },
+      { href: "/features/passage-webtoon", label: "지문 웹툰", description: "읽던 지문이 한 편의 웹툰으로" },
       { href: "/features/academy-erp", label: "학원 올인원", description: "출결·성적·리포트까지 한 곳에서" },
     ],
   },
@@ -91,14 +93,8 @@ export function MarketingHeader() {
         >
           <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <BrandIcon className="group-hover:bg-blue-600" />
-            <span className="flex flex-col leading-none">
-              <span className="whitespace-nowrap text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
-                SMOAT
-              </span>
-              {/* lg~xl 사이(고배율 줌 데스크톱 포함)에서 nav·CTA 와 폭 경합 → 잘림. min-[400px]~lg 미만(모바일·태블릿)과 xl 이상에서만 노출. */}
-              <span className="hidden whitespace-nowrap text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 min-[400px]:block lg:hidden xl:block">
-                스모트 · English AI Workbench
-              </span>
+            <span className="whitespace-nowrap text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
+              SMOAT
             </span>
           </Link>
 

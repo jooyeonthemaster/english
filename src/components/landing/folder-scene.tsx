@@ -11,6 +11,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { Reveal } from "./shared/reveal";
+import { GRID_DARK, SCENE_NAVY_BG, SceneGlow, SceneKicker } from "./shared/scene-ui";
 
 // 실제 워크벤치 보관함(FolderSection/FolderCard)의 시각 언어를 그대로 옮긴 목업 데이터.
 const SUB_FOLDERS = [
@@ -28,24 +29,26 @@ export function FolderScene() {
   const ref = useRef<HTMLElement>(null);
 
   return (
-    <section ref={ref} id="folder" className="relative w-full bg-white py-16 border-t border-blue-100 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10">
-      <div className="w-full px-6 lg:px-16 max-w-[1480px] mx-auto">
+    <section ref={ref} id="folder" className={`relative w-full overflow-hidden pt-16 pb-16 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10 ${SCENE_NAVY_BG}`}>
+      <div aria-hidden className={`absolute inset-0 ${GRID_DARK}`} />
+      <SceneGlow className="-top-10 h-[360px] w-[720px]" />
+      <div className="relative w-full px-6 lg:px-16 max-w-[1480px] mx-auto">
         <div className="mb-6 max-w-[900px] text-center mx-auto">
-          <Reveal className="text-[12px] uppercase tracking-[0.2em] text-[#3B82F6] font-bold mb-4 sm:text-[13px] sm:tracking-[0.25em] justify-center flex items-center gap-3" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 아카이브와 학원 운영
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
+          <Reveal className="mb-4" y={16}>
+            <SceneKicker dark className="justify-center">
+              FEATURE · 아카이브와 학원 운영
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="font-extrabold text-gray-900 leading-[1.2] break-keep" style={{ fontSize: "clamp(24px, 2.8vw, 38px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
+            <h2 className="font-black text-white leading-[1.24] break-keep" style={{ fontSize: "clamp(24px, 2.8vw, 40px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
               이 모든 것들을 철저하게
               <br />
-              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">파일 시스템 기반으로 관리</span>합니다.
+              <span className="text-[#7DB0FF]">파일 시스템 기반으로 관리</span>합니다.
             </h2>
           </Reveal>
           <Reveal delay={0.16}>
-            <p className="mt-4 text-[15px] text-gray-600 leading-[1.7] font-medium max-w-2xl mx-auto break-keep">
-              모든 결과물이 <strong className="text-gray-900 font-bold">학교·학년·연도 트리</strong>에 쌓여,
+            <p className="mt-4 text-[15px] text-[#B6C2D9] leading-[1.7] font-medium max-w-2xl mx-auto break-keep">
+              모든 결과물이 <strong className="text-white font-bold">학교·학년·연도 트리</strong>에 쌓여,
               <br className="lg:hidden" /> 내년에 그대로 꺼내 씁니다.
             </p>
           </Reveal>
@@ -128,7 +131,7 @@ export function FolderScene() {
             </div>
 
             {/* 하단: 클라우드 보관 안내 */}
-            <div className="flex items-center justify-center gap-1.5 border-t border-slate-100 bg-white px-4 py-2.5 text-[11.5px] font-semibold text-slate-400">
+            <div className="flex items-center justify-center gap-1.5 border-t border-slate-100 bg-white px-4 py-2.5 text-[11.5px] font-semibold text-slate-500">
               <Cloud className="size-3.5 text-blue-400" />
               생성된 모든 분석·시험지 파일은 클라우드에 안전하게 보관됩니다
             </div>

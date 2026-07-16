@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Download, ExternalLink, FileText } from "lucide-react";
 import { Reveal } from "./shared/reveal";
+import { Accent, GRID_INK, SceneKicker } from "./shared/scene-ui";
 
 const SAMPLES: Array<{
   file: string;
@@ -40,23 +41,21 @@ export function SampleScene() {
   return (
     <section
       id="samples"
-      className="relative w-full border-t border-blue-100/50 bg-[#F8FAFC] py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10"
+      className={`relative w-full bg-[#F8FAFC] pt-8 pb-8 sm:pt-12 sm:pb-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10 ${GRID_INK}`}
     >
       <div className="w-full px-6 lg:px-16 max-w-[1480px] mx-auto">
         <div className="mb-5 max-w-[900px] text-center mx-auto sm:mb-6">
-          <Reveal className="text-[12px] uppercase tracking-[0.2em] text-[#3B82F6] font-bold mb-3 justify-center flex items-center gap-3 sm:mb-4 sm:text-[13px] sm:tracking-[0.25em]" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            실제 결과물 샘플
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
+          <Reveal className="mb-3 sm:mb-4" y={16}>
+            <SceneKicker className="justify-center">실제 결과물 샘플</SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
             <h2
-              className="font-extrabold text-gray-900 leading-[1.2] break-keep"
-              style={{ fontSize: "clamp(24px, 2.8vw, 38px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}
+              className="font-black text-slate-900 leading-[1.24] break-keep"
+              style={{ fontSize: "clamp(24px, 2.8vw, 40px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}
             >
               말로만 설명하지 않겠습니다.
               <br />
-              직접 <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">SMOAT AI의 우수한 품질</span>을
+              직접 <Accent>SMOAT AI의 우수한 품질</Accent>을
               <br />
               확인해보세요.
             </h2>

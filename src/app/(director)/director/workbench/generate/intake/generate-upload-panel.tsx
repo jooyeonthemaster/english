@@ -890,7 +890,7 @@ export function GenerateUploadPanel({
                 className={
                   // 모바일(<lg)은 세로 스택이라 flex-1 만으론 드롭존이 쪼그라든다 —
                   // 직접 입력 탭의 텍스트박스와 동일하게 최소 높이(45vh)를 준다.
-                  "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:min-h-[45vh] " +
+                  "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:!min-h-[45vh] " +
                   (dragActive
                     ? "border-blue-300 bg-blue-50"
                     : "border-slate-200 bg-slate-50/70")

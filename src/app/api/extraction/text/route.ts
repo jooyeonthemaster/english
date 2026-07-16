@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { toClientErrorMessage } from "@/lib/client-error";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
 import { buildM1SourceMatchRows } from "@/lib/extraction/m1-draft-persistence";
 import {
@@ -332,7 +333,7 @@ export async function POST(req: NextRequest) {
     }
     return errorResponse(
       "TEXT_EXTRACTION_FAILED",
-      err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
+      toClientErrorMessage(err, "텍스트 추출에 실패했습니다."),
       500,
     );
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireStaffAuth } from "@/lib/auth";
+import { toClientErrorMessage } from "@/lib/client-error";
 import { PortOneTopUpError } from "@/lib/portone-credit-topups";
 import {
   buildSubscriptionBillingKeyIssueRequest,
@@ -66,5 +67,5 @@ function getSubscriptionErrorMessage(err: PortOneSubscriptionError) {
   if (err.code === "PLAN_NOT_PAYABLE") {
     return "이 요금제는 카드 정기결제를 사용할 수 없습니다.";
   }
-  return err.message;
+  return toClientErrorMessage(err, "결제 수단 등록에 실패했습니다.");
 }

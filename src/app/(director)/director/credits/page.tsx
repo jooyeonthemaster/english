@@ -5,7 +5,7 @@ import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
-import { AlertCircle, ArrowDownRight, ArrowUpRight, Calendar, CheckCircle2, Coins, Filter, Gift, RefreshCw } from "lucide-react";
+import { AlertCircle, ArrowDownRight, ArrowUpRight, CheckCircle2, Coins, Filter, Gift, RefreshCw } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -350,7 +350,7 @@ export default function CreditsPage() {
 
       {/* Overview cards — 2x2 grid with usage bar */}
       {summary && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {/* 현재 잔액 — 강조 카드 */}
           <div className="col-span-2 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8" />
@@ -395,12 +395,6 @@ export default function CreditsPage() {
             </div>
           </div>
 
-          <OverviewCard
-            label="월간 배정"
-            value={summary.monthlyAllocation}
-            icon={Calendar}
-            accent="blue"
-          />
           <OverviewCard
             label="보너스"
             value={summary.bonusCredits}

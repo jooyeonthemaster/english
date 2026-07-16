@@ -28,6 +28,50 @@ export function BusinessInfoBlock({
       data-business-info=""
     >
       <div className="mx-auto max-w-[1480px]">
+        {showPolicyLinks && (
+          <div className="mb-3 flex flex-col items-start gap-2 lg:flex-row lg:items-start lg:justify-between lg:gap-x-6">
+            {/* 콘텐츠 허브 — 전 공개 페이지에서 콘텐츠 클러스터로 내부링크 전달 */}
+            <nav
+              aria-label="콘텐츠"
+              className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500"
+            >
+              <Link href="/about" className="transition hover:text-slate-900">
+                스모트 소개
+              </Link>
+              {/* 임시 숨김 (요청 시 복구): 유형백과 /types · 시험 대비 /exam-prep · 교과서별 가이드 /textbooks · 제작 가이드 /guides · 무료자료실 /resources */}
+              <Link href="/faq" className="transition hover:text-slate-900">
+                FAQ
+              </Link>
+              <Link
+                href="/glossary"
+                className="transition hover:text-slate-900"
+              >
+                용어사전
+              </Link>
+            </nav>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500">
+              <Link
+                href="/credits/products"
+                className="transition hover:text-slate-900"
+              >
+                상품 정보
+              </Link>
+              <Link href="/terms" className="transition hover:text-slate-900">
+                이용약관
+              </Link>
+              <Link href="/privacy" className="transition hover:text-slate-900">
+                개인정보처리방침
+              </Link>
+              <Link
+                href="/refund-policy"
+                className="transition hover:text-slate-900"
+              >
+                환불 정책
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="text-[13px] font-black tracking-widest text-slate-900">
@@ -55,73 +99,6 @@ export function BusinessInfoBlock({
               </p>
             )}
           </div>
-
-          {showPolicyLinks && (
-            <div className="flex flex-col items-start gap-2 lg:items-end">
-              {/* 콘텐츠 허브 — 전 공개 페이지에서 콘텐츠 클러스터로 내부링크 전달 */}
-              <nav
-                aria-label="콘텐츠"
-                className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500"
-              >
-                <Link href="/about" className="transition hover:text-slate-900">
-                  스모트 소개
-                </Link>
-                <Link href="/types" className="transition hover:text-slate-900">
-                  유형백과
-                </Link>
-                <Link
-                  href="/exam-prep"
-                  className="transition hover:text-slate-900"
-                >
-                  시험 대비
-                </Link>
-                <Link
-                  href="/textbooks"
-                  className="transition hover:text-slate-900"
-                >
-                  교과서별 가이드
-                </Link>
-                <Link href="/guides" className="transition hover:text-slate-900">
-                  제작 가이드
-                </Link>
-                <Link
-                  href="/resources"
-                  className="transition hover:text-slate-900"
-                >
-                  무료자료실
-                </Link>
-                <Link href="/faq" className="transition hover:text-slate-900">
-                  FAQ
-                </Link>
-                <Link
-                  href="/glossary"
-                  className="transition hover:text-slate-900"
-                >
-                  용어사전
-                </Link>
-              </nav>
-              <div className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500">
-                <Link
-                  href="/credits/products"
-                  className="transition hover:text-slate-900"
-                >
-                  상품 정보
-                </Link>
-                <Link href="/terms" className="transition hover:text-slate-900">
-                  이용약관
-                </Link>
-                <Link href="/privacy" className="transition hover:text-slate-900">
-                  개인정보처리방침
-                </Link>
-                <Link
-                  href="/refund-policy"
-                  className="transition hover:text-slate-900"
-                >
-                  환불 정책
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
 
         <dl

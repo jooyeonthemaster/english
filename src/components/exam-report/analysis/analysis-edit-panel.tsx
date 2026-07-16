@@ -46,7 +46,8 @@ export function EditableAnalysisField({
 
   return (
     <div>
-      <div className="mb-1 text-xs font-medium text-slate-500">{label}</div>
+      {/* 섹션 라벨 — 워크벤치 공통 eyebrow(uppercase tracking) 규약 */}
+      <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</div>
       <Textarea
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
@@ -70,7 +71,7 @@ export function ReadonlyField({ label, value }: ReadonlyFieldProps) {
   if (!value.trim()) return null;
   return (
     <div>
-      <div className="mb-1 text-xs font-medium text-slate-500">{label}</div>
+      <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</div>
       <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{value}</p>
     </div>
   );

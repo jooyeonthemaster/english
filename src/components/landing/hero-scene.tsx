@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -11,13 +10,13 @@ import {
   GripVertical,
   LayoutTemplate,
   PencilLine,
-  Play,
   Plus,
   Save,
   Settings2,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import { GRID_DARK, SceneGlow } from "./shared/scene-ui";
 
 const BUILDER_ACTIONS: Array<{
   icon: LucideIcon;
@@ -402,18 +401,9 @@ function ProductDashboard() {
 
 export function HeroScene() {
   return (
-    <section className="relative isolate w-full h-auto min-h-0 md:h-[100svh] md:min-h-[850px] overflow-hidden bg-slate-50 pt-20 sm:pt-24 lg:pt-28 pb-12 md:pb-0">
-      <div aria-hidden className="absolute inset-0 -z-10">
-        <Image
-          src="/landing/hero-sky-v2.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center opacity-80"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0.4)_40%,rgba(248,250,252,0.7)_70%,#f8fafc_100%)]" />
-      </div>
+    <section className="relative isolate w-full h-auto min-h-0 md:h-[100svh] md:min-h-[850px] overflow-hidden bg-[radial-gradient(120%_80%_at_50%_-8%,#1B2A4A_0%,#111C34_45%,#0B1220_100%)] pt-20 sm:pt-24 lg:pt-28 pb-12 md:pb-0">
+      <div aria-hidden className={`absolute inset-0 -z-10 ${GRID_DARK}`} />
+      <SceneGlow className="-top-10 h-[420px] w-[820px]" />
 
       <div className="relative z-10 mx-auto flex h-full max-w-[1220px] flex-col items-center justify-start px-5 sm:px-8">
         <motion.div
@@ -422,16 +412,30 @@ export function HeroScene() {
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } } }}
         >
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+            }}
+            className="mb-5 flex justify-center"
+          >
+            <span className="inline-flex h-8 items-center gap-2 rounded-full bg-blue-500/15 px-4 text-[13px] font-extrabold tracking-[0.04em] text-blue-300">
+              <Sparkles className="size-3.5" />
+              영어 내신·수능 최적화 AI
+            </span>
+          </motion.p>
           <motion.h1
             variants={{
               hidden: { opacity: 0, y: 34, filter: "blur(8px)" },
               show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
             }}
-            className="break-normal text-[34px] font-black leading-[1.15] tracking-tight text-slate-950 drop-shadow-sm sm:break-keep sm:text-5xl lg:text-7xl"
+            className="break-normal text-[34px] font-black leading-[1.15] tracking-tight text-white sm:break-keep sm:text-5xl lg:text-7xl"
           >
             영어시험 고민은 이제 끝!
             <br />
-            <span className="text-blue-600">SMOAT가 모든 걸 해드립니다</span>
+            <span className="bg-gradient-to-r from-[#7DB0FF] to-[#3B82F6] bg-clip-text text-transparent">
+              SMOAT가 모든 걸 해드립니다
+            </span>
           </motion.h1>
 
           <div className="mx-auto mt-6 max-w-[880px] break-keep">
@@ -440,11 +444,11 @@ export function HeroScene() {
                 hidden: { opacity: 0, y: 22, filter: "blur(6px)" },
                 show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
               }}
-              className="text-[16px] font-black leading-8 text-slate-700 sm:text-[19px]"
+              className="text-[16px] font-bold leading-8 text-[#B6C2D9] sm:text-[19px]"
             >
               SMOAT의 영어 내신·수능 최적화 AI로
               <br />
-              <span className="mt-2 inline-block rounded-lg bg-yellow-300 px-2 py-0.5 text-blue-700">10시간을 10분으로 단축해드립니다!</span>
+              <span className="mt-2.5 inline-flex items-center rounded-full bg-blue-100 px-5 py-1.5 text-[15px] font-extrabold text-blue-800 sm:text-[17px]">10시간을 10분으로 단축해드립니다!</span>
             </motion.p>
           </div>
 
@@ -463,15 +467,15 @@ export function HeroScene() {
               <ArrowRight className="size-4" strokeWidth={2.5} />
             </a>
             <a
-              href="#section-intake"
+              href="#section-samples"
               onClick={(event) => {
                 event.preventDefault();
-                scrollTo("section-intake");
+                scrollTo("section-samples");
               }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-6 text-[14px] font-black text-slate-800 shadow-[0_16px_42px_-30px_rgba(15,23,42,0.45)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px]"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/[0.28] bg-white/[0.12] px-6 text-[14px] font-black text-white backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px]"
             >
-              <Play className="size-4 fill-current" strokeWidth={2.5} />
-              작동 방식 보기
+              <FileText className="size-4" strokeWidth={2.5} />
+              실제 결과물 보기
             </a>
           </motion.div>
         </motion.div>

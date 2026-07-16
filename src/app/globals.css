@@ -1113,6 +1113,10 @@
 .dark .bg-\[\#E5E7EB\], .dark .bg-\[\#E5E8EB\], .dark .bg-\[\#E8EAEE\],
 .dark .bg-\[\#E8ECF2\], .dark .bg-\[\#E5E7E0\], .dark .bg-\[\#9CA396\],
 .dark .bg-\[\#C8CCC2\] { background-color: var(--d-surface-3); }
+/* 랜딩 HWP 에디터 목업 크롬(소문자 hex) — 리맵 대소문자 불일치로 라이트 잔존하던
+   프랑켄슈타인 해결. 목업 전체를 은은한 표면 톤으로 통일. */
+.dark .bg-\[\#f7f8fa\], .dark .bg-\[\#fafbfc\], .dark .bg-\[\#e9edf2\],
+.dark .bg-\[\#E9EDF2\] { background-color: var(--d-surface-2); }
 .dark .bg-\[\#E8F3FF\], .dark .bg-\[\#EFF6FF\],
 .dark .bg-\[\#DBEAFE\] { background-color: var(--d-blue-surface); }
 .dark .bg-\[\#F1F8E9\], .dark .bg-\[\#F0FDF4\], .dark .bg-\[\#E8F5E9\],
@@ -1156,6 +1160,12 @@
 .dark .to-white { --tw-gradient-to: var(--d-surface); }
 .dark .from-slate-50 { --tw-gradient-from: var(--d-surface-2); }
 .dark .to-slate-50 { --tw-gradient-to: var(--d-surface-2); }
+.dark .via-slate-50 { --tw-gradient-via: var(--d-surface-2); }
+/* 세미나 placeholder 썸네일 gradient(from-blue-50 via-slate-50 to-indigo-50/100)이
+   다크에서 밝은 파랑으로 잔존하던 문제 — 컬러 stop 을 표면 톤으로. */
+.dark .from-blue-50 { --tw-gradient-from: var(--d-surface-2); }
+.dark .to-indigo-50 { --tw-gradient-to: var(--d-surface-2); }
+.dark .to-indigo-100 { --tw-gradient-to: var(--d-surface-2); }
 
 /* ── 스크롤바 ── */
 .dark ::-webkit-scrollbar-thumb { background-color: #3a3a3a; }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loginStudent } from "@/lib/auth-student";
 import { prisma } from "@/lib/prisma";
+import { toClientErrorMessage } from "@/lib/client-error";
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,8 +31,7 @@ export async function POST(req: NextRequest) {
     const session = await loginStudent(students[0].academyId, code.trim());
     return NextResponse.json({ success: true, studentId: session.studentId });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "로그인 중 오류가 발생했습니다";
+    const message = toClientErrorMessage(error, "로그인 중 오류가 발생했습니다");
     return NextResponse.json({ error: message }, { status: 401 });
   }
 }

@@ -54,43 +54,47 @@ export function CouponRegisterCard({
   }
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5">
-      <div className="mb-3 flex items-center gap-2">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-          <Ticket className="size-4" />
+    <div className="rounded-2xl border border-gray-100 bg-white px-5 py-3">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center gap-2 lg:min-w-0 lg:flex-1">
+          <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <Ticket className="size-3.5" />
+          </div>
+          <div className="lg:flex lg:min-w-0 lg:items-center lg:gap-2">
+            <h2 className="shrink-0 whitespace-nowrap text-[15px] font-bold text-gray-900">
+              쿠폰 등록
+            </h2>
+            <p className="text-[12px] text-gray-400 lg:truncate">
+              받으신 실물 쿠폰의 8자리 코드를 입력하세요. QR이 있으면 스캔해도 됩니다.
+            </p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-[15px] font-bold text-gray-900">쿠폰 등록</h2>
-          <p className="text-[12px] text-gray-400">
-            받으신 실물 쿠폰의 8자리 코드를 입력하세요. QR이 있으면 스캔해도 됩니다.
-          </p>
+        <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !submitting) void submit();
+            }}
+            placeholder="예: ABCD2345"
+            autoComplete="off"
+            maxLength={16}
+            className="h-10 flex-1 rounded-xl border border-gray-200 px-3 font-mono text-[14px] tracking-widest outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 lg:w-64 lg:flex-none"
+          />
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={() => void submit()}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 text-[14px] font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+          >
+            {submitting ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Ticket className="size-4" />
+            )}
+            등록
+          </button>
         </div>
-      </div>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <input
-          value={code}
-          onChange={(e) => setCode(e.target.value.toUpperCase())}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !submitting) void submit();
-          }}
-          placeholder="예: ABCD2345"
-          autoComplete="off"
-          maxLength={16}
-          className="h-11 flex-1 rounded-xl border border-gray-200 px-3 font-mono text-[15px] tracking-widest outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
-        />
-        <button
-          type="button"
-          disabled={submitting}
-          onClick={() => void submit()}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 text-[14px] font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
-        >
-          {submitting ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Ticket className="size-4" />
-          )}
-          등록
-        </button>
       </div>
     </div>
   );

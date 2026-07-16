@@ -9,6 +9,7 @@ import { useIsMobileViewport } from "@/components/workbench/mobile-step-flow";
 import { MainStage } from "./question-burst-scene/main-stage";
 import { SideTracker } from "./question-burst-scene/side-tracker";
 import { Item, Reveal, Stagger } from "./shared/reveal";
+import { Accent, GRID_INK, SceneGhost, SceneKicker } from "./shared/scene-ui";
 import type { GenerationState } from "./question-burst-scene/types";
 import { DemoGate } from "./demo/demo-gate";
 import { TypeChipSelector } from "./demo/step3-generate/type-chip-selector";
@@ -225,29 +226,28 @@ export function QuestionBurstScene() {
     <section
       ref={sectionRef}
       id="burst"
-      className="relative w-full overflow-hidden border-t border-blue-50 bg-white py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28"
+      className={`relative w-full overflow-hidden bg-white pt-8 pb-8 sm:pt-12 sm:pb-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28 ${GRID_INK}`}
     >
       {/* PC(≥lg): 카피(좌) | 데모(우) 한 화면 배치. 모바일은 세로 스택 그대로. */}
       <div className="relative mx-auto w-full max-w-[1480px] px-5 sm:px-6 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-8 lg:px-16">
         {/* Headline */}
-        <div className="mb-4 max-w-[900px] text-left lg:mb-0">
-          <Reveal className="mb-3 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:text-[13px] sm:tracking-[0.25em] lg:mb-4 justify-center lg:justify-start" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 25유형 문제 생성
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+        <div className="relative mb-4 max-w-[900px] text-left lg:mb-0">
+          <SceneGhost n="01" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
+          <Reveal className="relative" y={16}>
+            <SceneKicker className="mb-3 justify-center lg:mb-4 lg:justify-start">
+              FEATURE · 25유형 문제 생성
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
           <h2
-            className="text-[25px] font-extrabold leading-[1.2] text-gray-900 sm:text-[30px] lg:text-[34px] lg:leading-[1.3]"
+            className="relative text-[25px] font-black leading-[1.2] text-slate-900 sm:text-[30px] lg:text-[38px] lg:leading-[1.24]"
             style={{
               wordBreak: "keep-all",
             }}
           >
             지문 하나로 시작하는,
             <br />
-            <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">
-              초고속 AI 문제 생성
-            </span>
+            <Accent>초고속 AI 문제 생성</Accent>
           </h2>
           </Reveal>
           <Reveal delay={0.16}>

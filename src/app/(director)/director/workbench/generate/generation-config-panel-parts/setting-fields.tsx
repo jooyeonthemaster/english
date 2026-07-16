@@ -30,7 +30,7 @@ export const renderNumberSetting = ({
       <div className="flex items-center gap-1.5">
         <span className="text-[12px] font-bold text-slate-800">{title}</span>
       </div>
-      <div className="mt-1 flex flex-wrap gap-1 max-lg:mt-0.5">
+      <div className="mt-1 flex flex-wrap gap-1 max-lg:!mt-0.5">
         {badges.map((badge) => (
           <span
             key={badge}

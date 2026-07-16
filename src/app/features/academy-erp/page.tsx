@@ -10,6 +10,7 @@ import {
   faqSchema,
   softwareApplicationSchema,
 } from "@/lib/seo/structured-data";
+import { relatedFeatures } from "@/lib/seo/feature-links";
 
 const PATH = "/features/academy-erp";
 
@@ -35,15 +36,33 @@ const CONTENT: FeaturePageContent = {
   h1: "영어학원 관리 프로그램 — 학생·원비·출결을 한 화면에서, 올인원 학원 ERP",
   subhead:
     "AI 문제 생성과 지문 분석으로 수업 자료를 만들고, 그 자료를 만든 곳에서 학생 등록·반 편성·원비 청구·출결·급여·재무까지 운영합니다. 콘텐츠 제작과 학원 운영이 분리되지 않는, 영어학원을 위한 올인원 학원 관리 프로그램입니다. 영어학원 AI 올인원, 스모트(SMOAT)입니다.",
+  heroHighlight: "콘텐츠 제작과 학원 운영을 한 플랫폼에서",
+  heroImage: {
+    src: "/features/shots/academy-erp/hero.png",
+    alt: "SMOAT 원장 워크스페이스 화면",
+    caption: "원장 워크스페이스",
+  },
+  heroStats: [
+    { value: "1", unit: "곳", label: "콘텐츠 제작+운영 올인원" },
+    { value: "5", unit: "종", label: "역할별 전용 앱" },
+    { value: "0", unit: "원", label: "시작 비용" },
+  ],
   heroBullets: [
     "학생 등록·반 편성·기기·원비를 한 화면에서",
     "학생별 청구서 발행과 납부 상태 추적",
     "출석·결석·지각·조퇴·보강까지 출결 관리",
     "원장·강사·학생·학부모 역할별 맞춤 앱",
   ],
+  sectionsTitle: "학원 운영의 네 개 축",
+  sectionsBody: "학생·원비·출결·재무를 흩어진 도구 없이 관리합니다.",
   sections: [
     {
       title: "콘텐츠 제작부터 학원 운영까지 한 플랫폼",
+      image: {
+        src: "/features/shots/academy-erp/s1.png",
+        alt: "문항 제작 워크스페이스 화면",
+        caption: "제작 워크스페이스",
+      },
       body: "문제집을 만드는 도구와 학원을 운영하는 도구가 따로 놀면 자료도, 데이터도 흩어집니다. SMOAT는 AI 문제 생성·지문 분석·시험지 제작으로 수업 자료를 만든 그 플랫폼에서 학원 운영까지 이어집니다. 만든 문제·지문·시험지·학습활동은 클라우드에서 관리되고, 학생·원비·출결 운영도 같은 공간에서 돌아갑니다.",
       bullets: [
         "AI 문제 생성·지문 분석·시험지 제작이 한 곳에",
@@ -104,23 +123,7 @@ const CONTENT: FeaturePageContent = {
   ctaTitle: "콘텐츠 제작과 학원 운영을 하나로, 영어학원 올인원",
   ctaBody:
     "AI 문제 생성·지문 분석·시험지 제작부터 학생·원비·출결·급여·재무까지 — SMOAT 하나로 운영하세요. 지금 시작할 수 있습니다.",
-  related: [
-    {
-      href: "/features/ai-question-generation",
-      label: "AI 영어 문제 생성",
-      description: "지문 하나로 25유형 변형문제 자동 출제",
-    },
-    {
-      href: "/features/exam-builder",
-      label: "Word·한글 시험지 제작",
-      description: "문항을 편집 가능한 시험지·해설지로 조판",
-    },
-    {
-      href: "/features/passage-analysis",
-      label: "지문 분석",
-      description: "직독직해·구문·어휘 A4 분석 보고서",
-    },
-  ],
+  related: relatedFeatures(PATH),
 };
 
 export default function AcademyErpPage() {

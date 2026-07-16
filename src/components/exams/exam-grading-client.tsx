@@ -16,7 +16,7 @@ import {
   ChevronRight,
   User,
 } from "lucide-react";
-import { gradeSubmission } from "@/actions/exam-grading";
+import { gradeSubmission } from "@/actions/exams";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 import { toast } from "sonner";
